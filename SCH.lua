@@ -72,8 +72,8 @@ function get_sets()
     include('Sel-Include.lua')
 	send_command('lua l sch-hud')
 
-	include('SCH_soloSC.lua')
-    include('common_info.skillchain.lua')
+	--include('SCH_soloSC.lua')
+    --include('common_info.skillchain.lua')
 	organizer_items = {
         "Gyudon",
         "Reraiser",
@@ -648,14 +648,7 @@ end
 function job_self_command(commandArgs, eventArgs)
 	gearinfo(commandArgs, eventArgs)
 
-    if commandArgs[1] == 'soloSC' then
-        if not commandArgs[2] or not commandArgs[3] then
-          errlog('missing required parameters for function soloSkillchain')
-          return
-        else
-          soloSkillchain(commandArgs[2],commandArgs[3],commandArgs[4],commandArgs[5])
-        end
-    end
+
     if commandArgs[1]:lower() == 'scholar' then
         handle_stratagems(commandArgs)
         eventArgs.handled = true
@@ -851,7 +844,6 @@ function handle_elemental(cmdParams)
 	
 	elseif command == 'bardsong' then
 		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' Threnody" '..target..'')
-		
 	elseif command == 'skillchain1' then
 		if player.target.type ~= "MONSTER" then
 			add_to_chat(123,'Abort: You are not targeting a monster.')
@@ -866,55 +858,86 @@ function handle_elemental(cmdParams)
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
 			
 			if state.ElementalMode.value == 'Fire' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Liquefaction true')
+				windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Stone" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[281] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Pyrohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Fire" <t>')
+				end
 			elseif state.ElementalMode.value == 'Wind' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Detonation true')
+				windower.chat.input('/p '..auto_translate('Detonation')..' -<t>- MB: '..auto_translate('wind')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Stone" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Detonation')..' -<t>- MB: '..auto_translate('wind')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[280] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Anemohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Aero" <t>')
+				end
 			elseif state.ElementalMode.value == 'Lightning' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Impaction true')
+				windower.chat.input('/p '..auto_translate('Impaction')..' -<t>- MB: '..auto_translate('Thunder')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Water" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Impaction')..' -<t>- MB: '..auto_translate('Thunder')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[283] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Ionohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Thunder" <t>')
+				end
 			elseif state.ElementalMode.value == 'Light' then
-					windower.chat.input:schedule(1.3,'//gs c soloSC 1 Transfixion true')
+				local spell_recasts = windower.ffxi.get_spell_recasts()
+				if spell_recasts[284] > spell_latency or spell_recasts[285] > spell_latency + 7 then
+					add_to_chat(123,'Abort: Noctohelix or Luminohelix on cooldown.')
+				else
+					windower.chat.input('/p '..auto_translate('Transfixion')..' -<t>- MB: '..auto_translate('Light')..' <scall21> OPEN!')
+					windower.chat.input:schedule(1.3,'/ma "Noctohelix" <t>')
+					windower.chat.input:schedule(6.6,'/ja "Immanence" <me>')
+					windower.chat.input:schedule(7.9,'/p '..auto_translate('Transfixion')..' -<t>- MB: '..auto_translate('Light')..' <scall21> CLOSE!')
+					windower.chat.input:schedule(7.9,'/ma "Luminohelix" <t>')
+				end
 			elseif state.ElementalMode.value == 'Earth' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Scission true')
+				windower.chat.input('/p '..auto_translate('Scission')..' -<t>- MB: '..auto_translate('earth')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Fire" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Scission')..' -<t>- MB: '..auto_translate('earth')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[278] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Geohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Stone" <t>')
+				end
 			elseif state.ElementalMode.value == 'Ice' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Induration true')
+				windower.chat.input('/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Water" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[282] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Cryohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Blizzard" <t>')
+				end
 			elseif state.ElementalMode.value == 'Water' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Reverberation true')
+				windower.chat.input('/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Stone" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[279] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Hydrohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Water" <t>')
+				end
 			elseif state.ElementalMode.value == 'Dark' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Compression true')
-			else
-				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
-			end
-		end
-	
-	elseif command == 'skillchain1h' then
-		if player.target.type ~= "MONSTER" then
-			add_to_chat(123,'Abort: You are not targeting a monster.')
-		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
-			add_to_chat(123,'You are silenced, muted, or paralyzed, cancelling skillchain.')
-		elseif (get_current_stratagem_count() + immactive) < 2 then
-			add_to_chat(123,'Abort: You have less than two stratagems available.')
-		elseif not (state.Buff['Dark Arts']  or state.Buff['Addendum: Black']) then
-			add_to_chat(123,'Can\'t use elemental skillchain commands without Dark Arts - Activating.')
-			windower.chat.input('/ja "Dark Arts" <me>')
-		elseif state.ElementalMode.value ~= nil then
-			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
-			
-			if state.ElementalMode.value == 'Fire' then
-				windower.chat.input:schedule(1.3,'//ssc f a h mb 5')
-			elseif state.ElementalMode.value == 'Wind' then
-				windower.chat.input:schedule(1.3,'//ssc a a h mb 5')
-			elseif state.ElementalMode.value == 'Lightning' then
-				windower.chat.input:schedule(1.3,'//ssc t a h mb 5')
-			elseif state.ElementalMode.value == 'Light' then
-				windower.chat.input:schedule(1.3,'//ssc l a h mb 5')
-			elseif state.ElementalMode.value == 'Earth' then
-				windower.chat.input:schedule(1.3,'//ssc s a h mb 5')
-			elseif state.ElementalMode.value == 'Ice' then
-				windower.chat.input:schedule(1.3,'//ssc b a h mb 5')
-			elseif state.ElementalMode.value == 'Water' then
-				windower.chat.input:schedule(1.3,'//ssc w a h mb h2')
-			elseif state.ElementalMode.value == 'Dark' then
-				windower.chat.input:schedule(1.3,'//ssc d a h mb h2')
+				if windower.ffxi.get_spell_recasts()[284] > (spell_latency + 6) then
+					add_to_chat(123,'Abort: Noctohelix on cooldown.')
+				else
+					windower.chat.input('/p '..auto_translate('Compression')..' -<t>- MB: '..auto_translate('Darkness')..' <scall21> OPEN!')
+					windower.chat.input:schedule(1.3,'/ma "Blizzard" <t>')
+					windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+					windower.chat.input:schedule(6.9,'/p '..auto_translate('Compression')..' -<t>- MB: '..auto_translate('Darkness')..' <scall21> CLOSE!')
+					windower.chat.input:schedule(6.9,'/ma "Noctohelix" <t>')
+				end
 			else
 				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
 			end
@@ -936,13 +959,49 @@ function handle_elemental(cmdParams)
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
 			
 			if state.ElementalMode.value == 'Fire' or state.ElementalMode.value == 'Light' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Fusion true')
-			elseif state.ElementalMode.value == 'Lightning' or state.ElementalMode.value == 'Lightning' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Fragmentation true')
+				windower.chat.input('/p '..auto_translate('Fusion')..' -<t>- MB: '..auto_translate('Fire')..' '..auto_translate('Light')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Fire" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Fusion')..' -<t>- MB: '..auto_translate('Fire')..' '..auto_translate('Light')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[283] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Ionohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Thunder" <t>')
+				end
+			elseif state.ElementalMode.value == 'Wind' or state.ElementalMode.value == 'Lightning' then
+				windower.chat.input('/p '..auto_translate('Fragmentation')..' -<t>- MB: '..auto_translate('wind')..' '..auto_translate('Thunder')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Blizzard" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Fragmentation')..' -<t>- MB: '..auto_translate('wind')..' '..auto_translate('Thunder')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[279] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Hydrohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Water" <t>')
+				end
 			elseif state.ElementalMode.value == 'Earth' or state.ElementalMode.value == 'Dark' then
-					windower.chat.input:schedule(1.3,'//gs c soloSC 1 Gravitation')
+				if windower.ffxi.get_spell_recasts()[284] > (spell_latency + 6) then
+					add_to_chat(123,'Abort: Noctohelix on cooldown.')
+				else
+					windower.chat.input('/p '..auto_translate('Gravitation')..' -<t>- MB: '..auto_translate('earth')..' '..auto_translate('Darkness')..' <scall21> OPEN!')
+					windower.chat.input:schedule(1.3,'/ma "Aero" <t>')
+					windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+					windower.chat.input:schedule(6.9,'/p '..auto_translate('Gravitation')..' -<t>- MB: '..auto_translate('earth')..' '..auto_translate('Darkness')..' <scall21> CLOSE!')
+					windower.chat.input:schedule(6.9,'/ma "Noctohelix" <t>')
+				end
 			elseif state.ElementalMode.value == 'Ice' or state.ElementalMode.value == 'Water' then
-					windower.chat.input:schedule(1.3,'//gs c soloSC 1 Distortion true')
+				if windower.ffxi.get_spell_recasts()[285] > spell_latency then
+					add_to_chat(123,'Abort: Luminohelix on cooldown.')
+				else
+					windower.chat.input('/p '..auto_translate('Distortion')..' -<t>- MB: '..auto_translate('ice')..' '..auto_translate('Water')..' <scall21> OPEN!')
+					windower.chat.input:schedule(1.3,'/ma "Luminohelix" <t>')
+					windower.chat.input:schedule(6.6,'/ja "Immanence" <me>')
+					windower.chat.input:schedule(7.9,'/p '..auto_translate('Distortion')..' -<t>- MB: '..auto_translate('ice')..' '..auto_translate('Water')..' <scall21> CLOSE!')
+					if windower.ffxi.get_spell_recasts()[278] < (spell_latency + 6) then
+						windower.chat.input:schedule(7.9,'/ma "Geohelix" <t>')
+					else
+						windower.chat.input:schedule(7.9,'/ma "Stone" <t>')
+					end
+				end
 			else
 				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
 			end
@@ -962,7 +1021,18 @@ function handle_elemental(cmdParams)
 			windower.chat.input('/ja "Dark Arts" <me>')
 		elseif state.ElementalMode.value == 'Fire' then
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
-			windower.chat.input:schedule(1.3,'//gs c soloSC 2 Fusion true')
+			windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
+			windower.chat.input:schedule(1.3,'/ma "Stone" <t>')
+			windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+			windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
+			windower.chat.input:schedule(6.9,'/ma "Fire" <t>')
+			windower.chat.input:schedule(13,'/ja "Immanence" <me>')
+			windower.chat.input:schedule(14.3,'/p '..auto_translate('Fusion')..' -<t>- MB: '..auto_translate('Fire')..' '..auto_translate('Light')..' <scall21> CLOSE!')
+			if windower.ffxi.get_spell_recasts()[283] < (spell_latency + 12) then
+				windower.chat.input:schedule(14.3,'/ma "Ionohelix" <t>')
+			else
+				windower.chat.input:schedule(14.3,'/ma "Thunder" <t>')
+			end
 		else
 			add_to_chat(123,'Abort: Fire is the only element with a consecutive 3-step skillchain.')
 		end
