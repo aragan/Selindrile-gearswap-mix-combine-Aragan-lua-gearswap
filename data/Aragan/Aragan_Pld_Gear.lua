@@ -99,15 +99,33 @@ function init_gear_sets()
         body="Souv. Cuirass +1",hands="Macabre Gaunt. +1",ring1="Apeile Ring +1",ring2="Apeile Ring",
         back="Rudianos's Mantle",waist="Creed Baudrier",legs="Souv. Diechlings +1",feet="Eschite Greaves"}
 		
-    sets.Enmity.SIRD = {ammo="Staunch Tathlum +1",
-		head="Loess Barbuta +1",neck="Moonlight Necklace",ear1="Friomisi Earring",ear2="Trux Earring",
-		body="Souv. Cuirass +1",hands="Macabre Gaunt. +1",ring1="Apeile Ring +1",ring2="Moonlight Ring",
-		back="Rudianos's Mantle",waist="Rumination Sash",legs="Founder's Hose",feet="Odyssean Greaves"}
+    sets.Enmity.SIRD = {		ammo="Staunch Tathlum +1",
+	head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+	body={ name="Sakpata's Plate", augments={'Path: A',}},
+	hands="Chev. Gauntlets +3",
+	legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
+	feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
+	neck="Moonlight Necklace",
+	waist="Audumbla Sash",
+	left_ear="Tuisto Earring",
+	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+	right_ring="Defending Ring",
+	back="Rudianos's Mantle",}
 		
-    sets.Enmity.DT = {ammo="Staunch Tathlum +1",
-        head="Souv. Schaller +1",neck="Unmoving Collar +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
-        body="Rev. Surcoat +3",hands="Souv. Handsch. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
-        back="Moonlight Cape",waist="Creed Baudrier",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
+    sets.Enmity.DT = {		ammo="Staunch Tathlum +1",
+	head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+	body={ name="Sakpata's Plate", augments={'Path: A',}},
+	hands="Chev. Gauntlets +3",
+	legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
+	feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
+	neck="Moonlight Necklace",
+	waist="Audumbla Sash",
+	left_ear="Tuisto Earring",
+	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+	right_ring="Defending Ring",
+	back="Rudianos's Mantle",}
 		
     -- Precast sets to enhance JAs
     sets.precast.JA['Invincible'] = set_combine(sets.Enmity,{legs="Cab. Breeches +3"})
@@ -473,6 +491,8 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 	sets.midcast.Stun.SIRD = set_combine(sets.Enmity.SIRD, {})
 	sets.midcast['Blue Magic'] = set_combine(sets.Enmity, {})
 	sets.midcast['Blue Magic'].SIRD = set_combine(sets.Enmity.SIRD, {})
+	sets.midcast['Blue Magic'].DT = set_combine(sets.Enmity.SIRD, {})
+	sets.midcast['Blue Magic'].ConserveMP = set_combine(sets.Enmity.SIRD, {})
 	sets.midcast.Cocoon = set_combine(sets.Enmity.SIRD, {})
 
 	sets.midcast['Frightful Roar'] = {
@@ -489,22 +509,8 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
 	}
-	sets.midcast['Frightful Roar'].DT = {  
-		ammo="Staunch Tathlum +1",
-		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-		body={ name="Sakpata's Plate", augments={'Path: A',}},
-		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-		legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
-		feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
-		neck="Moonlight Necklace",
-		waist="Audumbla Sash",
-		left_ear="Tuisto Earring",
-		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-		right_ring="Defending Ring",
-		back="Rudianos's Mantle",
-	}	
-	sets.midcast['Frightful Roar'].SIRD = sets.midcast['Frightful Roar'].DT
+	sets.midcast['Frightful Roar'].DT = sets.midcast['Frightful Roar']	
+	sets.midcast['Frightful Roar'].SIRD = sets.midcast['Frightful Roar']
     sets.midcast.Cure = {ammo="Staunch Tathlum +1",
 		head="Loess Barbuta +1",neck="Sacro Gorget",ear1="Nourish. Earring",ear2="Nourish. Earring +1",
 		body="Jumalik Mail",hands="Macabre Gaunt. +1",ring1="Defending Ring",ring2="Moonlight Ring",
@@ -520,8 +526,8 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     waist="Audumbla Sash",
     left_ear={ name="Chev. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+11','Mag. Acc.+11','Damage taken-3%',}},
     right_ear={ name="Nourish. Earring +1", augments={'Path: A',}},
-    left_ring="Defending Ring",
-    right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    right_ring="Defending Ring",
+    left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     back="Moonlight Cape",}
 		
     sets.midcast.Cure.DT = {ammo="Staunch Tathlum +1",
@@ -580,8 +586,8 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     waist="Audumbla Sash",
     left_ear={ name="Chev. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+11','Mag. Acc.+11','Damage taken-3%',}},
     right_ear={ name="Nourish. Earring +1", augments={'Path: A',}},
-    left_ring="Defending Ring",
-    right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    right_ring="Defending Ring",
+    left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     back="Moonlight Cape",}
 		
 	sets.Self_Healing.DT = {ammo="Staunch Tathlum +1",
@@ -1020,8 +1026,8 @@ sets.idle.Evasion={
 			waist="Flume Belt +1",
 			left_ear="Tuisto Earring",
 			right_ear="Ethereal Earring",
-			left_ring="Moonlight Ring",
-			right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+			right_ring="Moonlight Ring",
+			left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 			back="Rudianos's Mantle",
 	}
 	sets.defense.Block = {

@@ -89,7 +89,7 @@ function global_on_load()
 	AutoStunMode
 	AutoCleanupMode
 	AutoShootMode
-	
+	gs c curecheat
 	SubJobEnmity
 	]]
 	send_command('bind ^- gs c toggle selectnpctargets')
@@ -125,7 +125,8 @@ function global_unload()
 	send_command('unbind !P')
 	send_command('unbind ^P')
 	send_command('unbind ^r')
-
+	send_command('unbind !r')
+	
 	send_command('lua u AutoCOR')--Turns addon off if job non cor.
 	send_command('lua u Singer')--Turns addon off if job non brd.
 	send_command('lua u PLD-HUD')--Turns addon off if job non pld.
