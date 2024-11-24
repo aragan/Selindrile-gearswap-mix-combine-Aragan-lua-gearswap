@@ -120,7 +120,7 @@ function init_include()
 	state.Capacity 			  = M(false, 'Capacity Mode')
 	state.ReEquip 			  = M(false, 'ReEquip Mode')
 	state.AutoArts	 		  = M(false, 'AutoArts Mode')
-	state.AutoLockstyle	 	  = M(false, 'AutoLockstyle Mode')
+	state.AutoLockstyle	 	  = M(true, 'AutoLockstyle Mode')
 	state.AutoTrustMode 	  = M(false, 'Auto Trust Mode')
 	state.RngHelper		 	  = M(false, 'RngHelper')
 	state.HoverShot		 	  = M(true, 'HoverShot')
@@ -142,15 +142,15 @@ function init_include()
 	state.DisplayMode  	  	  = M(true, 'Display Mode')
 	state.UseCustomTimers 	  = M(true, 'Use Custom Timers')
 	state.CancelStoneskin	  = M(true, 'Auto Cancel Stoneskin')
-	state.BlockMidaction	  = M(true, 'Block Midaction')
+	state.BlockMidaction	  = M(false, 'Block Midaction')
 	state.MaintainAftermath	  = M(true, 'Maintain Aftermath')
 	state.RefineWaltz		  = M(true, 'RefineWaltz')
 	state.ElementalWheel 	  = M(false, 'Elemental Wheel')
 	state.MaintainDefense 	  = M(false, 'Maintain Defense')
 	state.SkipProcWeapons 	  = M(false, 'Skip Proc Weapons')
 	state.NotifyBuffs		  = M(false, 'Notify Buffs')
-	state.UnlockWeapons		  = M(false, 'Unlock Weapons')
-	state.SelfWarp2Block 	  = M(true, 'Block Warp2 on Self')
+	state.UnlockWeapons		  = M(true, 'Unlock Weapons')
+	state.SelfWarp2Block 	  = M(false, 'Block Warp2 on Self')
 	state.MiniQueue		 	  = M(true, 'MiniQueue')
 	state.PWUnlock		 	  = M(false, 'PWUnlock')
 	
@@ -1160,7 +1160,7 @@ function default_post_midcast(spell, spellMap, eventArgs)
 					if sets.Self_Healing.SIRD and state.CastingMode.value:contains('SIRD') and (player.in_combat or being_attacked) then
 						equip(sets.Self_Healing.SIRD)
 					else
-						equip(sets.Self_Healing)
+						--equip(sets.Self_Healing)
 					end
 				end
 			elseif spellMap == 'Refresh' and sets.Self_Refresh then
@@ -2119,7 +2119,7 @@ end
 -- Function to add kiting gear on top of the base set if kiting state is true.
 -- @param baseSet : The gear set that the kiting gear will be applied on top of.
 function apply_kiting(baseSet)
-	if sets.Kiting and (state.Kiting.value or (player.status == 'Idle' and moving and state.DefenseMode.value == 'None' and state.Passive.value == 'None' and (state.IdleMode.value == 'Normal' or state.IdleMode.value:contains('Sphere') or not (player.in_combat or being_attacked)))) then
+	if sets.Kiting and (state.Kiting.value or (player.status == 'Idle' and moving and state.DefenseMode.value == 'None')) then
 		baseSet = set_combine(baseSet, sets.Kiting)
 	end
 	
@@ -2574,6 +2574,44 @@ end
 windower.raw_register_event('time change', time_change)
 windower.raw_register_event('zone change', zone_change)
 windower.raw_register_event('target change', target_change)
+
+-- Auto toggle Magic burst set.
+MB_Window = 0
+time_start = 0
+AEBurst = false
+
+if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+
+    windower.raw_register_event('action', function(act)
+        for _, target in pairs(act.targets) do
+            local battle_target = windower.ffxi.get_mob_by_target("t")
+            if battle_target ~= nil and target.id == battle_target.id then
+                for _, action in pairs(target.actions) do
+                    if action.add_effect_message > 287 and action.add_effect_message < 302 then
+                        --last_skillchain = skillchains[action.add_effect_message]
+                        MB_Window = 11
+                        MB_Time = os.time()
+                    end
+                end
+            end
+        end
+    end)
+
+    windower.raw_register_event('prerender', function()
+        --Items we want to check every second
+        if os.time() > time_start then
+            time_start = os.time()
+            if MB_Window > 0 then
+                MB_Window = 11 - (os.time() - MB_Time)
+                if state.AutoEquipBurst.value then
+                    AEBurst = true
+                end
+            else
+                AEBurst = false
+            end
+        end
+    end)
+end
 
 -- Auto-initialize the include - Do this at the bottom so that other user-files can overwrite these functions.
 init_include()
