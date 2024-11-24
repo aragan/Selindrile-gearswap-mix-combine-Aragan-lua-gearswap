@@ -288,17 +288,17 @@ function job_self_command(commandArgs, eventArgs)
 			local spell_recasts = windower.ffxi.get_spell_recasts()
 					
 			if spell_recasts[584] < spell_latency then
-				windower.chat.input('/ma "Sheep Song" <t>')
-			elseif spell_recasts[598] < spell_latency then
-				windower.chat.input('/ma "Soporific" <t>')
-			elseif spell_recasts[605] < spell_latency then
 				windower.chat.input('/ma "Geist Wall" <t>')
-			elseif spell_recasts[537] < spell_latency then
-				windower.chat.input('/ma "Stinking Gas" <t>')
-			elseif spell_recasts[575] < spell_latency then
-				windower.chat.input('/ma "Jettatura" <t>')
-			elseif spell_recasts[592] < spell_latency then
-				windower.chat.input('/ma "Blank Gaze" <t>')
+			--elseif spell_recasts[598] < spell_latency then
+			--	windower.chat.input('/ma "Soporific" <t>')
+			--elseif spell_recasts[605] < spell_latency then
+			--	windower.chat.input('/ma "Sheep Song" <t>')
+		    elseif spell_recasts[575] < spell_latency then
+			    windower.chat.input('/ma "Jettatura" <t>')	
+		    --elseif spell_recasts[537] < spell_latency then
+				--windower.chat.input('/ma "Stinking Gas" <t>')
+			--elseif spell_recasts[592] < spell_latency then
+				--windower.chat.input('/ma "Blank Gaze" <t>')
 			elseif not check_auto_tank_ws() then
 				if not state.AutoTankMode.value then add_to_chat(123,'All Enmity Blue Magic on cooldown.') end
 			end
@@ -680,18 +680,18 @@ end
 buff_spell_lists = {
 	Auto = {	
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
-		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
+		--{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
 	},
 	
 	Default = {
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,Reapply=false},
-		{Name='Reprisal',Buff='Reprisal',SpellID=97,Reapply=false},
+		--{Name='Reprisal',Buff='Reprisal',SpellID=97,Reapply=false},
 		{Name='Haste',Buff='Haste',SpellID=57,Reapply=false},
 		{Name='Refresh',Buff='Refresh',SpellID=109,Reapply=false},
 		{Name='Aquaveil',Buff='Aquaveil',SpellID=55,Reapply=false},
 		{Name='Stoneskin',Buff='Stoneskin',SpellID=54,Reapply=false},
-		{Name='Blink',Buff='Blink',SpellID=53,Reapply=false},
+		--{Name='Blink',Buff='Blink',SpellID=53,Reapply=false},
 		{Name='Regen',Buff='Regen',SpellID=108,Reapply=false},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,Reapply=false},
 	},
