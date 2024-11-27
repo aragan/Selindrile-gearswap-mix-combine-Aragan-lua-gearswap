@@ -53,20 +53,18 @@ function global_on_load()
 	send_command('bind f9 gs c cycle OffenseMode')
 	send_command('bind ^f9 gs c cycle HybridMode')
 	send_command('bind !f9 gs c cycle RangedMode')
-	send_command('bind f5 gs c cycle WeaponskillMode')
+	send_command('bind @f9 gs c cycle WeaponskillMode')
 	--send_command('bind f10 gs c set DefenseMode Physical')
 	--send_command('bind ^f10 gs c cycle PhysicalDefenseMode')
 	send_command('bind !f10 gs c toggle Kiting')
-	--send_command('bind f11 gs c set DefenseMode Magical')
-	send_command('bind ^f11 gs c cycle CastingMode')
+	send_command('bind !f11 gs c set DefenseMode Magical;gs c cycle MagicalDefenseMode')
+	send_command('bind f11 gs c cycle CastingMode')
 	send_command('bind ^f12 gs c update user')
 	send_command('bind f12 gs c cycle IdleMode;gs c reset DefenseMode')
 	send_command('bind !f12 gs c reset DefenseMode;gs c reset IdleMode')
-	send_command('bind f1 gs c cycle HippoMode')
 
-	send_command('bind f2 gs c toggle AutoRuneMode')
-	send_command('bind f3 gs c cycle RuneElement')
 	send_command('bind !f3 gs c toggle AutoTankMode')
+	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
 	send_command('bind !f5 gs c toggle AutoWSMode')
 	send_command('bind @f1 gs c toggle AutoEngageMode')
@@ -76,26 +74,14 @@ function global_on_load()
 	send_command('bind ^f1 gs c toggle AutoStunMode')
 	send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
+	send_command('bind @3 gs c curecheat')
+    send_command('bind @4 gs c cycle passive')
+    send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
 
-	send_command('bind @1 gs c toggle AutoCleanupMode')
-	send_command('bind @2 gs c toggle AutoShootMode')
-
-	--[[
-	
-	AutoBuffMode
-	AutoTrustMode
-	AutoFoodMode
-	AutoWSMode
-	AutoStunMode
-	AutoCleanupMode
-	AutoShootMode
-	gs c curecheat
-	SubJobEnmity
-	]]
 	send_command('bind ^- gs c toggle selectnpctargets')
 	send_command('bind !- gs c cycle pctargetmode')
 	send_command('input //gs org')
-	
+
 end
 -- Function to revert binds when unloading.
 function global_unload()
@@ -105,7 +91,7 @@ function global_unload()
 	send_command('unbind !s')
 
 
-	send_command('unbind f9')
+	--[[send_command('unbind f9')
 	send_command('unbind ^f9')
 	send_command('unbind !f9')
 	send_command('unbind @f9')
@@ -117,16 +103,14 @@ function global_unload()
 	send_command('unbind !f11')
 	send_command('unbind f12')
 	send_command('unbind ^f12')
-	send_command('unbind !f12')
+	send_command('unbind !f12')]]
 	send_command('unbind ^-')
 	send_command('unbind ^=')
 	send_command('unbind -')
 	send_command('unbind =')
 	send_command('unbind !P')
 	send_command('unbind ^P')
-	send_command('unbind ^r')
-	send_command('unbind !r')
-	
+
 	send_command('lua u AutoCOR')--Turns addon off if job non cor.
 	send_command('lua u Singer')--Turns addon off if job non brd.
 	send_command('lua u PLD-HUD')--Turns addon off if job non pld.
@@ -153,14 +137,14 @@ send_command('bind @scrolllock gs c cycle Passive') --Changes offense settings s
 send_command('bind f9 gs c cycle OffenseMode') --Changes offense settings such as accuracy.
 send_command('bind ^f9 gs c cycle HybridMode') --Changes defense settings for melee such as PDT.
 send_command('bind @f9 gs c cycle RangedMode') --Changes ranged offense settings such as accuracy.
---send_command('bind !f9 gs c cycle WeaponskillMode') --Changes weaponskill offense settings such as accuracy.
+send_command('bind !f9 gs c cycle WeaponskillMode') --Changes weaponskill offense settings such as accuracy.
 send_command('bind f10 gs c set DefenseMode Physical;gs c cycle PhysicalDefenseMode') --Turns your physical defense set on.
 send_command('bind ^f10 gs c cycle PhysicalDefenseMode') --Changes your physical defense set.
 send_command('bind !f10 gs c toggle Kiting') --Keeps your kiting gear on..
-send_command('bind !f11 gs c set DefenseMode Magical;gs c cycle MagicalDefenseMode') --Turns your magical defense set on.
-send_command('bind ^f11 gs c cycle MagicalDefenseMode') --Changes your magical defense set.
---send_command('bind @f11 gs c cycle CastingMode') --Changes your castingmode options such as magic accuracy.
-send_command('bind !f11 gs c cycle ExtraMeleeMode') --Adds another set layered on top of your engaged set.
+--send_command('bind f11 gs c set DefenseMode Magical') --Turns your magical defense set on.
+--send_command('bind ^f11 gs c cycle MagicalDefenseMode') --Changes your magical defense set.
+send_command('bind @f11 gs c cycle CastingMode') --Changes your castingmode options such as magic accuracy.
+send_command('bind !7 gs c cycle ExtraMeleeMode') --Adds another set layered on top of your engaged set.
 send_command('bind ^f12 gs c cycle ResistDefenseMode') --Changes your resist defense set.
 send_command('bind f12 gs c set DefenseMode Resist') --Turns your resist defense set on.
 send_command('bind @f12 gs c cycle IdleMode') --Changes your idle mode options such as refresh.
@@ -170,8 +154,7 @@ send_command('bind pause gs c update user') --Runs a quick check to make sure yo
 send_command('bind ^@!pause gs org') --Runs organizer.
 send_command('bind ^@!backspace gs c buffup') --Buffup macro because buffs are love.
 send_command('bind @r gs c weapons Default') --Requips weapons and gear.
-send_command('bind @c gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
-send_command('bind @x gs c toggle RP')  -- keeps neck JSE Reinforcement Points Mode on.
+send_command('bind ^z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
 send_command('bind ^y gs c toggle AutoCleanupMode') --Uses certain items and tries to clean up inventory.
 send_command('bind ^t gs c cycle treasuremode') --Toggles hitting htings with your treasure hunter set.
 send_command('bind !t input /target <bt>') --Targets the battle target.
