@@ -13,7 +13,8 @@ in macro for fast used i add :
 /con gs c elemental nuke -- for clear magic burst mobs in A/C
 /con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
 u can use addon automb 
---[[
+--]]
+--[[ 
 -- Scythe Light:
 Insurgency > Vorpal Scythe > Entropy > Guillotine > Entropy > Insurgency 
 Vorpal Scythe > Entropy > Guillotine > Entropy > Insurgency 
@@ -89,7 +90,9 @@ function user_job_setup()
 	send_command('bind ^` input /ja "Hasso" <me>')
 	send_command('bind !` input /ja "Seigan" <me>')
 	send_command('bind @` gs c cycle SkillchainMode')
-
+    send_command('bind f3 gs c cycle Absorbs')
+    send_command('bind !f3 gs c cycleback Absorbs')
+    send_command('bind f2 input //gs c Absorbs')
     send_command('bind f7 gs c cycle shield')
 	send_command('bind f4 gs c cycle ElementalMode')
 	send_command('bind @f4 gs c cycleback ElementalMode') --Robbiewobbie's idea
@@ -124,9 +127,10 @@ sets.Normal = {}
 sets.shield = {sub="Blurred Shield +1"}
 sets.DefaultShield = {sub="Blurred Shield +1"}
 
-
-    -- neck JSE Necks Reinf
-    sets.RP = {}
+-- neck JSE Necks Reinforcement Points Mode add u neck here 
+sets.RP = {}
+-- Capacity Points Mode
+sets.Capacity = {}
 
 	-- Precast Sets
 	-- Precast sets to enhance JAs
