@@ -17,10 +17,13 @@ in macro for fast used i add :
 sch i add macro for fast make skillchain :
 
 command add macro :
+
 SC1
 /console gs c elemental skillchain1
+
 SC2
 /console gs c elemental skillchain2
+
 SC3
 /console gs c elemental skillchain3
 -------------
