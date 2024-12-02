@@ -18,12 +18,15 @@ Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
 keyboard binds and chat 
 
-in macro for fast used i add :
+in macro job blm sch rdm nin drk geo whm pld for fast used i add :
 
+/con gs c elemental nuke -- for clear magic burst mobs in A/C and spam mb on bosses 
 /con gs c elemental nuke -- for clear magic burst mobs in A/C
 
 /con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
 
+----------
+FOR DRK I ADD  element in display screen f4 change it , and add absorts and cycle f3 and in macro
 
 sch i add macro for fast make skillchain :
 
