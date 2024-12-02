@@ -8,4 +8,5 @@ keyboard binds and chat
 in macro for fast used i add :
 
 /con gs c elemental nuke -- for clear magic burst mobs in A/C
+
 /con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
