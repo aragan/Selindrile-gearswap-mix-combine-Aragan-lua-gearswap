@@ -125,7 +125,6 @@ function job_setup()
     state.MagicBurst = M(false, 'Magic Burst')
     state.StormSurge = M(false, 'Stormsurge')
     state.Moving  = M(false, "moving")
-    state.AutoEquipBurst = M(true)
     state.HippoMode = M(false, "hippoMode")
 
 	-- Mote has capitalization errors in the default Absorb mappings, so we use our own
@@ -1234,7 +1233,7 @@ end
 
 function check_arts()
 	if not arts_active() and (buffup ~= '' or (not data.areas.cities:contains(world.area) and ((state.AutoArts.value and player.in_combat) or state.AutoBuffMode.value ~= 'Off'))) then
-	
+
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
 		if abil_recasts[232] < latency then

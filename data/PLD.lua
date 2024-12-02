@@ -47,6 +47,53 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+	organizer_items = {
+		"Airmid's Gorget",
+		"Tumult's Blood",
+		"Sarama's Hide",
+		"Hidhaegg's Scale",
+		"Sovereign's Hide",
+		"Grape Daifuku",
+		"G. Curry Bun +1",
+		"Pukatrice Egg",
+		"Moogle Amp.",
+		"Popo. con Queso",
+		"Pear Crepe",
+		"Crab Sushi",
+		"Om. Sandwich",
+		"Red Curry Bun",
+		"Foreshock Sword",
+		"Hepatizon Axe +1",
+		"Sword Strap",
+		"Mafic Cudgel",
+		"Gyudon",
+		"Reraiser",
+		"Hi-Reraiser",
+		"Vile Elixir",
+		"Vile Elixir +1",
+		"Miso Ramen",
+		"Carbonara",
+		"Silent Oil",
+		"Salt Ramen",
+		"Panacea",
+		"Sublime Sushi",
+		"Sublime Sushi 1+",
+		"Prism Powder",
+		"Antacid",
+		"Icarus Wing",
+		"Warp Cudgel",
+		"Holy Water",
+		"Sanjaku-Tenugui",
+		"Shinobi-Tabi",
+		"Shihei",
+		"Remedy",
+		"Emporox's Ring",
+		"Red Curry Bun",
+		"Instant Reraise",
+		"Black Curry Bun",
+		"Rolan. Daifuku",
+		"Reraise Earring",}
+	
 end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.

@@ -185,6 +185,15 @@ end
 
 function job_buff_change(buff, gain)
 	update_melee_groups()
+	if buff == 'Embolden' then
+        if gain then
+            equip(sets.Embolden)
+            disable('head','legs','back')
+        else
+            enable('head','legs','back')
+            status_change(player.status)
+        end
+    end
 end
 
 -------------------------------------------------------------------------------------------------------------------
