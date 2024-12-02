@@ -1,11 +1,33 @@
+-----------------------------Authors of this file--------------------------------
+------           ******************************************                ------
+---                                                                           ---
+--	  Aragan (Asura) --------------- [Author Primary]                          -- 
+--                                                                             --
+---------------------------------------------------------------------------------
+
+--[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
+to can play smooth and easy and i play with main gameped controller logitech and 
+keyboard binds and chat 
+
+
+in macro job blm sch rdm nin drk geo whm pld for fast used i add :
+
+/con gs c elemental nuke -- for clear magic burst mobs in A/C and spam mb on bosses 
+/con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
+/con gs c elemental aga -- for spell aja 
+u can use addon automb 
+-----------
+]]
+
+
 function user_job_setup()
 
 	state.OffenseMode:options('Normal','Acc','CRIT','FullAcc')
 	state.HybridMode:options('Tank','Tank_HP','Normal', 'DT','DTLite')
 	state.WeaponskillMode:options('Match','Normal','ACC','PDL')
 	state.CastingMode:options('SIRD','Normal')
-	state.PhysicalDefenseMode:options('PDT_HP','PDT','PDH', 'HP', 'Evasion', 'Resist', 'Enmity')
-	state.MagicalDefenseMode:options('MDT_HP','MDT','MEVA')
+	state.PhysicalDefenseMode:options('PDT_HP','PDT','PDH', 'HP', 'Evasion', 'Enmity')
+	state.MagicalDefenseMode:options('MDT_HP','MDT','Resist','MEVA')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
 	state.IdleMode:options('Tank','Normal','KiteTank', 'HP','PDH', 'PDT','Evasion', 'Resist','MEVA', 'Regen', 'Enmity') --,'Normal','Sphere'
 	state.Weapons:options('None','Epeolatry','Lycurgos','Naegling','MalignanceSword','Reikiko','Loxotic','Dolichenus','DualWeapons')
@@ -16,11 +38,12 @@ function user_job_setup()
 	gear.stp_jse_back = {name="Ogma's cape",augments={'DEX+20','Accuracy+20 Attack+20','"Store TP"+10',}}
 	gear.da_jse_back = {name="Ogma's cape",augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}}
 
-	-- Additional local binds
-	send_command('bind !` gs c SubJobEnmity')
-	send_command('bind @` gs c cycle RuneElement')
-	send_command('bind ^` gs c RuneElement')
-	send_command('bind @pause gs c toggle AutoRuneMode')
+    --use //listbinds    .. to show command keys
+    -- Additional local binds
+	send_command('bind !1 gs c SubJobEnmity')
+	send_command('bind f4 gs c cycle RuneElement')
+	send_command('bind f3 gs c RuneElement')
+	send_command('bind f2 gs c toggle AutoRuneMode')
 	send_command('bind ^delete input /ja "Provoke" <stnpc>')
 	send_command('bind !delete input /ma "Cure IV" <stal>')
 	send_command('bind @delete input /ma "Flash" <stnpc>')
@@ -30,11 +53,8 @@ function user_job_setup()
 	send_command('bind ^backspace input /ja "Lunge" <t>')
 	send_command('bind @backspace input /ja "Gambit" <t>')
 	send_command('bind !backspace input /ja "Rayke" <t>')
-	send_command('bind @f8 gs c toggle AutoTankMode')
-	send_command('bind !f2 gs c toggle TankAutoDefense')
-	send_command('bind ^@!` gs c cycle SkillchainMode')
 	send_command('bind f11 gs c cycle CastingMode')
-    send_command('bind @3 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
+    send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
     send_command('bind @s gs c toggle SrodaBelt')
     send_command('bind f7 gs c toggle AutoSubMode')
     send_command('bind ^f11 gs c cycle ExtraDefenseMode')
@@ -111,7 +131,7 @@ function init_gear_sets()
 	-- Item sets.
 
 	-- Precast sets to enhance JAs
-    sets.precast.JA['Vallation'] = set_combine(sets.Enmity,{body="Runeist's Coat +3",legs="Futhark Trousers +3"})
+    sets.precast.JA['Vallation'] = set_combine(sets.Enmity,{body="Runeist Coat +3",legs="Futhark Trousers +3"})
     sets.precast.JA['Valiance'] = sets.precast.JA['Vallation']
     sets.precast.JA['Pflug'] = set_combine(sets.Enmity,{feet="Runeist's Boots +3"})
     sets.precast.JA['Battuta'] = set_combine(sets.Enmity,{head="Futhark Bandeau +3"})
@@ -121,7 +141,6 @@ function init_gear_sets()
     sets.precast.JA['Elemental Sforzo'] = set_combine(sets.Enmity,{body="Futhark Coat +1"})
     sets.precast.JA['Swordplay'] = set_combine(sets.Enmity,{hands="Futhark Mitons +1"})
     sets.precast.JA['Embolden'] = set_combine(sets.Enmity,{})
-    sets.precast.JA['One for All'] = set_combine(sets.defense.HP,{})
     sets.precast.JA['Provoke'] = set_combine(sets.Enmity, {})
 	sets.precast.JA['Warcry'] = set_combine(sets.Enmity, {})
 	sets.precast.JA['Defender'] = set_combine(sets.Enmity, {})
@@ -129,8 +148,22 @@ function init_gear_sets()
 	sets.precast.JA['Last Resort'] = set_combine(sets.Enmity, {})
 	sets.precast.JA['Aggressor'] = set_combine(sets.Enmity, {})
 	sets.precast.JA['Animated Flourish'] = set_combine(sets.Enmity, {})
+    sets.precast.JA['One for All'] = {
+		head="Nyame Helm",
+		body="Adamantite Armor",
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+		waist="Plat. Mog. Belt",
+		left_ear="Tuisto Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Moonlight Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back="Moonlight Cape",
+	}
 
-    sets.precast.JA['Vallation'].DT = set_combine(sets.Enmity.DT,{body="Runeist's Coat +3", legs="Futhark Trousers +3"})
+    sets.precast.JA['Vallation'].DT = set_combine(sets.Enmity.DT,{body="Runeist Coat +3", legs="Futhark Trousers +3"})
     sets.precast.JA['Valiance'].DT = sets.precast.JA['Vallation'].DT
     sets.precast.JA['Pflug'].DT = set_combine(sets.Enmity.DT,{feet="Runeist's Boots +3"})
     sets.precast.JA['Battuta'].DT = set_combine(sets.Enmity.DT,{head="Futhark Bandeau +3"})
@@ -140,7 +173,6 @@ function init_gear_sets()
     sets.precast.JA['Elemental Sforzo'].DT = set_combine(sets.Enmity.DT,{body="Futhark Coat +1"})
     sets.precast.JA['Swordplay'].DT = set_combine(sets.Enmity.DT,{hands="Futhark Mitons +1"})
     sets.precast.JA['Embolden'].DT = set_combine(sets.Enmity.DT,{})
-    sets.precast.JA['One for All'].DT = set_combine(sets.defense.HP,{})
     sets.precast.JA['Provoke'].DT = set_combine(sets.Enmity.DT, {})
 	sets.precast.JA['Warcry'].DT = set_combine(sets.Enmity.DT, {})
 	sets.precast.JA['Defender'].DT = set_combine(sets.Enmity.DT, {})
@@ -148,7 +180,20 @@ function init_gear_sets()
 	sets.precast.JA['Last Resort'].DT = set_combine(sets.Enmity.DT, {})
 	sets.precast.JA['Aggressor'].DT = set_combine(sets.Enmity.DT, {})
 	sets.precast.JA['Animated Flourish'].DT = set_combine(sets.Enmity.DT, {})
-
+    sets.precast.JA['One for All'].DT = {
+		head="Nyame Helm",
+		body="Adamantite Armor",
+		hands="Nyame Gauntlets",
+		legs="Nyame Flanchard",
+		feet="Nyame Sollerets",
+		neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+		waist="Plat. Mog. Belt",
+		left_ear="Tuisto Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Moonlight Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back="Moonlight Cape",
+	}
     sets.precast.JA['Lunge'] = {    head="Agwu's Cap",
     body="Agwu's Robe",
     hands="Agwu's Gages",
@@ -503,8 +548,10 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
 	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
 	})
+
+
 	
-	sets.midcast['Phalanx'].SIRD = set_combine(sets.midcast.FastRecast.SIRD,{head="Futhark Bandeau +3",back="Moonlight Cape",})
+	sets.midcast['Phalanx'].SIRD = set_combine(sets.midcast.FastRecast.SIRD,{back="Moonlight Cape",})
 	
     sets.midcast['Regen'] = set_combine(sets.midcast['Enhancing Magic'],{        
 	head="Rune. Bandeau +3",
@@ -554,6 +601,9 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
     })
     sets.midcast.Cure.SIRD = sets.midcast.SIRD
 		
+	sets.HPCure = set_combine(sets.midcast.Cure.SIRD, {})
+	sets.HPDown = set_combine(sets.midcast.Cure.SIRD, {})
+
 	sets.midcast['Wild Carrot'] = set_combine(sets.midcast.Cure, {})
 		
 	sets.Self_Healing = set_combine(sets.midcast.Cure, {}) 
@@ -592,8 +642,8 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
     
 
    sets.idle = {ammo="Homiliary",
-   head="Rawhide Mask",neck="Loricate Torque +1",ear1="Genmei Earring",ear2="Ethereal Earring",
-   body="Runeist's Coat +3",hands="Regal Gauntlets",ring1="Stikini Ring +1",ring2="Stikini Ring +1",
+   head="Rawhide Mask",neck={ name="Bathy Choker +1", augments={'Path: A',}},ear1="Infused Earring",ear2="Ethereal Earring",
+   body="Runeist Coat +3",hands="Regal Gauntlets",ring1="Stikini Ring +1",ring2="Stikini Ring +1",
    back="Moonlight Cape",waist="Flume Belt +1",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 
    --sets.idle.Sphere = set_combine(sets.idle,{})--body="Mekosu. Harness"
@@ -834,7 +884,7 @@ sets.idle.MEVA = {ammo="Yamarang",
 
 	sets.defense.PDT_HP = {ammo="Staunch Tathlum +1",
         head="Nyame Helm",neck="Unmoving Collar +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
-        body="Runeist's Coat +3",hands="Nyame Gauntlets",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
+        body="Runeist Coat +3",hands="Nyame Gauntlets",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
         back="Moonlight Cape",waist="Flume Belt +1",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 	sets.defense.MDT_HP = {ammo="Yamarang",
         head="Nyame Helm",neck="Warder's Charm +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",

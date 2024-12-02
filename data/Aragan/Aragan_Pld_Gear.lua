@@ -1,3 +1,24 @@
+-----------------------------Authors of this file--------------------------------
+------           ******************************************                ------
+---                                                                           ---
+--	  Aragan (Asura) --------------- [Author Primary]                          -- 
+--                                                                             --
+---------------------------------------------------------------------------------
+
+--[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
+to can play smooth and easy and i play with main gameped controller logitech and 
+keyboard binds and chat 
+
+
+in macro job blm sch rdm nin drk geo whm pld for fast used i add :
+
+/con gs c elemental nuke -- for clear magic burst mobs in A/C and spam mb on bosses 
+/con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
+/con gs c elemental aga -- for spell aja 
+u can use addon automb 
+-----------
+]]
+
 function user_job_setup()
 
     -- Options: Override default values	
@@ -34,7 +55,6 @@ function user_job_setup()
 	send_command('bind ^q gs c set IdleMode Kiting')
 	send_command('bind !q gs c set IdleMode PDT')
 	send_command('bind @f8 gs c toggle AutoTankMode')
-	send_command('bind @f10 gs c toggle TankAutoDefense')
 	send_command('bind f7 gs c cycle ShieldMode')
     send_command('bind !f7 gs c cycleback ShieldMode')
 	send_command('bind !w gs c toggle WeaponLock')
@@ -48,6 +68,7 @@ function user_job_setup()
 	send_command('bind f2 gs c toggle AutoRuneMode')
 	send_command('bind f3 gs c cycle RuneElement')
 	send_command('bind !f3 gs c toggle AutoTankMode')
+	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
 	send_command('bind !f5 gs c toggle AutoWSMode')
 	send_command('bind @f1 gs c toggle AutoEngageMode')
@@ -736,7 +757,7 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 	}
 
 	sets.midcast.MAB = {
-		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+		ammo="Pemphredo Tathlum",
 		head="Jumalik Helm",
 		body="Nyame Mail",
 		hands="Nyame Gauntlets",
@@ -746,16 +767,16 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 		waist="Skrymir Cord",
 		left_ear="Hecate's Earring",
 		right_ear="Friomisi Earring",
-		left_ring="Mephitas's Ring",
-		right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
 		back="Argocham. Mantle",
 	}
 	sets.midcast.MAB.MB = {
-		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+		ammo="Pemphredo Tathlum",
 		head="Jumalik Helm",
-		body="Nyame Mail",
-		hands="Nyame Gauntlets",
-		legs="Nyame Flanchard",
+		body="Sacro Breastplate",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Augury Cuisses +1", augments={'Path: A',}},
 		feet="Nyame Sollerets",
 		neck={ name="Warder's Charm +1", augments={'Path: A',}},
 		waist="Skrymir Cord",

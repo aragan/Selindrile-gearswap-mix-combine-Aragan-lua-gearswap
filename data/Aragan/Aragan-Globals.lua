@@ -5,6 +5,26 @@
 --                                                                             --
 ---------------------------------------------------------------------------------
 
+--[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
+to can play smooth and easy and i play with main gameped controller logitech and 
+keyboard binds and chat 
+
+in macro job blm sch rdm nin drk geo whm pld for fast used i add :
+
+/con gs c elemental nuke -- for clear magic burst mobs in A/C and spam mb on bosses 
+/con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
+u can use addon automb 
+
+sch i add macro for fast make skillchain :
+
+command add macro :
+SC1
+/console gs c elemental skillchain1
+SC2
+/console gs c elemental skillchain2
+SC3
+/console gs c elemental skillchain3
+-------------
 
 --Place for settings and custom functions to work across one characters, all jobs.
 latency = .75
@@ -57,12 +77,13 @@ function global_on_load()
 	--send_command('bind f10 gs c set DefenseMode Physical')
 	--send_command('bind ^f10 gs c cycle PhysicalDefenseMode')
 	send_command('bind !f10 gs c toggle Kiting')
-	send_command('bind !f11 gs c set DefenseMode Magical;gs c cycle MagicalDefenseMode')
+	send_command('bind !f11 gs c cycle MagicalDefenseMode;gs c set DefenseMode Magical')
 	send_command('bind f11 gs c cycle CastingMode')
 	send_command('bind ^f12 gs c update user')
 	send_command('bind f12 gs c cycle IdleMode;gs c reset DefenseMode')
 	send_command('bind !f12 gs c reset DefenseMode;gs c reset IdleMode')
 
+	
 	send_command('bind !f3 gs c toggle AutoTankMode')
 	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
@@ -77,10 +98,12 @@ function global_on_load()
 	send_command('bind @3 gs c curecheat')
     send_command('bind @4 gs c cycle passive')
     send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
-
+	send_command('bind !f1 input //zonetimer reset') --Turns addon off.
+	
 	send_command('bind ^- gs c toggle selectnpctargets')
 	send_command('bind !- gs c cycle pctargetmode')
-	send_command('input //gs org')
+	send_command('input //gs org')-- org addon every change job
+    send_command('lua l runewidget;rw show')--Turns addon off if job non /run.
 
 end
 -- Function to revert binds when unloading.
@@ -89,9 +112,10 @@ function global_unload()
 	send_command('unbind f2')
 	send_command('unbind f3')
 	send_command('unbind !s')
+	send_command('unbind !r')
 
 
-	--[[send_command('unbind f9')
+	send_command('unbind f9')
 	send_command('unbind ^f9')
 	send_command('unbind !f9')
 	send_command('unbind @f9')
@@ -101,9 +125,6 @@ function global_unload()
 	send_command('unbind f11')
 	send_command('unbind ^f11')
 	send_command('unbind !f11')
-	send_command('unbind f12')
-	send_command('unbind ^f12')
-	send_command('unbind !f12')]]
 	send_command('unbind ^-')
 	send_command('unbind ^=')
 	send_command('unbind -')
@@ -117,17 +138,20 @@ function global_unload()
 	send_command('lua u DNC-hud')--Turns addon off if job non dnc.
 	send_command('lua u sch-hud')--Turns addon off if job non sch.
     send_command('lua u AutoRUN')--Turns addon off if job non /run.
-    send_command('lua u runewidget')--Turns addon off if job non /run.
 	send_command('input //parse reset')-- reset parse addon every change job
 
-	send_command('input //gs org')-- org addon every change job
 end
+
 send_command('bind home lua l autobuff') --Turns addon  on.
 send_command('bind end lua u autobuff') --Turns addon off.
+
+send_command('bind pageup input //ata on;input //lua r AutoWS;input //aws on;input //lua load Gaze_check')
+send_command('bind pagedown input //ata off;input //aws off;input //lua unload Gaze_check')
 
 send_command('bind !@^f7 gs c toggle AutoWSMode') --Turns auto-ws mode on and off.
 send_command('bind !^f7 gs c toggle AutoFoodMode') --Turns auto-ws mode on and off.
 send_command('bind f6 gs c cycle Weapons') --Cycle through weapons sets.
+send_command('bind !f6 gs c cycleback Weapons') --Cycle through weapons sets.
 send_command('bind @f8 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
 send_command('bind ^f8 gs c toggle AutoStunMode') --Turns auto-stun mode off and on.
 send_command('bind !f8 gs c toggle AutoDefenseMode') --Turns auto-defense mode off and on.
@@ -138,13 +162,13 @@ send_command('bind f9 gs c cycle OffenseMode') --Changes offense settings such a
 send_command('bind ^f9 gs c cycle HybridMode') --Changes defense settings for melee such as PDT.
 send_command('bind @f9 gs c cycle RangedMode') --Changes ranged offense settings such as accuracy.
 send_command('bind !f9 gs c cycle WeaponskillMode') --Changes weaponskill offense settings such as accuracy.
-send_command('bind f10 gs c set DefenseMode Physical;gs c cycle PhysicalDefenseMode') --Turns your physical defense set on.
+send_command('bind f10 gs c cycle PhysicalDefenseMode;gs c set DefenseMode Physical') --Turns your physical defense set on.
 send_command('bind ^f10 gs c cycle PhysicalDefenseMode') --Changes your physical defense set.
 send_command('bind !f10 gs c toggle Kiting') --Keeps your kiting gear on..
---send_command('bind f11 gs c set DefenseMode Magical') --Turns your magical defense set on.
---send_command('bind ^f11 gs c cycle MagicalDefenseMode') --Changes your magical defense set.
+send_command('bind f11 gs c set DefenseMode Magical') --Turns your magical defense set on.
+send_command('bind ^f11 gs c cycle MagicalDefenseMode') --Changes your magical defense set.
 send_command('bind @f11 gs c cycle CastingMode') --Changes your castingmode options such as magic accuracy.
-send_command('bind !7 gs c cycle ExtraMeleeMode') --Adds another set layered on top of your engaged set.
+send_command('bind !f11 gs c cycle ExtraMeleeMode') --Adds another set layered on top of your engaged set.
 send_command('bind ^f12 gs c cycle ResistDefenseMode') --Changes your resist defense set.
 send_command('bind f12 gs c set DefenseMode Resist') --Turns your resist defense set on.
 send_command('bind @f12 gs c cycle IdleMode') --Changes your idle mode options such as refresh.

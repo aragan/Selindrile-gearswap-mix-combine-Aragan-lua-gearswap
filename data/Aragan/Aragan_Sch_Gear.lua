@@ -4,6 +4,19 @@
 --	  Aragan (Asura) --------------- [Author Primary]                          -- 
 --                                                                             --
 ---------------------------------------------------------------------------------
+
+--[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
+to can play smooth and easy and i play with main gameped controller logitech and 
+keyboard binds and chat 
+
+
+in macro job blm sch rdm nin drk geo whm pld for fast used i add :
+
+/con gs c elemental nuke -- for clear magic burst mobs in A/C and spam mb on bosses 
+/con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
+/con gs c elemental aga -- for spell aja 
+u can use addon automb 
+
 --its work with Gearinfo Addon for give more info on screen
 
 --info.skillchain.tier1 =
@@ -137,7 +150,7 @@ function user_job_setup()
 
     --use //listbinds    .. to show command keys
     -- Additional local binds
-    send_command('bind f7 input //Sublimator')
+    send_command('bind f7 input //Sublimator')-- addon name Sublimator
     send_command('bind ^` input /ja Immanence <me>')
     send_command('bind !` gs c toggle MagicBurst')
     send_command('bind f11 gs c cycle CastingMode')
@@ -171,7 +184,9 @@ function user_job_setup()
 	send_command('bind @` gs c cycle MagicBurstMode')
 	send_command('bind ^q gs c weapons Khatvanga;gs c set CastingMode OccultAcumen')
 	send_command('bind !q gs c weapons default;gs c reset CastingMode')
-	send_command('bind @f10 gs c cycle RecoverMode')
+    send_command('bind f2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
+	send_command('bind !f2 gs c cycle RecoverMode')
+    send_command('bind @f2 gs c cycle AutoBuffMode') --Automatically keeps certain buffs up, job-dependant.
 	send_command('bind @f8 gs c toggle AutoNukeMode')
 	send_command('bind !pause gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind @^` input /ja "Parsimony" <me>')
@@ -283,7 +298,7 @@ right_ear="Telos Earring",
     waist="Chaac Belt"} 
 	
 	-- Gear that converts elemental damage done to recover MP.	
-	sets.RecoverMP = {} --body="Seidr Cotehardie"}
+	sets.RecoverMP = {body="Seidr Cotehardie",} --body="Seidr Cotehardie"}
 	
     ------------------------------------------------------------------------------------------------
     ------------------------------------- Weapon Skill Sets ----------------------------------------
@@ -499,7 +514,7 @@ right_ear="Telos Earring",
         ammo="Pemphredo Tathlum",
         head="Telchine Cap",
         hands="Telchine Gloves",
-        body="Telchine Chas.",
+        body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         legs="Telchine Braconi",
         feet="Telchine Pigaches",
         neck="Incanter's Torque",
@@ -515,7 +530,7 @@ right_ear="Telos Earring",
         main={ name="Musa", augments={'Path: C',}},
         sub="Enki Strap",
         head="Telchine Cap",
-        body="Telchine Chas.",
+        body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         hands="Telchine Gloves",
         legs="Telchine Braconi",
         feet="Telchine Pigaches",
@@ -526,7 +541,7 @@ right_ear="Telos Earring",
     sets.midcast.Regen = set_combine(sets.midcast['Enhancing Magic'], {
         main={ name="Musa", augments={'Path: C',}},
         head="Arbatel Bonnet +2",
-        body="Telchine Chas.",
+        body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         hands="Telchine Gloves",
         legs="Telchine Braconi",
         feet="Telchine Pigaches",
@@ -537,7 +552,7 @@ right_ear="Telos Earring",
     sets.midcast.RegenDuration = set_combine(sets.midcast['Enhancing Magic'], {
         main={ name="Musa", augments={'Path: C',}},
         head="Arbatel Bonnet +2",
-        body="Telchine Chas.",
+        body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         hands="Telchine Gloves",
         legs="Telchine Braconi",
         feet="Telchine Pigaches",
@@ -549,7 +564,7 @@ right_ear="Telos Earring",
 
     sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'], {
         head="Telchine Cap",
-        body="Telchine Chas.",
+        body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         hands="Telchine Gloves",
         legs="Telchine Braconi",
         feet="Telchine Pigaches",
@@ -559,7 +574,7 @@ right_ear="Telos Earring",
 
     sets.midcast.Stoneskin = set_combine(sets.midcast['Enhancing Magic'], {
         head="Telchine Cap",
-        body="Telchine Chas.",
+        body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         hands="Telchine Gloves",
         legs="Telchine Braconi",
         feet="Telchine Pigaches",
@@ -569,7 +584,7 @@ right_ear="Telos Earring",
 
     sets.midcast.Aquaveil = set_combine(sets.midcast['Enhancing Magic'], {
         head="Telchine Cap",
-        body="Telchine Chas.",
+        body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         hands="Telchine Gloves",
         legs="Telchine Braconi",
         feet="Telchine Pigaches",

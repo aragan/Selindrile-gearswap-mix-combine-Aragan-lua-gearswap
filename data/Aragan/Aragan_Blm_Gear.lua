@@ -1,3 +1,25 @@
+-----------------------------Authors of this file--------------------------------
+------           ******************************************                ------
+---                                                                           ---
+--	  Aragan (Asura) --------------- [Author Primary]                          -- 
+--                                                                             --
+---------------------------------------------------------------------------------
+
+--[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
+to can play smooth and easy and i play with main gameped controller logitech and 
+keyboard binds and chat 
+
+in macro job blm sch rdm nin drk geo whm pld for fast used i add :
+
+/con gs c elemental nuke -- for clear magic burst mobs in A/C and spam mb on bosses 
+/con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
+/con gs c elemental aga -- for spell aja 
+u can use addon automb 
+
+-------------
+]]
+
+
 function user_job_setup()
 	-- Options: Override default values
 	state.CastingMode:options('Normal', 'SIRD', 'Spaekona', 'ConserveMP', 'Proc')
