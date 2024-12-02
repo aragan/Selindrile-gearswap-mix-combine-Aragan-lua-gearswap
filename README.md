@@ -1,3 +1,5 @@
+Aragan (Asura) --------------- [Author Primary]
+
 u only change my name in lua and file and add u name to work 
 Aragan_sch_gear  change this name in all and use u name and file and global
 
@@ -10,3 +12,5 @@ in macro for fast used i add :
 /con gs c elemental nuke -- for clear magic burst mobs in A/C
 
 /con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
+
+
