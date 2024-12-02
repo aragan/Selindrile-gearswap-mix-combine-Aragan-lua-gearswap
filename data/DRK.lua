@@ -125,13 +125,14 @@ function job_setup()
 	 shields = S{'Blurred Shield +1'}
 	 -- Mote has capitalization errors in the default Absorb mappings, so we use our own
 	 absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
-	 -- Offhand weapons used to activate DW mode
+	 state.Absorbs = M{['description']='Absorbs', 'Absorb-TP', 'Absorb-VIT','Absorb-Attri', 'Absorb-MaxAcc','Absorb-STR', 'Absorb-DEX', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR',}
+	  -- Offhand weapons used to activate DW mode
 	 swordList = S{"Naegling", "Sangarius +1", "Reikiko", "Perun +1", "Tanmogayi", "Loxotic Mace +1", "Ternion Dagger +1", "Zantetsuken"}
 	 sets.weaponList = {"Caladbolg", "Liberator", "Apocalypse", "Nandaka", "Blurred Shield +1", "Naegling", "Sangarius +1", "Usonmunku", "Perun +1", "Tanmogayi", "Loxotic Mace +1"}
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Water','Lightning','Earth','Wind','Ice','Light','Dark',}
 	update_melee_groups()
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","Stance","DrainSwapWeaponMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","Absorbs","Stance","DrainSwapWeaponMode","TreasureMode",})
 end
 	
 -------------------------------------------------------------------------------------------------------------------
@@ -240,7 +241,6 @@ function job_customize_melee_set(meleeSet)
     else
         enable('neck')
     end
-	check_weaponset()
 
     return meleeSet
 end
@@ -248,23 +248,21 @@ end
 function job_customize_defense_set(defenseSet)
     return defenseSet
 end
-function update_combat_form()
+--[[function update_combat_form()
     -- Check for H2H or single-wielding
     if player.equipment.sub == "Blurred Shield +1" or player.equipment.sub == "Beatific Shield +1" or player.equipment.sub == "Utu Grip" or 
     player.equipment.sub == "Alber Strap" or player.equipment.sub == 'empty' then
         state.CombatForm:reset()
 
     end
-    check_weaponset()
 
-end
+end]]
 function job_state_change(stateField, newValue, oldValue)
     if state.WeaponLock.value == true then
         disable('main','sub')
     else
         enable('main','sub')
     end
-    check_weaponset()
 
 end
 -- Run after the general precast() is done.
@@ -384,6 +382,9 @@ function job_self_command(commandArgs, eventArgs)
 		handle_elemental(commandArgs)
 		eventArgs.handled = true			
 	end
+	if commandArgs[1]:lower() == 'absorbs' then
+        send_command('@input /ma "'..state.Absorbs.value..'" <t>')
+    end
 end
 
 -- Handling Elemental spells within Gearswap.
@@ -517,8 +518,6 @@ end
 
 function job_update(cmdParams, eventArgs)
     update_melee_groups()
-	--check_weaponset()
-	update_combat_form()
 	if player.sub_job ~= 'SAM' and state.Stance.value ~= "None" then
 		state.Stance:set("None")
 		update_job_states()
@@ -558,11 +557,9 @@ function update_melee_groups()
         state.CombatForm:set("SW")
 		equip(sets.DefaultShield)
 	end]]
-	handle_equipping_gear(player.status)
 
 end
-function check_weaponset()
-end
+
 function check_hasso()
 if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or state.Buff['SJ Restriction'] or main_weapon_is_one_handed() or silent_check_amnesia()) then
 		
