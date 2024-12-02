@@ -36,7 +36,9 @@ SC2
 /console gs c elemental skillchain2
 
 SC3
-/console gs c elemental skillchain3
+/console gs c elemental skillchain3 
+NOTE: for sortie NM Triboulex use this command for 2step fusion open close close2 ;
+
 -------------
 
 
