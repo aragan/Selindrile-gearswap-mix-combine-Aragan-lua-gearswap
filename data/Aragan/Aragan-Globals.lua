@@ -25,6 +25,7 @@ SC2
 SC3
 /console gs c elemental skillchain3
 -------------
+]]
 
 --Place for settings and custom functions to work across one characters, all jobs.
 latency = .75
@@ -73,7 +74,8 @@ function global_on_load()
 	send_command('bind f9 gs c cycle OffenseMode')
 	send_command('bind ^f9 gs c cycle HybridMode')
 	send_command('bind !f9 gs c cycle RangedMode')
-	send_command('bind @f9 gs c cycle WeaponskillMode')
+	send_command('bind f4 gs c cycle ElementalMode')
+	send_command('bind f5 gs c cycle WeaponskillMode')
 	--send_command('bind f10 gs c set DefenseMode Physical')
 	--send_command('bind ^f10 gs c cycle PhysicalDefenseMode')
 	send_command('bind !f10 gs c toggle Kiting')
@@ -83,27 +85,32 @@ function global_on_load()
 	send_command('bind f12 gs c cycle IdleMode;gs c reset DefenseMode')
 	send_command('bind !f12 gs c reset DefenseMode;gs c reset IdleMode')
 
-	
-	send_command('bind !f3 gs c toggle AutoTankMode')
+	send_command('bind !f1 input //zonetimer reset') --Turns addon off.
 	send_command('bind !f2 gs c toggle TankAutoDefense')
+	send_command('bind !f3 gs c toggle AutoTankMode')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
 	send_command('bind !f5 gs c toggle AutoWSMode')
 	send_command('bind @f1 gs c toggle AutoEngageMode')
 	send_command('bind @f2 gs c toggle AutoBuffMode')
 	send_command('bind @f3 gs c toggle AutoTrustMode')
-	send_command('bind @f4 gs c toggle 	AutoFoodMode')
+
 	send_command('bind ^f1 gs c toggle AutoStunMode')
 	send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
+	send_command('bind @1 gs c toggle AutoCleanupMode') --Uses certain items and tries to clean up inventory.
+	send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
 	send_command('bind @3 gs c curecheat')
     send_command('bind @4 gs c cycle passive')
-    send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
-	send_command('bind !f1 input //zonetimer reset') --Turns addon off.
+	send_command('bind @5 gs c toggle  AutoFoodMode')
+	send_command('bind !w gs c toggle WeaponLock')
+	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
+	send_command('bind !f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
+
 	
 	send_command('bind ^- gs c toggle selectnpctargets')
 	send_command('bind !- gs c cycle pctargetmode')
 	send_command('input //gs org')-- org addon every change job
-    send_command('lua l runewidget;rw show')--Turns addon off if job non /run.
+    send_command('lua r runewidget;rw show')--Turns addon off if job non /run.
 
 end
 -- Function to revert binds when unloading.
