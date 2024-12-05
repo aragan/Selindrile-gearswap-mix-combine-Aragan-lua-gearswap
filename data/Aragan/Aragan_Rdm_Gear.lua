@@ -57,7 +57,7 @@ function user_job_setup()
 	send_command('bind f7 gs c cycle Shield')
 
 	send_command('bind f6 gs c cycle Weapons') --Cycle through weapons sets.
-send_command('bind !f6 gs c cycleback Weapons') --Cycle through weapons sets.
+    send_command('bind !f6 gs c cycleback Weapons') --Cycle through weapons sets.
 
 	send_command('bind ^` gs c cycle ElementalMode')
 	send_command('bind @` gs c cycle MagicBurstMode')
@@ -423,8 +423,7 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
 		right_ring="Defending Ring",
 	}
 
-	-- Gear for Magic Burst mode.
-    sets.MagicBurst = {main=gear.grioavolr_nuke_staff,sub="Alber Strap",head="Ea Hat +1",neck="Mizu. Kubikazari",body="Ea Houppe. +1",hands="Amalric Gages +1",ring1="Mujin Band",legs="Ea Slops +1",feet="Jhakri Pigaches +2"}
+
 	sets.midcast.Absorb = {
 		ammo="Pemphredo Tathlum",
 		neck="Erra Pendant",
@@ -701,12 +700,12 @@ sets.midcast['Enfeebling Magic'].Potency = {
 
 	sets.midcast['Elemental Magic'] = {
 		ammo="Pemphredo Tathlum",
-		head="C. Palug Crown",
+		head="Leth. Chappel +2",
 		body="Lethargy Sayon +3",
 		hands="Amalric Gages +1",
 		legs="Leth. Fuseau +2",
 		feet={ name="Vitiation Boots +3", augments={'Immunobreak Chance',}},
-		neck="Sibyl Scarf",
+		neck="Baetyl Pendant",
 		waist="Sacro Cord",
 		left_ear="Malignance Earring",
 		right_ear="Regal Earring",
@@ -714,6 +713,9 @@ sets.midcast['Enfeebling Magic'].Potency = {
 		right_ring="Freke Ring",
 		back="Argocham. Mantle",
 	}
+
+	-- Gear for Magic Burst mode.
+
 	sets.magicburst = {    
 		ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
 		head="Ea Hat +1",
