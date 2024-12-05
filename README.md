@@ -19,6 +19,7 @@ Aragan file will work ..
 that to can switch between 2 any lua easy 
 
 -----------
+add code gearswap automatically detect open MB window and apply set.
 
 Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
