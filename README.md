@@ -34,7 +34,7 @@ in macro job blm sch rdm nin drk geo whm pld for fast used i add :
 
 ----------
 FOR DRK I ADD  element in display screen f4 change it , and add absorts and cycle f3 and in macro
-and add absorbs cycle
+and add absorbs cycle and elementalmode
 
 sch i add macro for fast make skillchain :
 
