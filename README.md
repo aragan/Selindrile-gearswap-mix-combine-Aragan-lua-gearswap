@@ -12,6 +12,12 @@ Aragan_sch_gear  change this name in all and use u name and file and global
 if u want use normal aragan lua in common file :
 change name file Aragan or u file name to any name or add number or Letters 
 common file will work .. 
+example common file name change of u want Aragan file work: 
+common0 
+Aragan
+or if u want common file work :
+common 
+Aragan0
 
 if u want Aragan file or u name file change name file common or u file name to any name or add number or Letters 
 Aragan file will work .. 
@@ -20,6 +26,8 @@ that to can switch between 2 any lua easy
 
 -----------
 add code gearswap automatically detect open MB window and apply set.
+add bind to work addon autoitem for auto use medicine for Odyssey nms 
+add bind for reset zone time for sortie bosses F/H to calc 3min run away before tpmove or use ja run or bind or kitting
 
 Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
