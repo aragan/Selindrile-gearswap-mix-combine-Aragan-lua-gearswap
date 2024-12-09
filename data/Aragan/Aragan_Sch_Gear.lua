@@ -27,10 +27,9 @@ u can use addon automb
 --info.skillchain.tier2 = {'Gravitation','Distortion','Fusion','Fragmentation'}
 
 --info.skillchain.tier3 = {'Dark','Light'}
+]]
 
---[[
-
-
+--[[ 
 u need for auto solo skillchain and Magic Burst from gearswap :
 SCH_soloSC.lua 
 include('common_info.skillchain.lua')

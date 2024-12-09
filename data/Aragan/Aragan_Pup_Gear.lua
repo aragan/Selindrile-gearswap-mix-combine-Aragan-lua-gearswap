@@ -40,9 +40,9 @@ function user_job_setup()
     state.WeaponskillMode:options('Match','Normal', 'PDL', 'SC')
     state.PhysicalDefenseMode:options('PDT')
     state.MagicalDefenseMode:options('MDT')
-	state.IdleMode:options('Normal','PDT','Refresh','Sphere')
-	state.Weapons:options('None','Godhands','PetWeapons','Xiucoatl','Ohtas','Condemners')
-    state.Animators = M{['description']='Weapon Set', 'AnimatorPI', 'Normal', 'AnimatorPII', 'NeoAnimator'}
+	state.IdleMode:options('Normal','PDT','EnemyCritRate','Evasion','HP','MDT','Refresh','Sphere')
+	state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners')
+    state.Animators = M{['description']='Animators', 'AnimatorPI', 'None', 'AnimatorPII', 'NeoAnimator'}
 
     state.PetMode = M{['description']='Pet Mode', 'None','Melee','MaxAcc','Ranged','MaxTP','Regen','Bruiser','Tank','LightTank','Magic','Heal','Nuke'}
 	state.AutoRepairMode = M(false, 'Auto Repair Mode')
@@ -133,6 +133,7 @@ function user_job_setup()
     send_command('bind f1 gs c cycle HippoMode')
     send_command("bind @c gs c toggle CP") 
     send_command('bind @x gs c toggle RP')  
+	init_job_states({"Capacity","AutoPuppetMode","PetWSGear","AutoRepairMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode","PetMode","Animators"})
 
 end
 
@@ -140,7 +141,6 @@ end
 function init_gear_sets()
     
 	-- Weapons sets
-	sets.weapons.PetWeapons = {main="Ohtas"}
 	sets.weapons.Godhands = {main="Godhands"}
 	sets.weapons.Xiucoatl = {main="Xiucoatl"}
 	sets.weapons.Ohtas = {main="Ohtas"}
@@ -657,14 +657,74 @@ range="Trollbane",  }
         right_ring="Fortified Ring",
         back="Moonlight Cape",
     }
+    sets.idle.MDT = {
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+        right_ear="Eabani Earring",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Defending Ring",
+        right_ring="Purity Ring",
+        back="Moonlight Cape",
+    }
     sets.idle.Sphere = set_combine(sets.idle, {
         body="Annoint. Kalasiris",
     })
 	sets.idle.Refresh = {
-        head="Rawhide Mask",neck="Loricate Torque +1",ear1="Etiolation Earring",ear2="Sanare Earring",
-        body="Vrikodara Jupon",hands="Malignance Gloves",ring1="Defending Ring",ring2="Dark Ring",
-        back="Moonlight Cape",waist="Fucho-no-Obi",legs="Malignance Tights",feet="Hippo. Socks +1"}
+        head={ name="Rawhide Mask", augments={'HP+50','Accuracy+15','Evasion+20',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        waist="Fucho-no-Obi",
+        right_ear="Ethereal Earring",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Stikini Ring +1",
+        right_ring="Stikini Ring +1",
+        back="Moonlight Cape",
+    }
 		
+    sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, { 
+        ammo="Eluder's Sachet",
+        left_ring="Warden's Ring",
+        right_ring="Fortified Ring",
+        back="Reiki Cloak",
+    })
+    sets.idle.HP={
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Plat. Mog. Belt",
+        right_ear="Tuisto Earring",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Defending Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+    }
+
+    sets.idle.Evasion={
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+        left_ear="Infused Earring",
+        right_ear="Eabani Earring",
+        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        right_ring="Vengeful Ring",
+        back="Moonlight Cape",
+    }
+
     -- Set for idle while pet is out (eg: pet regen gear)
     sets.idle.Pet = {
         head="Malignance Chapeau",
@@ -819,21 +879,48 @@ range="Trollbane",  }
     -- Defense sets
 
     sets.defense.PDT = {
-        head="Nyame Helm",neck="Loricate Torque +1",ear1="Etiolation Earring",ear2="Genmei Earring",
-        body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Dark Ring",
-        back="Moonlight Cape",waist="Isa Belt",legs="Nyame Flanchard",feet="Nyame Sollerets"}
-
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body="Adamantite Armor",
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        right_ear="Tuisto Earring",
+        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        right_ring="Fortified Ring",
+        back="Moonlight Cape",
+    }
     sets.defense.MDT = {
-        head="Nyame Helm",neck="Loricate Torque +1",ear1="Etiolation Earring",ear2="Genmei Earring",
-        body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Dark Ring",
-        back="Moonlight Cape",waist="Isa Belt",legs="Nyame Flanchard",feet="Nyame Sollerets"}
-		
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+        right_ear="Eabani Earring",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Defending Ring",
+        right_ring="Purity Ring",
+        back="Moonlight Cape",
+    }
     sets.defense.MEVA = {
-        head="Nyame Helm",neck="Loricate Torque +1",ear1="Etiolation Earring",ear2="Genmei Earring",
-        body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Dark Ring",
-        back="Moonlight Cape",waist="Isa Belt",legs="Nyame Flanchard",feet="Nyame Sollerets"}
-
-    sets.Kiting = {feet="Hermes' Sandals"}
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+        right_ear="Eabani Earring",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Defending Ring",
+        right_ring="Purity Ring",
+        back="Moonlight Cape",
+    }
+    sets.Kiting = {feet="Hermes' Sandals +1"}
 
     -- Engaged sets
 
