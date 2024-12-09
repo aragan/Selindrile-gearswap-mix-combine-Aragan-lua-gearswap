@@ -29,7 +29,7 @@ add code gearswap automatically detect open MB window and apply set.
 
 add bind to work addon autoitem for auto use medicine for Odyssey nms 
 
-add bind for reset zone time for sortie bosses F/H to calc 3min run away before tpmove or use ja run or bind or kitting
+add bind for reset addon zonetimer for sortie bosses F/H to calc 3min run away before tpmove or use ja run or bind or kitting
 
 Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
