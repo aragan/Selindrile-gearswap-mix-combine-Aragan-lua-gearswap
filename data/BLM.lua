@@ -412,6 +412,21 @@ function job_customize_defense_set(defenseSet)
     return defenseSet
 end
 
+mov = {counter=0}
+if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+    mov.x = windower.ffxi.get_mob_by_index(player.index).x
+    mov.y = windower.ffxi.get_mob_by_index(player.index).y
+    mov.z = windower.ffxi.get_mob_by_index(player.index).z
+end
+
+moving = false
+windower.raw_register_event('prerender',function()
+    mov.counter = mov.counter + 1;
+    if state.HippoMode.value == true then 
+        moving = false
+	end
+end)
+
 -- Function to display the current relevant user state when doing an update.
 function display_current_job_state(eventArgs)
     display_current_caster_state()

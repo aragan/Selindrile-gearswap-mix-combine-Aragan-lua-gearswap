@@ -357,7 +357,11 @@ function job_pet_aftercast(spell, spellMap, eventArgs)
 		end
     end
 end
-
+function job_handle_equipping_gear(playerStatus, eventArgs)   
+    if state.HippoMode.value == true then 
+        equip({feet="Hippo. Socks +1"})
+    end
+end
 -- Called when a player gains or loses a buff.
 -- buff == buff gained or lost
 -- gain == true if the buff was gained, false if it was lost.
@@ -400,6 +404,20 @@ function job_buff_change(buff, gain)
     end
 end
 
+mov = {counter=0}
+if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+    mov.x = windower.ffxi.get_mob_by_index(player.index).x
+    mov.y = windower.ffxi.get_mob_by_index(player.index).y
+    mov.z = windower.ffxi.get_mob_by_index(player.index).z
+end
+
+moving = false
+windower.raw_register_event('prerender',function()
+    mov.counter = mov.counter + 1;
+    if state.HippoMode.value == true then 
+        moving = false
+	end
+end)
 -- Called when a player gains or loses a pet.
 -- pet == pet gained or lost
 -- gain == true if the pet was gained, false if it was lost.
@@ -519,7 +537,7 @@ function job_customize_melee_set(meleeSet)
         enable('neck')
     end
 	if state.HippoMode.value == true then 
-        idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
+        meleeSet = set_combine(meleeSet, {feet="Hippo. Socks +1"})
     end
 
     return meleeSet

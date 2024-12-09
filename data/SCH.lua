@@ -1370,6 +1370,21 @@ function refine_various_spells(spell, action, spellMap, eventArgs)
     end
 end
     
+mov = {counter=0}
+if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+    mov.x = windower.ffxi.get_mob_by_index(player.index).x
+    mov.y = windower.ffxi.get_mob_by_index(player.index).y
+    mov.z = windower.ffxi.get_mob_by_index(player.index).z
+end
+
+moving = false
+windower.raw_register_event('prerender',function()
+    mov.counter = mov.counter + 1;
+    if state.HippoMode.value == true then 
+        moving = false
+	end
+end)
+
 function getNbStratagems()
     -- returns recast in seconds.
     local allRecasts = windower.ffxi.get_ability_recasts()
