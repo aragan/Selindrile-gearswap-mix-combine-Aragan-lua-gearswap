@@ -42,7 +42,9 @@ function user_job_setup()
     state.MagicalDefenseMode:options('MDT')
 	state.IdleMode:options('Normal','PDT','Refresh','Sphere')
 	state.Weapons:options('None','Godhands','PetWeapons','Xiucoatl','Ohtas','Condemners')
-	state.PetMode = M{['description']='Pet Mode', 'None','Melee','MaxAcc','Ranged','MaxTP','Regen','Bruiser','Tank','LightTank','Magic','Heal','Nuke'}
+    state.Animators = M{['description']='Weapon Set', 'AnimatorPI', 'Normal', 'AnimatorPII', 'NeoAnimator'}
+
+    state.PetMode = M{['description']='Pet Mode', 'None','Melee','MaxAcc','Ranged','MaxTP','Regen','Bruiser','Tank','LightTank','Magic','Heal','Nuke'}
 	state.AutoRepairMode = M(false, 'Auto Repair Mode')
 	state.AutoDeployMode = M(true, 'Auto Deploy Mode')
 	state.AutoPetMode 	 = M(false, 'Auto Pet Mode')
@@ -125,25 +127,29 @@ function user_job_setup()
 	send_command('bind !f11 gs c cycle MagicalDefenseMode;gs c set DefenseMode Magical')
     send_command('bind f11 gs c cycle PhysicalDefenseMode;gs c set DefenseMode Physical') --Turns your physical defense set on.
     send_command('bind f10 gs c cycle HybridMode') --Changes defense settings for melee such as PDT.
+	send_command('bind f7 gs c cycle Animators')
 
     send_command("bind f4 gs c toggle AutoMan")
     send_command('bind f1 gs c cycle HippoMode')
     send_command("bind @c gs c toggle CP") 
     send_command('bind @x gs c toggle RP')  
-    
+
 end
 
 -- Define sets used by this job file.
 function init_gear_sets()
     
 	-- Weapons sets
-	sets.weapons.PetWeapons = {main="Ohtas",range="Animator P +1",}
-	sets.weapons.Godhands = {main="Godhands",range="Animator P +1",}
-	sets.weapons.Xiucoatl = {main="Xiucoatl",range="Animator P +1",}
-	sets.weapons.Ohtas = {main="Ohtas",range="Animator P +1",}
-	sets.weapons.Condemners = {main="Condemners",range="Animator P +1",}
+	sets.weapons.PetWeapons = {main="Ohtas"}
+	sets.weapons.Godhands = {main="Godhands"}
+	sets.weapons.Xiucoatl = {main="Xiucoatl"}
+	sets.weapons.Ohtas = {main="Ohtas"}
+	sets.weapons.Condemners = {main="Condemners"}
 
-    --sets.Animators.AnimatorP1 = {range="Animator P +1"}
+    -- .Animators
+	sets.NeoAnimator = {range="Neo Animator"}
+	sets.AnimatorPI = {range="Animator P +1"}
+	sets.AnimatorPII = {range="Animator P II +1"}
 
 
     Animators = {"Animator P +1", "Animator P II +1", "Neo Animator",}
@@ -160,7 +166,7 @@ function init_gear_sets()
     Relic_Pitre = {}
     Relic_Pitre.Head_PRegen = "Pitre Taj +3" --Enhances Optimization
     Relic_Pitre.Body_PTP = "Pitre Tobe +3" --Enhances Overdrive
-    Relic_Pitre.Hands_WSD = "Pitre Dastanas +2" --Enhances Fine-Tuning
+    Relic_Pitre.Hands_WSD = "Pitre Dastanas +3" --Enhances Fine-Tuning
     Relic_Pitre.Legs_PMagic = "Pitre Churidars +2" --Enhances Ventriloquy
     Relic_Pitre.Feet_PMagic = "Pitre Babouches +1" --Role Reversal
 
