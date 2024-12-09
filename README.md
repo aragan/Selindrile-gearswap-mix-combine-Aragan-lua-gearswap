@@ -26,7 +26,9 @@ that to can switch between 2 any lua easy
 
 -----------
 add code gearswap automatically detect open MB window and apply set.
+
 add bind to work addon autoitem for auto use medicine for Odyssey nms 
+
 add bind for reset zone time for sortie bosses F/H to calc 3min run away before tpmove or use ja run or bind or kitting
 
 Note: optional : u can install macro all jobs from my web and addons plugin bot
@@ -36,7 +38,6 @@ keyboard binds and chat
 in macro job blm sch rdm nin drk geo whm pld for fast used i add :
 
 /con gs c elemental nuke -- for clear magic burst mobs in A/C and spam mb on bosses 
-/con gs c elemental nuke -- for clear magic burst mobs in A/C
 
 /con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
 
