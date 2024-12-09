@@ -283,6 +283,7 @@ end
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 
 function job_filtered_action(spell, eventArgs)
+ check_weaponset()
 
 end
 
@@ -418,9 +419,19 @@ function job_status_change(newStatus, oldStatus, eventArgs)
     end
 ]]--
 end
---[[function check_weaponset()
-    equip(sets[state.Animators.current])
-end]]
+function job_state_change(stateField, newValue, oldValue)
+
+	check_weaponset()
+end
+function check_weaponset()
+    --equip(sets[state.WeaponSet.current])
+	equip(sets[state.Animators.current])
+    --[[if (player.sub_job ~= 'NIN' and player.sub_job ~= 'DNC') then
+        equip(sets.DefaultShield)
+    elseif player.sub_job == 'NIN' and player.sub_job_level < 10 or player.sub_job == 'DNC' and player.sub_job_level < 20 then
+        equip(sets.DefaultShield)
+    end]]
+end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
 -------------------------------------------------------------------------------------------------------------------
@@ -725,4 +736,7 @@ function job_aftercast(spell, spellMap, eventArgs)
 	if not spell.interrupted and (spell.english == 'Activate' or spell.english == 'Deus Ex Automata') then
 		eventArgs.handled = true
 	end
+	if player.status ~= 'Engaged' and state.WeaponLock.value == false then
+        check_weaponset()
+    end
 end

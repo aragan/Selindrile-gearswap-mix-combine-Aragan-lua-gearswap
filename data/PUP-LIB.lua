@@ -622,6 +622,8 @@ function user_customize_idle_set(idleSet)
     else --Otherwise return the idleSet with no changes from us
         return idleSet
     end
+    check_weaponset()
+
 end
 
 --Used to determine what Hybrid Mode to use when Player is engaged for trusts only and Pet is Engaged
@@ -638,6 +640,8 @@ function user_customize_melee_set(meleeSet)
     else --Otherwise return the idleSet with no changes from us
         return meleeSet
     end
+    check_weaponset()
+
 end
 
 function job_precast(spell, action, spellMap, eventArgs)
@@ -700,6 +704,8 @@ function job_aftercast(spell, action, spellMap, eventArgs)
     else
         handle_equipping_gear(player.status, Pet_State)
     end
+    check_weaponset()
+
 end
 
 --This watches for when the Player changes to idle/engaged/resting
@@ -729,6 +735,7 @@ function job_status_change(new, old)
 
         TotalSCalc()
     end
+    check_weaponset()
 
     handle_equipping_gear(player.status, Pet_State)
 end
@@ -1279,6 +1286,7 @@ function job_state_change(stateField, newValue, oldValue)
     elseif stateField == 'Idle Mode' then -- Updates HUB for Idle Mode
         main_text_hub.player_current_idle = newValue
     end
+    check_weaponset()
 end
 
 -- Set eventArgs.handled to true if we don't want the automatic display to be run.
