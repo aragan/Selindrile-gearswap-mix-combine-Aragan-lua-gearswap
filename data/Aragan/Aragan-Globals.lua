@@ -123,6 +123,7 @@ function global_on_load()
 	send_command('bind !O input //gs org') 
 
 	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
+	
 	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f3 gs c toggle AutoTankMode')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
@@ -130,7 +131,13 @@ function global_on_load()
 	send_command('bind @f1 gs c toggle AutoEngageMode')
 	send_command('bind @f2 gs c toggle AutoBuffMode')
 	send_command('bind @f3 gs c toggle AutoTrustMode')
+    send_command('bind ^/ gs disable all')
+    send_command('bind !/ gs enable all')
 
+	
+	send_command('bind !1 gs c toggle AutoSambaMode')
+	send_command('bind !2 gs c toggle AutoShadowMode')
+	send_command('bind !3 gs c toggle AutoRuneMode')
 	send_command('bind ^f1 gs c toggle AutoStunMode')
 	send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
@@ -138,7 +145,7 @@ function global_on_load()
 	send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
 	send_command('bind @3 gs c curecheat')
     send_command('bind @4 gs c cycle passive')
-	send_command('bind @5 gs c toggle  AutoFoodMode')
+	send_command('bind @5 gs c toggle AutoFoodMode')
 	send_command('bind !w gs c toggle WeaponLock')
 	send_command('bind !f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 
