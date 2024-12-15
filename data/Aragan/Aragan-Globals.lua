@@ -263,6 +263,16 @@ function user_precast(spell, action, spellMap, eventArgs)
     refine_waltz(spell, action, spellMap, eventArgs)
 end
 
+-- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
+-- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
+function job_precast(spell, action, spellMap, eventArgs)
+    if spell.english == 'Warcry' then
+        if buffactive['Warcry'] then
+            cancel_spell()
+            add_to_chat(123, spell.name..' Canceled: Warcry its up [active]')
+        end
+    end
+end
 -- Global intercept on midcast.
 function user_midcast(spell, action, spellMap, eventArgs)
 	-- Default base equipment layer of fast recast.
