@@ -47,6 +47,42 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+	organizer_items = {
+        "Airmid's Gorget",
+        "Toolbag (Shihe)",
+        "Chonofuda",
+        "Shikanofuda",
+        "Inoshishinofuda",
+        "Sanjaku-Tenugui",
+        "Toolbag (Cho)",   
+        "Toolbag (Shika)",
+        "Toolbag (Ino)",
+        "Shihei",
+        "Toolbag (Shihe)",
+        "Gyudon",
+        "Reraiser",
+        "Hi-Reraiser",
+        "Vile Elixir",
+        "Vile Elixir +1",
+        "Miso Ramen",
+        "Carbonara",
+        "Silent Oil",
+        "Salt Ramen",
+        "Panacea",
+        "Sublime Sushi",
+        "Sublime Sushi 1+",
+        "Prism Powder",
+        "Antacid",
+        "Icarus Wing",
+        "Warp Cudgel",
+        "Holy Water",
+        "Remedy",
+        "Emporox's Ring",
+        "Red Curry Bun",
+        "Instant Reraise",
+        "Black Curry Bun",
+        "Rolan. Daifuku",
+        "Reraise Earring",}
 end
 
 
