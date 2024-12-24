@@ -4,7 +4,7 @@ function user_job_setup()
 	state.HybridMode:options('Normal','DT')
 	state.RangedMode:options('Normal','Acc')
     state.WeaponskillMode:options('Normal', 'PDL', 'SC', 'vagary')
-    state.CastingMode:options('Normal')
+    state.CastingMode:options('Normal','SIRD')
     state.IdleMode:options('Normal', 'Evasion', 'PDT', 'MDT', 'Regen', 'HP', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
@@ -165,6 +165,7 @@ function init_gear_sets()
         right_ring="Sroda Ring", 
     })
     sets.precast.WS.vagary =  {}
+    sets.vagary =  {}
 
     sets.Kamu = {
         ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
@@ -453,7 +454,6 @@ function init_gear_sets()
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         back="Sacro Mantle",
     })
-    sets.vagary =  {}
     sets.precast.WS['Aeolian Edge'].vagary = {}
     sets.precast.WS['Aeolian Edge'].PDL = set_combine(sets.precast.WS['Aeolian Edge'],{
     --range="Wingcutter +1",
@@ -481,7 +481,6 @@ function init_gear_sets()
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
-    sets.precast.WS['Tachi: Jinpu'].vagary =  {}
     sets.precast.WS['Tachi: Kagero'] = set_combine(sets.precast.WS['Tachi: Jinpu'], {})
     sets.precast.WS['Tachi: Kagero'].PDL = set_combine(sets.precast.WS['Tachi: Jinpu'].PDL, {})
     sets.precast.WS['Tachi: Koki'] = set_combine(sets.precast.WS['Tachi: Jinpu'], {})
@@ -598,6 +597,7 @@ feet={ name="Nyame Sollerets", augments={'Path: B',}},
 
 sets.precast.WS["Dark Harvest"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
 sets.precast.WS["Shadow of Death"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
+
 sets.precast.WS["Infernal Scythe"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
 sets.precast.WS["Energy Steal"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
 sets.precast.WS["Energy Drain"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
@@ -640,6 +640,19 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+sets.precast.WS["Shadow of Death"].vagary = sets.precast.WS.vagary
+sets.precast.WS["Cyclone"].vagary =  {}
+sets.precast.WS["Starburst"].vagary =  {}
+sets.precast.WS["Sunburst"].vagary =  {}
+sets.precast.WS["Earth Crusher"].vagary =  {}
+sets.precast.WS["Freezebite"].vagary =  {}
+sets.precast.WS["Red Lotus Blade"].vagary =  {}
+sets.precast.WS["Seraph Blade"].vagary =  {}
+sets.precast.WS["Energy Drain"].vagary =  {}
+sets.precast.WS["Shining Blade"].vagary =  {}
+sets.precast.WS["Raiden Thrust"].vagary =  {}
+sets.precast.WS['Tachi: Jinpu'].vagary =  {}
+sets.precast.WS['Tachi: Koki'].vagary =  {}
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Lugra Earring",ear2="Lugra Earring +1",}
@@ -655,7 +668,16 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
     --------------------------------------
 
     sets.midcast.FastRecast = {}
-
+    sets.SIRD = {
+         sub="Tancho",
+        ammo="Staunch Tathlum +1",
+        hands={ name="Rawhide Gloves", augments={'Mag. Acc.+15','INT+7','MND+7',}},
+        neck="Moonlight Necklace",
+        waist="Audumbla Sash",
+        left_ear="Halasz Earring",
+        right_ring="Evanescence Ring",
+        back="Moonlight Cape",
+    }
 
     sets.midcast.ElementalNinjutsu = {        ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
     head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
@@ -1245,12 +1267,17 @@ back="Andartia's Mantle",
     right_ear="Eabani Earring", --4
     waist="Reiki Yotai", --7
     }
-	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+	sets.TreasureHunter = set_combine(sets.TreasureHunter, {
+    ammo="Per. Lucky Egg", head="Wh. Rarab Cap +1",
+    waist="Chaac Belt"
+    })
 	sets.Skillchain = {legs="Ryuo Hakama +1",}
 
 
 end
-
+function user_job_lockstyle()
+	windower.chat.input('/lockstyleset 144')
+end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()
     -- Default macro set/book
@@ -1269,4 +1296,4 @@ function select_default_macro_book()
     end
 end
 
-autows_list = {['Default']='',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['DualSavageWeapons']='Savage Blade',['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+autows_list = {['Default']='Blade: Shun',['Tauret']='Aeolian Edge',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['DualSavageWeapons']='Savage Blade',['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
