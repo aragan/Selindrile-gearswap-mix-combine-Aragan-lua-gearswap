@@ -94,7 +94,8 @@ function job_setup()
     state.Buff.Yonin = buffactive.Yonin or false
     state.Buff.Innin = buffactive.Innin or false
     state.Buff.Futae = buffactive.Futae or false
-	
+	--state.Proc = M(false, 'Proc')
+    --state.unProc = M(false, 'unProc')
 	state.Stance = M{['description']='Stance','Innin','Yonin','None'}
 
 	autows = "Blade: Shun"
@@ -180,6 +181,12 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 	end	
+	if spell.type == 'WeaponSkill' then
+        if state.WeaponskillMode.value == 'vagary' then
+            equip()
+        end
+	end
+
 end
 
 -- Run after the general midcast() is done.
@@ -207,6 +214,11 @@ function job_post_midcast(spell, spellMap, eventArgs)
 		if state.Buff.Futae and sets.buff.Futae then
 			equip(sets.buff.Futae)
 		end
+    end
+    if (spell.type:endswith('Magic') or spell.type == "Ninjutsu") then
+        if state.CastingMode.value == 'SIRD' then
+			equip(sets.SIRD)
+        end
     end
 end
 
@@ -244,7 +256,17 @@ function job_status_change(new_status, old_status)
 
 end
 
-
+-- Handle notifications of general user state change.
+--[[function job_state_change(stateField, newValue, oldValue)
+    if stateField == 'Proc' then
+        --send_command('@input /console gs enable all')
+        --send_command('@input /console gs disable all')
+		send_command('gs c weapons Default;gs c set WeaponskillMode Normal;gs c set CastingMode Normal;gs c update')
+	elseif stateField == 'unProc' then
+        --send_command('@input /console gs enable all')
+        --equip(sets.unProc)
+	end
+end]]
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
 -------------------------------------------------------------------------------------------------------------------
@@ -297,7 +319,9 @@ function job_customize_melee_set(meleeSet)
 	if state.Buff.Migawari then
         meleeSet = set_combine(meleeSet, sets.buff.Migawari)
     end
-
+    if state.TreasureMode.value == 'Fulltime' then
+        meleeSet = set_combine(meleeSet, sets.TreasureHunter)
+    end
     return meleeSet
 end
 
