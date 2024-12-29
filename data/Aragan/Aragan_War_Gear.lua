@@ -825,7 +825,8 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     sets.precast.WS["Raiden Thrust"] = set_combine(sets.precast.WS["Burning Blade"],{})
     sets.precast.WS["Frostbite"] = set_combine(sets.precast.WS["Burning Blade"],{})
     sets.precast.WS["Freezebite"] = set_combine(sets.precast.WS["Burning Blade"],{})
-
+	sets.precast.WS['Tachi: Jinpu'] =  set_combine(sets.precast.WS["Burning Blade"],{})
+	sets.precast.WS['Tachi: Koki'] =  set_combine(sets.precast.WS["Burning Blade"],{})
     sets.precast.WS["Herculean Slash"] = set_combine(sets.precast.WS["Burning Blade"],{})
     sets.precast.WS["Earth Crusher"] = set_combine(sets.precast.WS["Burning Blade"],{})
     sets.precast.WS["Rock Crusher"] = set_combine(sets.precast.WS["Burning Blade"],{})
@@ -833,6 +834,9 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
     sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+
+
+	
 	sets.precast.WS["Shadow of Death"].vagary = sets.precast.WS.vagary
 	sets.precast.WS["Cyclone"].vagary =  {}
 	sets.precast.WS["Starburst"].vagary =  {}
