@@ -259,9 +259,12 @@ function job_post_precast(spell, spellMap, eventArgs)
 				equip(sets.WSMighty)
 			end
 		end
-
 	end
-
+	if spell.type == 'WeaponSkill' then
+        if state.WeaponskillMode.value == 'vagary' then
+            equip()
+        end
+	end
 end
 
 function job_tick()
@@ -285,9 +288,7 @@ function job_aftercast(spell, spellMap, eventArgs)
 			lastwarcry = player.name
 		end
 	end
-	if player.status ~= 'Engaged' and state.WeaponLock.value == false then
-        check_weaponset()
-    end
+
 
 end
 function job_handle_equipping_gear(playerStatus, eventArgs)
@@ -427,7 +428,6 @@ function job_state_change(stateField, newValue, oldValue)
         enable('main','sub')
     end
 
-    check_weaponset()
 
 end
 function check_weaponset()
