@@ -1,7 +1,7 @@
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'H2H')
-    state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL')
+    state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL','vagary')
     state.HybridMode:options('Normal', 'PDT')
     state.PhysicalDefenseMode:options('PDT', 'HP','Evasion', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
@@ -9,7 +9,7 @@ function user_job_setup()
 	state.IdleMode:options('Normal', 'PDT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular'}
-	state.Weapons:options('Naegling','Loxotic','Shining','None','Chango','AgwuClaymore','Malevolence','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevolence','DualIkengaAxe','ProcDagger','ProcSword','ProcGreatSword','ProcScythe','ProcPolearm','ProcGreatKatana','ProcClub','ProcStaff')
+	state.Weapons:options('Naegling','Loxotic','Shining','None','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
     state.Shield = M{['description']='Weapon Set', 'Normal', 'Shield'}
 
 	gear.da_jse_back = {name="Cichol's Mantle",augments={'DEX+20','Accuracy+20 Attack+20','"Dbl.Atk."+10'}}
@@ -19,9 +19,11 @@ function user_job_setup()
 	send_command('bind ^` input /ja "Hasso" <me>')
 	send_command('bind !` input /ja "Seigan" <me>')
 	send_command('bind @` gs c cycle SkillchainMode')
-	send_command('bind !9 gs c weapons Greatsword;gs c update')
     send_command('bind f7 gs c cycle Shield')
 
+	send_command('bind !8 gs c weapons Greatsword;gs c update')
+	send_command('bind !0 gs c set WeaponskillMode Proc;;gs c set CastingMode Proc;gs c update')
+	send_command('bind !9 gs c weapons Default;gs c set WeaponskillMode Normal;gs c set CastingMode Normal;gs c update')
 	--Ikenga_axe_bonus = 300  -- It is 300 at R25. Uncomment if you need to manually adjust because you are using below R25 or above
 	
 	select_default_macro_book()
@@ -39,13 +41,14 @@ sets.weapons.Shining = {main="Shining One", sub="Utu Grip"}
 sets.weapons.Loxotic = {main="Loxotic Mace +1", sub="Blurred Shield +1",}
 sets.weapons.Chango = {main="Chango", sub="Utu Grip"}
 sets.weapons.AgwuClaymore = {main="Agwu's Claymore", sub="Utu Grip"}
-sets.weapons.Malevolence = {main="Malevolence", sub="Blurred Shield +1",}
+sets.weapons.Malevo = {main="Malevolence", sub="Blurred Shield +1",}
 sets.weapons.Drepanum = {main="Drepanum", sub="Utu Grip",}
 sets.weapons.IkengaAxe = {main="Ikenga's Axe", sub="Blurred Shield +1",}
 
+sets.weapons.DualWeapons = {main="Firangi",sub="Reikiko"}
 sets.weapons.DualNaegling = {main="Naegling", sub="Demers. Degen +1",}
 sets.weapons.DualLoxotic = {main="Loxotic Mace +1", sub="Demers. Degen +1",}
-sets.weapons.DualMalevolence = {main="Malevolence", sub="Malevolence",}
+sets.weapons.DualMalevo = {main="Malevolence", sub="Malevolence",}
 sets.weapons.DualIkengaAxe = {main="Ikenga's Axe", sub="Demers. Degen +1",}
 
 sets.Normal = {}
@@ -53,14 +56,19 @@ sets.Shield = {sub="Blurred Shield +1"}
 sets.DefaultShield = {sub="Blurred Shield +1"}
 
 
-	sets.weapons.ProcDagger = {main="Chicken Knife II",sub=empty}
-	sets.weapons.ProcSword = {main="Ark Sword",sub=empty}
-	sets.weapons.ProcGreatSword = {main="Lament",sub=empty}
-	sets.weapons.ProcScythe = {main="Ark Scythe",sub=empty}
-	sets.weapons.ProcPolearm = {main="Pitchfork +1",sub=empty}
-	sets.weapons.ProcGreatKatana = {main="Hardwood Katana",sub=empty}
-	sets.weapons.ProcClub = {main="Dream Bell +1",sub=empty}
-	sets.weapons.ProcStaff = {main="Terra's Staff",sub=empty}
+sets.weapons.ProcDagger = {main="Qutrub Knife",sub=empty}
+sets.weapons.ProcDagger2 = {main="Qutrub Knife",sub=empty}
+sets.weapons.ProcSword = {main="Fermion Sword",sub=empty}
+sets.weapons.ProcSword2 = {main="Fermion Sword",sub=empty}
+sets.weapons.ProcGreatSword = {main="Irradiance Blade",sub=empty}
+sets.weapons.ProcScythe = {main="Maven's Scythe",sub=empty}
+sets.weapons.ProcPolearm = {main="Sha Wujing's La. +1",sub=empty}
+sets.weapons.ProcGreatKatana = {main="Zanmato +1",sub=empty}
+sets.weapons.ProcGreatKatana2 = {main="Zanmato +1",sub=empty}
+sets.weapons.ProcKatana = {main="Debahocho +1",sub=empty}
+sets.weapons.ProcClub = {main="Caduceus",sub=empty}
+sets.weapons.ProcStaff = {main="Profane Staff",sub=empty}
+sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 
 	 -- neck JSE Necks Reinforcement Points Mode add u neck here 
 	 sets.RP = {}
@@ -270,6 +278,9 @@ sets.DefaultShield = {sub="Blurred Shield +1"}
         legs="Boii Cuisses +3",
         left_ring="Sroda Ring",
      })
+	 sets.precast.WS.vagary =  {}
+	 sets.vagary =  {}
+
     sets.precast.WS['Upheaval'] = set_combine(sets.precast.WS, {
     ammo="Knobkierrie",
     head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}},
@@ -822,6 +833,21 @@ sets.DefaultShield = {sub="Blurred Shield +1"}
     sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
     sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+	sets.precast.WS["Shadow of Death"].vagary = sets.precast.WS.vagary
+	sets.precast.WS["Cyclone"].vagary =  {}
+	sets.precast.WS["Starburst"].vagary =  {}
+	sets.precast.WS["Sunburst"].vagary =  {}
+	sets.precast.WS["Earth Crusher"].vagary =  {}
+	sets.precast.WS["Freezebite"].vagary =  {}
+	sets.precast.WS["Red Lotus Blade"].vagary =  {}
+	sets.precast.WS["Seraph Blade"].vagary =  {}
+	sets.precast.WS["Energy Drain"].vagary =  {}
+	sets.precast.WS["Shining Blade"].vagary =  {}
+	sets.precast.WS["Raiden Thrust"].vagary =  {}
+	sets.precast.WS['Tachi: Jinpu'].vagary =  {}
+	sets.precast.WS['Tachi: Koki'].vagary =  {}
+	
+
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Lugra Earring",}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
@@ -1156,15 +1182,23 @@ function select_default_macro_book()
 		set_macro_page(6, 24)
     elseif player.sub_job == 'THF' then
 		set_macro_page(6, 24)
+	elseif world.area:contains("Abyssea") then
+		set_macro_page(4, 24)
     else
 		set_macro_page(6, 24)
     end
 end
 
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 152')
+	if world.area:contains("Abyssea") then
+        windower.chat.input('/lockstyleset 1')
+    else
+		windower.chat.input('/lockstyleset 152')
+    end
 end
 
+
+autows_list = {['DualNaegling']='Savage Blade',['Malevo']='Aeolian Edge',['Naegling']='Savage Blade',['Chango']='Upheaval',['AgwuClaymore']='Resolution',['Drepanum']='Spiral Hell',['IkengaAxe']='Calamity',['DualIkengaAxe']='Calamity',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['Loxotic ']='Judgment',['DualLoxotic']='Judgment',['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive'}
 
 --[[
     sets.engaged.Charge = {}
