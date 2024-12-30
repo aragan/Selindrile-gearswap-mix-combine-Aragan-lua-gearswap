@@ -65,6 +65,8 @@ state.CancelStoneskin 		= M(true, 'Cancel Stone Skin') --Set this to false if yo
 state.SkipProcWeapons 		= M(true, 'Skip Proc Weapons') --Set this to false if you want to display weapon sets fulltime rather than just Aby/Voidwatch.
 state.NotifyBuffs	  		= M(false, 'Notify Buffs') 	 --Set this to true if you want to notify your party when you recieve a specific buff/debuff. (List Below)
 
+state.WeaponLock = M(false, 'Weapon Lock')
+state.RP = M(false, "Reinforcement Points Mode")
 --[[Binds you may want to change.
 	Bind special characters.
 	@ = Windows Key
@@ -115,6 +117,7 @@ function global_on_load()
 	send_command('bind ^f12 gs c update user')
 	send_command('bind f12 gs c cycle IdleMode;gs c reset DefenseMode')
 	send_command('bind !f12 gs c reset DefenseMode;gs c reset IdleMode')
+	send_command('bind ^f11 gs c cycle ExtraMeleeMode') --Adds another set layered on top of your engaged set.
 
 	send_command('bind delete input //zonetimer reset') --Turns addon reset time.
 	send_command('bind !0 input //zonetimer reset') --Turns addon reset time.
@@ -133,6 +136,8 @@ function global_on_load()
 	send_command('bind @f3 gs c toggle AutoTrustMode')
     send_command('bind ^/ gs disable all')
     send_command('bind !/ gs enable all')
+    send_command('bind @x gs c toggle RP')  
+	send_command('bind @z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
 
 	
 	send_command('bind !1 gs c toggle AutoSambaMode')
@@ -280,7 +285,38 @@ function user_midcast(spell, action, spellMap, eventArgs)
 		equip(sets.midcast.FastRecast)
 	end
 end
+-- Handle notifications of general user state change.
+function job_state_change(stateField, newValue, oldValue)
+    if state.WeaponLock.value == true then
+        disable('main','sub')
+    else
+        enable('main','sub')
+    end
+end
+-- Modify the default idle set after it was constructed.
+function customize_idle_set(idleSet)
+    if state.RP.current == 'on' then
+        equip(sets.RP)
+        disable('neck')
+    else
+        enable('neck')
+    end
 
+    return idleSet
+end
+-- Modify the default melee set after it was constructed.
+function job_customize_melee_set(meleeSet)
+	if state.RP.current == 'on' then
+        equip(sets.RP)
+        disable('neck')
+    else
+        enable('neck')
+    end
+    if state.TreasureMode.value == 'Fulltime' then
+        meleeSet = set_combine(meleeSet, sets.TreasureHunter)
+    end
+    return meleeSet
+end
 -- Global intercept on buff change.
 function user_buff_change(buff, gain, eventArgs)
 	-- Create a timer when we gain weakness.  Remove it when weakness is gone.

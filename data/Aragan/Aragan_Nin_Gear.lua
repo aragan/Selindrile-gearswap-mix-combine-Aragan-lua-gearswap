@@ -1,3 +1,15 @@
+-----------------------------Authors of this file--------------------------------
+------           ******************************************                ------
+---                                                                           ---
+--	  Aragan (Asura) --------------- [Author Primary]                          -- 
+--                                                                             --
+---------------------------------------------------------------------------------
+
+--[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
+to can play smooth and easy and i play with main gameped controller logitech and 
+keyboard binds and chat 
+]]
+
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'TP', 'ZANISH', 'DOUBLE','CRIT')
@@ -5,12 +17,12 @@ function user_job_setup()
 	state.RangedMode:options('Normal','Acc')
     state.WeaponskillMode:options('Normal', 'PDL', 'SC', 'vagary')
     state.CastingMode:options('Normal','SIRD')
-    state.IdleMode:options('Normal', 'Evasion', 'PDT', 'MDT', 'Regen', 'HP', 'EnemyCritRate')
+    state.IdleMode:options('Normal', 'Evasion', 'DT', 'MDT', 'Regen', 'HP', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('Heishi','None','Tauret','Naegling','Hachimonji','Zanmato','CLUB','H2H','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
-	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None','SuppaBrutal','DWEarrings','DWMax'}
+	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None','Resist','SuppaBrutal','DWEarrings','DWMax'}
 
 	gear.wsd_jse_back = {}
 	gear.da_jse_back = {}    
@@ -26,7 +38,8 @@ function user_job_setup()
 	send_command('bind @` gs c cycle SkillchainMode')
 	send_command('bind !0 gs c set WeaponskillMode Proc;;gs c set CastingMode Proc;gs c update')
 	send_command('bind !9 gs c weapons Default;gs c set WeaponskillMode Normal;gs c set CastingMode Normal;gs c update')
-    
+    send_command('bind f11 gs c cycle CastingMode')
+
     send_command('bind f2 gs c toggle AutoShadowMode')
 
 	utsusemi_cancel_delay = .3
@@ -679,17 +692,18 @@ sets.precast.WS['Tachi: Koki'].vagary =  {}
         back="Moonlight Cape",
     }
 
-    sets.midcast.ElementalNinjutsu = {        ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+    sets.midcast.ElementalNinjutsu = {  
+      ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
     head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands="Hattori Tekko +2",
 legs={ name="Nyame Flanchard", augments={'Path: B',}},
-feet={ name="Nyame Sollerets", augments={'Path: B',}},
+feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
     neck="Sibyl Scarf",
     waist="Orpheus's Sash",
  left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
  right_ring="Dingir Ring",
- left_ear="Hecate's Earring",
+ left_ear="Crematio Earring",
  right_ear="Friomisi Earring",
  back="Argocham. Mantle",}
 
@@ -702,7 +716,7 @@ feet={ name="Nyame Sollerets", augments={'Path: B',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands="Hattori Tekko +2",
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
-    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
         waist="Orpheus's Sash",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -733,7 +747,8 @@ feet={ name="Nyame Sollerets", augments={'Path: B',}},
         back="Andartia's Mantle",
     })
 
-    sets.midcast.Migawari = set_combine(sets.midcast.Ninjutsu, {    neck="Incanter's Torque",
+    sets.midcast.Migawari = set_combine(sets.midcast.Ninjutsu, { 
+   neck="Incanter's Torque",
     ammo="Staunch Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
@@ -856,7 +871,7 @@ sets.idle = {
     back="Andartia's Mantle",
 
 }
-sets.idle.PDT = {
+sets.idle.DT = {
     ammo="Staunch Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
@@ -902,7 +917,7 @@ sets.idle.HP = {
     right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     back="Moonlight Cape",
 }
-sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, { 
+sets.idle.EnemyCritRate = set_combine(sets.idle.DT, { 
     ammo="Eluder's Sachet",
     left_ring="Warden's Ring",
     right_ring="Fortified Ring",
@@ -951,54 +966,54 @@ sets.idle.Evasion = {
         left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         right_ring="Paguroidea Ring",
         back="Moonlight Cape",
-        }
-        sets.defense.Enmity = {
-            ammo="Iron Gobbet",
-            head="Malignance Chapeau",
-            body={ name="Emet Harness +1", augments={'Path: A',}},
-            hands="Kurys Gloves",
-            legs={ name="Zoar Subligar +1", augments={'Path: A',}},
-            feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
-            neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-            waist="Flume Belt +1",
-            left_ear="Trux Earring",
-            right_ear="Cryptic Earring",
-            left_ring="Defending Ring",
-            right_ring="Vengeful Ring",
-            back="Reiki Cloak",
-        }
-        sets.defense.HP = {
-            ammo="Coiste Bodhar",
-            head={ name="Nyame Helm", augments={'Path: B',}},
-            body="Adamantite Armor",
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet={ name="Nyame Sollerets", augments={'Path: B',}},
-            neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-            waist="Plat. Mog. Belt",
-            right_ear="Tuisto Earring",
-            left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-            left_ring="Eihwaz Ring",
-            right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-            back="Moonlight Cape",
-        }
-        sets.defense.MDT = set_combine(sets.defense.PDT, {
-            ammo="Staunch Tathlum +1",
+    }
+    sets.defense.Enmity = {
+        ammo="Iron Gobbet",
+        head="Malignance Chapeau",
+        body={ name="Emet Harness +1", augments={'Path: A',}},
+        hands="Kurys Gloves",
+        legs={ name="Zoar Subligar +1", augments={'Path: A',}},
+        feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Flume Belt +1",
+        left_ear="Trux Earring",
+        right_ear="Cryptic Earring",
+        left_ring="Defending Ring",
+        right_ring="Vengeful Ring",
+        back="Reiki Cloak",
+    }
+    sets.defense.HP = {
+        ammo="Coiste Bodhar",
         head={ name="Nyame Helm", augments={'Path: B',}},
-        body={ name="Nyame Mail", augments={'Path: B',}},
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet={ name="Nyame Sollerets", augments={'Path: B',}},
-            neck={ name="Warder's Charm +1", augments={'Path: A',}},
-            waist="Carrier's Sash",
-            left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-            right_ear="Tuisto Earring",
-            left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-            right_ring="Purity Ring",
-            back="Moonlight Cape",
-        })
-        sets.defense.Evasion = sets.idle.Evasion
-    
+        body="Adamantite Armor",
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Plat. Mog. Belt",
+        right_ear="Tuisto Earring",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Eihwaz Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+    }
+    sets.defense.MDT = set_combine(sets.defense.PDT, {
+        ammo="Staunch Tathlum +1",
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        right_ear="Tuisto Earring",
+        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        right_ring="Purity Ring",
+        back="Moonlight Cape",
+    })
+    sets.defense.Evasion = sets.idle.Evasion
+
 	sets.defense.MEVA = { ammo="Staunch Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
@@ -1197,7 +1212,7 @@ sets.idle.Evasion = {
         back="Andartia's Mantle",
     }
     
-    ------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 ---------------------------------------- Hybrid Sets -------------------------------------------
 ------------------------------------------------------------------------------------------------
 
@@ -1256,6 +1271,13 @@ back="Andartia's Mantle",
 
     -- Extra Melee sets.  Apply these on top of melee sets.
     sets.Knockback = {}
+    sets.Resist = {
+        hands={ name="Floral Gauntlets", augments={'Rng.Acc.+15','Accuracy+15','"Triple Atk."+3','Magic dmg. taken -4%',}},
+        feet="Ahosi Leggings",
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Engraved Belt",
+    }
+
 	sets.SuppaBrutal = {ear1="Suppanomimi", ear2="Brutal Earring"}
 	sets.DWEarrings = {    left_ear="Suppanomimi", --5
     right_ear="Eabani Earring", --4
@@ -1276,7 +1298,11 @@ back="Andartia's Mantle",
 
 end
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 144')
+    if world.area:contains("Abyssea") then
+        windower.chat.input('/lockstyleset 1')
+    else
+        windower.chat.input('/lockstyleset 144')
+    end
 end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()
@@ -1296,4 +1322,4 @@ function select_default_macro_book()
     end
 end
 
-autows_list = {['Heishi']='Blade: Shun',['Tauret']='Aeolian Edge',['Naegling']='Savage Blade',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['CLUB']='Judgment',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+autows_list = {['Heishi']='Blade: Shun',['Tauret']='Aeolian Edge',['Naegling']='Savage Blade',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['CLUB']='Judgment',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}

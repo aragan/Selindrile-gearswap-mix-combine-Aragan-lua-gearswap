@@ -1,3 +1,16 @@
+-----------------------------Authors of this file--------------------------------
+------           ******************************************                ------
+---                                                                           ---
+--	  Aragan (Asura) --------------- [Author Primary]                          -- 
+--                                                                             --
+---------------------------------------------------------------------------------
+
+--[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
+to can play smooth and easy and i play with main gameped controller logitech and 
+keyboard binds and chat 
+]]
+
+
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'H2H')
@@ -6,7 +19,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'HP','Evasion', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options('Normal', 'PDT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
+	state.IdleMode:options('Normal', 'DT', 'Tank', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular'}
 	state.Weapons:options('Naegling','Loxotic','Shining','None','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
@@ -972,7 +985,8 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         left_ring="Defending Ring",
         back="Moonlight Cape",
     }
-     sets.idle.PDT = sets.defense.PDT
+     sets.idle.DT = sets.defense.PDT
+	 sets.idle.Tank = sets.defense.PDT
      sets.idle.MDT = sets.defense.MDT
      sets.idle.Evasion = sets.defense.Evasion
      sets.idle.HP = sets.defense.HP
