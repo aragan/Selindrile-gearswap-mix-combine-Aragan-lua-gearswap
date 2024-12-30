@@ -47,8 +47,8 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-	
-	organizer_items = {
+
+	organizer_items = {     
 		"Airmid's Gorget",
 		"Tumult's Blood",
 		"Sarama's Hide",
@@ -59,10 +59,10 @@ function get_sets()
 		"G. Curry Bun +1",
 		"Pukatrice Egg",
 		"Moogle Amp.",
-		"Popo. con Queso",
 		"Pear Crepe",
+		"Crab Sushi",
 		"Om. Sandwich",
-		"Red Curry Bun",
+		"Red Curry Bun",   
 		"Gyudon",
 		"Reraiser",
 		"Hi-Reraiser",
@@ -84,7 +84,6 @@ function get_sets()
 		"Shinobi-Tabi",
 		"Shihei",
 		"Remedy",
-		"Wh. Rarab Cap +1",
 		"Emporox's Ring",
 		"Red Curry Bun",
 		"Instant Reraise",
@@ -93,117 +92,92 @@ function get_sets()
 		"Reraise Earring",}
 end
 
-    -- Setup vars that are user-independent.
+
+-- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
 
-	state.Buff['Brazen Rush'] = buffactive['Brazen Rush'] or false
-	state.Buff["Warrior's Charge"] = buffactive["Warrior's Charge"] or false
-	state.Buff['Mighty Strikes'] = buffactive['Mighty Strikes']  or false
-	state.Buff.Retaliation = buffactive['Retaliation'] or false
-	state.Buff.Restraint = buffactive['Restraint'] or false
-    state.Buff['Aftermath'] = buffactive['Aftermath'] or false
+    state.Buff.Sekkanoki = buffactive.Sekkanoki or false
+    state.Buff.Sengikori = buffactive.Sengikori or false
+    state.Buff['Meikyo Shisui'] = buffactive['Meikyo Shisui'] or false
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
+	state.Buff['Third Eye'] = buffactive['Third Eye'] or false
     state.Buff.Hasso = buffactive.Hasso or false
-    state.Buff.Seigan = buffactive.Seigan or false   
-	state.WeaponLock = M(false, 'Weapon Lock')
-    state.RP = M(false, "Reinforcement Points Mode")
-
+    state.Buff.Seigan = buffactive.Seigan or false
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 
-    absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
-
-	autows = "Ukko's Fury"
+	autows = 'Tachi: Fudo'
+	rangedautows = "Apex Arrow"
 	autofood = 'Soy Ramen'
-	
+
+	update_melee_groups()
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","TreasureMode",})
 end
-	
+
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for standard casting events.
 -------------------------------------------------------------------------------------------------------------------
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 
-function job_filtered_action(spell, eventArgs)
-	if spell.type == 'WeaponSkill' then
-		local available_ws = S(windower.ffxi.get_abilities().weapon_skills)
-		-- WS 112 is Double Thrust, meaning a Spear is equipped.
-		if available_ws:contains(48) then
-            if spell.english == "Upheaval" then
-				windower.chat.input('/ws "Resolution" '..spell.target.raw)
-                cancel_spell()
-				eventArgs.cancel = true
-            elseif spell.english == "Ukko's Fury" then
-                send_command('@input /ws "Ground Strike" '..spell.target.raw)
-                cancel_spell()
-				eventArgs.cancel = true
-            end
-        end
-	end
-
-end
-
 function job_precast(spell, spellMap, eventArgs)
+
 	if spell.type == 'WeaponSkill' and state.AutoBuffMode.value ~= 'Off' then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
-		if player.tp < 2250 and not buffactive['Blood Rage'] and abil_recasts[2] < latency then
-			eventArgs.cancel = true
-			windower.chat.input('/ja "Warcry" <me>')
-			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
-			tickdelay = os.clock() + 1.25
-			return
-		elseif state.Buff['SJ Restriction'] then
-			return
-		elseif player.sub_job == 'SAM' and player.tp > 1850 and abil_recasts[140] < latency then
+		if player.tp > 1850 and abil_recasts[140] < latency then
 			eventArgs.cancel = true
 			windower.chat.input('/ja "Sekkanoki" <me>')
 			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
 			tickdelay = os.clock() + 1.25
 			return
-		elseif player.sub_job == 'SAM' and abil_recasts[134] < latency then
+		elseif abil_recasts[134] < latency then
 			eventArgs.cancel = true
 			windower.chat.input('/ja "Meditate" <me>')
 			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
 			tickdelay = os.clock() + 1.25
 			return
+		elseif player.tp < 1500 and not buffactive['Sekkanoki'] and abil_recasts[54] < latency then
+			eventArgs.cancel = true
+			windower.chat.input('/ja "Hagakure" <me>')
+			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+			tickdelay = os.clock() + 1.25
+			return
 		end
 	end
-end
--- Modify the default idle set after it was constructed.
-function customize_idle_set(idleSet)
-    if state.RP.current == 'on' then
-        equip(sets.RP)
-        disable('neck')
-    else
-        enable('neck')
-    end
 
-    return idleSet
 end
--- Modify the default melee set after it was constructed.
-function job_customize_melee_set(meleeSet)
 
-	if not state.OffenseMode.value:contains('Acc') and state.HybridMode.value == 'Normal' and buffactive['Retaliation'] then
-		meleeSet = set_combine(meleeSet, sets.buff.Retaliation)
+function job_filtered_action(spell, eventArgs)
+	if spell.type == 'WeaponSkill' then
+		local available_ws = S(windower.ffxi.get_abilities().weapon_skills)
+		-- WS 112 is Double Thrust, meaning a Spear is equipped.
+		if available_ws:contains(112) then
+            if spell.english == "Tachi: Fudo" then
+				windower.chat.input('/ws "Stardiver" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+            elseif spell.english == "Tachi: Shoha" then
+                send_command('@input /ws "Impulse Drive" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+            elseif spell.english == "Tachi: Rana" then
+                send_command('@input /ws "Penta Thrust" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+            elseif spell.english == "Tachi: Gekko" then
+                send_command('@input /ws "Sonic Thrust" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+            elseif spell.english == "Tachi: Hobaku" then
+                send_command('@input /ws "Leg Sweep" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+            end
+        end
 	end
-	
-	if not state.OffenseMode.value:contains('Acc') and state.HybridMode.value == 'Normal' and buffactive['Restraint'] then
-		meleeSet = set_combine(meleeSet, sets.buff.Restraint)
-	end
-	if state.RP.current == 'on' then
-        equip(sets.RP)
-        disable('neck')
-    else
-        enable('neck')
-    end
-    if state.TreasureMode.value == 'Fulltime' then
-        meleeSet = set_combine(meleeSet, sets.TreasureHunter)
-    end
-    return meleeSet
 end
 
--- Run after the general precast() is done.
 function job_post_precast(spell, spellMap, eventArgs)
+
 	if spell.type == 'WeaponSkill' then
 
 		local WSset = standardize_set(get_precast_set(spell, spellMap))
@@ -212,22 +186,31 @@ function job_post_precast(spell, spellMap, eventArgs)
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
 			if get_effective_player_tp(spell, WSset) > 3200 then
-				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
-					local AccMaxTPset = standardize_set(sets.AccMaxTP)
-
-					if (AccMaxTPset.ear1:startswith("Lugra Earring") or AccMaxTPset.ear2:startswith("Lugra Earring")) and not classes.DuskToDawn and sets.AccDayMaxTPWSEars then
-						equip(sets.AccDayMaxTPWSEars[spell.english] or sets.AccDayMaxTPWSEars)
+				if spell.skill == 25 then
+					if wsacc:contains('Acc') and sets.RangedAccMaxTP then
+						equip(sets.RangedAccMaxTP)
+					elseif sets.RangedMaxTP then
+						equip(sets.RangedMaxTP)
 					else
-						equip(sets.AccMaxTP[spell.english] or sets.AccMaxTP)
-					end
-				elseif sets.MaxTP then
-					local MaxTPset = standardize_set(sets.MaxTP)
-					if (MaxTPset.ear1:startswith("Lugra Earring") or MaxTPset.ear2:startswith("Lugra Earring")) and not classes.DuskToDawn and sets.DayMaxTPWSEars then
-						equip(sets.DayMaxTPWSEars[spell.english] or sets.DayMaxTPWSEars)
-					else
-						equip(sets.MaxTP[spell.english] or sets.MaxTP)
 					end
 				else
+					if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
+						local AccMaxTPset = standardize_set(sets.AccMaxTP)
+
+						if (AccMaxTPset.ear1:startswith("Lugra Earring") or AccMaxTPset.ear2:startswith("Lugra Earring")) and not classes.DuskToDawn and sets.AccDayMaxTPWSEars then
+							equip(sets.AccDayMaxTPWSEars[spell.english] or sets.AccDayMaxTPWSEars)
+						else
+							equip(sets.AccMaxTP[spell.english] or sets.AccMaxTP)
+						end
+					elseif sets.MaxTP then
+						local MaxTPset = standardize_set(sets.MaxTP)
+						if (MaxTPset.ear1:startswith("Lugra Earring") or MaxTPset.ear2:startswith("Lugra Earring")) and not classes.DuskToDawn and sets.DayMaxTPWSEars then
+							equip(sets.DayMaxTPWSEars[spell.english] or sets.DayMaxTPWSEars)
+						else
+							equip(sets.MaxTP[spell.english] or sets.MaxTP)
+						end
+					else
+					end
 				end
 			else
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and (WSset.ear1:startswith("Lugra Earring") or WSset.ear2:startswith("Lugra Earring")) and not classes.DuskToDawn and sets.AccDayWSEars then
@@ -244,29 +227,53 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 		
-		if wsacc:contains('Acc') and not buffactive['Sneak Attack'] then
-			if state.Buff.Charge and state.Buff['Mighty Strikes'] and sets.ACCWSMightyCharge then
-				equip(sets.ACCWSMightyCharge)
-			elseif state.Buff.Charge and sets.ACCWSCharge then
-				equip(sets.ACCWSCharge)
-			elseif state.Buff['Mighty Strikes'] and sets.ACCWSMighty then
-				equip(sets.AccWSMighty)
-			end
-		else
-			if state.Buff.Charge and state.Buff['Mighty Strikes'] and sets.WSMightyCharge then
-				equip(sets.WSMightyCharge)
-			elseif state.Buff.Charge and sets.WSCharge then
-				equip(sets.WSCharge)
-			elseif state.Buff['Mighty Strikes'] and sets.WSMighty then
-				equip(sets.WSMighty)
-			end
-		end
-	end
-	if spell.type == 'WeaponSkill' then
-        if state.WeaponskillMode.value == 'vagary' then
-            equip()
+        if state.Buff.Sekkanoki then
+            equip(sets.buff.Sekkanoki)
         end
+        if state.Buff.Sengikori then
+            equip(sets.buff.Sengikori)
+        end
+
 	end
+
+end
+
+-- Modify the default melee set after it was constructed.
+function job_customize_melee_set(meleeSet)
+
+    if state.Buff.Hasso and state.DefenseMode.value == 'None' and state.OffenseMode.value ~= 'FullAcc' then
+		meleeSet = set_combine(meleeSet, sets.buff.Hasso)
+	elseif state.Buff.Seigan and state.Buff['Third Eye'] and not state.OffenseMode.value:contains('Acc') then
+		meleeSet = set_combine(meleeSet, sets.buff['Third Eye'])
+    end
+
+    return meleeSet
+end
+
+-- Run after the default midcast() is done.
+-- eventArgs is the same one used in job_midcast, in case information needs to be persisted.
+function job_post_midcast(spell, spellMap, eventArgs)
+    -- Effectively lock these items in place.
+    if state.HybridMode.value == 'Reraise'  or
+	(state.DefenseMode.value == 'Physical' and state.PhysicalDefenseMode.value == 'PDTReraise') or
+    (state.DefenseMode.value == 'Magical' and state.MagicalDefenseMode.value == 'MDTReraise') then
+        equip(sets.Reraise)
+    end
+end
+
+function job_aftercast(spell, spellMap, eventArgs)
+	if spell.type == 'WeaponSkill' then
+		if player.tp < 750 and state.Buff['Meikyo Shisui'] then
+			send_command('cancel Meikyo Shisui')
+		end
+    elseif spell.english == "Meikyo Shisui" and not spell.interrupted and sets.buff['Meikyo Shisui'] then
+		equip(sets.buff['Meikyo Shisui'])
+		disable('feet')
+	end
+end
+
+function job_self_command(commandArgs, eventArgs)
+
 end
 
 function job_tick()
@@ -275,101 +282,50 @@ function job_tick()
 	return false
 end
 
--- Called by the 'update' self-command.
-function job_update(cmdParams, eventArgs)
-
-    update_melee_groups()
-	if player.sub_job ~= 'SAM' and state.Stance.value ~= "None" then
-		state.Stance:set("None")
-	end
-end
-
-function job_aftercast(spell, spellMap, eventArgs)
-	if not spell.interrupted then
-		if spell.english == 'Warcry' then
-			lastwarcry = player.name
-		end
-	end
-
-
-end
-function job_handle_equipping_gear(playerStatus, eventArgs)
-
-end
 function job_buff_change(buff, gain)
-	if buff == 'Warcry' then
-		if gain and windower.ffxi.get_ability_recasts()[2] > 297 then
-			lastwarcry = player.name
-		else
-			lastwarcry = ''
-		end
-	end
-	if buff == "Mighty Strikes" then
-        if gain then  			
-            send_command('input /p "Mighty Strikes" [ON]')		
-        else	
-            send_command('input /p "Mighty Strikes" [OFF]')
-        end
-    end
-	if buff == "Warcry" then
-        if gain then  			
-            send_command('input /p "Warcry" [ON]')		
-        else	
-            send_command('input /p "Warcry" [OFF]')
-        end
+    if buff == 'Meikyo Shisui' and not gain then
+		enable('feet')
     end
 
-    if buff == "Blood Rage" then
-        if gain then  			
-            send_command('input /p "Blood Rage" [ON]')		
-        else	
-            send_command('input /p "Blood Rage" [OFF]')
-        end
-    end    
-    if buff == "petrification" then
-        if gain then    
-            equip(sets.defense.PDT)
-            send_command('input /p Petrification, please Stona.')		
-        else
-            send_command('input /p '..player.name..' is no longer Petrify!')
-            handle_equipping_gear(player.status)
-        end
-    end
-    if buff == "Charm" then
-        if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
-        else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
-        end
-    end
 	update_melee_groups()
 end
 
-function update_melee_groups()
-    if player then
-		classes.CustomMeleeGroups:clear()
-		
-		if data.areas.adoulin:contains(world.area) and buffactive.Ionis then
-			classes.CustomMeleeGroups:append('Adoulin')
-		end
-		
-		if state.Buff['Brazen Rush'] or state.Buff["Warrior's Charge"] then
-			classes.CustomMeleeGroups:append('Charge')
-		end
-		
-		if state.Buff['Mighty Strikes'] then
-			classes.CustomMeleeGroups:append('Mighty')
-		end
-		
-		if (player.equipment.main == "Conqueror" and buffactive['Aftermath: Lv.3']) or ((player.equipment.main == "Bravura" or player.equipment.main == "Ragnarok") and state.Buff['Aftermath']) then
-				classes.CustomMeleeGroups:append('AM')
-		end
-	end
+-------------------------------------------------------------------------------------------------------------------
+-- User code that supplements standard library decisions.
+-------------------------------------------------------------------------------------------------------------------
+
+-- Called by the 'update' self-command, for common needs.
+-- Set eventArgs.handled to true if we don't want automatic equipping of gear.
+function job_update(cmdParams, eventArgs)
+	update_melee_groups()
+end
+
+-- Set eventArgs.handled to true if we don't want the automatic display to be run.
+function display_current_job_state(eventArgs)
 
 end
 
+-------------------------------------------------------------------------------------------------------------------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+
+-- Utility functions specific to this job.
+-------------------------------------------------------------------------------------------------------------------
+
+function update_melee_groups()
+	classes.CustomMeleeGroups:clear()
+	
+    if data.areas.adoulin:contains(world.area) and buffactive.Ionis then
+		classes.CustomMeleeGroups:append('Adoulin')
+    end
+
+	if player.equipment.main then
+		if player.equipment.main == "Kogarasumaru" and state.Buff['Aftermath: Lv.3'] then
+				classes.CustomMeleeGroups:append('AM')
+		end
+	end	
+end
+
 function check_hasso()
-	if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or state.Buff['SJ Restriction'] or main_weapon_is_one_handed() or silent_check_amnesia()) then
+	if player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or main_weapon_is_one_handed() or silent_check_amnesia()) then
 		
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		
@@ -390,27 +346,19 @@ function check_hasso()
 end
 
 function check_buff()
-	if state.AutoBuffMode.value ~= 'Off' and player.in_combat then
+	if state.AutoBuffMode.value ~= 'Off' and player.in_combat and not state.Buff['SJ Restriction'] then
 		
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
-		if not buffactive.Retaliation and abil_recasts[8] < latency then
-			windower.chat.input('/ja "Retaliation" <me>')
-			tickdelay = os.clock() + 1.1
-			return true		
-		elseif not buffactive.Restraint and abil_recasts[9] < latency then
-			windower.chat.input('/ja "Restraint" <me>')
+		if player.sub_job == 'DRK' and not buffactive['Last Resort'] and abil_recasts[87] < latency then
+			windower.chat.input('/ja "Last Resort" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
-		elseif not buffactive['Blood Rage'] and abil_recasts[11] < latency then
-			windower.chat.input('/ja "Blood Rage" <me>')
-			tickdelay = os.clock() + 1.1
-			return true
-		elseif not buffactive.Berserk and abil_recasts[1] < latency then
+		elseif player.sub_job == 'WAR' and not buffactive.Berserk and abil_recasts[1] < latency then
 			windower.chat.input('/ja "Berserk" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
-		elseif not buffactive.Aggressor and abil_recasts[4] < latency then
+		elseif player.sub_job == 'WAR' and not buffactive.Aggressor and abil_recasts[4] < latency then
 			windower.chat.input('/ja "Aggressor" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
@@ -421,20 +369,4 @@ function check_buff()
 		
 	return false
 end
--- Handle notifications of general user state change.
-function job_state_change(stateField, newValue, oldValue)
-    if state.WeaponLock.value == true then
-        disable('main','sub')
-    else
-        enable('main','sub')
-    end
-end
-function check_weaponset()
-	--[[equip(sets[state.Shield.current])
-    if (player.sub_job ~= 'NIN' and player.sub_job ~= 'DNC') then
-        equip(sets.DefaultShield)
-    elseif player.sub_job == 'NIN' and player.sub_job_level < 10 or player.sub_job == 'DNC' and player.sub_job_level < 20 then
-        equip(sets.DefaultShield)
-    end]]
 
-end

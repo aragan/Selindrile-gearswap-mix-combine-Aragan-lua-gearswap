@@ -96,11 +96,12 @@ function job_setup()
     state.Buff.Futae = buffactive.Futae or false
 	--state.Proc = M(false, 'Proc')
     --state.unProc = M(false, 'unProc')
-	state.Stance = M{['description']='Stance','Innin','Yonin','None'}
+	state.Stance = M{['description']='Stance','None','Innin','Yonin',}
 
 	autows = "Blade: Shun"
 	autofood = 'Soy Ramen'
-	
+	autonuke = 'Katon: San'
+
 	utsusemi_ni_cancel_delay = .1
 	
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Water','Lightning','Earth','Wind','Ice','Light','Dark',}
@@ -250,6 +251,31 @@ end
 -- gain == true if the buff was gained, false if it was lost.
 function job_buff_change(buff, gain)
 	update_melee_groups()
+
+	if buff == "Sleep" then
+        if gain then    
+            send_command('input /p ZZZzzz, please cure.')		
+        else
+            send_command('input /p '..player.name..' is no longer Sleep!')
+        end
+    end
+	if buff == "petrification" then
+        if gain then    
+            equip(sets.defense.DT)
+            send_command('input /p Petrification, please Stona.')		
+        else
+        send_command('input /p '..player.name..' is no longer Petrify!')
+        handle_equipping_gear(player.status)
+        end
+    end
+    if buff == "Charm" then
+        if gain then  			
+           send_command('input /p Charmd, please Sleep me.')		
+        else	
+           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+           handle_equipping_gear(player.status)
+        end
+    end
 end
 
 function job_status_change(new_status, old_status)
@@ -636,11 +662,12 @@ end
 
 buff_spell_lists = {
 	Auto = {	
-		{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
+		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,Reapply=false},
+		--{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
 	},
 	
 	Default = {
-		{Name='Myoshu: Ichi',Buff='Subtle Blow Plus',SpellID=507,Reapply=false},
+		--{Name='Myoshu: Ichi',Buff='Subtle Blow Plus',SpellID=507,Reapply=false},
 		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,Reapply=false},
 	},
 }
