@@ -326,6 +326,43 @@ function user_buff_change(buff, gain, eventArgs)
 		end
 	end
 end
+
+function job_buff_change(buff, gain)
+    if buff == "Charm" then
+        if gain then  			
+           send_command('input /p Charmd, please Sleep me.')		
+        else	
+           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        end
+    end
+    if buff == "petrification" then
+        if gain then    
+            equip(sets.defense.PDT)
+            send_command('input /p Petrification, please Stona.')		
+        else
+        send_command('input /p '..player.name..' is no longer Petrify!')
+        handle_equipping_gear(player.status)
+        end
+    end
+    if buff == "sleep" then
+        if gain then    
+            send_command('input /p ZZZzzz, please cure.')		
+        else
+            send_command('input /p '..player.name..' is no longer Sleep!')
+        end
+    end
+	if buff == "doom" then
+        if gain then
+            equip(sets.buff.Doom)
+            send_command('@input /p Doomed, please Cursna.')
+        else
+            send_command('input /p Doom removed.')
+            handle_equipping_gear(player.status)
+        end
+    end
+end
+
+
 function is_sc_element_today(spell)
     if spell.type ~= 'WeaponSkill' then
         return
