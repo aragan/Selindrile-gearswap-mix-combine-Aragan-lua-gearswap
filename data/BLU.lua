@@ -47,51 +47,48 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-
 	
-organizer_items = {
-    "Airmid's Gorget",
-    "Prime Sword",
-    "Tumult's Blood",
-    "Sarama's Hide",
-    "Hidhaegg's Scale",
-    "Sovereign's Hide",
-    "Grape Daifuku",
-    "Soy Ramen",
-    "G. Curry Bun +1",
-    "Pukatrice Egg",
-    "Moogle Amp.",
-    "Popo. con Queso",
-    "Pear Crepe",
-    "Om. Sandwich",
-    "Red Curry Bun",
-    "Gyudon",
-    "Reraiser",
-    "Hi-Reraiser",
-    "Vile Elixir",
-    "Vile Elixir +1",
-    "Miso Ramen",
-    "Carbonara",
-    "Silent Oil",
-    "Salt Ramen",
-    "Panacea",
-    "Sublime Sushi",
-    "Sublime Sushi 1+",
-    "Prism Powder",
-    "Antacid",
-    "Icarus Wing",
-    "Warp Cudgel",
-    "Holy Water",
-    "Sanjaku-Tenugui",
-    "Shinobi-Tabi",
-    "Shihei",
-    "Remedy",
-    "Emporox's Ring",
-    "Red Curry Bun",
-    "Instant Reraise",
-    "Black Curry Bun",
-    "Rolan. Daifuku",}
-    
+	organizer_items = {
+		"Airmid's Gorget",
+		"Tumult's Blood",
+		"Sarama's Hide",
+		"Hidhaegg's Scale",
+		"Sovereign's Hide",
+		"Grape Daifuku",
+		"Soy Ramen",
+		"G. Curry Bun +1",
+		"Pukatrice Egg",
+		"Moogle Amp.",
+		"Popo. con Queso",
+		"Pear Crepe",
+		"Om. Sandwich",
+		"Red Curry Bun",
+		"Gyudon",
+		"Reraiser",
+		"Hi-Reraiser",
+		"Vile Elixir",
+		"Vile Elixir +1",
+		"Miso Ramen",
+		"Carbonara",
+		"Silent Oil",
+		"Salt Ramen",
+		"Panacea",
+		"Sublime Sushi",
+		"Sublime Sushi 1+",
+		"Prism Powder",
+		"Antacid",
+		"Icarus Wing",
+		"Warp Cudgel",
+		"Holy Water",
+		"Sanjaku-Tenugui",
+		"Shinobi-Tabi",
+		"Shihei",
+		"Remedy",
+		"Emporox's Ring",
+		"Red Curry Bun",
+		"Instant Reraise",
+		"Black Curry Bun",
+		"Rolan. Daifuku",}
 end
 
 
@@ -108,8 +105,8 @@ function job_setup()
     state.Buff['Unbridled Learning'] = buffactive['Unbridled Learning'] or false
 	state.Buff['Unbridled Wisdom'] = buffactive['Unbridled Wisdom'] or false
 	state.AutoEquipBurst = M(true)
+    state.MagicBurst = M(false, 'Magic Burst')
     state.HippoMode = M(false, "hippoMode")
-    state.Storms =  M{['description']='storms', 'Sandstorm', 'Aurorastorm', 'Voidstorm', 'Firestorm', 'Rainstorm', 'Windstorm', 'Hailstorm', 'Thunderstorm'}
 
 	state.LearningMode = M(false, 'Learning Mode')
 	state.AutoUnbridled = M(false, 'Auto Unbridled Mode')
@@ -190,9 +187,6 @@ function job_setup()
 		'Nectarous Deluge','Searing Tempest','Blinding Fulgor','Spectral Floe','Scouring Spate',
 		'Anvil Lightning','Silent Storm','Entomb','Tenebral Crush','Palling Salvo'
     }
-	
-    blue_magic_maps.MagicalDark = S{'Dark Orb','Death Ray','Eyes On Me','Evryone. Grudge','Palling Salvo',
-        'Tenebral Crush'}
 
     -- Magical spells with a primary Mnd mod 
     blue_magic_maps.MagicalMnd = S{
@@ -383,12 +377,6 @@ function job_post_midcast(spell, spellMap, eventArgs)
         if spellMap == 'Healing' then
 			if (state.Weapons.value == 'None' or state.UnlockWeapons.value) and sets.midcast['Blue Magic'].UnlockedHealing then
 				equip(sets.midcast['Blue Magic'].UnlockedHealing)
-			elseif state.CastingMode.value == 'SIRD' then
-				equip(sets.SIRD)
-			elseif state.CastingMode.value == 'ConserveMP' then
-				equip(sets.ConserveMP)
-			elseif state.CastingMode.value == 'DT' then
-				equip(sets.DT)
 			end
 			
 			if spell.target.type == 'SELF' then
@@ -449,52 +437,38 @@ function job_post_midcast(spell, spellMap, eventArgs)
     if state.LearningMode.value == true then
 		equip(sets.Learning)
     end
+	if state.CastingMode.value == 'SIRD' then
+		equip(sets.SIRD)
+	elseif state.CastingMode.value == 'ConserveMP' then
+		equip(sets.ConserveMP)
+	else
 
-	if spell.skill == 'Enhancing Magic' and classes.NoSkillSpells:contains(spell.english) then
-		if state.CastingMode.value == 'Duration' then
-			equip(sets.midcast.Duration)
-		elseif state.CastingMode.value == 'SIRD' then
+	end
+    if spell.skill == 'Enhancing Magic' or spell.skill == 'Blue Magic' and classes.NoSkillSpells:contains(spell.english) then
+		if state.CastingMode.value == 'SIRD' then
 			equip(sets.SIRD)
 		elseif state.CastingMode.value == 'ConserveMP' then
 			equip(sets.ConserveMP)
-		elseif state.CastingMode.value == 'DT' then
-			equip(sets.DT)
 		else
-		equip(sets.midcast['Enhancing Magic'])
-		end
-		if spellMap == 'Refresh' then
-			equip(sets.midcast.Refresh)
-		elseif spellMap == 'Aquaveil' then
-			equip(sets.midcast.Aquaveil)
-		elseif spellMap == 'Phalanx' then
-			equip(sets.midcast.Phalanx)
-		elseif spellMap == 'Haste' then
-			equip(sets.midcast.Haste)
+
 		end
 	end
+	if spell.skill == 'Elemental Magic' or spell.skill == 'Blue Magic' and (state.MagicBurst.value or AEBurst) then
+        equip(sets.magicburst)
+        if spell.english == "Impact" then
+            equip(sets.midcast.Impact)
+        end
+    end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
-    if not spell.interrupted then
-        if spell.english == "Dream Flower" then
-            send_command('@timers c "Dream Flower ['..spell.target.name..']" 90 down spells/00098.png')
-        elseif spell.english == "Soporific" then
-            send_command('@timers c "Sleep ['..spell.target.name..']" 90 down spells/00259.png')
-        elseif spell.english == "Sheep Song" then
-            send_command('@timers c "Sheep Song ['..spell.target.name..']" 60 down spells/00098.png')
-        elseif spell.english == "Yawn" then
-            send_command('@timers c "Yawn ['..spell.target.name..']" 60 down spells/00098.png')
-        elseif spell.english == "Entomb" then
-            send_command('@timers c "Entomb ['..spell.target.name..']" 60 down spells/00547.png')
-        end
-    end
-	if state.MagicBurstMode.value == 'Single' then
-		if spell.skill == 'Elemental Magic' or (spell.skill == 'Blue Magic' and spellMap:contains('Magical')) then
-			state.MagicBurstMode:reset()
-			if state.DisplayMode.value then update_job_states()	end
-		end
-	end
 
+        if state.MagicBurstMode.value == 'Single' then
+			if spell.skill == 'Elemental Magic' or (spell.skill == 'Blue Magic' and spellMap:contains('Magical')) then
+				state.MagicBurstMode:reset()
+				if state.DisplayMode.value then update_job_states()	end
+			end
+		end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -506,47 +480,6 @@ end
 -- gain == true if the buff was gained, false if it was lost.
 function job_buff_change(buff, gain)
 	update_melee_groups()
-	if buff == "doom" then
-        if gain then
-            equip(sets.buff.Doom)
-            send_command('input /p Doomed, please Cursna.')
-            send_command('input /item "Holy Water" <me>')	
-        else
-            send_command('input /p Doom removed.')
-            handle_equipping_gear(player.status)
-        end
-    end
-    if buff == "petrification" then
-        if gain then    
-            equip(sets.defense.PDT)
-            send_command('input /p Petrification, please Stona.')		
-        else
-            send_command('input /p '..player.name..' is no longer Petrify !')
-            handle_equipping_gear(player.status)
-        end
-    end
-    if buff == "terror" then
-        if gain then
-            send_command('input /p I am TERROR cant move.')		
-            equip(sets.defense.PDT)
-        end
-        handle_equipping_gear(player.status)
-    end
-    if buff == "Charm" then
-        if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
-        else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
-           handle_equipping_gear(player.status)
-        end
-    end
-    if buff == "Sleep" then
-        if gain then    
-            send_command('input /p ZZZzzz, please cure.')		
-        else
-            send_command('input /p '..player.name..' is no longer Sleep!')
-        end
-    end
 end
 
 -- Custom spell mapping.
@@ -567,9 +500,7 @@ function job_customize_melee_set(meleeSet)
 	if state.LearningMode.value == true then 
 		meleeSet = set_combine(meleeSet, sets.Learning)
 	end
-    if state.TreasureMode.value == 'Fulltime' then
-        meleeSet = set_combine(meleeSet, sets.TreasureHunter)
-    end
+
     return meleeSet
 end
 
@@ -593,11 +524,13 @@ function job_customize_idle_set(idleSet)
 		idleSet = set_combine(idleSet, sets.Learning)
 	end
 	if state.HippoMode.value == true then 
-        idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
-    end
-
-    return idleSet
+		idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
+	end
+    
+	return idleSet
 end
+
+
 
 -- Called by the 'update' self-command, for common needs.
 -- Set eventArgs.handled to true if we don't want automatic equipping of gear.
@@ -614,9 +547,6 @@ function job_self_command(commandArgs, eventArgs)
 		end
 		eventArgs.handled = true
 	end
-	if commandArgs[1]:lower() == 'storms' then
-        send_command('@input /ma "'..state.Storms.value..'" <stpc>')
-    end
 end
 
 function unbridled_ready()
@@ -649,8 +579,6 @@ function check_arts()
 	
 	return false
 end
-
-
 
 -------------------------------------------------------------------------------------------------------------------
 -- Utility functions specific to this job.
@@ -753,15 +681,15 @@ buff_spell_lists = {
 	},
 	
 	Cleave = {
-		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	Reapply=false},
-		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	Reapply=false},
-		{Name='Refresh',			Buff='Refresh',			SpellID=109,	Reapply=false},
-		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	Reapply=false},
-		{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	Reapply=false},
-		{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		Reapply=false},
-		{Name='Occultation',		Buff='Blink',			SpellID=679,	Reapply=false},
-		{Name='Blink',				Buff='Blink',			SpellID=53,		Reapply=false},
-		{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	Reapply=false},
-		{Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	Reapply=false},
+		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
+		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
+		{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Always'},
+		{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+		{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
+		{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
+		{Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
 	},
 }
