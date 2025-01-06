@@ -22,6 +22,7 @@ function user_job_setup()
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('Naegling', 'Naegling2','None', 'Maxentius', 'Nuking', 'MaccWeapons')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','MP','SuppaBrutal','DWEarrings','DWMax'}
+	state.AutoBuffMode:options('Off','Auto','Cleave') --,'Off','Off','Off','Off','Off',
 
 	gear.wsd_jse_back = {}
 
@@ -50,6 +51,7 @@ function user_job_setup()
 	send_command('bind !9 gs c weapons HybridWeapons;gs c update')
     send_command('bind f1 gs c cycle HippoMode')
     send_command('alias destroy setkey down down;')
+	--send_command('bind ^f2 gs c toggle AutoBuffMode')
 
     send_command('alias lamp input /targetnpc;wait .1; input //tradenpc 1 "Smoldering Lamp";wait 1.4;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey right down;wait .4;setkey right up;wait .1;setkey numpadenter down;wait .1;setkey numpadenter up;')  --//lamp
     send_command('alias glowing input /targetnpc;wait .1; input //tradenpc 1 "Glowing Lamp";wait 1.8;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;') -- //glowing 
@@ -447,6 +449,7 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
 	sets.ConserveMP = {    
 		ammo="Pemphredo Tathlum",
 		body="Vedic Coat",
+        left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
 		waist="Austerity Belt +1",
 	}
 	sets.SIRD = {
@@ -484,7 +487,7 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
 		right_ring="Stikini Ring +1",
 		back={ name="Fi Follet Cape +1", augments={'Path: A',}},
 	}
-	sets.midcast.FastRecast = sets.SIRD 
+	sets.midcast.FastRecast = {}
 	sets.midcast.Utsusemi = sets.SIRD
 	
 	sets.midcast.RA = {		
@@ -800,6 +803,9 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
 
 	sets.midcast['Blue Magic'].Healing.SIRD = set_combine(sets.SIRD, sets.midcast['Blue Magic'].Healing)
 	sets.self_healing = set_combine(sets.midcast['Blue Magic'].Healing, {
+		waist="Gishdubar Sash", -- (10)
+	})
+	sets.self_healing.SIRD = set_combine(sets.midcast['Blue Magic'].Healing, {
 		waist="Gishdubar Sash", -- (10)
 	})
 	sets.midcast['Blue Magic'].UnlockedHealing = sets.midcast['Blue Magic'].Healing
