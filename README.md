@@ -61,7 +61,7 @@ SC3
 NOTE: for sortie NM Triboulex use this command for 2step fusion open close close2 ;
 
 -------------
-Note: i play with pedgamed controler logitec and keyboard and if u want play like me easy fast smooth 
+Note: i play with Wireless Gamepad controller logitec and keyboard and if u want play like me easy fast smooth 
 u need install my last macro all jobs i add line for job and add code u follow number line macro in lua job 
 and learning all  and u need see all list binds to know all binds and u need see Aragan global to know all binds 
 and install all addons all plugin all bot tako project and easyfarm and curepleas 
