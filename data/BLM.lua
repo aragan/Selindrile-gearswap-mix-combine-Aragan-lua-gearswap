@@ -271,6 +271,24 @@ function job_post_midcast(spell, spellMap, eventArgs)
 			equip(sets.buff['Mana Wall'])
 		end
 	end
+	if state.CastingMode.value == 'SIRD' then
+		equip(sets.SIRD)
+	elseif state.CastingMode.value == 'ConserveMP' then
+		equip(sets.ConserveMP)
+	end
+    if spell.skill == 'Enhancing Magic' and classes.NoSkillSpells:contains(spell.english) then
+		if state.CastingMode.value == 'SIRD' then
+			equip(sets.SIRD)
+		elseif state.CastingMode.value == 'ConserveMP' then
+			equip(sets.ConserveMP)
+		end
+	end
+	if spell.skill == 'Elemental Magic' and (state.MagicBurst.value or AEBurst) then
+        equip(sets.magicburst)
+        if spell.english == "Impact" then
+            equip(sets.midcast.Impact)
+        end
+    end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)

@@ -139,7 +139,7 @@ function job_setup()
 	
 	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
 	
-	autows = 'Retribution'
+	autows = 'Myrkr'
 	autofood = 'Pear Crepe'
 
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","HelixMode","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
@@ -237,7 +237,7 @@ function job_post_midcast(spell, spellMap, eventArgs)
         end
     end
     if spell.skill == 'Elemental Magic' and (state.MagicBurst.value or AEBurst) then
-        equip(sets.magic_burst)
+        equip(sets.magicburst)
         if spell.english == "Impact" then
             equip(sets.midcast.Impact)
         end
