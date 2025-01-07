@@ -609,11 +609,8 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
 	sets.Self_Healing = set_combine(sets.midcast.Cure, {}) 
 	sets.Cure_Received = {waist="Gishdubar Sash"}
 	sets.Self_Refresh = {head="Erilaz Galea +2",waist="Gishdubar Sash"}
-	sets.Phalanx_Received = {head="Fu. Bandeau +3",
-	body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
-	feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
-}
+    sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
+
 	
     sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring"})
     sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring"})

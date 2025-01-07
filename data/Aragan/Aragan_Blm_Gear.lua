@@ -341,14 +341,21 @@ function init_gear_sets()
     sets.midcast.FastRecast = sets.precast.FC
 
 	sets.SIRD = {
-			ammo="Staunch Tathlum +1",
-			head={ name="Agwu's Cap", augments={'Path: A',}},
-			body={ name="Ros. Jaseran +1", augments={'Path: A',}},
-			hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-			feet="Wicce Sabots +2",
-			waist="Rumination Sash",
-			right_ring="Freke Ring",
+        ammo="Staunch Tathlum +1",
+        head={ name="Agwu's Cap", augments={'Path: A',}},
+        body={ name="Ros. Jaseran +1", augments={'Path: A',}},
+        hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+        feet="Wicce Sabots +2",
+        waist="Rumination Sash",
+        right_ring="Freke Ring",
 	} 
+    sets.ConserveMP = {
+        ammo="Pemphredo Tathlum",
+        body="Spaekona's Coat +3",
+        hands="Wicce Gloves +2",
+        waist="Shinjutsu-no-Obi +1",
+        left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+    }
 
     sets.midcast.Cure = {      
 	ammo="Pemphredo Tathlum",
@@ -1110,14 +1117,17 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 	sets.Self_Healing = {waist="Gishdubar Sash"}
 	sets.Cure_Received = {waist="Gishdubar Sash"}
 	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash",feet="Inspirited Boots"}
-		
+    sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'], {})
 end
 
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()
-    set_macro_page(6, 8)
+    set_macro_page(6, 9)
 end
 
 function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 174')
 end
+
+
+autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',['Drepanum']='Spiral Hell',['Maliya']='Spinning Scythe',['TernionDagger']='Aeolian Edge',['Club']='Black Halo',}

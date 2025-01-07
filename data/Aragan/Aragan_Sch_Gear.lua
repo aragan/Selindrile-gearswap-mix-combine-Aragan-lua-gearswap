@@ -143,7 +143,7 @@ function user_job_setup()
     state.IdleMode:options('Normal', 'DT', 'Resist','BoostHP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
     state.PhysicalDefenseMode:options('PDT','BoostHP', 'Evasion', 'Resist')
     state.MagicalDefenseMode:options('MDT')
-	state.Weapons:options('Mpaca','Marin','None')
+	state.Weapons:options('Mpaca','Marin','None','Xoanon', 'Club','TernionDagger')
 
 	gear.nuke_jse_back = {"Lugh's Cape"}
 
@@ -215,6 +215,9 @@ function init_gear_sets()
     --sets.normal = {}
     sets.weapons.Marin = {main="Marin Staff +1",sub="Enki Strap"}
     sets.weapons.Mpaca = {main="Mpaca's Staff",sub="Enki Strap"}
+    sets.weapons.Xoanon = {main="Xoanon", sub="Alber Strap"}
+    sets.weapons.Club = {main="Maxentius",sub="Ammurapi Shield",}
+    sets.weapons.TernionDagger = {main="Ternion Dagger +1",sub="Ammurapi Shield",}
 
 
     sets.Capacity = {}
@@ -1209,15 +1212,18 @@ end
 -- Default macro set/book
 function select_default_macro_book()
 	if player.sub_job == 'RDM' then
-        set_macro_page(4, 17)
+        set_macro_page(4, 15)
 	elseif player.sub_job == 'BLM' then
-        set_macro_page(3, 17)
+        set_macro_page(3, 15)
 	elseif player.sub_job == 'WHM' then
-        set_macro_page(2, 17)
+        set_macro_page(2, 15)
 	else
-        set_macro_page(8, 17)
+        set_macro_page(8, 15)
 	end
 end
 function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 173')
 end
+
+autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',['Drepanum']='Spiral Hell',
+['Xoanon']="Cataclysm",['TernionDagger']='Aeolian Edge',['Club']='Black Halo',}

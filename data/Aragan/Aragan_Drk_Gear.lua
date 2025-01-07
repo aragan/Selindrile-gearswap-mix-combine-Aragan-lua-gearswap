@@ -13,8 +13,18 @@ in macro for fast used i add :
 /con gs c elemental nuke -- for clear magic burst mobs in A/C
 /con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
 u can use addon automb 
+
+/con gs c cycle Absorbs -- for cycle Absorbs
+/con gs c cycleback Absorbs -- for cycleback Absorbs
+/con gs c Absorbs -- for USE Absorbs
+
+and i add bind alt+f1 reset addon zonetime on screen to know when u fight
+sortie boss 3min u can run away before or bind before 20s
+and i add code in gs if u engage zonetime will reset every engage
+
 --]]
 --[[ 
+
 -- Scythe Light:
 Insurgency > Vorpal Scythe > Entropy > Guillotine > Entropy > Insurgency 
 Vorpal Scythe > Entropy > Guillotine > Entropy > Insurgency 
@@ -77,8 +87,8 @@ function user_job_setup()
     state.PhysicalDefenseMode:options( 'PDT', 'HP', 'Enmity', 'Dread Spikes', 'SEboost', 'Reraise')
     state.MagicalDefenseMode:options('Normal','MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options('Normal','PDT' ,'Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate', 'Refresh')
-	state.Weapons:options('Normal', 'Caladbolg', 'Lycurgos', 'Liberator', 'Anguta', 'Apocalypse', 'AgwuClaymore', 'Naegling', 'Loxotic', 'TernionDagger')
+	state.IdleMode:options('Tank','Normal','PDT' ,'Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate', 'Refresh')
+	state.Weapons:options('Normal', 'Caladbolg', 'Lycurgos', 'Liberator', 'Anguta', 'Apocalypse', 'Drepanum', 'AgwuClaymore', 'Naegling', 'Loxotic', 'TernionDagger', 'Dolichenus')
 	state.shield = M{['description']='Weapon Set', 'Normal', 'shield'}
 
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
@@ -94,6 +104,7 @@ function user_job_setup()
     send_command('bind !f3 gs c cycleback Absorbs')
     send_command('bind f2 input //gs c Absorbs')
     send_command('bind f7 gs c cycle shield')
+	send_command('bind f5 gs c cycle WeaponskillMode')
 	send_command('bind f4 gs c cycle ElementalMode')
 	send_command('bind @f4 gs c cycleback ElementalMode') --Robbiewobbie's idea
     send_command('bind @c gs c toggle Capacity')
@@ -117,11 +128,19 @@ sets.weapons.Caladbolg = {main="Caladbolg", sub="Utu Grip"}
 sets.weapons.Liberator = {main="Liberator", sub="Utu Grip"}
 sets.weapons.Anguta = {main="Anguta", sub="Utu Grip"}
 sets.weapons.Apocalypse = {main="Apocalypse", sub="Utu Grip"}
+sets.weapons.Drepanum = {main="Drepanum", sub="Utu Grip"}
 sets.weapons.AgwuClaymore = {main="Agwu's Claymore", sub="Utu Grip"}
 sets.weapons.Lycurgos = {main="Lycurgos", sub="Utu Grip",}
+
+sets.weapons.DualNaegling = {main="Naegling", sub="Sangarius +1"}
+sets.weapons.DualLoxotica = {main="Loxotic Mace +1", sub="Sangarius +1"}
+sets.weapons.DualTernionDagger = {main="Ternion Dagger +1", sub="Sangarius +1",}
+sets.weapons.DualDolichenus = {main="Dolichenus", sub="Sangarius +1",}
+
 sets.weapons.Naegling = {main="Naegling", sub="Blurred Shield +1",}
 sets.weapons.Loxotic = {main="Loxotic Mace +1", sub="Blurred Shield +1",}
 sets.weapons.TernionDagger = {main="Ternion Dagger +1", sub="Blurred Shield +1",}
+sets.weapons.Dolichenus = {main="Dolichenus", sub="Blurred Shield +1",}
 
 sets.Normal = {}
 sets.shield = {sub="Blurred Shield +1"}
@@ -1264,13 +1283,17 @@ sets.defense.SEboost = {
         -- Idle sets
            
     sets.idle = {ammo="Staunch Tathlum +1",
-		head="Jumalik Helm",neck="Loricate Torque +1",
-		ear1="Genmei Earring",ear2="Ethereal Earring",
-		body="Jumalik Mail",hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-		ring1="Stikini Ring +1",ring2="Stikini Ring +1",
-		back="Shadow Mantle",waist="Flume Belt +1",
+		head="Jumalik Helm",
+		body="Jumalik Mail",
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
-		feet={ name="Sakpata's Leggings", augments={'Path: A',}},}
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		neck="Coatl Gorget +1",
+		ear1="Genmei Earring",ear2="Ethereal Earring",
+		ring1="Stikini Ring +1",ring2="Stikini Ring +1",
+		waist="Flume Belt +1",
+		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+	}
 		
     sets.idle.Refresh = set_combine(sets.idle, {       
 			head=empty,
@@ -1308,6 +1331,8 @@ sets.defense.SEboost = {
 	right_ring="Moonlight Ring",
 	back="Moonlight Cape",
     }
+	sets.idle.Tank = sets.idle.PDT
+	
 	sets.idle.MDT = sets.defense.MDT
 	sets.idle.Evasion = sets.defense.Evasion
 	sets.idle.HP = sets.defense.HP
@@ -1410,7 +1435,7 @@ sets.defense.SEboost = {
 		back="Moonlight Cape",
 	})
 		  
-		sets.engaged.Acc = {
+	sets.engaged.Acc = {
 			ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 			head="Sulevia's Mask +2",
 			body="Crepuscular Mail",
@@ -1676,18 +1701,23 @@ sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
 function select_default_macro_book()
     -- Default macro set/book
     if player.sub_job == 'WAR' then
-        set_macro_page(7, 21)
+        set_macro_page(7, 4)
     elseif player.sub_job == 'SAM' then
-        set_macro_page(7, 21)
+        set_macro_page(7, 4)
     elseif player.sub_job == 'DNC' then
-        set_macro_page(7, 21)
+        set_macro_page(7, 4)
     elseif player.sub_job == 'THF' then
-        set_macro_page(7, 21)
+        set_macro_page(7, 4)
     else
-        set_macro_page(7, 21)
+        set_macro_page(7, 4)
     end
 end
 
 function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 165')
 end
+
+autows_list = {['Caladbolg']='Torcleaver',['Liberator']='Insurgency',['Anguta']='Cross Reaper',['Apocalypse']='Catastrophe',
+     ['Drepanum']='Spiral Hell',['AgwuClaymore']='Resolution',['Lycurgos']='Fell Cleave',['DualNaegling']='Savage Blade',
+     ['DualLoxotica']='Judgment',['DualTernionDagger']='Aeolian Edge',['DualDolichenus']='Decimation',
+     ['Naegling']='Savage Blade',['Loxotic']='Judgment',['TernionDagger']='Aeolian Edge',['Dolichenus']='Decimation'}

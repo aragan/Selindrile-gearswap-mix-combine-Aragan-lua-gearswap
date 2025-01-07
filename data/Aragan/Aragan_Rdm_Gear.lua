@@ -1304,15 +1304,15 @@ end
 -- Default macro set/book
 function select_default_macro_book()
 	if player.sub_job == 'DNC' then
-        set_macro_page(5, 22)
+        set_macro_page(5, 1)
 	elseif player.sub_job == 'NIN' then
-        set_macro_page(5, 22)
+        set_macro_page(5, 1)
 	elseif player.sub_job == 'BLM' then
-        set_macro_page(5, 22)
+        set_macro_page(5, 1)
 	elseif player.sub_job == 'WHM' then
-        set_macro_page(5, 22)
+        set_macro_page(5, 1)
 	else
-        set_macro_page(5, 22)
+        set_macro_page(5, 1)
 	end
 end
 
@@ -1403,4 +1403,6 @@ function user_job_lockstyle()
 	end
 end
 
-autows_list = {['Naegling']='Savage Blade',['DualWeapons']='Savage Blade',['DualWeaponsAcc']='Savage Blade',['DualEvisceration']='Evisceration',['DualClubs']='Black Halo',['DualAeolian']='Aeolian Edge',['EnspellDW']='Sanguine Blade'}
+autows_list = {['SWORDS']='Savage Blade',['Crocea']='Seraph Blade',['Club']='Black Halo',
+['DAGGERS']='Aeolian Edge',['DualClub']='Black Halo',['DualSWORDS']='Savage Blade',
+['DualCrocea']='Seraph Blade',['DualDAGGERS']='Aeolian Edge'}

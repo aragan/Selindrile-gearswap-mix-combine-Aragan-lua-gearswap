@@ -51,6 +51,7 @@ function user_job_setup()
 	send_command('bind ^\\\\ input /ja "Random Deal" <me>')
     send_command('bind !\\\\ input /ja "Bolter\'s Roll" <me>')
 	send_command('bind ^@!\\\\ gs c toggle LuzafRing')
+    send_command('bind ^2 gs c toggle LuzafRing')
 	send_command('bind @f7 gs c toggle RngHelper')
 	send_command('bind !f1 gs c toggle RngHelper')
     send_command('bind !a gs c toggle phalanxset') 
@@ -554,16 +555,14 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
 	sets.Self_Healing = {waist="Gishdubar Sash"}
 	sets.Cure_Received = {waist="Gishdubar Sash"}
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
-	sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'], {
-        body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-        hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
-        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
-    })
+
     sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'], {
         body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
         hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
         feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
-    })
+    })    
+    sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
+
     sets.midcast.Utsusemi = sets.midcast.SpellInterrupt
     sets.midcast.Absorb = {
         ammo="Pemphredo Tathlum",
@@ -1023,15 +1022,15 @@ end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()
     if player.sub_job == 'NIN' then
-        set_macro_page(5, 26)
+        set_macro_page(5, 7)
     elseif player.sub_job == 'DNC' then
-        set_macro_page(5, 26)
+        set_macro_page(5, 7)
     elseif player.sub_job == 'RNG' then
-        set_macro_page(5, 26)
+        set_macro_page(5, 7)
     elseif player.sub_job == 'DRG' then
-        set_macro_page(5, 26)
+        set_macro_page(5, 7)
     else
-        set_macro_page(5, 26)
+        set_macro_page(5, 7)
     end
 end
 
@@ -1063,4 +1062,4 @@ function user_job_lockstyle()
 	end
 end
 
-autows_list = {['Default']='Savage Blade',['Evisceration']='Evisceration',['Savage']='Savage Blade',['Ranged']='Last Stand',['DualWeapons']='Savage Blade',['DualSavageWeapons']='Savage Blade',['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+autows_list = {['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='Aeolian Edge',['Ranged']='Leaden Salute',['Kustawi']='Last Stand',['DualSavageWeapons']='Savage Blade',['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}

@@ -579,6 +579,7 @@ function init_gear_sets()
 	sets.midcast.Protectra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear1="Gifted Earring",ear2="Malignance Earring"})
 	sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear1="Gifted Earring",ear2="Malignance Earring"})
 	sets.midcast.Shellra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear1="Gifted Earring",ear2="Malignance Earring"})
+    sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'], {})
 
 	--------------------------------------
 	-- Idle/resting/defense/etc sets
@@ -870,7 +871,7 @@ function user_job_lockstyle()
 end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()
-    set_macro_page(5, 34)
+    set_macro_page(5, 6)
 end
 
 autows_list = {['Idris']='Exudation',['Maxentius']="Black Halo",['Bunzi']="Flash Nova",['TernionDagger']='Aeolian Edge',['Xoanon']='Retribution',['MalignancePole']='Cataclysm',

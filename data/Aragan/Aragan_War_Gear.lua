@@ -14,7 +14,7 @@ keyboard binds and chat
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'H2H')
-    state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL','vagary')
+    state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL','Proc')
     state.HybridMode:options('Normal', 'PDT')
     state.PhysicalDefenseMode:options('PDT', 'HP','Evasion', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
@@ -291,8 +291,18 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         legs="Boii Cuisses +3",
         left_ring="Sroda Ring",
      })
-	 sets.precast.WS.vagary =  {}
-	 sets.vagary =  {}
+	 sets.precast.WS.Proc = {
+        neck="Fotia Gorget",waist="Fotia Belt",left_ring="Rufescent Ring",
+        right_ring={ name="Beithir Ring", augments={'Path: A',}},
+        ammo="Pemphredo Tathlum",
+    head={ name="Sakpata's Helm", augments={'Path: A',}},
+    hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+    legs="Boii Cuisses +3",
+    feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+    left_ear="Crep. Earring",
+    right_ear="Digni. Earring",
+    }
+	 sets.Proc = {neck="Fotia Gorget",waist="Fotia Belt",left_ring="Rufescent Ring",right_ring={ name="Beithir Ring", augments={'Path: A',}}}
 
     sets.precast.WS['Upheaval'] = set_combine(sets.precast.WS, {
     ammo="Knobkierrie",
@@ -850,19 +860,20 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 
 
 	
-	sets.precast.WS["Shadow of Death"].vagary = sets.precast.WS.vagary
-	sets.precast.WS["Cyclone"].vagary =  {}
-	sets.precast.WS["Starburst"].vagary =  {}
-	sets.precast.WS["Sunburst"].vagary =  {}
-	sets.precast.WS["Earth Crusher"].vagary =  {}
-	sets.precast.WS["Freezebite"].vagary =  {}
-	sets.precast.WS["Red Lotus Blade"].vagary =  {}
-	sets.precast.WS["Seraph Blade"].vagary =  {}
-	sets.precast.WS["Energy Drain"].vagary =  {}
-	sets.precast.WS["Shining Blade"].vagary =  {}
-	sets.precast.WS["Raiden Thrust"].vagary =  {}
-	sets.precast.WS['Tachi: Jinpu'].vagary =  {}
-	sets.precast.WS['Tachi: Koki'].vagary =  {}
+	sets.precast.WS["Shadow of Death"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Cyclone"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Starburst"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Sunburst"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Earth Crusher"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Freezebite"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Red Lotus Blade"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Seraph Blade"].Proc = set_combine(sets.precast.WS.Proc,{})
+    sets.precast.WS["Seraph Strike"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Energy Drain"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Shining Blade"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS["Raiden Thrust"].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS['Tachi: Jinpu'].Proc = set_combine(sets.precast.WS.Proc,{})
+	sets.precast.WS['Tachi: Koki'].Proc = set_combine(sets.precast.WS.Proc,{})
 	
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
@@ -1216,7 +1227,15 @@ function user_job_lockstyle()
 end
 
 
-autows_list = {['DualNaegling']='Savage Blade',['Malevo']='Aeolian Edge',['Naegling']='Savage Blade',['Chango']='Upheaval',['AgwuClaymore']='Resolution',['Drepanum']='Spiral Hell',['IkengaAxe']='Calamity',['DualIkengaAxe']='Calamity',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['Loxotic ']='Judgment',['DualLoxotic']='Judgment',['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive'}
+autows_list = {['DualNaegling']='Circle Blade',['Malevo']='Aeolian Edge',['Naegling']='Savage Blade',
+['Chango']='Fell Cleave',['AgwuClaymore']='Resolution',['Drepanum']='Spiral Hell',['IkengaAxe']='Calamity',
+['DualIkengaAxe']='Calamity',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',
+['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',
+['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',
+['ProcClub']='Seraph Strike',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',
+['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',
+['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['Loxotic']='Judgment',['DualLoxotic']='Judgment',
+['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive'}
 
 --[[
     sets.engaged.Charge = {}

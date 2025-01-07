@@ -468,6 +468,110 @@ range="Trollbane",  }
 
     sets.midcast.FastRecast = {}
 	
+    
+    -------------------------------------Midcast
+    sets.midcast = {} --Can be left empty
+
+    sets.midcast.FastRecast = {}
+    sets.midcast['Healing Magic'] = {
+        feet={ name="Regal Pumps +1", augments={'Path: A',}},
+        neck="Reti Pendant",
+        waist="Luminary Sash",
+        left_ear="Mendi. Earring",
+        right_ear="Enmerkar Earring",
+        left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+        right_ring="Naji's Loop",
+        back="Solemnity Cape",
+    }
+    sets.midcast['Enhancing Magic'] = {
+        feet={ name="Regal Pumps +1", augments={'Path: A',}},
+        neck="Incanter's Torque",
+        waist="Olympus Sash",
+        right_ear="Andoaa Earring",
+        left_ring="Stikini Ring +1",
+        right_ring="Stikini Ring +1",
+        back={ name="Fi Follet Cape +1", augments={'Path: A',}},
+    }
+
+    sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'],{
+	body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
+	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+	})
+    sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
+
+    sets.midcast.Stoneskin = set_combine(sets.midcast['Enhancing Magic'], {
+        neck="Stone Gorget",
+	    legs="Haven Hose",
+        left_ear="Earthcry Earring",
+        waist="Siegel Sash",
+    })
+    sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'], {waist="Gishdubar Sash"})
+
+    sets.midcast['Enfeebling Magic'] = {
+        main={ name="Xiucoatl", augments={'Path: C',}},
+        body={ name="Cohort Cloak +1", augments={'Path: A',}},
+        hands="Karagoz Guanti +2",
+        legs="Kara. Pantaloni +2",
+        feet="Karagoz Scarpe +2",
+        neck="Incanter's Torque",
+        waist="Rumination Sash",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back={ name="Aurist's Cape +1", augments={'Path: A',}},
+    }
+    sets.midcast['Elemental Magic'] = {
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Sibyl Scarf",
+        waist="Eschan Stone",
+        left_ear="Friomisi Earring",
+        right_ear="Hecate's Earring",
+        left_ring="Stikini Ring +1",
+        right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        back="Argocham. Mantle",
+	}
+    sets.midcast['Divine Magic'] = {
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Incanter's Torque",
+        waist="Skrymir Cord",
+        left_ear="Crematio Earring",
+        right_ear="Hecate's Earring",
+        left_ring="Stikini Ring +1",
+        right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+        back={ name="Aurist's Cape +1", augments={'Path: A',}},
+    }
+    sets.midcast['Blue Magic'] = { 
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        hands={ name="Rawhide Gloves", augments={'Mag. Acc.+15','INT+7','MND+7',}},
+        neck="Incanter's Torque",
+        waist="Eschan Stone",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring="Stikini Ring +1",
+        right_ring="Stikini Ring +1",
+        back={ name="Aurist's Cape +1", augments={'Path: A',}},
+    }
+    sets.TreasureHunter = { 
+        --ammo="Per. Lucky Egg",
+        head="White rarab cap +1", 
+        waist="Chaac Belt",
+     }
+
+
+
 	sets.midcast.Dia = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 	sets.midcast.Diaga = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 	sets.midcast['Dia II'] = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
@@ -1157,15 +1261,18 @@ end
 function select_default_macro_book()
     -- Default macro set/book
     if player.sub_job == 'DNC' then
-        set_macro_page(8, 39)
+        set_macro_page(8, 17)
     elseif player.sub_job == 'NIN' then
-        set_macro_page(8, 39)
+        set_macro_page(8, 17)
     elseif player.sub_job == 'THF' then
-        set_macro_page(8, 39)
+        set_macro_page(8, 17)
     else
-        set_macro_page(8, 39)
+        set_macro_page(8, 17)
     end
 end
 function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 160')
 end
+
+autows_list = {['Godhands']='Victory Smite',['Xiucoatl']='Victory Smite',['Ohtas']='Victory Smite',
+['Condemners']='Victory Smite',['Karambit']='Asuran Fists'}

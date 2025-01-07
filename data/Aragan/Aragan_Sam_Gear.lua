@@ -1064,26 +1064,30 @@ end
 function select_default_macro_book()
     -- Default macro set/book
     if player.sub_job == 'DNC' then
-    	set_macro_page(6, 31)
+    	set_macro_page(6, 16)
     elseif player.sub_job == 'WAR' then
-    	set_macro_page(3, 31)
+    	set_macro_page(3, 16)
     elseif player.sub_job == 'NIN' then
-    	set_macro_page(5, 31)
+    	set_macro_page(5, 16)
     elseif player.sub_job == 'THF' then
-    	set_macro_page(1, 31)
+    	set_macro_page(1, 16)
     elseif player.sub_job == 'DRK' then
-    	set_macro_page(4, 31)
+    	set_macro_page(4, 16)
     else
-    	set_macro_page(1, 31)
+    	set_macro_page(1, 16)
     end
 end
 
 function user_job_lockstyle()
-		windower.chat.input('/lockstyleset 172')
+	windower.chat.input('/lockstyleset 172')
 end
 
 
-autows_list = {['Masamune']='Tachi: Fudo',['Dojikiri']='Tachi: Shoha',['Amanomurakumo']='Tachi: Kaiten',['Polearm']='Impulse Drive',['TernionDagger']='Aeolian Edge',['Club ']='Spiral Hell',['ProcWeapon']='Tachi: Jinpu',['DualIkengaAxe']='Calamity',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['Loxotic ']='Judgment',['DualLoxotic']='Judgment',['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive'}
+autows_list = {['Masamune']='Tachi: Fudo',['Dojikiri']='Tachi: Shoha',['Amanomurakumo']='Tachi: Kaiten',['Polearm']='Impulse Drive',['TernionDagger']='Aeolian Edge',
+['Club ']='Spiral Hell',['ProcWeapon']='Tachi: Jinpu',['DualIkengaAxe']='Calamity',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',
+['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',
+['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',
+['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['Loxotic ']='Judgment',['DualLoxotic']='Judgment',['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive'}
 
 --Job Specific Trust Overwrite
 function check_trust()

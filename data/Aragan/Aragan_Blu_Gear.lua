@@ -10,6 +10,31 @@ to can play smooth and easy and i play with main gameped controller logitech and
 keyboard binds and chat 
 ]]
 
+----- buff -----
+--[[
+usage : for AutoBuffMode u find buff_spell_lists in blu.lua last down line
+add
+	state.AutoBuffMode:options('Off','Auto','Cleave') or any
+
+bind add any like
+
+	send_command('bind ^f2 gs c toggle AutoBuffMode')
+
+	----
+for buffup 
+
+gc c buffup name 
+
+like 
+gc c buffup mp 
+
+bind add any like
+
+	send_command('bind !f2 gs c buffup')
+
+
+]]
+
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'SubtleBlow', 'CRIT', 'Refresh')--, 'Learning'
@@ -1360,23 +1385,23 @@ end
 function select_default_macro_book()
 	-- Default macro set/book
 	if player.sub_job == 'DNC' then
-        set_macro_page(6, 40)
+        set_macro_page(6, 18)
 	elseif player.sub_job == "SCH" then
-        set_macro_page(8, 40)
+        set_macro_page(8, 18)
 	elseif player.sub_job == 'NIN' then
-        set_macro_page(6, 40)
+        set_macro_page(6, 18)
 	elseif player.sub_job == 'WAR' then
-        set_macro_page(6, 40)
+        set_macro_page(6, 18)
 	elseif player.sub_job == 'RUN' then
-        set_macro_page(6, 40)
+        set_macro_page(6, 18)
 	elseif player.sub_job == 'THF' then
-        set_macro_page(6, 40)
+        set_macro_page(6, 18)
 	elseif player.sub_job == 'RDM' then
-        set_macro_page(6, 40)
+        set_macro_page(6, 18)
 	else
-        set_macro_page(6, 40)
+        set_macro_page(6, 18)
 	end
 end
 
-autows_list = {['Tizbron']='Expiacion',['Tizalmace']='Expiacion',['Almace']='Chant Du Cygne',['MeleeClubs']='Realmrazer',
-     ['HybridWeapons']='Sanguine Blade',['Naegbron']='Savage Blade',['Naegmace']='Savage Blade'}
+autows_list = {['Naegling']='Savage Blade',['Naegling2']='Expiacion',['Maxentius']='Black Halo',['Nuking']='Seraph Strike',
+     ['MaccWeapons']='Chant Du Cygne',['Naegbron']='Black Halo',['Naegmace']='Chant Du Cygne'}

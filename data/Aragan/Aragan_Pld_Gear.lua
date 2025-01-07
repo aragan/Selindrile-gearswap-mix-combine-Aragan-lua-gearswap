@@ -111,6 +111,7 @@ function init_gear_sets()
 
      -- neck JSE Necks Reinf
 	 sets.RP = {}
+
 	--------------------------------------
 	-- Precast sets
 	--------------------------------------
@@ -1346,27 +1347,31 @@ end
 function select_default_macro_book()
     -- Default macro set/book
     if player.sub_job == 'NIN' then
-	    set_macro_page(5, 37)
+	    set_macro_page(5, 20)
     elseif player.sub_job == 'RUN' then
-        set_macro_page(6, 37)
+        set_macro_page(6, 20)
         send_command('lua l AutoRUN') --addon work with sub
         --send_command('lua l runewidget') --addon work with sub
     elseif player.sub_job == 'RDM' then
-        set_macro_page(3, 37)
+        set_macro_page(3, 20)
 	elseif player.sub_job == 'BLU' then
-        set_macro_page(1, 37)
+        set_macro_page(1, 20)
         send_command('input //blupldsets set pld') --addon work with sub
 	elseif player.sub_job == 'DNC' then
-		set_macro_page(5, 37)
+		set_macro_page(5, 20)
 	elseif player.sub_job == 'WAR' then
-        set_macro_page(2, 37)
+        set_macro_page(2, 20)
     elseif player.sub_job == 'SCH' then
-        set_macro_page(7, 37)
+        set_macro_page(7, 20)
     else
-        set_macro_page(1, 37)
+        set_macro_page(1, 20)
     end
 end
 
 function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 177')
 end
+
+autows_list = {['Naegling']='Savage Blade',['Burtgang']='Atonement',['MalignanceSword']='Sanguine Blade',['Reikiko']='Chant du Cygne',
+     ['Malevolence']='Aeolian Edge',['Club']='Judgment',['Caladbolg']='Torcleaver',
+	 ['MalignancePole']='Shell Crusher'}
