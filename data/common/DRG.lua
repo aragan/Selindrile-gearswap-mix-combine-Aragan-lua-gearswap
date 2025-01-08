@@ -19,7 +19,6 @@ function get_sets()
 	include('organizer-lib')
 
     organizer_items = {
-        "Regis",
         "Airmid's Gorget",
         "Angon",
         "Gyudon",
@@ -162,6 +161,7 @@ sets.Club = {main="Mafic Cudgel", sub="Demers. Degen +1",}
 
 sets.Normal = {}
 sets.Shield = {sub="Regis"}
+sets.DefaultShield = {sub="Regis"}
 
 -- neck JSE Necks Reinf
 sets.RP = {}
@@ -221,19 +221,7 @@ sets.precast.JA.Jump = {
     }
 	
 	-- Healing Breath sets
-	sets.HB = {
-        ammo="Ginsen",
-		--head="Pteroslaver Armet +3",
-        neck="Adad Amulet",
-        ear1="Sherida Earring",
-        ear2="Cessance Earring",
-        hands="Flamma Manopolas +2",
-        --back="Updraft Mantle",
-        --ring1="Dreki Ring",
-        --waist="Glassblower's Belt",
-        --legs="Vishap Brais +3",
-        --feet="Pteroslaver Greaves"
-    }
+	sets.HB = {back="Brigantia's Mantle"}
 
     sets.MadrigalBonus = {
         --hands="Composer's Mitts"
@@ -798,7 +786,7 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
         back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
 
-	sets.engaged.Acc = set_combine(sets.engaged.Mid, {
+	sets.engaged.Acc = set_combine(sets.engaged, {
         ammo="Coiste Bodhar",
         head="Flam. Zucchetto +2",
         body="Pelt. Plackart +3",
@@ -814,7 +802,7 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
         back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     })
 
-    sets.engaged.STP = set_combine(sets.engaged.Mid, {
+    sets.engaged.STP = set_combine(sets.engaged, {
         ammo="Coiste Bodhar",
         head="Flam. Zucchetto +2",
         body="Pelt. Plackart +3",

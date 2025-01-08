@@ -27,8 +27,6 @@ function get_sets()
 
         organizer_items = {
             "Airmid's Gorget",
-            "Agwu's Claymore",
-            "Reikiko",
             "Tumult's Blood",
             "Sarama's Hide",
             "Hidhaegg's Scale",
@@ -40,13 +38,8 @@ function get_sets()
             "Moogle Amp.",
             "Popo. con Queso",
             "Pear Crepe",
-            "Crab Sushi",
             "Om. Sandwich",
             "Red Curry Bun",
-            "Drepanum",
-            "Sword Strap",
-            "Maliya Sickle +1",
-            "Thr. Tomahawk",
             "Gyudon",
             "Reraiser",
             "Hi-Reraiser",
@@ -74,10 +67,7 @@ function get_sets()
             "Instant Reraise",
             "Black Curry Bun",
             "Rolan. Daifuku",
-            "Qutrub Knife",
-            "Wind Knife +1",
             "Reraise Earring",}
-    
 end
  
  
@@ -126,7 +116,7 @@ end
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_setup()
     -- Options: Override default values
-    state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'Counter', 'H2H')
+    state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'H2H')
     state.HybridMode:options('Normal', 'PDT')
     state.WeaponskillMode:options('Normal', 'SC', 'PDL')
     state.CastingMode:options('Normal', 'sird', 'ConserveMP')
@@ -1191,7 +1181,7 @@ sets.TreasureHunter = {
         body="Crepuscular Mail",}
 
  
-     -- Engaged set, assumes Liberator
+     -- Engaged set, 
     sets.engaged = {
         ammo="Coiste Bodhar",
         head="Hjarrandi Helm",
@@ -1255,21 +1245,6 @@ sets.TreasureHunter = {
     back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     })
 
-    ------------------------------------------------------------------------------------------------
-    ---------------------------------------- Hybrid Sets -------------------------------------------
-    ------------------------------------------------------------------------------------------------
-
-     -- Defensive sets to combine with various weapon-specific sets below
-     -- These allow hybrid acc/pdt sets for difficult content
-     sets.Defensive = {
-        head={ name="Sakpata's Helm", augments={'Path: A',}}, -- 4% haste
-        body={ name="Sakpata's Plate", augments={'Path: A',}}, -- 2% haste
-        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}}, -- 4% haste
-        legs={ name="Sakpata's Cuisses", augments={'Path: A',}}, -- 4% haste
-        feet={ name="Sakpata's Leggings", augments={'Path: A',}}, -- 2% haste
-        waist={ name="Sailfi Belt +1", augments={'Path: A',}},-- 9% haste
-    }
-
     sets.engaged.SubtleBlow = set_combine(sets.engaged, {        
         body="Dagon Breast.",
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
@@ -1279,7 +1254,7 @@ sets.TreasureHunter = {
         left_ring="Chirich Ring +1",
         right_ring="Niqmaddu Ring",
     })
-
+    
     sets.engaged.H2H = {
         ammo="Coiste Bodhar",
         head="Hjarrandi Helm",
@@ -1296,18 +1271,19 @@ sets.TreasureHunter = {
         back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
 
-    sets.engaged.Counter = set_combine(sets.engaged, {
-        ammo="Amar Cluster",
-        body="Obviation Cuirass",
-        hands={ name="Founder's Gauntlets", augments={'STR+7','Attack+10','"Mag.Atk.Bns."+8','Phys. dmg. taken -2%',}},
-        feet={ name="Sakpata's Leggings", augments={'Path: A',}},
-    left_ear="Genmei Earring",
-    right_ear="Cryptic Earring",
-    })
-    sets.engaged.ressistwater = {
-        head="Genmei Kabuto",
-        neck={ name="Warder's Charm +1", augments={'Path: A',}},
-        waist="Engraved Belt",
+    ------------------------------------------------------------------------------------------------
+    ---------------------------------------- Hybrid Sets -------------------------------------------
+    ------------------------------------------------------------------------------------------------
+
+     -- Defensive sets to combine with various weapon-specific sets below
+     -- These allow hybrid acc/pdt sets for difficult content
+     sets.Defensive = {
+        head={ name="Sakpata's Helm", augments={'Path: A',}}, -- 4% haste
+        body={ name="Sakpata's Plate", augments={'Path: A',}}, -- 2% haste
+        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}}, -- 4% haste
+        legs={ name="Sakpata's Cuisses", augments={'Path: A',}}, -- 4% haste
+        feet={ name="Sakpata's Leggings", augments={'Path: A',}}, -- 2% haste
+        waist={ name="Sailfi Belt +1", augments={'Path: A',}},-- 9% haste
     }
 
 

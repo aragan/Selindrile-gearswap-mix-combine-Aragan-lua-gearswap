@@ -55,9 +55,6 @@ organizer_items = {
     "G. Curry Bun +1",
     "Pukatrice Egg",
     "Moogle Amp.",
-    "Popo. con Queso",
-    "Pear Crepe",
-    "Crab Sushi",
     "Om. Sandwich",
     "Red Curry Bun",
     "Gyudon",
@@ -119,7 +116,7 @@ function user_setup()
     state.MagicalDefenseMode:options('MDT')
     state.WeaponskillMode:options('Normal', 'PDL')
     state.CastingMode:options('Normal', 'AUGMENT')
-    state.IdleMode:options('Normal', 'PDT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
+    state.IdleMode:options('Normal', 'DT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
 
     state.LullabyMode = M{['description']='Lullaby Instrument', 'Harp', 'Horn'}
 
@@ -582,8 +579,7 @@ sets.precast.WS['Shattersoul'] = {
     sets.midcast.FastRecast = {}
         
     -- Gear to enhance certain classes of songs.  No instruments added here since Gjallarhorn is being used.
-    sets.midcast.Ballad = {    	legs="Fili Rhingrave +2",--legs="Fili Rhingrave +3",
-}
+    sets.midcast.Ballad = {legs="Fili Rhingrave +2"}
     sets.midcast.Lullaby = {}
     sets.midcast.Madrigal = {head="Fili Calot +2", back="Intarabus's Cape",}
     sets.midcast.March = {hands="Fili Manchettes +2",}
@@ -591,11 +587,10 @@ sets.precast.WS['Shattersoul'] = {
     sets.midcast.Minne = {}
     sets.midcast.Paeon = {}
     sets.midcast.Carol = {}
-    sets.midcast["Sentinel's Scherzo"] = {    	feet="Fili Cothurnes +2",--feet="Fili Cothurnes +3",
-}
-    sets.midcast['Magic Finale'] = {    	neck="Sanctity Necklace",
+    sets.midcast["Sentinel's Scherzo"] = {feet="Fili Cothurnes +2"}
+    sets.midcast['Magic Finale'] = {neck="Sanctity Necklace",
     waist="Luminary Sash",
-    legs="Fili Rhingrave +2",--legs="Fili Rhingrave +3",
+    legs="Fili Rhingrave +2",
 }
 
     sets.midcast.Mazurka = {range=info.ExtraSongInstrument}
@@ -1005,20 +1000,7 @@ sets.idle.Sphere = set_combine(sets.idle, {
         right_ring="Chirich Ring +1",
         back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
     })
-    sets.engaged.PD = set_combine(sets.engaged, {range="Linos",
-        head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        body="Ashera Harness",
-        hands="Bunzi's Gloves",
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet="Battlecast Gaiters",
-        neck={ name="Bard's Charm +2", augments={'Path: A',}},
-        waist="Reiki Yotai",
-        left_ear="Suppanomimi",
-        right_ear="Balder Earring +1",
-        left_ring="Moonlight Ring",
-        right_ring="Defending Ring",
-        back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-    })
+
 
     ---------------------------------------- DW-HASTE ------------------------------------------
     -- * DNC Subjob DW Trait: +15%
