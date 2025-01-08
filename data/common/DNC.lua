@@ -163,7 +163,7 @@ function user_setup()
     send_command('bind ^= gs c cycle treasuremode')
     send_command('bind !w gs c toggle WeaponLock')
     send_command('bind f5 gs c cycle WeaponskillMode')
-    send_command('bind f4 input //fillmode')
+    --send_command('bind !f4 input //fillmode')
     send_command('bind ^/ gs disable all')
     send_command('bind !/ gs enable all')
     send_command('bind f3 gs c cycle mainstep')
@@ -347,6 +347,7 @@ sets.precast.Flourish3['Climactic Flourish'] = {head="Maculele Tiara +2"}
 
     -- Ranged snapshot gear
     sets.precast.RA = {ammo=empty,
+    range="Trollbane",  
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -356,7 +357,9 @@ sets.precast.Flourish3['Climactic Flourish'] = {head="Maculele Tiara +2"}
     right_ear="Telos Earring",
     }
 
-    sets.precast.RA.Acc = {       
+    sets.precast.RA.Acc = {  
+        ammo=empty,
+        range="Trollbane",       
         legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},        
         feet="Meg. Jam. +2",
         waist="Yemaya Belt",}
@@ -379,57 +382,71 @@ sets.precast.Flourish3['Climactic Flourish'] = {head="Maculele Tiara +2"}
     right_ring="Cornelia's Ring",
     back="Sacro Mantle",
 }
-    sets.precast.WS.SC = set_combine(sets.precast.WS, {head="Nyame Helm",
-    body={ name="Nyame Mail", augments={'Path: B',}},
+    sets.precast.WS.SC = set_combine(sets.precast.WS, {
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Warder's Charm +1", augments={'Path: A',}},})
 
-sets.precast.WS.PDL = set_combine(sets.precast.WS, {
-ammo="Crepuscular Pebble",
-body={ name="Gleti's Cuirass", augments={'Path: A',}},
-neck={ name="Etoile Gorget +2", augments={'Path: A',}},
-right_ear="Maculele Earring",
-})
+    sets.precast.WS.PDL = set_combine(sets.precast.WS, {
+        ammo="Crepuscular Pebble",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        neck={ name="Etoile Gorget +2", augments={'Path: A',}},
+        right_ear="Maculele Earring",
+    })
+        
+    sets.precast.WS.PDL.Clim = {
+        ammo="Crepuscular Pebble",
+        head="Maculele Tiara +2",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        right_ear="Maculele Earring",
+        back="Sacro Mantle",
+    }
+    sets.precast.WS.Clim = {
+        head="Maculele Tiara +2",
+    }
 
     sets.precast.WS.Critical = {body="Meg. Cuirie +2"}
 
 
+    
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
     sets.precast.WS['Exenterator'] = set_combine(sets.precast.WS, {
-    ammo="C. Palug Stone",
-    head={ name="Gleti's Mask", augments={'Path: A',}},
-    body={ name="Gleti's Cuirass", augments={'Path: A',}},
-    hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
-    legs="Meg. Chausses +2",
-    feet={ name="Lustra. Leggings +1", augments={'Accuracy+20','DEX+8','Crit. hit rate+3%',}},
-    neck="Fotia Gorget",
-    waist="Fotia Belt",
-    left_ear="Sherida Earring",
-    right_ear="Ishvara Earring",
-    left_ring="Ilabrat Ring",
-    right_ring="Regal Ring",})
-
-    sets.precast.WS['Exenterator'].SC = set_combine(sets.precast.WS['Exenterator'], {head={ name="Nyame Helm", augments={'Path: B',}},
-body={ name="Nyame Mail", augments={'Path: B',}},
-hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-legs={ name="Nyame Flanchard", augments={'Path: B',}},
-feet={ name="Nyame Sollerets", augments={'Path: B',}},
-    neck={ name="Warder's Charm +1", augments={'Path: A',}},})
-    sets.precast.WS['Exenterator'].PDL = set_combine(sets.precast.WS['Exenterator'], {
-        ammo="Crepuscular Pebble",
+        ammo={ name="Coiste Bodhar", augments={'Path: A',}},    
+        head="Maculele Tiara +2",
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
-        neck={ name="Etoile Gorget +2", augments={'Path: A',}},
-right_ear="Maculele Earring",
+        hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Fotia Gorget",
+        waist="Fotia Belt",
+        left_ear="Sherida Earring",
+        right_ear="Brutal Earring",
+        left_ring="Regal Ring",
+        right_ring="Ilabrat Ring",})
+    
+    sets.precast.WS['Exenterator'].SC = set_combine(sets.precast.WS['Exenterator'], {
+        head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},})
+        sets.precast.WS['Exenterator'].PDL = set_combine(sets.precast.WS['Exenterator'], {
+            ammo="Crepuscular Pebble",
+            body={ name="Gleti's Cuirass", augments={'Path: A',}},
+            neck={ name="Etoile Gorget +2", augments={'Path: A',}},
+    right_ear="Maculele Earring",
     })
-
+       
     sets.precast.WS['Pyrrhic Kleos'] = set_combine(sets.precast.WS, {
-        ammo="Coiste Bodhar",
-        head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+        ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+        head="Maculele Tiara +2",
         body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
-        legs="Meg. Chausses +2",
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Lustra. Leggings +1", augments={'Accuracy+20','DEX+8','Crit. hit rate+3%',}},
         neck="Fotia Gorget",
         waist="Fotia Belt",
@@ -439,7 +456,8 @@ right_ear="Maculele Earring",
         right_ring="Regal Ring",
         back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     })
-    sets.precast.WS['Pyrrhic Kleos'].SC = set_combine(sets.precast.WS.SC, {head={ name="Nyame Helm", augments={'Path: B',}},
+    sets.precast.WS['Pyrrhic Kleos'].SC = set_combine(sets.precast.WS.SC, {
+        head={ name="Nyame Helm", augments={'Path: B',}},
 body={ name="Nyame Mail", augments={'Path: B',}},
 hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -462,12 +480,13 @@ feet={ name="Nyame Sollerets", augments={'Path: B',}},
         back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     })
 
-    sets.precast.WS['Evisceration'] = set_combine(sets.precast.WS, {ammo="Aurgelmir Orb +1",
+    sets.precast.WS['Evisceration'] = set_combine(sets.precast.WS, {
+        ammo="Aurgelmir Orb +1",
     head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        body="Meg. Cuirie +2",
-        hands="Mummu Wrists +2",
-        legs={ name="Lustr. Subligar +1", augments={'Accuracy+20','DEX+8','Crit. hit rate+3%',}},
-        feet="Mummu Gamash. +2",
+    body={ name="Gleti's Cuirass", augments={'Path: A',}},
+    hands="Mummu Wrists +2",
+    legs={ name="Gleti's Breeches", augments={'Path: A',}},
+    feet="Mummu Gamash. +2",
         neck="Fotia Gorget",
         waist="Fotia Belt",
         left_ear="Sherida Earring",
@@ -491,8 +510,8 @@ feet={ name="Nyame Sollerets", augments={'Path: B',}},
 
 
     sets.precast.WS["Rudra's Storm"] = set_combine(sets.precast.WS, {
-        ammo="Aurgelmir Orb +1",
-        head={ name="Nyame Helm", augments={'Path: B',}},
+        ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+        head="Maculele Tiara +2",
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -500,80 +519,124 @@ feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Etoile Gorget +2", augments={'Path: A',}},
         waist={ name="Kentarch Belt +1", augments={'Path: A',}},
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-        right_ear="Odr Earring",
+        right_ear="Sherida Earring",
         left_ring="Regal Ring",
-        right_ring="Cornelia's Ring",
+        right_ring="Ilabrat Ring",
         back="Sacro Mantle",
     })
-    sets.precast.WS["Rudra's Storm"].SC = set_combine(sets.precast.WS["Rudra's Storm"], {head={ name="Nyame Helm", augments={'Path: B',}},
+    sets.precast.WS["Rudra's Storm"].SC = set_combine(sets.precast.WS["Rudra's Storm"], {
+        head={ name="Nyame Helm", augments={'Path: B',}},
 body={ name="Nyame Mail", augments={'Path: B',}},
 hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 legs={ name="Nyame Flanchard", augments={'Path: B',}},
 feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Warder's Charm +1", augments={'Path: A',}},})
 
-    sets.precast.WS["Rudra's Storm"].PDL = set_combine(sets.precast.WS["Rudra's Storm"], {
+sets.precast.WS["Rudra's Storm"].PDL = set_combine(sets.precast.WS["Rudra's Storm"], {
         ammo="Crepuscular Pebble",
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
-        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Maculele Earring",
         left_ring="Regal Ring",
+        right_ring="Cornelia's Ring",
         back="Sacro Mantle",
     })
     sets.precast.WS["Rudra's Storm"].PDL.Clim = set_combine(sets.precast.WS["Rudra's Storm"], {
         ammo="Crepuscular Pebble",
         head="Maculele Tiara +2",
+        hands="Maxixi Bangles +3",
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
-        right_ear="Odr Earring",
-        left_ring={ name="Beithir Ring", augments={'Path: A',}},
+        right_ear="Maculele Earring",
         back="Sacro Mantle",
     })
     sets.precast.WS["Rudra's Storm"].Clim = set_combine(sets.precast.WS["Rudra's Storm"], {
         head="Maculele Tiara +2",
     })
-    
-
--- Elemental Weapon Skill --elemental_ws--
-
--- SANGUINE BLADE
--- 50% MND / 50% STR Darkness Elemental
-sets.precast.WS['Sanguine Blade'] = set_combine(sets.precast.WS, {
-    head="Pixie Hairpin +1",
-    body={ name="Nyame Mail", augments={'Path: B',}},
-    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-    legs={ name="Nyame Flanchard", augments={'Path: B',}},
-    feet={ name="Nyame Sollerets", augments={'Path: B',}},
-    neck="Sibyl Scarf",
-    waist="Orpheus's Sash",
-    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-    right_ear="Friomisi Earring",
-    left_ring="Cornelia's Ring",
-    right_ring="Archon Ring",
-    back={ name="Aurist's Cape +1", augments={'Path: A',}},
-})
-
-sets.precast.WS["Dark Harvest"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
-sets.precast.WS["Shadow of Death"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
-sets.precast.WS["Infernal Scythe"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
-sets.precast.WS["Energy Steal"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
-sets.precast.WS["Energy Drain"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
-sets.precast.WS.Cataclysm = sets.precast.WS["Sanguine Blade"]
-
-sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
-    ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
-head={ name="Nyame Helm", augments={'Path: B',}},
+ 
+    sets.precast.WS["Shark Bite"] = set_combine(sets.precast.WS, {
+        ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+        head="Maculele Tiara +2",
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands="Maxixi Bangles +3",
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Etoile Gorget +2", augments={'Path: A',}},
+        waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Sherida Earring",
+        left_ring="Regal Ring",
+        right_ring="Ilabrat Ring",
+        back="Sacro Mantle",
+    })
+    sets.precast.WS["Shark Bite"].SC = set_combine(sets.precast.WS["Shark Bite"], {
+        head={ name="Nyame Helm", augments={'Path: B',}},
 body={ name="Nyame Mail", augments={'Path: B',}},
 hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 legs={ name="Nyame Flanchard", augments={'Path: B',}},
 feet={ name="Nyame Sollerets", augments={'Path: B',}},
-    neck="Sibyl Scarf",
-    waist="Orpheus's Sash",
-    right_ear="Friomisi Earring",
-    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-    left_ring="Epaminondas's Ring",
-    right_ring="Cornelia's Ring",
-    back="Sacro Mantle",
-})
+    neck={ name="Warder's Charm +1", augments={'Path: A',}},})
+
+    sets.precast.WS["Shark Bite"].PDL = set_combine(sets.precast.WS["Shark Bite"], {
+        ammo="Crepuscular Pebble",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        right_ear="Maculele Earring",
+        left_ring="Regal Ring",
+        right_ring="Cornelia's Ring",
+        back="Sacro Mantle",
+    })
+    sets.precast.WS["Shark Bite"].PDL.Clim = set_combine(sets.precast.WS["Shark Bite"], {
+        ammo="Crepuscular Pebble",
+        head="Maculele Tiara +2",
+        hands="Maxixi Bangles +3",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        right_ear="Maculele Earring",
+        back="Sacro Mantle",
+    })
+    sets.precast.WS["Shark Bite"].Clim = set_combine(sets.precast.WS["Shark Bite"], {
+        head="Maculele Tiara +2",
+    })
+
+-- Elemental Weapon Skill --elemental_ws--
+
+    -- SANGUINE BLADE
+    -- 50% MND / 50% STR Darkness Elemental
+    sets.precast.WS['Sanguine Blade'] = set_combine(sets.precast.WS, {
+        ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+        head="Pixie Hairpin +1",
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Sibyl Scarf",
+        waist="Orpheus's Sash",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Friomisi Earring",
+        left_ring="Cornelia's Ring",
+        right_ring="Archon Ring",
+        back={ name="Aurist's Cape +1", augments={'Path: A',}},
+    })
+    
+    sets.precast.WS["Dark Harvest"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
+    sets.precast.WS["Shadow of Death"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
+    sets.precast.WS["Infernal Scythe"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
+    sets.precast.WS["Energy Steal"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
+    sets.precast.WS["Energy Drain"] = set_combine(sets.precast.WS["Sanguine Blade"], {})
+    sets.precast.WS.Cataclysm = sets.precast.WS["Sanguine Blade"]
+    
+    sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
+	ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Sibyl Scarf",
+        waist="Orpheus's Sash",
+        right_ear="Friomisi Earring",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        left_ring="Epaminondas's Ring",
+        right_ring="Cornelia's Ring",
+        back="Sacro Mantle",
+    })
 
 sets.precast.WS["Red Lotus Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Shining Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
@@ -669,7 +732,7 @@ sets.precast.Skillchain = {}
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
     back="Moonlight Cape", }
-    sets.ExtraRegen = {eft_ear="Infused Earring",}
+    sets.ExtraRegen = {left_ear="Infused Earring",}
     
     -- Defense sets
 
@@ -1373,12 +1436,12 @@ function job_post_precast(spell, action, spellMap, eventArgs)
     if spell.type == "WeaponSkill" then
         if state.Buff['Sneak Attack'] == true then
             equip(sets.precast.WS.Critical)
-        end
-        if buffactive["Climactic Flourish"] and spell.name == "Rudra's Storm" then
+        
+		elseif buffactive["Climactic Flourish"] and not elemental_ws:contains(spell.name) then
             if state.WeaponskillMode.value == 'PDL' then
-                equip(sets.precast.WS["Rudra's Storm"].PDL.Clim)
+                equip(sets.precast.WS[spell.english].PDL.Clim)
             elseif state.WeaponskillMode.value ~= 'PDL' then
-            equip(sets.precast.WS["Rudra's Storm"].Clim)
+                equip(sets.precast.WS[spell.english].Clim)
             end
         end
         if state.SkillchainPending.value == true then
@@ -1854,13 +1917,13 @@ end)
 function select_default_macro_book()
     -- Default macro set/book
     if player.sub_job == 'WAR' then
-        set_macro_page(3, 28)
+        set_macro_page(3, 8)
     elseif player.sub_job == 'NIN' then
-        set_macro_page(3, 28)
+        set_macro_page(3, 8)
     elseif player.sub_job == 'SAM' then
-        set_macro_page(3, 28)
+        set_macro_page(3, 8)
     else
-        set_macro_page(3, 28)
+        set_macro_page(3, 8)
     end
 end
 

@@ -49,7 +49,6 @@ organizer_items = {
     "G. Curry Bun +1",
     "Pukatrice Egg",
     "Moogle Amp.",
-    "Popo. con Queso",
     "Pear Crepe",
     "Crab Sushi",
     "Om. Sandwich",

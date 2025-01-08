@@ -117,7 +117,6 @@ function get_sets()
         "Crab Sushi",
         "Om. Sandwich",
         "Red Curry Bun",
-        "Prime Sword",
         "Gyudon",
         "Reraiser",
         "Hi-Reraiser",
@@ -153,6 +152,13 @@ function job_setup()
     indi_timer = ''
     indi_duration = 180
     
+    lowTierNukes = S{'Stone', 'Water', 'Aero', 'Fire', 'Blizzard', 'Thunder',
+        'Stone II', 'Water II', 'Aero II', 'Fire II', 'Blizzard II', 'Thunder II',
+        'Stone III', 'Water III', 'Aero III', 'Fire III', 'Blizzard III', 'Thunder III',
+        'Stonega', 'Waterga', 'Aeroga', 'Firaga', 'Blizzaga', 'Thundaga', 
+        'Stonera', 'Watera', 'Aerora', 'Fira', 'Blizzara', 'Thundara',
+        'Stonega II', 'Waterga II', 'Aeroga II', 'Firaga II', 'Blizzaga II', 'Thundaga II'}
+        
     elemental_ws = S{"Flash Nova", "Sanguine Blade","Seraph Blade","Burning Blade","Red Lotus Blade"
     , "Shining Strike", "Aeolian Edge", "Gust Slash", "Cyclone","Energy Steal","Energy Drain"
     , "Leaden Salute", "Wildfire", "Hot Shot", "Flaming Arrow", "Trueflight", "Blade: Teki", "Blade: To"
@@ -260,12 +266,6 @@ function init_gear_sets()
 
     sets.DefaultShield = {sub="Ammurapi Shield"}
 
-    lowTierNukes = S{'Stone', 'Water', 'Aero', 'Fire', 'Blizzard', 'Thunder',
-        'Stone II', 'Water II', 'Aero II', 'Fire II', 'Blizzard II', 'Thunder II',
-        'Stone III', 'Water III', 'Aero III', 'Fire III', 'Blizzard III', 'Thunder III',
-        'Stonega', 'Waterga', 'Aeroga', 'Firaga', 'Blizzaga', 'Thundaga', 
-        'Stonera', 'Watera', 'Aerora', 'Fira', 'Blizzara', 'Thundara',
-        'Stonega II', 'Waterga II', 'Aeroga II', 'Firaga II', 'Blizzaga II', 'Thundaga II'}
     --------------------------------------
     -- Precast sets
     --------------------------------------
@@ -273,7 +273,7 @@ function init_gear_sets()
     -- Precast sets to enhance JAs
     sets.precast.JA.Bolster = {body="Bagua Tunic +3"}
     sets.precast.JA['Life Cycle'] = {head="Azimuth Hood +2", body="Geo. Tunic +3", back="Nantosuelta's Cape"}
-    sets.precast.JA['Full Circle'] = {hands="Bagua Mitaines"}
+    sets.precast.JA['Full Circle'] = {}
     sets.precast.JA['Radial Arcana'] = {legs="Bagua Pants +3"}
     sets.precast.JA['Sublimation'] = {waist="Embla Sash"}
 
@@ -320,27 +320,6 @@ function init_gear_sets()
     left_ear="Crep. Earring",
     right_ear="Telos Earring",
     }
-    sets.midcast.SIRD={
-        main="Idris",
-        sub="Culminus",
-        ammo="Staunch Tathlum +1",
-        head={ name="Agwu's Cap", augments={'Path: A',}},
-        body={ name="Ros. Jaseran +1", augments={'Path: A',}},
-        hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-        legs="Geomancy Pants +2",
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        left_ring="Freke Ring",
-    }
-    sets.midcast.ConserveMP = {  
-        head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
-        body="Vedic Coat",
-        legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
-        feet={ name="Merlinic Crackows", augments={'Mag. Acc.+3','"Fast Cast"+6','CHR+1','"Mag.Atk.Bns."+4',}},
-        neck="Incanter's Torque",
-        waist={ name="Shinjutsu-no-Obi +1", augments={'Path: A',}},
-        left_ear="Mendi. Earring",
-        right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
-    back="Solemnity Cape",}
 
     -- Weaponskill sets
     -- Default set for any weaponskill that isn't any more specifically defined
@@ -467,6 +446,27 @@ function init_gear_sets()
     --------------------------------------
     -- Midcast sets
     --------------------------------------
+    sets.midcast.SIRD={
+        main="Idris",
+        sub="Culminus",
+        ammo="Staunch Tathlum +1",
+        head={ name="Agwu's Cap", augments={'Path: A',}},
+        body={ name="Ros. Jaseran +1", augments={'Path: A',}},
+        hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+        legs="Geomancy Pants +2",
+        neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        left_ring="Freke Ring",
+    }
+    sets.midcast.ConserveMP = {  
+        head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
+        body="Vedic Coat",
+        legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
+        feet={ name="Merlinic Crackows", augments={'Mag. Acc.+3','"Fast Cast"+6','CHR+1','"Mag.Atk.Bns."+4',}},
+        neck="Incanter's Torque",
+        waist={ name="Shinjutsu-no-Obi +1", augments={'Path: A',}},
+        left_ear="Mendi. Earring",
+        right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+    back="Solemnity Cape",}
 
     -- Base fast recast for spells
     sets.midcast.FastRecast = {}
@@ -687,7 +687,11 @@ function init_gear_sets()
         ring2="Kishar Ring",
         body="Geo. Tunic +3",
     })
-    
+    sets.midcast['Dark Magic'] = {ammo="Pemphredo Tathlum",
+    neck="Erra Pendant",ear1="Regal Earring",ear2="Malignance Earring",
+    hands="Amalric Gages +1",ring1="Metamor. Ring +1",ring2="Stikini Ring +1",
+    legs="Merlinic Shalwar"}
+
     sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
         head="Pixie Hairpin +1",
         hands={ name="Merlinic Dastanas", augments={'"Mag.Atk.Bns."+1','"Drain" and "Aspir" potency +10','CHR+5','Mag. Acc.+4',}},
@@ -987,7 +991,7 @@ function init_gear_sets()
         right_ear="Mache Earring +1",
         left_ring="Defending Ring",
         right_ring="Chirich Ring +1",
-        back={ name="Aurist's Cape +1", augments={'Path: A',}},    })
+        back={ name="Aurist's Cape +1", augments={'Path: A',}},})
     --------------------------------------
     -- Custom buff sets
     --------------------------------------
@@ -1420,9 +1424,7 @@ end
 -- Utility functions specific to this job.
 -------------------------------------------------------------------------------------------------------------------
 -- Select default macro book on initial load or subjob change.
-function select_default_macro_book()
-    set_macro_page(5, 34)
-end
+
 --Refine Nuke Spells
 function refine_various_spells(spell, action, spellMap, eventArgs)
 	aspirs = S{'Aspir','Aspir II','Aspir III'}
@@ -1680,4 +1682,8 @@ function sub_job_change(new,old)
         user_setup()
         send_command('wait 6;input /lockstyleset 198')
     end
+end
+
+function select_default_macro_book()
+    set_macro_page(5, 34)
 end
