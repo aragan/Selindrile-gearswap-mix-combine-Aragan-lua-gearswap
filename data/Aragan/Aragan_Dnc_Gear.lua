@@ -24,8 +24,8 @@ function user_job_setup()
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Suppa','DWEarrings','DWMax'}
 
 	
-	gear.stp_jse_back = {name="Senuna's Mantle",augments={'DEX+20','Accuracy+20 Attack+20','"Store TP"+10',}}
-	gear.wsd_jse_back = {name="Senuna's Mantle",augments={'DEX+20','Accuracy+20 Attack+20','Weapon skill damage +10%',}}
+	gear.stp_jse_back = {}
+	gear.wsd_jse_back = {}
 	
     -- Additional local binds
     send_command('bind @` gs c step')
@@ -38,6 +38,8 @@ function user_job_setup()
 	send_command('bind !\\\\ input /ja "Spectral Jig" <me>')
 	send_command('bind !backspace input /ja "Reverse Flourish" <me>')
 	send_command('bind ^backspace input /ja "No Foot Rise" <me>')
+    send_command('bind f11 gs c cycle MagicalDefenseMode;gs c set DefenseMode Magical') --Changes your magical defense set.
+
 	send_command('bind %~` gs c cycle SkillchainMode')
     send_command('bind f2 gs c toggle CurrentStep')
     send_command('bind f3 gs c cycle mainstep')
