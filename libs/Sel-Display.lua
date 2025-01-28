@@ -172,6 +172,7 @@ function update_job_states()
 		ExtraSongsMode = "Songs",
 		AutoStunMode = "Auto Stun",
 		LuzafRing = "Luzaf's Ring",
+		HippoMode = "HippoMode",
 		AutoDefenseMode = "Auto Defense",
 		AutoTrustMode = "Auto Trust",
 		JugMode = "Pet",
@@ -378,7 +379,11 @@ function update_job_states()
 				stateBox:append(string.format("%sStance: %s%s    ", clr.w, clr.h, state.Stance.value))
 			end
 		else
-			stateBox:append(string.format("%s%s: ${%s}    ", clr.w, labels[n], n))
+			if labels[n] then
+				stateBox:append(string.format("%s%s: ${%s}    ", clr.w, labels[n], n))
+			else
+				stateBox:append(string.format("%s%s: ${%s}    ", clr.w, n, n))
+			end
 		end
     end
 	
