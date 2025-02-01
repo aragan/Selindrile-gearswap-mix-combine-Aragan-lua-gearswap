@@ -60,6 +60,8 @@ SC3 /console gs c elemental skillchain3
 
 NOTE: for sortie NM Triboulex use this command for 2step fusion open close close2 ;
 -------------
+
+------------
 if u have all jobs for easy have free slot inventory 
 
 add itmizer addon bind 
