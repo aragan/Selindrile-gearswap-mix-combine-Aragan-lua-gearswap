@@ -60,7 +60,6 @@ SC3
 
 /console gs c elemental skillchain3 
 NOTE: for sortie NM Triboulex use this command for 2step fusion open close close2 ;
-
 -------------
 if u have all jobs for easy have free slot inventory 
 
@@ -71,6 +70,7 @@ send_command('bind ^[ input //get storage slip* all')
 
 //get storage slip* all
 //put storage slip* case all
+
 -------------
 Note: i play with Wireless Gamepad controller logitec and keyboard and if u want play like me easy fast smooth 
 u need install my last macro all jobs and if u play my selindrile gs u need install macro selindrile all jobs and if u play normal gs u install normal macro all jobs  i add line for job and add code u follow number line macro in lua job 
