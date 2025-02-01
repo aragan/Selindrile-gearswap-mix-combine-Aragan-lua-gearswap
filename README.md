@@ -118,4 +118,6 @@ and know all aliases to now all see inti in scripts file or do command //listali
 and install all addons all plugin all bot tako project and easyfarm and curepleas 
 and install my init in script and use it for active my addon need it only .
 finaly any ask u can meet me in discord i add my discord under icon github account 
+my discord https://discord.gg/pcYCEHGT
+https://soundcloud.com/araganffxi
 
