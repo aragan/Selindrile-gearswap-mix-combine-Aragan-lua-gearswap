@@ -32,6 +32,8 @@ add bind to work addon autoitem for auto use medicine for Odyssey nms
 
 add bind for reset addon zonetimer for sortie bosses F/H to calc 3min run away before tpmove or use ja run or bind or kitting
 
+modification seli-display to can add any state 
+
 Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
 keyboard binds and chat 
@@ -45,6 +47,8 @@ in macro job blm sch rdm nin drk geo whm pld for fast used i add :
 ----------
 FOR DRK I ADD  element in display screen f4 change it , and add absorts and cycle f3 and in macro
 and add absorbs cycle and elementalmode
+
+--
 
 sch i add macro for fast make skillchain :
 
@@ -61,7 +65,39 @@ SC3 /console gs c elemental skillchain3
 NOTE: for sortie NM Triboulex use this command for 2step fusion open close close2 ;
 -------------
 
+-----
+for brd add state.Songset have songsset its copy from AutoBuffBard addon file abb_sets 
+u can add name songsset there and copy name in state.Songset
+
+cycle Songset
+
+send_command('bind f2 gs c cycle Songset')
+send_command('bind !f2 gs c Songset')
+
+macro
+
+/con gs c Songset
+
+its do all ja first then do u  songset
+
 ------------
+
+for cor add state.Roller1 state.Roller2 have all rolls send to roller addon 
+
+cycle Roll
+
+  send_command('bind f2 gs c cycle Roller1;input //gs c Roller1')
+    send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
+    send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
+    send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
+
+macro
+
+/con gs c Roller1
+/con gs c Roller2
+/con input //roll
+
+-----
 if u have all jobs for easy have free slot inventory 
 
 add itmizer addon bind 
