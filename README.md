@@ -3,7 +3,7 @@ Aragan (Asura) --------------- [Author Primary]
 
 {{{{{{{this lua have all codes}}}}}}}}}
 
-Listen carefully, it is unnatural, it is supernatural, it is advanced and superior to everyone, and they are primitive without it, it is difficult to reach it, it is smooth like water, it is solid like a mountain, it is light like the wind, it is burning like fire.. it was made for a long period of time, it came out of the power of darkness, only the light.. you cannot be defeated, and it is in your hands, the power is with you.
+Listen carefully, it is unnatural, it is supernatural ,its powerfull , it is advanced and superior to everyone, and they are primitive without it, it is difficult to reach it, it is smooth like water, it is solid like a mountain, it is light like the wind, it is burning like fire.. it was made for a long period of time, it came out of the power of darkness, only the light.. you cannot be defeated, and it is in your hands, the power is with you.
 
 {{{{{{{this lua have all codes}}}}}}}}}
 
