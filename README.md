@@ -59,11 +59,23 @@ SC2
 SC3
 /console gs c elemental skillchain3 
 NOTE: for sortie NM Triboulex use this command for 2step fusion open close close2 ;
+-------------
+if u have all jobs for easy have free slot inventory 
 
+add itmizer addon bind 
+
+send_command('bind ^] input //put storage slip* case all')
+send_command('bind ^[ input //get storage slip* all')
+
+//get storage slip* all
+//put storage slip* case all
 -------------
 Note: i play with Wireless Gamepad controller logitec and keyboard and if u want play like me easy fast smooth 
-u need install my last macro all jobs i add line for job and add code u follow number line macro in lua job 
-and learning all  and u need see all list binds to know all binds and u need see Aragan global to know all binds 
+u need install my last macro all jobs and if u play my selindrile gs u need install macro selindrile all jobs and if u play normal gs u install normal macro all jobs  i add line for job and add code u follow number line macro in lua job 
+(seli. gs macro have more code macro work with seli. gs every job have code for it and those code not work with normal gs)
+
+and learning all and u need see all list binds to know all binds do command //listbinds and u need see Aragan global to know all binds 
+and know all aliases to now all see inti in scripts file or do command //listaliases.
 and install all addons all plugin all bot tako project and easyfarm and curepleas 
 and install my init in script and use it for active my addon need it only .
 finaly any ask u can meet me in discord i add my discord under icon github account 
