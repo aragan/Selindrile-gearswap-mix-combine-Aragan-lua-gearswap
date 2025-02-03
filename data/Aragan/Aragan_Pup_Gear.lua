@@ -464,7 +464,20 @@ range="Trollbane",  }
     sets.precast.WS["Backhand Blow"].PDL = sets.precast.WS["Victory Smite"].PDL
     sets.precast.WS['Evisceration'] = sets.precast.WS["Stringing Pummel"]
 
-    -- Midcast Sets
+       sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Eschan Stone",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",})
 
     sets.midcast.FastRecast = {}
 	
@@ -578,145 +591,6 @@ range="Trollbane",  }
 	sets.midcast.Bio = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 	sets.midcast['Bio II'] = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 	
-    -- Midcast sets for pet actions
-    sets.midcast.Pet.Cure = {
-        legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
-        feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},    }
-
-    sets.midcast.Pet["Healing Magic"] = {
-        legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
-        feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},    }
-
-    sets.midcast.Pet["Elemental Magic"] = {
-        head={ name="Herculean Helm", augments={'Pet: "Mag.Atk.Bns."+26','Pet: "Dbl.Atk."+2 Pet: Crit.hit rate +2',}},
-        body="Udug Jacket",
-    hands={ name="Herculean Gloves", augments={'Pet: "Mag.Atk.Bns."+28','Pet: "Store TP"+6','Pet: DEX+1',}},
-    legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
-    feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},
-    neck="Adad Amulet",
-    waist="Ukko Sash",
-    left_ear="Enmerkar Earring",
-    right_ear="Kara. Earring +1",
-    left_ring="C. Palug Ring",
-    right_ring="Tali'ah Ring",
-    back="Argocham. Mantle",
-     }
-
-    sets.midcast.Pet["Enfeebling Magic"] = {
-        head={ name="Mpaca's Cap", augments={'Path: A',}},
-        body="Mpaca's Doublet",
-        hands="Mpaca's Gloves",
-        legs={ name="Mpaca's Hose", augments={'Path: A',}},
-        feet="Mpaca's Boots",
-        neck="Adad Amulet",
-        waist="Ukko Sash",
-        left_ear="Kyrene's Earring",
-        right_ear="Enmerkar Earring",
-        left_ring="C. Palug Ring",
-        right_ring="Tali'ah Ring",
-        back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},    }
-
-    sets.midcast.Pet["Dark Magic"] = {
-        head={ name="Herculean Helm", augments={'Pet: "Mag.Atk.Bns."+26','Pet: "Dbl.Atk."+2 Pet: Crit.hit rate +2',}},
-        	body="Udug Jacket",
-        hands={ name="Herculean Gloves", augments={'Pet: "Mag.Atk.Bns."+28','Pet: "Store TP"+6','Pet: DEX+1',}},
-        legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
-        feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},
-        neck="Adad Amulet",
-        waist="Ukko Sash",
-        left_ear="Kyrene's Earring",
-        right_ear="Enmerkar Earring",
-        left_ring="C. Palug Ring",
-        right_ring="Tali'ah Ring",
-        back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},     }
-
-    sets.midcast.Pet["Divine Magic"] = {
-       -- Add your set here 
-    }
-
-    sets.midcast.Pet["Enhancing Magic"] = {
-       -- Add your set here 
-    }
-	-- The following sets are predictive and are equipped before we even know the ability will happen, as a workaround due to
-	-- the fact that start of ability packets are too late in the case of Pup abilities, WS, and certain spells.
-	sets.midcast.Pet.PetEnmityGear = {}
-
-    
-    -------------------------------------WS
-    --[[
-        WSNoFTP is the default weaponskill set used
-    ]]
-    sets.midcast.Pet.WSNoFTP = {                
-        main={ name="Xiucoatl", augments={'Path: C',}},
-        head={ name="Mpaca's Cap", augments={'Path: A',}},
-        body={ name="Taeon Tabard", augments={'Pet: Attack+25 Pet: Rng.Atk.+25','Pet: "Dbl. Atk."+5','Pet: Damage taken -4%',}},
-        hands="Mpaca's Gloves",
-        legs={ name="Taeon Tights", augments={'Pet: Attack+22 Pet: Rng.Atk.+22','Pet: "Dbl. Atk."+5','Pet: Damage taken -4%',}},
-        feet="Mpaca's Boots",
-        neck="Shulmanu Collar",
-        waist="Incarnation Sash",
-        left_ring="Thurandaut Ring",
-        right_ring="C. Palug Ring",
-        left_ear="Kyrene's Earring",    
-        right_ear="Sroda Earring",
-    
-    }
-
-    --[[
-        If we have a pet weaponskill that can benefit from WSFTP
-        then this set will be equipped
-    ]]
-    sets.midcast.Pet.WSFTP = {        
-        main={ name="Xiucoatl", augments={'Path: C',}},
-        ammo="Automat. Oil +3",
-        head="Kara. Cappello +2",
-        hands="Mpaca's Gloves",
-        legs="Kara. Pantaloni +2",
-        feet="Mpaca's Boots",
-        neck="Shulmanu Collar",
-        waist="Klouskap Sash +1",
-        left_ear="Kara. Earring +1",
-        left_ear="Kyrene's Earring",
-        left_ring="Thurandaut Ring",
-        right_ring="C. Palug Ring",
-        back={ name="Dispersal Mantle", augments={'STR+1','Pet: TP Bonus+480',}},
-    }
-
-    --[[
-        Base Weapon Skill Set
-        Used by default if no modifier is found
-    ]]
-    sets.midcast.Pet.WS = {             
-    main={ name="Xiucoatl", augments={'Path: C',}},
-    ammo="Automat. Oil +3",
-        head={ name="Herculean Helm", augments={'Pet: "Mag.Atk.Bns."+26','Pet: "Dbl.Atk."+2 Pet: Crit.hit rate +2',}},
-        body={ name="Herculean Vest", augments={'Pet: "Mag.Atk.Bns."+25','Pet: "Dbl.Atk."+2 Pet: Crit.hit rate +2','Pet: AGI+10',}},
-        hands={ name="Herculean Gloves", augments={'Pet: "Mag.Atk.Bns."+28','Pet: "Store TP"+6','Pet: DEX+1',}},
-        legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
-        feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},
-        neck="Adad Amulet",
-        waist="Ukko Sash",
-        left_ear="Kyrene's Earring",
-        right_ear="Kara. Earring +1",
-        left_ring="C. Palug Ring",
-        right_ring="Tali'ah Ring",
-        back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},   
-    }
-
-	sets.midcast.Pet.PetWSGear ={}
-	
-    sets.midcast.Pet.PetWSGear.Ranged = set_combine(sets.midcast.Pet.PetWSGear, {})
-	sets.midcast.Pet.PetWSGear.Melee = set_combine(sets.midcast.Pet.PetWSGear, {})
-	sets.midcast.Pet.PetWSGear.Tank = set_combine(sets.midcast.Pet.PetWSGear, {})
-	sets.midcast.Pet.PetWSGear.Bruiser = set_combine(sets.midcast.Pet.PetWSGear, {})
-	sets.midcast.Pet.PetWSGear.LightTank = set_combine(sets.midcast.Pet.PetWSGear, {})
-    sets.midcast.Pet.PetWSGear.Magic = set_combine(sets.midcast.Pet.PetWSGear, {})
-	sets.midcast.Pet.PetWSGear.Heal = set_combine(sets.midcast.Pet.PetWSGear, {})
-	sets.midcast.Pet.PetWSGear.Nuke = set_combine(sets.midcast.Pet.PetWSGear, {})
-    sets.midcast.Pet.PetWSGear.MaxTP = set_combine(sets.midcast.Pet.PetWSGear, {})
-	sets.midcast.Pet.PetWSGear.Regen = set_combine(sets.midcast.Pet.PetWSGear, {})
-	sets.midcast.Pet.PetWSGear.MaxAcc = set_combine(sets.midcast.Pet.PetWSGear, {})
-
 	-- Currently broken, preserved in case of future functionality.
 	--sets.midcast.Pet.WeaponSkill = {}
 
@@ -1231,6 +1105,146 @@ range="Trollbane",  }
         right_ring="Varar Ring +1",
         back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},
     }
+
+
+    -- Midcast sets for pet actions
+    sets.midcast.Pet = {
+        legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
+        feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},    }
+
+    sets.midcast.Pet["Healing Magic"] = {
+        legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
+        feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},    }
+
+    sets.midcast.Pet["Elemental Magic"] = {
+        head={ name="Herculean Helm", augments={'Pet: "Mag.Atk.Bns."+26','Pet: "Dbl.Atk."+2 Pet: Crit.hit rate +2',}},
+        body="Udug Jacket",
+    hands={ name="Herculean Gloves", augments={'Pet: "Mag.Atk.Bns."+28','Pet: "Store TP"+6','Pet: DEX+1',}},
+    legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
+    feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},
+    neck="Adad Amulet",
+    waist="Ukko Sash",
+    left_ear="Enmerkar Earring",
+    right_ear="Kara. Earring +1",
+    left_ring="C. Palug Ring",
+    right_ring="Tali'ah Ring",
+    back="Argocham. Mantle",
+     }
+
+    sets.midcast.Pet["Enfeebling Magic"] = {
+        head={ name="Mpaca's Cap", augments={'Path: A',}},
+        body="Mpaca's Doublet",
+        hands="Mpaca's Gloves",
+        legs={ name="Mpaca's Hose", augments={'Path: A',}},
+        feet="Mpaca's Boots",
+        neck="Adad Amulet",
+        waist="Ukko Sash",
+        left_ear="Kyrene's Earring",
+        right_ear="Enmerkar Earring",
+        left_ring="C. Palug Ring",
+        right_ring="Tali'ah Ring",
+        back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},    }
+
+    sets.midcast.Pet["Dark Magic"] = {
+        head={ name="Herculean Helm", augments={'Pet: "Mag.Atk.Bns."+26','Pet: "Dbl.Atk."+2 Pet: Crit.hit rate +2',}},
+        	body="Udug Jacket",
+        hands={ name="Herculean Gloves", augments={'Pet: "Mag.Atk.Bns."+28','Pet: "Store TP"+6','Pet: DEX+1',}},
+        legs={ name="Pitre Churidars +3", augments={'Enhances "Ventriloquy" effect',}},
+        feet={ name="Pitre Babouches +3", augments={'Enhances "Role Reversal" effect',}},
+        neck="Adad Amulet",
+        waist="Ukko Sash",
+        left_ear="Kyrene's Earring",
+        right_ear="Enmerkar Earring",
+        left_ring="C. Palug Ring",
+        right_ring="Tali'ah Ring",
+        back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},     }
+
+    sets.midcast.Pet["Divine Magic"] = {
+       -- Add your set here 
+    }
+
+    sets.midcast.Pet["Enhancing Magic"] = {
+       -- Add your set here 
+    }
+	-- The following sets are predictive and are equipped before we even know the ability will happen, as a workaround due to
+	-- the fact that start of ability packets are too late in the case of Pup abilities, WS, and certain spells.
+	sets.midcast.Pet.PetEnmityGear = {}
+
+    
+    -------------------------------------WS
+    --[[
+        WSNoFTP is the default weaponskill set used
+    ]]
+    sets.midcast.Pet.WSNoFTP = {                
+        main={ name="Xiucoatl", augments={'Path: C',}},
+        head={ name="Mpaca's Cap", augments={'Path: A',}},
+        body={ name="Taeon Tabard", augments={'Pet: Attack+25 Pet: Rng.Atk.+25','Pet: "Dbl. Atk."+5','Pet: Damage taken -4%',}},
+        hands="Mpaca's Gloves",
+        legs={ name="Taeon Tights", augments={'Pet: Attack+22 Pet: Rng.Atk.+22','Pet: "Dbl. Atk."+5','Pet: Damage taken -4%',}},
+        feet="Mpaca's Boots",
+        neck="Shulmanu Collar",
+        waist="Incarnation Sash",
+        left_ring="Thurandaut Ring",
+        right_ring="C. Palug Ring",
+        left_ear="Kyrene's Earring",    
+        right_ear="Sroda Earring",
+    
+    }
+
+    --[[
+        If we have a pet weaponskill that can benefit from WSFTP
+        then this set will be equipped
+    ]]
+    sets.midcast.Pet.WSFTP = {        
+        main={ name="Xiucoatl", augments={'Path: C',}},
+        ammo="Automat. Oil +3",
+        head="Kara. Cappello +2",
+        hands="Mpaca's Gloves",
+        legs="Kara. Pantaloni +2",
+        feet="Mpaca's Boots",
+        neck="Shulmanu Collar",
+        waist="Klouskap Sash +1",
+        left_ear="Kara. Earring +1",
+        left_ear="Kyrene's Earring",
+        left_ring="Thurandaut Ring",
+        right_ring="C. Palug Ring",
+        back={ name="Dispersal Mantle", augments={'STR+1','Pet: TP Bonus+480',}},
+    }
+
+    --[[
+        Base Weapon Skill Set
+        Used by default if no modifier is found
+    ]]
+    sets.midcast.Pet.WS = {             
+        main={ name="Xiucoatl", augments={'Path: C',}},
+        ammo="Automat. Oil +3",
+        head="Kara. Cappello +2",
+        hands="Mpaca's Gloves",
+        legs="Kara. Pantaloni +2",
+        feet="Mpaca's Boots",
+        neck="Shulmanu Collar",
+        waist="Klouskap Sash +1",
+        left_ear="Kara. Earring +1",
+        left_ear="Kyrene's Earring",
+        left_ring="Thurandaut Ring",
+        right_ring="C. Palug Ring",
+        back={ name="Dispersal Mantle", augments={'STR+1','Pet: TP Bonus+480',}},
+    }
+
+	sets.midcast.Pet.PetWSGear ={}
+	
+    sets.midcast.Pet.PetWSGear.Ranged = set_combine(sets.midcast.Pet.PetWSGear, {})
+	sets.midcast.Pet.PetWSGear.Melee = set_combine(sets.midcast.Pet.PetWSGear, {})
+	sets.midcast.Pet.PetWSGear.Tank = set_combine(sets.midcast.Pet.PetWSGear, {})
+	sets.midcast.Pet.PetWSGear.Bruiser = set_combine(sets.midcast.Pet.PetWSGear, {})
+	sets.midcast.Pet.PetWSGear.LightTank = set_combine(sets.midcast.Pet.PetWSGear, {})
+    sets.midcast.Pet.PetWSGear.Magic = set_combine(sets.midcast.Pet.PetWSGear, {})
+	sets.midcast.Pet.PetWSGear.Heal = set_combine(sets.midcast.Pet.PetWSGear, {})
+	sets.midcast.Pet.PetWSGear.Nuke = set_combine(sets.midcast.Pet.PetWSGear, {})
+    sets.midcast.Pet.PetWSGear.MaxTP = set_combine(sets.midcast.Pet.PetWSGear, {})
+	sets.midcast.Pet.PetWSGear.Regen = set_combine(sets.midcast.Pet.PetWSGear, {})
+	sets.midcast.Pet.PetWSGear.MaxAcc = set_combine(sets.midcast.Pet.PetWSGear, {})
+
 
     sets.buff.Doom = {    neck="Nicander's Necklace",
     waist="Gishdubar Sash",
