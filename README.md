@@ -45,6 +45,10 @@ in macro job blm sch rdm nin drk geo whm pld for fast used i add :
 /con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
 
 ----------
+add staff on all job weapons to can do shell crusher Lowers target's defense .
+add regain idle all job and dnc add in defensemode to can keep it all time up for aminon.
+
+------
 FOR DRK I ADD  element in display screen f4 change it , and add absorts and cycle f3 and in macro
 and add absorbs cycle and elementalmode
 
