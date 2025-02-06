@@ -399,6 +399,22 @@ sets.precast.WS["Rock Crusher"] = set_combine(sets.precast.WS["Burning Blade"],{
 sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+    ammo="Pemphredo Tathlum",
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck="Null Loop",
+    waist="Eschan Stone",
+    left_ear="Digni. Earring",
+    right_ear="Crep. Earring",
+    left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+    right_ring="Stikini Ring +1",
+    back="Null Shawl",
+})
+
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {}
 	sets.AccMaxTP = {}

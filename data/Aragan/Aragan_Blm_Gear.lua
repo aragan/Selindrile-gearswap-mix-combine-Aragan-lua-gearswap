@@ -28,7 +28,7 @@ function user_job_setup()
 	state.PhysicalDefenseMode:options('PDT', 'MDT')
     state.MagicalDefenseMode:options('MDT')
 	state.Enfeebling = M('None', 'Effect')
-	state.IdleMode:options('Normal', 'PDT', 'MDT', 'DT', 'HB', 'MB', 'Evasion', 'EnemyCritRate', 'Sphere')
+	state.IdleMode:options('DT','Normal','DT', 'PDT', 'MDT', 'HB', 'MB', 'Evasion', 'EnemyCritRate', 'Sphere')
 	state.Weapons:options('None','Mpaca', 'Marin', 'Drepanum', 'Maliya', 'Club','TernionDagger')
 
 	gear.nuke_jse_back = {}
@@ -331,7 +331,23 @@ function init_gear_sets()
         left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
         neck="Nefarious Collar +1",
         left_ring="Hetairoi Ring",
-        })
+    })
+
+    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Eschan Stone",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
+    })
 
 	sets.MaxTPMyrkr = {}
     
@@ -364,10 +380,13 @@ function init_gear_sets()
 	legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
 	feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
 	neck="Incanter's Torque",
+    waist="Plat. Mog. Belt",
 	left_ear="Mendi. Earring",
 	right_ear="Etiolation Earring",
 	left_ring="Kishar Ring",
-	right_ring="Naji's Loop",}
+	right_ring="Naji's Loop",
+    back="Moonlight Cape",
+}
 	sets.midcast.Cure.SIRD = set_combine(sets.midcast.Cure,sets.SIRD, {})
 
     sets.midcast.LightWeatherCure = set_combine(sets.midcast.Cure, {
@@ -814,19 +833,19 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 
     sets.idle = {
         ammo="Staunch Tathlum +1",
-        head="Befouled Crown",
-        body="Shamash Robe",
+        head="Null Masque",
+        body="Wicce Coat +3",
         hands="Wicce Gloves +2",
-        legs="Assid. Pants +1",
-        feet="Nyame Sollerets",
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        waist="Carrier's Sash",
+        legs={ name="Assid. Pants +1", augments={'Path: A',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Rep. Plat. Medal",
+        waist="Null Belt",
         left_ear="Etiolation Earring",
         right_ear="Infused Earring",
         left_ring="Stikini Ring +1",
         right_ring="Stikini Ring +1",
-		back="Taranus's Cape",
-	}
+        back="Taranus's Cape",}
+
 
     -- Idle mode that keeps PDT gear on, but doesn't prevent normal gear swaps for precast/etc.
 	sets.idle.PDT = {
@@ -875,6 +894,7 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 	left_ring="Mephitas's Ring",
 	right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
 	back="Taranus's Cape",}
+
     sets.idle.DeathMode = {
         ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
         head="Pixie Hairpin +1",
@@ -944,6 +964,8 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
         right_ring="Stikini Ring +1",
         back="Moonlight Cape",
     }
+    sets.idle.Tank = sets.idle.DT 
+
     sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, { 
         ammo="Eluder's Sachet",
         left_ring="Warden's Ring",
@@ -1027,7 +1049,7 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 	sets.HPCure = {ammo="Hasty Pinion +1",
 		head="Nyame Helm",neck="Nodens Gorget",ear1="Etiolation Earring",ear2="Ethereal Earring",
 		body="Vrikodara Jupon",hands="Telchine Gloves",ring1="Kunaji Ring",ring2="Meridian Ring",
-		back="Tempered Cape +1",waist="Witful Belt",legs="Psycloth Lappas",feet="Vanya Clogs"}
+		back="Tempered Cape +1",waist="Plat. Mog. Belt",legs="Psycloth Lappas",feet="Vanya Clogs"}
 	
 	sets.buff.Doom = set_combine(sets.buff.Doom, {
 		neck="Nicander's Necklace",

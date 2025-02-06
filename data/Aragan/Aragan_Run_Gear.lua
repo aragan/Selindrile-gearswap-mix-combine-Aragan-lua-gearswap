@@ -133,7 +133,7 @@ function init_gear_sets()
 	-- Precast sets to enhance JAs
     sets.precast.JA['Vallation'] = set_combine(sets.Enmity,{body="Runeist Coat +3",legs="Futhark Trousers +3"})
     sets.precast.JA['Valiance'] = sets.precast.JA['Vallation']
-    sets.precast.JA['Pflug'] = set_combine(sets.Enmity,{feet="Runeist's Boots +3"})
+    sets.precast.JA['Pflug'] = set_combine(sets.Enmity,{feet="Runeist Bottes +3"})
     sets.precast.JA['Battuta'] = set_combine(sets.Enmity,{head="Futhark Bandeau +3"})
     sets.precast.JA['Liement'] = set_combine(sets.Enmity,{body="Futhark Coat +1"})
     sets.precast.JA['Gambit'] = set_combine(sets.Enmity,{hands="Runeist's Mitons +2"})
@@ -165,7 +165,7 @@ function init_gear_sets()
 
     sets.precast.JA['Vallation'].DT = set_combine(sets.Enmity.DT,{body="Runeist Coat +3", legs="Futhark Trousers +3"})
     sets.precast.JA['Valiance'].DT = sets.precast.JA['Vallation'].DT
-    sets.precast.JA['Pflug'].DT = set_combine(sets.Enmity.DT,{feet="Runeist's Boots +3"})
+    sets.precast.JA['Pflug'].DT = set_combine(sets.Enmity.DT,{feet="Runeist Bottes +3"})
     sets.precast.JA['Battuta'].DT = set_combine(sets.Enmity.DT,{head="Futhark Bandeau +3"})
     sets.precast.JA['Liement'].DT = set_combine(sets.Enmity.DT,{body="Futhark Coat +1"})
     sets.precast.JA['Gambit'].DT = set_combine(sets.Enmity.DT,{hands="Runeist's Mitons +2"})
@@ -467,12 +467,28 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
     sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
     sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+	sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+		ammo="Pemphredo Tathlum",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Null Loop",
+		waist="Eschan Stone",
+		left_ear="Digni. Earring",
+		right_ear="Crep. Earring",
+		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		right_ring="Stikini Ring +1",
+		back="Null Shawl",
+    })
 	
 	sets.precast.WS['Sanguine Blade'] = set_combine(sets.precast.JA['Lunge'], {
 		head="Pixie Hairpin +1",   
 		right_ring="Archon Ring",	   
 	})
 	sets.precast.WS.Cataclysm = sets.precast.WS["Sanguine Blade"]
+
 
 	--------------------------------------
 	-- Midcast sets
@@ -639,9 +655,9 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
     
 
    sets.idle = {ammo="Homiliary",
-   head="Rawhide Mask",neck={ name="Bathy Choker +1", augments={'Path: A',}},ear1="Infused Earring",ear2="Ethereal Earring",
+   head="Null Masque",neck="Rep. Plat. Medal",ear1="Infused Earring",ear2="Ethereal Earring",
    body="Runeist Coat +3",hands="Regal Gauntlets",ring1="Stikini Ring +1",ring2="Stikini Ring +1",
-   back="Moonlight Cape",waist="Flume Belt +1",legs="Nyame Flanchard",feet="Nyame Sollerets"}
+   back="Moonlight Cape",waist="Null Belt",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 
    --sets.idle.Sphere = set_combine(sets.idle,{})--body="Mekosu. Harness"
 

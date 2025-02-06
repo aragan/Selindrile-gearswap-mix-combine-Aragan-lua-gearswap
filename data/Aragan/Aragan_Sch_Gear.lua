@@ -54,7 +54,7 @@ Usage example :
 ---
 command add macro 
 for change weather :
-/console gs c elemental weather
+/console gs c cycle ElementalMode
 ---
 command add macro 
 for helix :
@@ -140,7 +140,7 @@ Distortion
 function user_job_setup()
     state.OffenseMode:options('None','Normal','Acc','DT')
     state.CastingMode:options('Normal','Seidr','magicburst','Enmity','ConserveMP','Sird','SubtleBlow', 'Proc')
-    state.IdleMode:options('Normal', 'DT', 'Resist','BoostHP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
+    state.IdleMode:options('DT','Normal', 'Resist','BoostHP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
     state.PhysicalDefenseMode:options('PDT','BoostHP', 'Evasion', 'Resist')
     state.MagicalDefenseMode:options('MDT')
 	state.Weapons:options('Mpaca','Marin','None','Xoanon', 'Club','TernionDagger')
@@ -295,9 +295,9 @@ right_ear="Telos Earring",
     sets.precast.FC.Dispelga = set_combine(sets.precast.FC, {main="Daybreak", sub="Ammurapi Shield"})
     sets.precast.Storm = set_combine(sets.precast.FC, {ring1="Stikini Ring +1"})
 
-    sets.TreasureHunter = {ammo="Per. Lucky Egg",
+    --[[sets.TreasureHunter = {ammo="Per. Lucky Egg",
     head="White rarab cap +1", 
-    waist="Chaac Belt"} 
+    waist="Chaac Belt"} ]]
 	
 	-- Gear that converts elemental damage done to recover MP.	
 	sets.RecoverMP = {body="Seidr Cotehardie",} --body="Seidr Cotehardie"}
@@ -408,6 +408,21 @@ right_ear="Telos Earring",
         back={ name="Aurist's Cape +1", augments={'Path: A',}},
     }
 
+    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+		ammo="Pemphredo Tathlum",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Null Loop",
+		waist="Eschan Stone",
+		left_ear="Digni. Earring",
+		right_ear="Crep. Earring",
+		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		right_ring="Stikini Ring +1",
+		back="Null Shawl",
+    })
 
     ------------------------------------------------------------------------------------------------
     ---------------------------------------- Midcast Sets ------------------------------------------
@@ -879,13 +894,13 @@ right_ear="Telos Earring",
 
     sets.idle = {
         ammo="Homiliary",
-        head="Befouled Crown",
+        head="Null Masque",
         body="Arbatel Gown +3",
         hands={ name="Chironic Gloves", augments={'VIT+4','"Waltz" potency +2%','"Refresh"+2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
         legs="Assid. Pants +1",
         feet="Nyame Sollerets",
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        waist="Carrier's Sash",
+        neck="Rep. Plat. Medal",
+        waist="Null Belt",
         left_ear="Etiolation Earring",
         right_ear="Infused Earring",
         left_ring="Stikini Ring +1",
@@ -894,18 +909,18 @@ right_ear="Telos Earring",
    }
 
     sets.idle.DT = set_combine(sets.idle, {
-        ammo="Homiliary",
-        head="Nyame Helm",
-        body="Arbatel Gown +3",
-        hands="Nyame Gauntlets",
-        legs="Nyame Flanchard",
-        feet="Nyame Sollerets",
+        ammo="Staunch Tathlum +1",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-        waist="Carrier's Sash",
-        left_ear="Etiolation Earring",
+        waist="Plat. Mog. Belt",
+        left_ear="Tuisto Earring",
         right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring="Stikini Ring +1",
-        right_ring="Stikini Ring +1",
+        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        right_ring="Paguroidea Ring",
         back="Moonlight Cape",
     })
 

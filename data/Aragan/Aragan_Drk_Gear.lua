@@ -81,10 +81,10 @@ Scourge (R) > Resolution (MM)
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'STP', 'DA', 'Acc', 'SubtleBlow', 'CRIT')
-    state.WeaponskillMode:options('Normal', 'Mid', 'PDL', 'SC', 'Dread', 'None')
+    state.WeaponskillMode:options('Normal', 'Acc', 'PDL', 'SC', 'Dread', 'None')
     state.HybridMode:options('Normal', 'DT', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
-    state.PhysicalDefenseMode:options( 'PDT', 'HP', 'Enmity', 'Dread Spikes', 'SEboost', 'Reraise')
+    state.PhysicalDefenseMode:options( 'PDT', 'HP', 'Enmity','Regain', 'Dread Spikes', 'SEboost', 'Reraise')
     state.MagicalDefenseMode:options('Normal','MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options('Tank','Normal','PDT' ,'Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate', 'Refresh')
@@ -512,7 +512,8 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
 	sets.Self_Healing = {waist="Gishdubar Sash"}
 	sets.Cure_Received = {waist="Gishdubar Sash"}
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
-			
+    sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
+
 	
     sets.precast.RA = { ammo=empty,
         range="Trollbane",  
@@ -560,7 +561,8 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
 }
     sets.precast.WS.Dread  = sets.defense['Dread Spikes']
     sets.precast.WS.None  = {}
-    sets.precast.WS.Mid = set_combine(sets.precast.WS, {       
+    sets.precast.WS.Proc = {}
+    sets.precast.WS.Acc = set_combine(sets.precast.WS, {       
         head={ name="Nyame Helm", augments={'Path: B',}},
        body={ name="Nyame Mail", augments={'Path: B',}},
        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -643,7 +645,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
 }
   
     sets.precast.WS['Catastrophe'].Dread  = sets.defense['Dread Spikes']
-    sets.precast.WS['Catastrophe'].Mid = set_combine(sets.precast.WS['Catastrophe'], {
+    sets.precast.WS['Catastrophe'].Acc = set_combine(sets.precast.WS['Catastrophe'], {
         head="Nyame Helm",
         body="Nyame Mail",
         hands="Nyame Gauntlets",
@@ -674,7 +676,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         right_ear={ name="Lugra Earring +1", augments={'Path: A',}},
         right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     })
-    sets.precast.WS['Spiral Hell'].Mid = set_combine(sets.precast.WS.Mid, {
+    sets.precast.WS['Spiral Hell'].Acc = set_combine(sets.precast.WS.Acc, {
         right_ear={ name="Lugra Earring +1", augments={'Path: A',}},
         right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     })
@@ -711,7 +713,7 @@ sets.precast.WS['Insurgency'] = {
 }
   
     sets.precast.WS['Insurgency'].Dread  = sets.defense['Dread Spikes']
-    sets.precast.WS['Insurgency'].Mid = set_combine(sets.precast.WS['Insurgency'], {
+    sets.precast.WS['Insurgency'].Acc = set_combine(sets.precast.WS['Insurgency'], {
         head="Nyame Helm",
         body="Nyame Mail",
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
@@ -751,7 +753,7 @@ sets.precast.WS['Insurgency'] = {
 }
   
     sets.precast.WS['Cross Reaper'].Dread  = sets.defense['Dread Spikes']
-    sets.precast.WS['Cross Reaper'].Mid = set_combine(sets.precast.WS['Cross Reaper'], {
+    sets.precast.WS['Cross Reaper'].Acc = set_combine(sets.precast.WS['Cross Reaper'], {
     })
     sets.precast.WS['Cross Reaper'].PDL = set_combine(sets.precast.WS['Cross Reaper'], {
         head="Heath. Burgeon. +2",
@@ -784,7 +786,7 @@ sets.precast.WS['Quietus'] = {
     right_ring="Niqmaddu Ring",
     back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 } 
-sets.precast.WS['Quietus'].Mid = set_combine(sets.precast.WS['Quietus'], {
+sets.precast.WS['Quietus'].Acc = set_combine(sets.precast.WS['Quietus'], {
     head="Nyame Helm",
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -823,7 +825,7 @@ sets.precast.WS['Entropy'] = {
     right_ring="Niqmaddu Ring",
     back="Annealed Mantle",
 } 
-sets.precast.WS['Entropy'].Mid = set_combine(sets.precast.WS['Entropy'], {})
+sets.precast.WS['Entropy'].Acc = set_combine(sets.precast.WS['Entropy'], {})
 
 sets.precast.WS['Entropy'].PDL = set_combine(sets.precast.WS['Entropy'], {
     ammo="Crepuscular Pebble",
@@ -858,7 +860,7 @@ right_ring="Cornelia's Ring",
 back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 }
 sets.precast.WS['Infernal Scythe'].Dread  = sets.defense['Dread Spikes']
-sets.precast.WS['Infernal Scythe'].Mid = set_combine(sets.precast.WS['Infernal Scythe'], {})
+sets.precast.WS['Infernal Scythe'].Acc = set_combine(sets.precast.WS['Infernal Scythe'], {})
 sets.precast.WS['Infernal Scythe'].PDL = set_combine(sets.precast.WS['Infernal Scythe'], {})
 sets.precast.WS['Infernal Scythe'].SC = set_combine(sets.precast.WS['Infernal Scythe'], {
     head="Nyame Helm",
@@ -870,7 +872,7 @@ sets.precast.WS['Infernal Scythe'].SC = set_combine(sets.precast.WS['Infernal Sc
 })
 sets.precast.WS['Infernal Scythe'].None = {}
 sets.precast.WS['Shadow of Death'] = set_combine(sets.precast.WS['Infernal Scythe'], {neck="Sibyl Scarf",})
-sets.precast.WS['Shadow of Death'].Mid = set_combine(sets.precast.WS['Infernal Scythe'], {neck="Sibyl Scarf",})
+sets.precast.WS['Shadow of Death'].Acc = set_combine(sets.precast.WS['Infernal Scythe'], {neck="Sibyl Scarf",})
 sets.precast.WS['Shadow of Death'].PDL = set_combine(sets.precast.WS['Infernal Scythe'].PDL, {neck="Sibyl Scarf",})
 sets.precast.WS['Shadow of Death'].SC = set_combine(sets.precast.WS['Infernal Scythe'].SC, {neck="Sibyl Scarf",})
 sets.precast.WS['Shadow of Death'].None = {}
@@ -949,7 +951,7 @@ sets.precast.WS['Nightmare Scythe'] = {
         right_ring="Cornelia's Ring",
         back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
     } 
-    sets.precast.WS['Ground Strike'].Mid = set_combine(sets.precast.WS['Ground Strike'], {
+    sets.precast.WS['Ground Strike'].Acc = set_combine(sets.precast.WS['Ground Strike'], {
         head="Nyame Helm",
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -997,7 +999,7 @@ sets.precast.WS['Nightmare Scythe'] = {
     back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
     }       
     sets.precast.WS['Torcleaver'].Dread  = sets.defense['Dread Spikes']
-    sets.precast.WS['Torcleaver'].Mid = set_combine(sets.precast.WS['Torcleaver'], {})
+    sets.precast.WS['Torcleaver'].Acc = set_combine(sets.precast.WS['Torcleaver'], {})
     sets.precast.WS['Torcleaver'].PDL = set_combine(sets.precast.WS['Torcleaver'], {
         head="Heath. Burgeon. +2",
         right_ear="Heathen's Earring",
@@ -1115,6 +1117,21 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+    ammo="Pemphredo Tathlum",
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck="Null Loop",
+    waist="Eschan Stone",
+    left_ear="Digni. Earring",
+    right_ear="Crep. Earring",
+    left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+    right_ring="Stikini Ring +1",
+    back="Null Shawl",
+})
 
      -- Sets to return to when not performing an action.
            
@@ -1279,41 +1296,53 @@ sets.defense.SEboost = {
 		right_ring="Archon Ring",
 		back="Moonlight Cape",}
 
+    sets.defense.Regain = {
+        ammo="Staunch Tathlum +1",
+        head="Ratri Sallet +1",
+        body={ name="Sakpata's Plate", augments={'Path: A',}},
+        hands={ name="Macabre Gaunt. +1", augments={'Path: A',}},
+        legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+        feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+        neck="Rep. Plat. Medal",
+        waist="Carrier's Sash",
+        left_ear="Eabani Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        right_ring="Defending Ring",
+        back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+    }
 
-        -- Idle sets
+    -- Idle sets
            
     sets.idle = {ammo="Staunch Tathlum +1",
-		head="Jumalik Helm",
+        head="Null Masque",
 		body="Jumalik Mail",
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
 		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
-		neck="Coatl Gorget +1",
+        waist="Null Belt",
 		ear1="Genmei Earring",ear2="Ethereal Earring",
 		ring1="Stikini Ring +1",ring2="Stikini Ring +1",
-		waist="Flume Belt +1",
 		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 	}
 		
     sets.idle.Refresh = set_combine(sets.idle, {       
-			head=empty,
-			body={ name="Lugra Cloak +1", augments={'Path: A',}},
-			left_ring="Stikini Ring +1",
-			right_ring="Stikini Ring +1",
+        left_ring="Stikini Ring +1",
+        right_ring="Stikini Ring +1",
 	})
 	sets.idle.Regen = { 
 		ammo="Staunch Tathlum +1",
-		head="Crepuscular Helm",
+        head="Null Masque",
 		body="Sacro Breastplate",
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
 		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
 		neck={ name="Bathy Choker +1", augments={'Path: A',}},
-		waist="Flume Belt +1",
+        waist="Null Belt",
 		left_ear="Infused Earring",
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring="Chirich Ring +1",
-		right_ring="Defending Ring",
+		right_ring="Chirich Ring +1",
 		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 	}
 	sets.idle.PDT = {
@@ -1332,7 +1361,8 @@ sets.defense.SEboost = {
 	back="Moonlight Cape",
     }
 	sets.idle.Tank = sets.idle.PDT
-	
+    sets.idle.DT = sets.idle.PDT
+
 	sets.idle.MDT = sets.defense.MDT
 	sets.idle.Evasion = sets.defense.Evasion
 	sets.idle.HP = sets.defense.HP

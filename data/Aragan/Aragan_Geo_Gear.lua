@@ -336,6 +336,22 @@ function init_gear_sets()
         back={ name="Aurist's Cape +1", augments={'Path: A',}},
     }
 
+    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Eschan Stone",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
+    })
+
     sets.precast.WS['Starlight'] = sets.precast.WS
     sets.precast.WS['Moonlight'] = sets.precast.WS
 
@@ -641,7 +657,7 @@ function init_gear_sets()
         body="Shamash Robe",
         hands={ name="Chironic Gloves", augments={'VIT+4','"Waltz" potency +2%','"Refresh"+2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
         legs="Assid. Pants +1",
-        feet="Geo. Sandals +2",
+        feet="Geo. Sandals +3",
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
         waist="Carrier's Sash",
         left_ear="Etiolation Earring",
@@ -759,7 +775,7 @@ function init_gear_sets()
 	
 	sets.defense.GeoLock = sets.midcast.Geomancy.Indi
 
-	sets.Kiting = {feet="Geo. Sandals +2"}
+	sets.Kiting = {feet="Geo. Sandals +3"}
 	sets.latent_refresh = {waist="Fucho-no-obi"}
 	sets.latent_refresh_grip = {sub="Oneiros Grip"}
 	sets.TPEat = {}
@@ -874,5 +890,4 @@ function select_default_macro_book()
     set_macro_page(5, 6)
 end
 
-autows_list = {['Idris']='Exudation',['Maxentius']="Black Halo",['Bunzi']="Flash Nova",['TernionDagger']='Aeolian Edge',['Xoanon']='Retribution',['MalignancePole']='Cataclysm',
-['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
+autows_list = {['Idris']='Exudation',['Maxentius']='Black Halo',['Bunzi']="Flash Nova",['TernionDagger']='Aeolian Edge',['Xoanon']='Retribution',['MalignancePole']='Cataclysm'}

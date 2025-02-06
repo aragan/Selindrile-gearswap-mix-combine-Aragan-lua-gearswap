@@ -64,10 +64,10 @@ function init_gear_sets()
     -- Precast sets to enhance JAs
     sets.precast.JA['Astral Flow'] = {head="Glyphic Horn +1"}
     
-    sets.precast.JA['Elemental Siphon'] = {main="Soulscourge",
-    head="Convoker's Horn",neck="Caller's Pendant",
-    body="Caller's Doublet +2",hands="Glyphic Bracers +1",ring1="Evoker's Ring",ring2="Fervor Ring",
-    legs="Marduk's Shalwar +1",feet="Caller's Pigaches +2"}
+    sets.precast.JA['Elemental Siphon'] = {
+    neck="Incanter's Torque",ear1="Andoaa Earring",
+   hands="Baayami Cuffs",ring1="Evoker's Ring",ring2="Stikini Ring +1",
+    back="Conveyance Cape",waist="Kobo Obi",}
 
 
     sets.precast.JA['Mana Cede'] = {hands="Beck. Bracers +1"}
@@ -340,16 +340,16 @@ sets.midcast['Enfeebling Magic'] = {
     
 sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     waist="Fuchi-no-Obi",})
-    sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], { left_ear="Brachyura Earring"})
+    sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], { left_ear="Sheltered Ring"})
     sets.midcast.Protectra = sets.midcast.Protect
-    sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], { left_ear="Brachyura Earring"})
+    sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], { left_ear="Sheltered Ring"})
     sets.midcast.Shellra = sets.midcast.Shell
     sets.midcast.Stoneskin = set_combine(sets.midcast['Enhancing Magic'], {
         legs="Haven Hose",
         left_ear="Earthcry Earring",
         neck="Nodens Gorget",
         waist="Siegel Sash",
-        })
+    })
 
 
     sets.midcast['Divine Magic'] = {        head=empty,
@@ -476,13 +476,9 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     
 	sets.midcast.Pet['Impact'] = sets.midcast.Pet.DebuffBloodPactWard
 
-	sets.midcast.Pet['Flaming Crush'] = set_combine(sets.midcast.Pet.MagicalBloodPactRage, {
-
-    })
+	sets.midcast.Pet['Flaming Crush'] = set_combine(sets.midcast.Pet.MagicalBloodPactRage, {})
 		
-	sets.midcast.Pet['Flaming Crush'].Acc =set_combine(sets.midcast.Pet.MagicalBloodPactRage, {
-
-    })
+	sets.midcast.Pet['Flaming Crush'].Acc =set_combine(sets.midcast.Pet.MagicalBloodPactRage, {})
 	
 	sets.midcast.Pet['Mountain Buster'] = set_combine(sets.midcast.Pet.PhysicalBloodPactRage, {legs="Enticer's Pants"})
 	sets.midcast.Pet['Mountain Buster'].Acc = set_combine(sets.midcast.Pet.PhysicalBloodPactRage.Acc, {legs="Enticer's Pants"})
@@ -602,7 +598,7 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     -- Can make due without either the head or the body, and use +refresh items in those slots.
     
     sets.idle.Avatar = {
-        main="Contemplator +1",
+    main="Contemplator +1",
     sub="Vox Grip",
     ammo="Sancus Sachet +1",
     head={ name="Glyphic Horn +1", augments={'Enhances "Astral Flow" effect',}},
@@ -689,10 +685,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
     back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
 
-    sets.idle.Spirit = {main="Gridarvor",sub="Achaq Grip",ammo="Seraphicaller",
-        head="Convoker's Horn",neck="Caller's Pendant",ear1="Gifted Earring",ear2="Loquacious Earring",
-        body="Hagondes Coat",hands="Serpentes Cuffs",ring1="Evoker's Ring",ring2="Sangoma Ring",
-        back="Samanisi Cape",waist="Fucho-no-Obi",legs="Summoner's Spats",feet="Herald's Gaiters"}
+    sets.idle.Spirit = {}
 
     sets.idle.Town = {
     feet="Herald's Gaiters",
@@ -816,10 +809,17 @@ sets.defense.MagicalBloodPactRage = {
     back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
 
-    sets.defense.MEVA = {main="Malignance Pole",sub="Enki Strap",ammo="Epitaph",
-        head="Amalric Coif +1",neck="Warder's Charm +1",ear1="Lugalbanda Earring",ear2="Sanare Earring",
-		body="Inyanga Jubbah +2",hands="Telchine Gloves",ring1="Vengeful Ring",Ring2="Purity Ring",
-        back="Aurist's Cape +1",waist="Luminary Sash",legs="Telchine Braconi",feet="Telchine Pigaches"}
+    sets.defense.MEVA = {        
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck={ name="Warder's Charm +1", augments={'Path: A',}},
+    waist="Carrier's Sash",
+    ear1="Lugalbanda Earring",ear2="Sanare Earring",
+		ring1="Vengeful Ring",Ring2="Purity Ring",
+        back="Aurist's Cape +1"}
 		
     sets.Kiting = {feet="Herald's Gaiters"}
     sets.latent_refresh = {waist="Fucho-no-obi"}
@@ -846,8 +846,7 @@ sets.defense.MagicalBloodPactRage = {
     -- Normal melee group
 
     sets.engaged = {
-        main={ name="Espiritus", augments={'Summoning magic skill +15','Pet: Mag. Acc.+30','Pet: Damage taken -4%',}},
-        sub="Alber Strap",
+
         ammo="Sancus Sachet +1",
         head="Nyame Helm",
         body="Tali'ah Manteel +2",
@@ -864,8 +863,7 @@ sets.defense.MagicalBloodPactRage = {
 }
 
 sets.engaged.Acc = {
-    main={ name="Espiritus", augments={'Summoning magic skill +15','Pet: Mag. Acc.+30','Pet: Damage taken -4%',}},
-    sub="Alber Strap",
+
     ammo="Sancus Sachet +1",
     head="Nyame Helm",
     body="Tali'ah Manteel +2",
@@ -881,7 +879,9 @@ sets.engaged.Acc = {
     back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
 end
-
+function user_job_lockstyle()
+	windower.chat.input('/lockstyleset 174')
+end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book(reset)
     if reset == 'reset' then

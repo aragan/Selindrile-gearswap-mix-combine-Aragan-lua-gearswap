@@ -497,6 +497,22 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 	
+sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+    ammo="Pemphredo Tathlum",
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck="Null Loop",
+    waist="Eschan Stone",
+    left_ear="Digni. Earring",
+    right_ear="Crep. Earring",
+    left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+    right_ring="Stikini Ring +1",
+    back="Null Shawl",
+})
+
 	-- Sets to return to when not performing an action.
 	
 	-- Resting sets
@@ -822,22 +838,13 @@ sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.eng
 -----------------------
 
     sets.engaged.AM = {}
-    sets.engaged.AM.SomeAcc = {}
 	sets.engaged.AM.Acc = {}
-    sets.engaged.AM.FullAcc = {}
-    sets.engaged.AM.Fodder = {}
 	
     sets.engaged.PDT = {}
-    sets.engaged.SomeAcc.PDT = {}
 	sets.engaged.Acc.PDT = {}
-    sets.engaged.FullAcc.PDT = {}
-    sets.engaged.Fodder.PDT = {}
 	
     sets.engaged.AM.PDT = {}
-    sets.engaged.AM.SomeAcc.PDT = {}
 	sets.engaged.AM.Acc.PDT = {}
-    sets.engaged.AM.FullAcc.PDT = {}
-    sets.engaged.AM.Fodder.PDT = {}
 		
 	--[[ Melee sets for in Adoulin, which has an extra 2% Haste from Ionis.
 	

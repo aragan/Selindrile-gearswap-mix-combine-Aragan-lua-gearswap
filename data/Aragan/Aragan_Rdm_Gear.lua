@@ -23,11 +23,11 @@ function user_job_setup()
 	state.WeaponskillMode:options('Normal', 'PDL', 'SC')
 	state.AutoBuffMode:options('Off','Auto','AutoMelee')
 	state.CastingMode:options( 'Duration','Normal', 'Burst', 'SIRD', 'DT')
-    state.IdleMode:options('Normal', 'PDT', 'MDT','Regen', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
+    state.IdleMode:options('DT','Normal', 'PDT', 'MDT','Regen', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
     state.PhysicalDefenseMode:options('PDT','NukeLock')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('None','DualSWORDS','DualCrocea','DualClub','DualDAGGERS','SWORDS', 'Crocea', 'DAGGERS', 'Club')
+	state.Weapons:options('None','DualSWORDS','DualCrocea','DualClub','DualDAGGERS','SWORDS', 'Crocea', 'DAGGERS', 'Club','Staff')
 	state.Shield = M{['description']='Weapon Set', 'Normal', 'Ammurapi', 'Bulwark'}
 	--state.WeaponSet = M{['description']='Weapon Set', 'Normal', 'SWORDS', 'Crocea', 'DAGGERS', 'Club'}
 
@@ -95,6 +95,8 @@ function init_gear_sets()
 	sets.weapons.SWORDS = {main="Naegling",}
 	sets.weapons.Crocea = {main="Crocea Mors", }
 	sets.weapons.Club = {main="Maxentius", }
+	sets.weapons.Staff = {main="Xoanon",sub="Niobid Strap"}
+
 	sets.weapons.DAGGERS = {main="Tauret", }
 	sets.weapons.DualSWORDS = {main="Naegling", sub="Demers. Degen +1"}
 	sets.weapons.DualCrocea = {main="Crocea Mors", sub="Daybreak"}
@@ -161,7 +163,11 @@ function init_gear_sets()
         head="Umuthi Hat",
         waist="Siegel Sash",})
 	sets.precast.FC.Cure = set_combine(sets.precast.FC, {})
-	sets.precast.FC.Dispelga = set_combine(sets.precast.FC, {main="Daybreak", sub="Sacro Bulwark"})
+	sets.precast.FC.Dispelga = set_combine(sets.precast.FC, {
+		main="Daybreak", 
+		sub="Sacro Bulwark",
+		neck={ name="Dls. Torque +2", augments={'Path: A',}},
+	})
        
 
     -- Weaponskill sets
@@ -397,6 +403,21 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+	ammo="Pemphredo Tathlum",
+	head={ name="Nyame Helm", augments={'Path: B',}},
+	body={ name="Nyame Mail", augments={'Path: B',}},
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck="Null Loop",
+	waist="Eschan Stone",
+	left_ear="Digni. Earring",
+	right_ear="Crep. Earring",
+	left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+	right_ring="Stikini Ring +1",
+	back="Null Shawl",
+})
 
 	-- Midcast Sets
 
@@ -425,13 +446,7 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
 	}
 
 
-	sets.midcast.Absorb = {
-		ammo="Pemphredo Tathlum",
-		neck="Erra Pendant",
-		waist="Acuity Belt +1",
-		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		right_ring="Kishar Ring",
-	}
+
 	sets.Duration = {
 		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
 		sub="Ammurapi Shield",
@@ -763,6 +778,14 @@ sets.midcast['Enfeebling Magic'].Potency = {
 		right_ring="Stikini Ring",
 		back={ name="Aurist's Cape +1", augments={'Path: A',}},
 	}
+	sets.midcast.Absorb = set_combine(sets.midcast['Dark Magic'], {
+		ammo="Pemphredo Tathlum",
+		neck="Erra Pendant",
+		waist="Acuity Belt +1",
+		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		right_ring="Kishar Ring",
+	})
+
 	--sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
 	
 	sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
@@ -826,33 +849,35 @@ sets.midcast['Enfeebling Magic'].Potency = {
 
 	-- Idle sets
 	sets.idle = {	ammo="Homiliary",
-	head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
+	head="Null Masque",
 	body="Lethargy Sayon +3",
 	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	feet={ name="Nyame Sollerets", augments={'Path: B',}},
-	neck={ name="Loricate Torque +1", augments={'Path: A',}},
-	waist="Carrier's Sash",
+	neck="Rep. Plat. Medal",
+	waist="Null Belt",
 	left_ear="Etiolation Earring",
 	right_ear="Genmei Earring",
 	left_ring="Stikini Ring +1",
 	right_ring="Stikini Ring +1",
 	back="Moonlight Cape",}
 		
-	sets.idle.PDT = {	ammo="Homiliary",
+	sets.idle.PDT = {	ammo="Staunch Tathlum +1",
 	head={ name="Nyame Helm", augments={'Path: B',}},
 	body="Adamantite Armor",
 	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	feet={ name="Nyame Sollerets", augments={'Path: B',}},
 	neck={ name="Loricate Torque +1", augments={'Path: A',}},
-	waist="Carrier's Sash",
+	waist="Plat. Mog. Belt",
 	left_ear="Tuisto Earring",
 	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	left_ring="Paguroidea Ring",
 	right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 	back="Moonlight Cape",}
 		
+	sets.idle.DT = set_combine(sets.PDT, {})
+
 sets.idle.MDT = {
 	ammo="Staunch Tathlum +1",
 	head={ name="Bunzi's Hat", augments={'Path: A',}},

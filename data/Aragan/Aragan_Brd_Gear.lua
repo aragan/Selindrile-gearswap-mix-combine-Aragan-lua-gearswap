@@ -8,6 +8,21 @@
 --[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
 keyboard binds and chat 
+
+state.Songset have songsset its copy from AutoBuffBard addon file abb_sets 
+u can add name songsset there and copy name in state.Songset
+
+cycle Songset
+
+send_command('bind f2 gs c cycle Songset')
+send_command('bind !f2 gs c Songset')
+
+macro
+
+/con gs c Songset
+
+its do all ja first then do u  songset
+
 ]]
 
 function user_job_setup()
@@ -15,10 +30,10 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'Shield', 'CRIT')
 	state.HybridMode:options('Normal','DT')
     state.CastingMode:options('Normal','Resistant','AoE')
-	state.PhysicalDefenseMode:options('PDT', 'Evasion')
+	state.PhysicalDefenseMode:options('PDT', 'Evasion','Regain')
     state.MagicalDefenseMode:options('MDT')
     state.WeaponskillMode:options('Normal', 'PDL')
-    state.IdleMode:options('Normal', 'DT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
+    state.IdleMode:options('DT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
 	state.Weapons:options('None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan')
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Always','300','1000','Never'}
@@ -50,15 +65,17 @@ function user_job_setup()
 	send_command('bind !f7 gs c cycleback ExtraSongsMode')
 
     send_command('bind f1 gs c cycle HippoMode')
-    send_command('bind f2 gs c cycle Etude')
-    send_command('bind !f2 gs c Etude')
+    send_command('bind ^3 gs c cycle Etude')
+    send_command('bind ^4 gs c Etude')
     send_command('bind f3 gs c cycle Carol')
     send_command('bind !f3 gs c Carol')
     send_command('bind f4 gs c cycle Threnody')
     send_command('bind !f4 gs c Threnody')
 	send_command('bind @f4 gs c toggle AutoSongMode')
 	send_command('bind ^f4 gs c toggle AutoDefenseMode')
-
+    send_command('bind f2 gs c cycle Songset')
+    send_command('bind ^f2 gs c cycleback Songset')
+    send_command('bind !f2 gs c Songset')
 	select_default_macro_book()
 end
 
@@ -161,10 +178,10 @@ function init_gear_sets()
 	feet="Fili Cothurnes +2",
 	neck="Baetyl Pendant",
 	waist="Witful Belt",
-	left_ear="Etiolation Earring",
-	right_ear="Loquac. Earring",
-	left_ring="Kishar Ring",
-	right_ring="Prolix Ring",
+	right_ear="Etiolation Earring",
+	left_ear="Loquac. Earring",
+	right_ring="Kishar Ring",
+	left_ring="Prolix Ring",
 	back={ name="Fi Follet Cape +1", augments={'Path: A',}},}
 
 	sets.precast.FC.SongDebuff = set_combine(sets.precast.FC.BardSong,{range="Marsyas"})
@@ -183,8 +200,8 @@ function init_gear_sets()
 
 	sets.precast.FC.Daurdabla = set_combine(sets.precast.FC.BardSong, {range=info.ExtraSongInstrument})
 	sets.precast.DaurdablaDummy = sets.precast.FC.Daurdabla
-	sets.precast.FC.Gjallarhorn = set_combine(sets.precast.FC.BardSong, {range=info.SongHorn})
-    sets.precast.FC.Marsyas = set_combine(sets.precast.FC.BardSong, {range=info.SongMarsyas})
+	sets.precast.FC.Gjallarhorn = set_combine(sets.precast.FC.BardSong, {range="Gjallarhorn"})
+    sets.precast.FC.Marsyas = set_combine(sets.precast.FC.BardSong, {range="Marsyas"})
 
 
 	-- Precast sets to enhance JAs
@@ -218,6 +235,7 @@ function init_gear_sets()
     sets.precast.WS.PDL = set_combine(sets.precast.WS,{
         body="Bunzi's Robe",
         neck={ name="Bard's Charm +2", augments={'Path: A',}},})
+        
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
     sets.precast.WS['Evisceration'] = { range="Linos",
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
@@ -427,10 +445,7 @@ sets.precast.WS['Shattersoul'] = {
 	-- Midcast Sets
 
 	-- General set for recast times.
-	sets.midcast.FastRecast = {
-		head="Bunzi's Hat",neck="Voltsurge Torque",ear2="Loquac. Earring",
-		body="Inyanga Jubbah +2",hands="Leyline Gloves",ring1="Kishar Ring",ring2="Lebeche Ring",
-		waist="Witful Belt",legs="Aya. Cosciales +2",feet="Bihu Slippers +3"}
+	sets.midcast.FastRecast = sets.precast.FC
 
 	-- Gear to enhance certain classes of songs
 	sets.midcast.Ballad = {legs="Fili Rhingrave +2"}
@@ -465,8 +480,8 @@ sets.precast.WS['Shattersoul'] = {
     legs="Inyanga Shalwar +2",
     feet="Brioso Slippers +3",
     neck="Mnbw. Whistle +1",
-    ear1="Odnowa Earring +1",
-    ear2="Loquac. Earring",
+    ear2="Odnowa Earring +1",
+    ear1="Loquac. Earring",
     ring1="Stikini Ring +1",
     ring2="Stikini Ring +1",
     waist="Witful Belt",
@@ -476,7 +491,6 @@ sets.precast.WS['Shattersoul'] = {
 
 	-- For song defbuffs (duration primary, accuracy secondary)
 	sets.midcast.SongDebuff = {     range="Marsyas",
-    sub="Ammurapi Shield",
         head="Fili Calot +2",
         body="Fili Hongreline +2",
         hands="Fili Manchettes +2",    
@@ -496,18 +510,24 @@ sets.precast.WS['Shattersoul'] = {
 	sets.midcast.SongDebuff.Resistant = sets.midcast.SongDebuff
 
 	-- Song-specific recast reduction
-	sets.midcast.SongRecast = {range="Daurdabla",ammo=empty,
-		head="Bunzi's Hat",neck="Voltsurge Torque",ear1="Enchntr. Earring +1",ear2="Loquac. Earring",
-		body="Inyanga Jubbah +2",ring1="Kishar Ring",ring2="Prolix Ring",
-		waist="Witful Belt",legs="Fili Rhingrave +2",feet="Aya. Gambieras +2"}
+	sets.midcast.SongRecast = sets.precast.FC.BardSong
 		
 	-- Cast spell with normal gear, except using Daurdabla instead
     sets.midcast.Daurdabla = {range=info.ExtraSongInstrument}
-    sets.midcast.Gjallarhorn = set_combine(sets.midcast.SongEffect, {range=info.SongHorn})
+    sets.midcast.Gjallarhorn =  {range=info.SongHorn}
     sets.midcast.Marsyas = set_combine(sets.midcast.SongEffect, {range=info.SongMarsyas})
 
 	-- Dummy song with Daurdabla; minimize duration to make it easy to overwrite.
     sets.midcast.DaurdablaDummy = set_combine(sets.midcast.SongRecast, {range=info.ExtraSongInstrument})
+
+
+    --dummy songs
+    sets.midcast["Army's Paeon"] = sets.midcast.DaurdablaDummy
+    sets.midcast["Valor Minuet"] = sets.midcast.DaurdablaDummy
+    sets.midcast["Knight's Minne"] = sets.midcast.DaurdablaDummy
+    sets.midcast["Sheepfoe Mambo"] = sets.midcast.DaurdablaDummy
+    sets.midcast["Shining Fantasia"] = sets.midcast.DaurdablaDummy
+    sets.midcast["Herb Pastoral"] = sets.midcast.DaurdablaDummy
 
 	-- Other general spells and classes.
 	sets.midcast.Cure =     {head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
@@ -573,15 +593,36 @@ sets.precast.WS['Shattersoul'] = {
         right_ring="Stikini Ring +1",
         back="Aurist's Cape +1",
         }
-	sets.midcast['Elemental Magic'] = {main="Daybreak",sub="Ammurapi Shield",ammo="Ghastly Tathlum +1",
-		head="C. Palug Crown",neck="Sanctity Necklace",ear1="Friomisi Earring",ear2="Crematio Earring",
-		body="Chironic Doublet",hands="Volte Gloves",ring1="Shiva Ring +1",ring2="Shiva Ring +1",
-		back="Toro Cape",waist="Sekhmet Corset",legs="Gyve Trousers",feet=gear.chironic_nuke_feet}
-		
-	sets.midcast['Elemental Magic'].Resistant = {main="Daybreak",sub="Ammurapi Shield",ammo="Ghastly Tathlum +1",
-		head="C. Palug Crown",neck="Sanctity Necklace",ear1="Friomisi Earring",ear2="Crematio Earring",
-		body="Chironic Doublet",hands="Volte Gloves",ring1="Shiva Ring +1",ring2="Shiva Ring +1",
-		back="Toro Cape",waist="Yamabuki-no-Obi",legs="Gyve Trousers",feet=gear.chironic_nuke_feet}
+	sets.midcast['Elemental Magic'] = {
+    ammo="Ghastly Tathlum +1",
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Sanctity Necklace",
+        ear1="Friomisi Earring",
+        ear2="Crematio Earring",
+        left_ring="Stikini Ring +1",
+        right_ring="Stikini Ring +1",
+        back="Aurist's Cape +1",
+    }
+    sets.midcast['Absorb-TP'] = {
+    ammo="Pemphredo Tathlum",
+    head="Fili Calot +2",
+	body="Fili Hongreline +2",        
+    hands="Fili Manchettes +2",
+	legs="Fili Rhingrave +2", 
+    feet="Fili Cothurnes +2",
+    neck="Mnbw. Whistle +1",
+	waist="Acuity Belt +1",
+	ear1="Crep. Earring",
+    ear2="Fili Earring +1",
+    ring1="Metamor. Ring +1",
+    ring2="Stikini Ring +1",
+    back="Aurist's Cape +1",
+   }
+
 		
 	sets.midcast.Cursna =  set_combine(sets.midcast.Cure, {neck="Debilis Medallion",
 		ring1="Haoma's Ring",ring2="Menelaus's Ring",waist="Witful Belt",feet="Vanya Clogs"})
@@ -651,19 +692,32 @@ sets.precast.WS['Shattersoul'] = {
         right_ring="Defending Ring",
         back="Moonlight Cape",
     }
-
-	sets.idle = {
-        head={ name="Nyame Helm", augments={'Path: B',}},
+    sets.defense.Regain = {
+        head="Null Masque",
+        body="Adamantite Armor",
+        hands="Regal Gloves",
+        legs="Fili Rhingrave +2",
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Rep. Plat. Medal",
+        waist="Carrier's Sash",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        right_ear="Fili Earring +1",
+        left_ring="Chirich Ring +1",
+        right_ring="Defending Ring",
+        back="Moonlight Cape",
+    }
+	sets.idle = {   
+        head="Null Masque",
         body="Adamantite Armor",
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        waist="Carrier's Sash",
+        neck="Rep. Plat. Medal",
+        waist="Null Belt",
         left_ear="Tuisto Earring",
-        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring="Stikini Ring +1",
-        right_ring="Defending Ring",
+        right_ear="Infused Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
         back="Intarabus's Cape",
     }
 
@@ -679,7 +733,7 @@ sets.precast.WS['Shattersoul'] = {
     waist="Flume Belt +1",
     left_ear="Tuisto Earring",
     right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-    left_ring="Stikini Ring +1",
+    left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     right_ring="Defending Ring",
     back="Intarabus's Cape",
     }
@@ -725,7 +779,7 @@ sets.idle.Sphere = set_combine(sets.idle, {
     waist="Carrier's Sash",
     left_ear="Tuisto Earring",
     right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-    left_ring="Stikini Ring +1",
+    left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     right_ring="Defending Ring",
     back="Intarabus's Cape",    }
 
@@ -887,3 +941,41 @@ end
 
 autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
 ['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
+
+
+--Job Specific Trust Overwrite
+function check_trust()
+	if not moving then
+		if state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Elvorseal'] or buffactive['Reive Mark'] or not player.in_combat) then
+			local party = windower.ffxi.get_party()
+			if party.p5 == nil then
+				local spell_recasts = windower.ffxi.get_spell_recasts()
+			
+				if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
+					windower.send_command('input /ma "Ygnas" <me>')
+					tickdelay = os.clock() + 3
+					return true
+				elseif spell_recasts[952] < spell_latency and not have_trust("Koru-Moru") then
+					windower.send_command('input /ma "Koru-Moru" <me>')
+					tickdelay = os.clock() + 3
+					return true
+				elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+					windower.send_command('input /ma "Sylvie (UC)" <me>')
+					tickdelay = os.clock() + 3
+					return true
+				elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+					windower.send_command('input /ma "Joachim" <me>')
+					tickdelay = os.clock() + 3
+					return true
+				elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+					windower.send_command('input /ma "Qultada" <me>')
+					tickdelay = os.clock() + 3
+					return true
+				else
+					return false
+				end
+			end
+		end
+	end
+	return false
+end

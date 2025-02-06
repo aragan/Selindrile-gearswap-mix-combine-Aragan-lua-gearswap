@@ -19,10 +19,10 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'HP','Evasion', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options('Normal', 'DT', 'Tank', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
+	state.IdleMode:options( 'DT','Normal', 'Tank', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular'}
-	state.Weapons:options('Naegling','Loxotic','Shining','None','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
+	state.Weapons:options('None','Naegling','Loxotic','Shining','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
     state.Shield = M{['description']='Weapon Set', 'Normal', 'Shield'}
 
 	gear.da_jse_back = {name="Cichol's Mantle",augments={'DEX+20','Accuracy+20 Attack+20','"Dbl.Atk."+10'}}
@@ -33,6 +33,7 @@ function user_job_setup()
 	send_command('bind !` input /ja "Seigan" <me>')
 	send_command('bind @` gs c cycle SkillchainMode')
     send_command('bind f7 gs c cycle Shield')
+    send_command('bind ^m gs c toggle Medicine')
 
 	send_command('bind !8 gs c weapons Greatsword;gs c update')
 	send_command('bind !0 gs c set WeaponskillMode Proc;;gs c set CastingMode Proc;gs c update')
@@ -285,22 +286,25 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
-     })
-     sets.precast.WS.PDL= set_combine(sets.precast.WS, {
+    })
+    sets.precast.WS.PDL= set_combine(sets.precast.WS, {
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
         legs="Boii Cuisses +3",
         left_ring="Sroda Ring",
-     })
-	 sets.precast.WS.Proc = {
-        neck="Fotia Gorget",waist="Fotia Belt",left_ring="Rufescent Ring",
-        right_ring={ name="Beithir Ring", augments={'Path: A',}},
-        ammo="Pemphredo Tathlum",
+    })
+	sets.precast.WS.Proc = {
+    ammo="Pemphredo Tathlum",
     head={ name="Sakpata's Helm", augments={'Path: A',}},
     hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
     legs="Boii Cuisses +3",
     feet={ name="Sakpata's Leggings", augments={'Path: A',}},
     left_ear="Crep. Earring",
     right_ear="Digni. Earring",
+    neck="Null Loop",
+    waist="Eschan Stone",
+    right_ring={ name="Beithir Ring", augments={'Path: A',}},
+    left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+    back="Null Shawl",
     }
 	 sets.Proc = {neck="Fotia Gorget",waist="Fotia Belt",left_ring="Rufescent Ring",right_ring={ name="Beithir Ring", augments={'Path: A',}}}
 
@@ -875,7 +879,22 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.precast.WS['Tachi: Jinpu'].Proc = set_combine(sets.precast.WS.Proc,{})
 	sets.precast.WS['Tachi: Koki'].Proc = set_combine(sets.precast.WS.Proc,{})
 	
-
+    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Eschan Stone",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
+    })
+    
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Lugra Earring",}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
@@ -983,17 +1002,18 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 
      -- Idle sets
      sets.idle = {
-        head={ name="Sakpata's Helm", augments={'Path: A',}},
-        body="Adamantite Armor",
+        ammo="Staunch Tathlum +1",
+        head="Null Masque",
+        body="Sacro Breastplate",
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
         legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
         feet={ name="Sakpata's Leggings", augments={'Path: A',}},
-        ear1="Tuisto Earring",
+        left_ear="Infused Earring",
         ear2={ name="Odnowa Earring +1", augments={'Path: A',}},
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        waist="Engraved Belt",
-        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-        left_ring="Defending Ring",
+        neck="Rep. Plat. Medal",
+        waist="Null Belt",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
         back="Moonlight Cape",
     }
      sets.idle.DT = sets.defense.PDT
@@ -1012,6 +1032,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     sets.idle.Regen = set_combine(sets.idle, {
         body="Sacro Breastplate",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
         left_ear="Infused Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",

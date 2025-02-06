@@ -58,15 +58,23 @@ state.DisplayMode = M(true, 'Display Mode') --Set this to false if you don't wan
 --}
 
 --Options for automation.
-state.ReEquip 		  		= M(true, 'ReEquip Mode')		 --Set this to false if you don't want to equip your current Weapon set when you aren't wearing any weapons.
+state.ReEquip 		  		= M(false, 'ReEquip Mode')		 --Set this to false if you don't want to equip your current Weapon set when you aren't wearing any weapons.
 state.AutoArts 		  		= M(true, 'AutoArts') 		 --Set this to false if you don't want to automatically try to keep up Solace/Arts.
 state.AutoLockstyle	 	    = M(true, 'AutoLockstyle Mode') --Set this to false if you don't want gearswap to automatically lockstyle on load and weapon change.
 state.CancelStoneskin 		= M(true, 'Cancel Stone Skin') --Set this to false if you don't want to automatically cancel stoneskin when you're slept.
 state.SkipProcWeapons 		= M(true, 'Skip Proc Weapons') --Set this to false if you want to display weapon sets fulltime rather than just Aby/Voidwatch.
 state.NotifyBuffs	  		= M(false, 'Notify Buffs') 	 --Set this to true if you want to notify your party when you recieve a specific buff/debuff. (List Below)
-
+state.UnlockWeapons		  = M(true, 'Unlock Weapons')
+state.CraftingMode		  = M{['description'] = 'Crafting Mode','None','Goldsmithing','Smithing','Cooking','Fishing',}
+state.CraftQuality  	  = M{['description'] = 'Crafting Quality','Normal','HQ','NQ'}
 state.WeaponLock = M(false, 'Weapon Lock')
 state.RP = M(false, "Reinforcement Points Mode")
+
+state.StormSurge = M(false, 'Stormsurge')
+
+
+state.Medicine = M(false,'Medicine')
+
 --[[Binds you may want to change.
 	Bind special characters.
 	@ = Windows Key
@@ -123,6 +131,9 @@ function global_on_load()
 	send_command('bind !0 input //zonetimer reset') --Turns addon reset time.
 	send_command('bind ^pagedown input //autoitem off') --Turns addon off.
 	send_command('bind ^pageup input //autoitem on') --Turns addon on.
+	send_command('bind ^delete input //aws toggle') --Turns addon autows on odd.
+	--input //lua r AutoWS;input //aws on;
+
 	send_command('bind !O input //gs org') 
 
 	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
@@ -138,8 +149,9 @@ function global_on_load()
     send_command('bind !/ gs enable all')
     send_command('bind @x gs c toggle RP')  
 	send_command('bind @z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
+	send_command('bind !c gs c cycle CraftingMode')
+	send_command('bind ^c gs c cycle CraftQuality')
 
-	
 	send_command('bind !1 gs c toggle AutoSambaMode')
 	send_command('bind !2 gs c toggle AutoShadowMode')
 	send_command('bind !3 gs c toggle AutoRuneMode')
@@ -162,6 +174,10 @@ function global_on_load()
 	send_command('input //gs org')-- org addon every change job
     send_command('lua r runewidget;rw show')--Turns addon off if job non /run.
 
+	send_command('bind ^] input //put storage slip* case all')
+	send_command('bind ^[ input //get storage slip* all')
+
+	
 end
 -- Function to revert binds when unloading.
 function global_unload()
@@ -198,11 +214,12 @@ function global_unload()
 
 end
 
+
 send_command('bind home lua l autobuff') --Turns addon  on.
 send_command('bind end lua u autobuff') --Turns addon off.
 
-send_command('bind pageup input //ata on;input //lua r AutoWS;input //aws on;input //lua load Gaze_check')
-send_command('bind pagedown input //ata off;input //aws off;input //lua unload Gaze_check')
+send_command('bind pageup input //ata on;input //lua load Gaze_check')
+send_command('bind pagedown input //ata off;input //lua unload Gaze_check')
 
 send_command('bind !@^f7 gs c toggle AutoWSMode') --Turns auto-ws mode on and off.
 send_command('bind !^f7 gs c toggle AutoFoodMode') --Turns auto-ws mode on and off.
@@ -276,6 +293,11 @@ function job_precast(spell, action, spellMap, eventArgs)
         end
     end
 end
+function job_post_precast(spell)
+	if spell.name == "Holy Water" then
+		 equip(sets.precast.Item['Holy Water'])
+	  end
+  end
 -- Global intercept on midcast.
 function user_midcast(spell, action, spellMap, eventArgs)
 	-- Default base equipment layer of fast recast.
@@ -290,6 +312,7 @@ function job_state_change(stateField, newValue, oldValue)
     else
         enable('main','sub')
     end
+	
 end
 -- Modify the default idle set after it was constructed.
 function customize_idle_set(idleSet)
@@ -325,9 +348,6 @@ function user_buff_change(buff, gain, eventArgs)
 			send_command('timers delete "Weakness"')
 		end
 	end
-end
-
-function job_buff_change(buff, gain)
     if buff == "Charm" then
         if gain then  			
            send_command('input /p Charmd, please Sleep me.')		
@@ -340,29 +360,175 @@ function job_buff_change(buff, gain)
             equip(sets.defense.PDT)
             send_command('input /p Petrification, please Stona.')		
         else
-        send_command('input /p '..player.name..' is no longer Petrify!')
-        handle_equipping_gear(player.status)
+            send_command('input /p '..player.name..' is no longer Petrify!')
+            handle_equipping_gear(player.status)
         end
     end
-    if buff == "sleep" then
+    if buff == "Sleep" then
         if gain then    
             send_command('input /p ZZZzzz, please cure.')		
         else
             send_command('input /p '..player.name..' is no longer Sleep!')
         end
     end
-	if buff == "doom" then
-        if gain then
-            equip(sets.buff.Doom)
-            send_command('@input /p Doomed, please Cursna.')
-        else
-            send_command('input /p Doom removed.')
-            handle_equipping_gear(player.status)
+	if buff == "Defense Down" then
+        if gain then  			
+            send_command('input /item "Panacea" <me>')
+        end
+    elseif buff == "Magic Def. Down" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "Max HP Down" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "Evasion Down" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "Magic Evasion Downn" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "Dia" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end  
+    elseif buff == "Bio" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "Bind" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "slow" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "weight" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "Attack Down" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "Accuracy Down" then
+        if gain then  			
+            send_command('@input /item "panacea" <me>')
         end
     end
+
+    if buff == "VIT Down" then
+        if gain then
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "INT Down" then
+        if gain then
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "MND Down" then
+        if gain then
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "STR Down" then
+        if gain then
+            send_command('@input /item "panacea" <me>')
+        end
+    elseif buff == "AGI Down" then
+        if gain then
+            send_command('@input /item "panacea" <me>')
+        end
+    end
+    if buff == "curse" then
+        if gain then  
+            send_command('input /item "Holy Water" <me>')
+			equip(sets.precast.Item['Holy Water'])
+        end
+    end
+	if state.Medicine.value then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Downn" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+		if not midaction() then
+			status_change(player.status)
+		end
+	end
 end
-
-
 function is_sc_element_today(spell)
     if spell.type ~= 'WeaponSkill' then
         return

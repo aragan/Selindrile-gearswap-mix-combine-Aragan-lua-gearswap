@@ -45,7 +45,7 @@ function user_job_setup()
 	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('Naegling', 'Naegling2','None', 'Maxentius', 'Nuking', 'MaccWeapons')
+	state.Weapons:options('Naegling', 'Naegling2','None', 'Maxentius', 'Nuking', 'MaccWeapons','Staff')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','MP','SuppaBrutal','DWEarrings','DWMax'}
 	state.AutoBuffMode:options('Off','Auto','Cleave') --,'Off','Off','Off','Off','Off',
 
@@ -95,6 +95,7 @@ function init_gear_sets()
     sets.weapons.Maxentius = {main="Maxentius", sub="Thibron"}
     sets.weapons.Nuking = {main="Maxentius", sub="Bunzi's Rod"}
     sets.weapons.MaccWeapons = {main="Iris", sub="Iris",}
+	sets.weapons.Staff = {main="Gozuki Mezuki",sub="Niobid Strap"}
 
 
 
@@ -465,6 +466,21 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+	ammo="Pemphredo Tathlum",
+	head={ name="Nyame Helm", augments={'Path: B',}},
+	body={ name="Nyame Mail", augments={'Path: B',}},
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck="Null Loop",
+	waist="Eschan Stone",
+	left_ear="Digni. Earring",
+	right_ear="Crep. Earring",
+	left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+	right_ring="Stikini Ring +1",
+	back="Null Shawl",
+})
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Cessance Earring",ear2="Brutal Earring"}

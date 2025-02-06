@@ -25,12 +25,12 @@ Shoha > Fudo > Kasha > Shoha > Fudo
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'triple', 'SubtleBlow', 'Range' )
     state.HybridMode:options('Normal','DTLite','PDT')
-    state.WeaponskillMode:options('Match','Normal', 'SC', 'Acc', 'PDL')
+    state.WeaponskillMode:options('Match','Normal', 'SC', 'Acc', 'PDL','Proc')
     state.RangedMode:options('Normal', 'Acc')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Reraise')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-    state.IdleMode:options('Normal','DT' ,'Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate')
+    state.IdleMode:options('DT','Normal','Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate')
 	state.Weapons:options('Masamune','None','Dojikiri','Polearm','Amanomurakumo','TernionDagger','Club','ProcWeapon')
 
 	gear.ws_jse_back = {name="Smertrios's Mantle",augments={'STR+20','Accuracy+20 Attack+20','Weapon skill damage +10%',}}
@@ -157,7 +157,8 @@ function init_gear_sets()
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
         })
-        
+        sets.precast.WS.Proc =  {}
+
         sets.precast.WS['Namas Arrow'] = {
             head={ name="Mpaca's Cap", augments={'Path: A',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
@@ -512,6 +513,7 @@ function init_gear_sets()
             right_ring="Cornelia's Ring",
             back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
         })
+
         
         sets.precast.WS["Tachi: Kagero"] = set_combine(sets.precast.WS, {
             ammo="Knobkierrie",
@@ -531,6 +533,22 @@ function init_gear_sets()
         sets.precast.WS["Tachi: Goten"] = set_combine(sets.precast.WS["Tachi: Kagero"],{})
         sets.precast.WS["Tachi: Koki"] = set_combine(sets.precast.WS["Tachi: Kagero"],{})
     
+        sets.precast.WS['Tachi: Jinpu'].Proc = set_combine(sets.precast.WS.Proc,{})
+
+        sets.precast.WS['Aeolian Edge'] = sets.precast.WS['Tachi: Jinpu']
+
+        sets.precast.WS['Aeolian Edge'].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS['Tachi: Koki'].Proc =  set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS["Tachi: Kagero"].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS["Tachi: Goten"].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS['Tachi: Yukikaze'].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS['Tachi: Kasha'].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS['Tachi: Gekko'].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS['Tachi: Shoha'].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS['Tachi: Kaiten'].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS['Tachi: Fudo'].Proc = set_combine(sets.precast.WS.Proc,{})
+        sets.precast.WS['Tachi: Rana'].Proc = set_combine(sets.precast.WS.Proc,{})
+
     -- Elemental Weapon Skill --elemental_ws--
     
     -- SANGUINE BLADE
@@ -595,6 +613,21 @@ function init_gear_sets()
         sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
         sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
     
+        sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+            ammo="Pemphredo Tathlum",
+            head={ name="Nyame Helm", augments={'Path: B',}},
+            body={ name="Nyame Mail", augments={'Path: B',}},
+            hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+            legs={ name="Nyame Flanchard", augments={'Path: B',}},
+            feet={ name="Nyame Sollerets", augments={'Path: B',}},
+            neck="Null Loop",
+            waist="Eschan Stone",
+            left_ear="Digni. Earring",
+            right_ear="Crep. Earring",
+            left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+            right_ring="Stikini Ring +1",
+            back="Null Shawl",
+        })
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Thrud Earring",ear2="Lugra Earring +1",}
@@ -698,8 +731,6 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
     ear2="Infused Earring",
        body="Hizamaru Haramaki +2",}
     
-
-    -- Idle sets (default idle set not needed since the other three are defined, but leaving for testing purposes)
 	
 	sets.Kiting = {feet="Danzo Sune-ate"}
 
@@ -707,63 +738,10 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
 	
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 	sets.Skillchain = {}
-	
-    sets.idle = {        
-        head="Valorous Mask",
-        body="Adamantite Armor",
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet={ name="Nyame Sollerets", augments={'Path: B',}},
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        waist="Flume Belt +1",
-        left_ear="Tuisto Earring",
-        right_ear="Infused Earring",
-        left_ring="Purity Ring",
-        right_ring="Defending Ring",
-        back="Moonlight Cape",
-    }
-
-    sets.idle.Regen = set_combine(sets.idle, { 
-            neck={ name="Bathy Choker +1", augments={'Path: A',}},
-            right_ear="Infused Earring",
-            left_ring="Chirich Ring +1",
-            right_ring="Chirich Ring +1",
-    })
-    
-    sets.idle.EnemyCritRate = set_combine(sets.defense.PDT, { 
-        ammo="Eluder's Sachet",
-        left_ring="Warden's Ring",
-        right_ring="Fortified Ring",
-        back="Reiki Cloak",
-    })
-    sets.idle.DT = set_combine(sets.defense.PDT, {})
-    sets.idle.MDT = set_combine(sets.defense.MDT, {})
-    sets.idle.Enmity = set_combine(sets.defense.Enmity, {})
-    sets.idle.Evasion = set_combine(sets.defense.Evasion, {})
-    sets.idle.Weak = set_combine(sets.idle, {
-        head="Crepuscular Helm",
-        body="Crepuscular Mail",
-    })
-    sets.idle.HP =  { 
-        ammo="Staunch Tathlum +1",
-        head="Crepuscular Helm",
-        body="Adamantite Armor",
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet={ name="Nyame Sollerets", augments={'Path: B',}},
-        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-        waist="Plat. Mog. Belt",
-        left_ear="Tuisto Earring",
-        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring="Eihwaz Ring",
-        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-        back="Moonlight Cape",
-    }
     
 	sets.DayIdle = {}
 	sets.NightIdle = {}
     
-    -- Defense sets
 
     -- Defense sets
     sets.defense.PDT = {
@@ -777,7 +755,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
     waist="Flume Belt +1",
     left_ear="Tuisto Earring",
     right_ear="Infused Earring",
-    left_ring="Purity Ring",
+    left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     right_ring="Defending Ring",
     back="Moonlight Cape",
     }
@@ -821,6 +799,62 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
         head="Nyame Helm",neck="Warder's Charm +1",ear1="Etiolation Earring",ear2="Sanare Earring",
         body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Shadow Ring",
         back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
+
+        
+    -- Idle sets (default idle set not needed since the other three are defined, but leaving for testing purposes)
+
+    sets.idle = {        
+        ammo="Staunch Tathlum +1",
+        head={ name="Valorous Mask", augments={'Pet: "Mag.Atk.Bns."+30','Pet: "Subtle Blow"+10','Pet: STR+2',}},
+        body="Sacro Breastplate",
+        hands={ name="Rao Kote +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
+        legs={ name="Rao Haidate +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
+        feet={ name="Rao Sune-Ate +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
+        neck="Rep. Plat. Medal",
+        waist="Null Belt",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        right_ear="Infused Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        back="Moonlight Cape",
+    }
+
+    sets.idle.Regen = set_combine(sets.idle, { 
+            neck={ name="Bathy Choker +1", augments={'Path: A',}},
+            right_ear="Infused Earring",
+            left_ring="Chirich Ring +1",
+            right_ring="Chirich Ring +1",
+    })
+    
+    sets.idle.EnemyCritRate = set_combine(sets.defense.PDT, { 
+        ammo="Eluder's Sachet",
+        left_ring="Warden's Ring",
+        right_ring="Fortified Ring",
+        back="Reiki Cloak",
+    })
+    sets.idle.DT = set_combine(sets.defense.PDT, {})
+    sets.idle.MDT = set_combine(sets.defense.MDT, {})
+    sets.idle.Enmity = set_combine(sets.defense.Enmity, {})
+    sets.idle.Evasion = set_combine(sets.defense.Evasion, {})
+    sets.idle.Weak = set_combine(sets.idle, {
+        head="Crepuscular Helm",
+        body="Crepuscular Mail",
+    })
+    sets.idle.HP =  { 
+        ammo="Staunch Tathlum +1",
+        head="Crepuscular Helm",
+        body="Adamantite Armor",
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Plat. Mog. Belt",
+        left_ear="Tuisto Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Eihwaz Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+    }
 
     -- Engaged sets
 
@@ -982,10 +1016,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
         head="Nyame Helm",neck="Loricate Torque +1",ear1="Etiolation Earring",ear2="Sanare Earring",
         body="Nyame Mail",hands="Wakido Kote +3",ring1="Defending Ring",ring2="Patricius Ring",
         back="Moonlight Cape",waist="Ioskeha Belt",legs="Wakido Haidate +3",feet="Nyame Sollerets"}
-    sets.engaged.Fodder.DTLite = {ammo="Staunch Tathlum +1",
-        head="Nyame Helm",neck="Loricate Torque +1",ear1="Etiolation Earring",ear2="Sanare Earring",
-        body="Nyame Mail",hands="Wakido Kote +3",ring1="Defending Ring",ring2="Patricius Ring",
-        back="Moonlight Cape",waist="Ioskeha Belt",legs="Wakido Haidate +3",feet="Nyame Sollerets"}
+
         
     -- Melee sets for in Adoulin, which has an extra 10 Save TP for weaponskills.
     -- Delay 450 GK, 35 Save TP => 89 Store TP for a 4-hit (49 Store TP in gear), 2 Store TP for a 5-hit
@@ -1083,7 +1114,7 @@ function user_job_lockstyle()
 end
 
 
-autows_list = {['Masamune']='Tachi: Fudo',['Dojikiri']='Tachi: Shoha',['Amanomurakumo']='Tachi: Kaiten',['Polearm']='Impulse Drive',['TernionDagger']='Aeolian Edge',
+autows_list = {['Masamune']='Tachi: Fudo',['Dojikiri']='Tachi: Jinpu',['Amanomurakumo']='Tachi: Kaiten',['Polearm']='Impulse Drive',['TernionDagger']='Aeolian Edge',
 ['Club ']='Spiral Hell',['ProcWeapon']='Tachi: Jinpu',['DualIkengaAxe']='Calamity',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',
 ['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',
 ['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',

@@ -64,6 +64,7 @@ function user_job_setup()
 	send_command('bind f7 gs c toggle AutoSubMode') --Automatically uses sublimation.
 	send_command('bind @f5 gs c cycle WeaponskillMode')
     send_command('bind ^f2 gs c smartcure')
+	send_command('bind !f5 gs c toggle AutoWSMode')
 
     select_default_macro_book()
 end
@@ -355,6 +356,22 @@ function init_gear_sets()
         right_ring="Mephitas's Ring",
         back="Alaunus's Cape",
     }
+
+    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Eschan Stone",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
+    })
 		
 	sets.MaxTP = {ear1="Cessance Earring",ear2="Brutal Earring"}
 	sets.MaxTP.Dagan = {ear1="Etiolation Earring"}
@@ -1304,4 +1321,5 @@ function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 178')
 end
 
-autows_list = {['DualWeapons']='Realmrazer',['MeleeWeapons']='Realmrazer'}
+autows_list = {['DualWeapons']='Realmrazer',['MeleeWeapons']='Black Halo',
+['Queller']='Dagan',['Daybreak']='Seraph Strike',['Black Halo']='Black Halo',}

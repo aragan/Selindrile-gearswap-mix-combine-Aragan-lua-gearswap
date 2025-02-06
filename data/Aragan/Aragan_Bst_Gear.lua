@@ -20,7 +20,7 @@ function user_job_setup()
 	state.PhysicalDefenseMode:options('PDT', 'PetPDT', 'Reraise', 'Killer')
 	state.MagicalDefenseMode:options('PetMDT', 'MDT', 'Petregen')
 	state.ResistDefenseMode:options('PetMEVA', 'MEVA')
-	state.Weapons:options('None', 'SWORDS', 'AXE', 'SCYTHE', 'DAGGERS', 'CLUB')
+	state.Weapons:options('None', 'SWORDS', 'AXE', 'SCYTHE', 'DAGGERS', 'CLUB','Staff')
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Knockback','Suppa','DWEarrings'}
 	
 	autows_list = {['PetPDTAxe']='Ruinator',['DualWeapons']='Ruinator'}
@@ -73,6 +73,7 @@ function init_gear_sets()
     sets.weapons.SCYTHE = {main="Drepanum"}
     sets.weapons.DAGGERS = {main="Ternion Dagger +1",}
     sets.weapons.CLUB = {main="Mafic Cudgel"}
+	sets.weapons.Staff = {main="Gozuki Mezuki",sub="Niobid Strap"}
 
     sets.SACRO = {sub="Sacro Bulwark",}
 
@@ -550,6 +551,22 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 	sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 	sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
+
+	sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+		ammo="Pemphredo Tathlum",
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Null Loop",
+		waist="Eschan Stone",
+		left_ear="Digni. Earring",
+		right_ear="Crep. Earring",
+		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+		right_ring="Stikini Ring +1",
+		back="Null Shawl",
+	})
 	
 	-- Calamity, Meditate, Sekkanoki > brain > tail, leave, cb, fight > Primal Rend > tegmina > Clerrrdplerrterrr
 	--------------------------------------------------------------------------------		

@@ -8,22 +8,40 @@
 --[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
 keyboard binds and chat 
+
+state.Roller1 state.Roller2 have all rolls send to roller addon 
+
+cycle Roll
+
+    send_command('bind f2 gs c cycle Roller1;input //gs c Roller1')
+    send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
+    send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
+    send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
+
+macro
+
+/con gs c Roller1
+/con gs c Roller2
+/con input //roll
+
 ]]
 
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'Ranged', 'CRIT')
     state.HybridMode:options('Normal', 'PDT')
-    state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical')
+    state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow10','SubtleBlow40')
     state.WeaponskillMode:options('Match','Normal', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'Resistant')
-    state.IdleMode:options('Normal', 'PDT', 'Evasion', 'HP', 'Regen', 'EnemyCritRate')
+    state.IdleMode:options('DT','Normal', 'Evasion', 'HP', 'Regen', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP')
     state.MagicalDefenseMode:options('MDT')
-	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax'}
+	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax','SubtleBlow10','SubtleBlow40'}
 	state.Weapons:options('None','SWORDS','Tauret','Rostam','Kustawi','Ranged')
 	state.CompensatorMode:options('Never','Always','300','1000')
+    --state.ranged:options('normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp')
     state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
+
 
     gear.RAbullet = "Decimating Bullet"
     gear.WSbullet = "Chrono Bullet"
@@ -40,8 +58,11 @@ function user_job_setup()
 	gear.str_wsd_jse_back = {name="Camulus's Mantle",augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%',}}
 
     -- Additional local binds
-	send_command('bind ^` gs c cycle ElementalMode')
+	send_command('bind ^` gs c cycle ElementalMode;gs c cycle RuneElement')
 	send_command('bind !` gs c elemental quickdraw')
+    send_command('bind !1 gs c cycle AutoSambaMode')
+	send_command('bind f4 gs c cycle ElementalMode;gs c cycle RuneElement')
+
 	
 	send_command('bind ^backspace input /ja "Double-up" <me>')
 	send_command('bind @backspace input /ja "Snake Eye" <me>')
@@ -53,25 +74,34 @@ function user_job_setup()
 	send_command('bind ^@!\\\\ gs c toggle LuzafRing')
     send_command('bind ^2 gs c toggle LuzafRing')
 	send_command('bind @f7 gs c toggle RngHelper')
-	send_command('bind !f1 gs c toggle RngHelper')
+	send_command('bind !f1 gs c toggle RngHelperQuickDraw')
     send_command('bind !a gs c toggle phalanxset') 
 
 	--send_command('bind !r gs c weapons DualSavageWeapons;gs c update')
 	--send_command('bind ^q gs c weapons DualAeolian;gs c update')
 	--send_command('bind !q gs c weapons DualLeadenRanged;gs c update')
-	
+    send_command('bind f1 gs c toggle RngHelper')
     send_command('bind @pause roller roll')
     send_command('bind f7 gs c cycle Weapongun')
     send_command('bind !f7 gs c cycleback Weapongun')
     send_command('bind !w gs c toggle WeaponLock')
     send_command('bind @x gs c toggle RP')  
 	send_command('bind @z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
-    send_command('bind f3 gs c cycle QDMode')
+    send_command('bind !f3 gs c cycle QDMode')
     send_command('bind !c gs c toggle CompensatorMode')  
+    send_command('bind f2 gs c cycle Roller1;input //gs c Roller1')
+    send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
+    send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
+    send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
+    send_command('bind ^z gs c rollset')--;input //gs c Rollset
 
+    --send_command('bind f1 gs c cycle rollset')
+    --send_command('alias melee input //roller roll1 Chaos Roll;wait .1;input //roller roll2 Samurai Roll')
+    --send_command('alias magic input //roller roll1 Wizard\'s Roll;wait .1;input //roller roll2 Caster\'s Roll')
+    -- Define the roll commands in a table
+    --send_command('bind !f7 gs c toggle rangedautows')
 
-
-
+    
     select_default_macro_book()
 end
 
@@ -520,6 +550,22 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+    ammo="Pemphredo Tathlum",
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck="Null Loop",
+    waist="Eschan Stone",
+    left_ear="Digni. Earring",
+    right_ear="Crep. Earring",
+    left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+    right_ring="Stikini Ring +1",
+    back="Null Shawl",
+})
+
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {}
 	sets.AccMaxTP = {}
@@ -641,6 +687,82 @@ sets.midcast.RA.Critical = set_combine(sets.midcast.RA, {
     right_ring="Dingir Ring",
     back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 })
+sets.midcast.RA.SubtleBlow10 = set_combine(sets.midcast.RA, {
+    hands="Ikenga's Gloves",
+})
+sets.midcast.RA.SubtleBlow40 = set_combine(sets.midcast.RA, {
+    hands="Oshosi Gloves +1",
+    feet="Mummu Gamash. +2",
+    neck={ name="Bathy Choker +1", augments={'Path: A',}},
+    right_ear="Digni. Earring",   
+})
+sets.midcast.CorsairShot = {
+    ammo=gear.QDbullet,
+    head="Nyame Helm",
+    body="Lanun Frac +3",
+    hands="Nyame Gauntlets",
+    legs="Nyame Flanchard",
+    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+    neck={ name="Comm. Charm +2", augments={'Path: A',}},
+    waist="Skrymir Cord",
+    left_ear="Friomisi Earring",
+    right_ear="Crematio Earring",
+    left_ring="Dingir Ring",
+    right_ring="Cornelia's Ring",
+    back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+}
+
+sets.midcast.CorsairShot.Acc = {
+    ammo=gear.QDbullet,
+    head="Nyame Helm",
+    body="Lanun Frac +3",
+    hands="Nyame Gauntlets",
+    legs="Nyame Flanchard",
+    feet="Chass. Bottes +2",
+    neck={ name="Comm. Charm +2", augments={'Path: A',}},
+    waist="Skrymir Cord",
+    left_ear="Friomisi Earring",
+    right_ear="Crematio Earring",
+    left_ring="Dingir Ring",
+    right_ring="Cornelia's Ring",
+    back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+}
+sets.midcast.CorsairShot.STP = {
+    ammo=gear.QDbullet,
+    head="Malignance Chapeau",
+    body="Malignance Tabard",
+    hands="Malignance Gloves",
+    legs="Malignance Tights",
+    feet="Malignance Boots",
+    neck="Iskur Gorget",
+    ear1="Dedition Earring",
+    ear2="Telos Earring",
+    ring1="Chirich Ring +1",
+    ring2="Chirich Ring +1",
+    waist="Kentarch Belt +1",
+    back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+
+    }
+sets.midcast.CorsairShot['Light Shot'] = {
+    ammo=gear.QDbullet,
+    head="Malignance Chapeau",
+    body="Laksa. Frac +3",
+    hands="Malignance Gloves",
+    legs="Chas. Culottes +3",
+    feet="Chass. Bottes +2",
+    neck={ name="Comm. Charm +2", augments={'Path: A',}},
+    waist="Eschan Stone",
+    left_ear="Crep. Earring",
+    right_ear="Chas. Earring +1",
+    left_ring="Stikini Ring +1",
+    right_ring="Stikini Ring +1",
+    back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+}
+
+sets.midcast.CorsairShot['Dark Shot'] = sets.midcast.CorsairShot['Light Shot']
+sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
+
+
 	sets.buff['Triple Shot'] = {body="Chasseur's Frac +2"}
     
     -- Sets to return to when not performing an action.
@@ -667,63 +789,6 @@ sets.midcast.RA.Critical = set_combine(sets.midcast.RA, {
 }
 	sets.BulletPouch = {waist="Chr. Bul. Pouch"}
 
-    -- Idle sets
-    sets.idle = {
-    head="Malignance Chapeau",
-    body="Adamantite Armor",
-    hands="Malignance Gloves",
-    legs="Malignance Tights",
-    feet="Malignance Boots",
-    neck={ name="Loricate Torque +1", augments={'Path: A',}},
-    waist="Flume Belt +1",
-    left_ear="Odnowa Earring",
-    right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-    left_ring="Defending Ring",
-    right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-    back="Moonlight Cape",}
-		
-sets.idle.Evasion = set_combine(sets.idle, {
-    head="Malignance Chapeau",
-    body="Malignance Tabard",
-    hands="Malignance Gloves",
-    legs="Malignance Tights",
-    feet="Malignance Boots",
-    neck={ name="Bathy Choker +1", augments={'Path: A',}},
-    waist="Svelt. Gouriz +1",
-    left_ear="Infused Earring",
-    right_ear="Eabani Earring",
-    left_ring="Defending Ring",
-    right_ring="Vengeful Ring",
-    back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
-})
-sets.idle.Town ={legs="Carmine Cuisses +1",
-    left_ear="Infused Earring",}
-sets.idle.HP =  {
-        head={ name="Nyame Helm", augments={'Path: B',}},
-        body="Adamantite Armor",
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet={ name="Nyame Sollerets", augments={'Path: B',}},
-        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-        waist="Plat. Mog. Belt",
-        left_ear="Tuisto Earring",
-        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring="Ilabrat Ring",
-        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-        back="Moonlight Cape",
-}
-sets.idle.Regen = set_combine(sets.idle, {
-    neck={ name="Bathy Choker +1", augments={'Path: A',}},
-    right_ear="Infused Earring",
-    left_ring="Chirich Ring +1",
-    right_ring="Chirich Ring +1",
-})
-sets.idle.EnemyCritRate = set_combine(sets.idle, { 
-    ammo="Eluder's Sachet",
-    left_ring="Warden's Ring",
-    right_ring="Fortified Ring",
-    back="Reiki Cloak",
-})
 
     -- Defense sets
     sets.defense.PDT = {
@@ -789,6 +854,68 @@ sets.idle.EnemyCritRate = set_combine(sets.idle, {
         body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Shadow Ring",
         back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 
+
+    -- Idle sets
+    sets.idle = {
+        head="Null Masque",
+        body="Adamantite Armor",
+        hands="Malignance Gloves",
+        legs="Malignance Tights",
+        feet="Malignance Boots",
+        neck="Rep. Plat. Medal",
+        waist="Null Belt",
+        left_ear="Infused Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        back="Moonlight Cape",}
+            
+        sets.idle.DT = set_combine(sets.defense.PDT, {})
+        
+    sets.idle.Evasion = set_combine(sets.idle, {
+        head="Malignance Chapeau",
+        body="Malignance Tabard",
+        hands="Malignance Gloves",
+        legs="Malignance Tights",
+        feet="Malignance Boots",
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Svelt. Gouriz +1",
+        left_ear="Infused Earring",
+        right_ear="Eabani Earring",
+        left_ring="Defending Ring",
+        right_ring="Vengeful Ring",
+        back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+    })
+    sets.idle.Town ={legs="Carmine Cuisses +1",
+        left_ear="Infused Earring",}
+    sets.idle.HP =  {
+            head={ name="Nyame Helm", augments={'Path: B',}},
+            body="Adamantite Armor",
+            hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+            legs={ name="Nyame Flanchard", augments={'Path: B',}},
+            feet={ name="Nyame Sollerets", augments={'Path: B',}},
+            neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+            waist="Plat. Mog. Belt",
+            left_ear="Tuisto Earring",
+            right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+            left_ring="Ilabrat Ring",
+            right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+            back="Moonlight Cape",
+    }
+    sets.idle.Regen = set_combine(sets.idle.DT, {
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        right_ear="Infused Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    })
+    sets.idle.EnemyCritRate = set_combine(sets.idle.DT, { 
+        ammo="Eluder's Sachet",
+        left_ring="Warden's Ring",
+        right_ring="Fortified Ring",
+        back="Reiki Cloak",
+    })
+
+
     sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 	sets.DWMax = {
@@ -799,6 +926,16 @@ sets.idle.EnemyCritRate = set_combine(sets.idle, {
         right_ear="Eabani Earring", --4
         waist="Reiki Yotai", --7
     }
+	sets.SubtleBlow10 = {
+        hands="Ikenga's Gloves",
+    }
+	sets.SubtleBlow40 = {
+        hands="Oshosi Gloves +1",
+        feet="Mummu Gamash. +2",
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        right_ear="Digni. Earring",   
+    }
+
 
     -- Engaged sets
 
