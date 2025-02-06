@@ -140,9 +140,10 @@ function job_setup()
 	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
 	
 	autows = 'Myrkr'
-	autofood = 'Pear Crepe'
+	autofood = 'Tropical Crep'
+	autonuke = 'Absorb-TP'
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","HelixMode","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode",},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","HelixMode","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
     
 
 end

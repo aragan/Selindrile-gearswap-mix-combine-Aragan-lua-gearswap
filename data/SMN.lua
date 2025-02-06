@@ -196,7 +196,7 @@ function job_setup()
 	autows = 'Spirit Taker'
 	autofood = 'Akamochi'
 	
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","PactSpamMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","PactSpamMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -240,7 +240,7 @@ function job_filter_precast(spell, spellMap, eventArgs)
 			windower.chat.input('/ja Convert <me>')
 		end
 	end
-
+    --eventArgs.useMidcastGear = true
 end
 
 function job_precast(spell, spellMap, eventArgs)

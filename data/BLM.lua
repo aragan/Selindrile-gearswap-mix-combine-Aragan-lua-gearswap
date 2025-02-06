@@ -119,8 +119,9 @@ function job_setup()
 
 	autows = 'Myrkr'
 	autofood = 'Pear Crepe'
-	
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoManawell","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	autonuke = 'Absorb-TP'
+
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoManawell","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -403,6 +404,9 @@ function job_customize_idle_set(idleSet)
     if state.HippoMode.value == true then 
         idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
     end
+	--[[if (player.in_combat or being_attacked) and (state.IdleMode.current:contains('Normal') or state.IdleMode.current:contains('Refresh')) then
+        idleSet = set_combine(idleSet, sets.idle.PDT)
+    end]]
     return idleSet
 end
 

@@ -113,6 +113,7 @@ function job_setup()
 
 	autows = 'Resolution'
 	autofood = 'Soy Ramen'
+	autonuke = 'Absorb-TP'
 
 	LowTierNukes = S{'Stone', 'Water', 'Aero', 'Fire', 'Blizzard', 'Thunder',
 	'Stone II', 'Water II', 'Aero II', 'Fire II', 'Blizzard II', 'Thunder II',

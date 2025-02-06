@@ -122,11 +122,12 @@ function job_setup()
 	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
 	
 	autows = "Savage Blade"
-	autofood = 'Pear Crepe'
+	autofood = 'Tropical Crep'
 	enspell = ''
-	
+	autonuke = 'Absorb-TP'
+
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -923,13 +924,13 @@ end
 function update_melee_groups()
 	classes.CustomMeleeGroups:clear()
 	
-	if enspell ~= '' then
-		if enspell:endswith('II') then
+	--[[if enspell ~= '' then
+		if enspell:endswith('') then
 			classes.CustomMeleeGroups:append('Enspell2')
 		else
 			classes.CustomMeleeGroups:append('Enspell')
 		end
-	end
+	end]]
 
 	if player.equipment.main and player.equipment.main == "Murgleis" and state.Buff['Aftermath: Lv.3'] then
 		classes.CustomMeleeGroups:append('AM')

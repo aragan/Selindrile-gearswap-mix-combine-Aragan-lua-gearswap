@@ -107,12 +107,13 @@ function job_setup()
     state.Buff.Seigan = buffactive.Seigan or false   
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.RP = M(false, "Reinforcement Points Mode")
+    state.Medicine = M(false,'Medicine')
 
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 
     absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
 
-	autows = "Ukko's Fury"
+	autows = 'Savage Blade'
 	autofood = 'Soy Ramen'
 	
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","TreasureMode",})
@@ -294,9 +295,87 @@ function job_aftercast(spell, spellMap, eventArgs)
 
 end
 function job_handle_equipping_gear(playerStatus, eventArgs)
-
 end
+
 function job_buff_change(buff, gain)
+	if state.Medicine.value then
+        if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Downn" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+    end
+
 	if buff == 'Warcry' then
 		if gain and windower.ffxi.get_ability_recasts()[2] > 297 then
 			lastwarcry = player.name
@@ -342,6 +421,7 @@ function job_buff_change(buff, gain)
            send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
         end
     end
+
 	update_melee_groups()
 end
 
@@ -394,11 +474,11 @@ function check_buff()
 		
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
-		if not buffactive.Retaliation and abil_recasts[8] < latency then
+		--[[if not buffactive.Retaliation and abil_recasts[8] < latency then
 			windower.chat.input('/ja "Retaliation" <me>')
 			tickdelay = os.clock() + 1.1
-			return true		
-		elseif not buffactive.Restraint and abil_recasts[9] < latency then
+			return true	]]	
+		if not buffactive.Restraint and abil_recasts[9] < latency then
 			windower.chat.input('/ja "Restraint" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
@@ -438,3 +518,12 @@ function check_weaponset()
     end]]
 
 end
+
+windower.register_event('hpp change', -- code add from Aragan Asura
+function(new_hpp,old_hpp)
+    if new_hpp < 5 then
+        equip(sets.Reraise)
+    end
+end
+)
+

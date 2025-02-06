@@ -1054,7 +1054,7 @@ windower.register_event(
                         petWeaponSkillLock == false
                  then
                     if state.SetFTP.value then
-                        equip(set_combine(sets.midcast.Pet.WSFTP))
+                        equip(set_combine(sets.midcast.Pet.WS))
                     else
                         equip(set_combine(sets.midcast.Pet.WSNoFTP))
                     end

@@ -120,24 +120,47 @@ function job_setup()
 	state.Buff['Triple Shot'] = buffactive['Triple Shot'] or false
 	state.RP = M(false, "Reinforcement Points Mode")  
 	state.WeaponLock = M(false, 'Weapon Lock')
-    state.QDMode = M{['description']='Quick Mode', 'STP', 'Enhance', 'TH'}
+    state.QDMode = M{['description']='Quick Mode','Enhance', 'STP',  'TH'}
+    state.ElementalMode = M{['description'] = 'Elemental Mode','Light', 'Fire','Ice','Wind','Earth','Lightning','Water','Dark'}
+	state.RuneElement = M{['description'] = 'Rune Element','Lux','Ignis','Gelus','Flabra','Tellus','Sulpor','Unda','Tenebrae'}
+
     state.phalanxset = M(false,true)
 
     send_command('lua l AutoCOR')
-
+    state.Roller1 = M{['description']='Roller', 'Chaos Roll', 'Samurai Roll','Fighter\'s Roll',
+    'Wizard\'s Roll', 'Warlock\'s Roll','Miser\'s Roll',
+      'Companion\'s Roll','Puppet Roll', 'Beast Roll', 'Drachen Roll',
+      'Blitzer\'s Roll', 'Courser\'s Roll', 'Allies\' Roll',
+     'Avenger\'s Roll', 'Magus\'s Roll', 'Runeist\'s Roll', 'Gallant\'s Roll',
+    'Monk\'s Roll', 'Healer\'s Roll', 'Rogue\'s Roll',
+    'Choral Roll', 'Hunter\'s Roll', 'Ninja Roll', 'Evoker\'s Roll',
+    'Dancer\'s Roll', 'Scholar\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll','Naturalist\'s Roll',
+    }
+    state.Roller2 = M{['description']='Roller', 'Samurai Roll', 'Chaos Roll', 'Fighter\'s Roll',
+    'Wizard\'s Roll', 'Warlock\'s Roll','Miser\'s Roll',
+      'Companion\'s Roll','Puppet Roll', 'Beast Roll', 'Drachen Roll',
+      'Blitzer\'s Roll', 'Courser\'s Roll', 'Allies\' Roll',
+     'Avenger\'s Roll', 'Magus\'s Roll', 'Runeist\'s Roll', 'Gallant\'s Roll',
+    'Monk\'s Roll', 'Healer\'s Roll', 'Rogue\'s Roll',
+    'Choral Roll', 'Hunter\'s Roll', 'Ninja Roll', 'Evoker\'s Roll',
+    'Dancer\'s Roll', 'Scholar\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll','Naturalist\'s Roll',
+    }
+    state.Rollset = M{['description']='Rollset','None', 'melee', 'magic'
+    }
 	-- Whether to use Luzaf's Ring
 	state.LuzafRing = M(true, "Luzaf's Ring")
     -- Whether a warning has been given for low ammo
-	absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
+	absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-TP'}
 
 	autows = 'Leaden Salute'
+    autonuke = 'Absorb-TP'
 	rangedautows = 'Last Stand'
 	autofood = 'Sublime Sushi'
 	ammostock = 198
 
     define_roll_values()
 	
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
+	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
 end
 
 
@@ -163,6 +186,7 @@ function job_filtered_action(spell, eventArgs)
 			end
         end
 	end
+
 
 end
 
@@ -259,17 +283,44 @@ function job_aftercast(spell, spellMap, eventArgs)
 	if player.status ~= 'Engaged' and state.WeaponLock.value == false then
         check_weaponset()
     end
+	check_weaponset()
 
 end
+
+local command_count = 0
+local rate_limit = 5 -- commands per 10 seconds
+
 function job_self_command(commandArgs, eventArgs)
 	if commandArgs[1]:lower() == 'elemental' and commandArgs[2]:lower() == 'quickdraw' then
 		windower.chat.input('/ja "'..data.elements.quickdraw_of[state.ElementalMode.Value]..' Shot" <t>')
 		eventArgs.handled = true			
 	end
-	
-	handle_equipping_gear(player.status)
+    if commandArgs[1]:lower() == 'roller1' then
+       send_command('@input //roller roll1 "'..state.Roller1.value..'"')
+    elseif commandArgs[1]:lower() == 'roller2' then
+        send_command('@input //roller roll2 "'..state.Roller2.value..'"')
+    end
+    if commandArgs[1]:lower() == 'Rollset' then
+        send_command('@input //gs c "'..state.Rollset.value..'"')
+    end
+   --[[ if commandArgs[1]:lower() == 'roller1' then
+        send_command('@input //cor roll 1 "'..state.Roller1.value..'"')
+     elseif commandArgs[1]:lower() == 'roller2' then
+         send_command('@input //cor roll 2 "'..state.Roller2.value..'"')
+     end]]
 
-	check_weaponset()
+end
+
+local rollset_handle = {
+    melee = 'roller roll1 Chaos Roll;roller roll2 Samurai Roll',
+    magic = 'roller roll1 Wizard\'s Roll;roller roll2 Caster\'s Roll'
+}
+do 
+    function job_state_change(mode, current, previous)
+        if mode == 'rollset' and rollset_handle[current] then
+            send_command(rollset_handle[current])
+        end
+    end
 end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
@@ -350,7 +401,7 @@ function job_customize_melee_set(meleeSet)
     if state.TreasureMode.value == 'Fulltime' then
         meleeSet = set_combine(meleeSet, sets.TreasureHunter)
     end
-    if state.Weapongun.value then
+    if state.Weapon.value then
         meleeSet = set_combine(meleeSet, check_weaponset())
     end
 	check_weaponset()
@@ -358,12 +409,13 @@ function job_customize_melee_set(meleeSet)
     return meleeSet
 end
 function job_handle_equipping_gear(playerStatus, eventArgs)
-    check_weaponset()
+	check_weaponset()
 
 end
 -- Called by the 'update' self-command, for common needs.
 -- Set eventArgs.handled to true if we don't want automatic equipping of gear.
 function job_update(cmdParams, eventArgs)
+	check_weaponset()
 
 end
 
@@ -480,7 +532,6 @@ function check_weaponset()
     elseif player.sub_job == 'NIN' and player.sub_job_level < 10 or player.sub_job == 'DNC' and player.sub_job_level < 20 then
         equip(sets.DefaultShield)
     end
-
 end
 -------------------------------------------------------------------------------------------------------------------
 -- Utility functions specific to this job.

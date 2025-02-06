@@ -83,6 +83,13 @@ function get_sets()
         "Black Curry Bun",
         "Rolan. Daifuku",
         "Reraise Earring",}
+
+
+
+		attack2            = 1000 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
+	
+	
+
 end
 
 
@@ -139,8 +146,73 @@ function job_precast(spell, spellMap, eventArgs)
 			enable('main','sub','range','ammo')
 		end
 	end
+
+	local player = windower.ffxi.get_player()
+    local attack = player.attack
+    local defense = player.defense
+
+    print("Attack: " .. attack)
+    print("Defense: " .. defense)
+	-- Determine which WS sets to use based on your attack in your TP set (or idle set if WSing unengaged).
+	attack = player.attack
+	if attack > attack2 then
+        AtkFlag = 2
+        active_ws = sets.precast.WS.PDL
+    else
+        AtkFlag = 1
+        active_ws = sets.precast.WS
+    end
+	
+	self = windower.ffxi.get_mob_by_target("me")
+	target = windower.ffxi.get_mob_by_target("t") or windower.ffxi.get_mob_by_target("st") or self
+		
+    -- Cancel weapon skill if enemy is further than 7 yalms away to prevent losing TP. This value should be larger for "large" model enemies such as Fafnir.
+    if active_ws[spell.name] then
+
+        
+    equip(active_ws[spell.name])
+    end
 end
 
+function check_param()
+	print("-------------------------")
+	if AccFlag == 1 then
+		print("Accuracy Mode:...1250 Eva")
+	elseif AccFlag == 2 then
+		print("Accuracy Mode:...1350 Eva")
+	elseif AccFlag == 3 then
+		print("Accuracy Mode:...1500 Eva")
+	end
+
+	if HasteFlag == 0 then
+		print("Haste Level:...........0%")
+	elseif HasteFlag == 1 then
+		print("Haste Level:..........15%")
+	elseif HasteFlag == 2 then
+		print("Haste Level:..........30%")
+	elseif HasteFlag == 3 then
+		print("Haste Level:..........Cap")
+	end
+
+	if HybridTPFlag == false then
+		print("Hybrid TP:............OFF")
+	elseif HybridTPFlag == true then
+		print("Hybrid TP:.............ON")
+	end
+
+	if MagicBurstFlag == false then
+		print("Magic Burst:..........OFF")
+	elseif MagicBurstFlag == true then
+		print("Magic Burst:...........ON")
+	end
+
+	if UtsuEnmityFlag == false then
+		print("Utsu: Enmity:.........OFF")
+	elseif UtsuEnmityFlag == true then
+		print("Utsu: Enmity:..........ON")
+	end
+	print("-------------------------")
+end
 function job_post_precast(spell, spellMap, eventArgs)
 	if spell.type == 'WeaponSkill' then
 
@@ -185,7 +257,8 @@ function job_post_precast(spell, spellMap, eventArgs)
 	if spell.type == 'WeaponSkill' then
         if state.WeaponskillMode.value == 'vagary' then
             equip()
-        end
+
+		end
 	end
 
 end
@@ -276,6 +349,7 @@ function job_buff_change(buff, gain)
            handle_equipping_gear(player.status)
         end
     end
+
 end
 
 function job_status_change(new_status, old_status)
@@ -354,6 +428,7 @@ end
 -- Called by the default 'update' self-command.
 function job_update(cmdParams, eventArgs)
 	update_melee_groups()
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -405,6 +480,8 @@ end
 end]]--Removed for now.
 
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
+
 	if commandArgs[1]:lower() == 'elemental' then
 		handle_elemental(commandArgs)
 		eventArgs.handled = true
@@ -516,8 +593,40 @@ function job_self_command(commandArgs, eventArgs)
 		end
 
 	end
+
 end
 
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+		if type(tonumber(commandArgs[3])) == 'number' then
+			local attack = tonumber(commandArgs[3])
+			if attack > 1100 then
+				
+				send_command('input //gs c set WeaponskillMode PDL')
+
+			end
+		end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
 function job_tick()
 	if check_stance() then return true end
 	if check_buff() then return true end
@@ -563,6 +672,27 @@ function handle_elemental(cmdParams)
 		windower.chat.input('/ma "'..data.elements.ninjutsu_nuke_of[state.ElementalMode.value]..': '..command..'" '..target..'')
 	elseif command == 'proc' then
 		windower.chat.input('/ma "'..data.elements.ninjutsu_nuke_of[state.ElementalMode.value]..': Ni" '..target..'')
+	elseif command == 'ninjutsu' then
+		windower.chat.input('/ma "'..data.elements.ninjutsu_nuke_of[state.ElementalMode.value]..': Ni" '..target..'')
+
+	elseif command == 'smallnuke' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+
+		local tiers = {' II',''}
+		for k in ipairs(tiers) do
+			if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
+				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
+				return
+			end
+		end
+		add_to_chat(123,'Abort: All '..data.elements.nuke_of[state.ElementalMode.value]..' nukes on cooldown or or not enough MP.')
+
+	elseif command:startswith('tier') then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		local tierlist = {['tier1']='',['tier2']=' II',['tier3']=' III',['tier4']=' IV',['tier5']=' V',['tier6']=' VI'}
+
+		windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..tierlist[command]..'" '..target..'')
+
 	end
 end
 
@@ -660,9 +790,21 @@ function check_buffup()
 	end
 end
 
+
+windower.register_event('incoming text',function(org)     
+
+	--abyssea stagger
+	if string.find(org, "staggers") then
+
+		windower.send_command('input /p Stagger! <call14>!')
+		send_command('input //gs c Weapons Default')
+
+	end
+end)
+
 buff_spell_lists = {
 	Auto = {	
-		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,Reapply=false},
+		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Idle'},
 		--{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
 	},
 	
