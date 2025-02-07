@@ -145,7 +145,8 @@ function job_setup()
     'Choral Roll', 'Hunter\'s Roll', 'Ninja Roll', 'Evoker\'s Roll',
     'Dancer\'s Roll', 'Scholar\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll','Naturalist\'s Roll',
     }
-    state.Rollset = M{['description']='Rollset','None', 'melee', 'magic'
+    state.Rollset = M{['description']='Rollset','None', 'melee', 'magic','dynamis','aminon','exp','tp','speed','acc','ws',
+    'pet','petnuke',
     }
 	-- Whether to use Luzaf's Ring
 	state.LuzafRing = M(true, "Luzaf's Ring")
@@ -299,9 +300,8 @@ function job_self_command(commandArgs, eventArgs)
        send_command('@input //roller roll1 "'..state.Roller1.value..'"')
     elseif commandArgs[1]:lower() == 'roller2' then
         send_command('@input //roller roll2 "'..state.Roller2.value..'"')
-    end
-    if commandArgs[1]:lower() == 'Rollset' then
-        send_command('@input //gs c "'..state.Rollset.value..'"')
+    elseif commandArgs[1]:lower() == 'rollset' then
+        send_command('@input //roller "'..state.Rollset.value..'"')
     end
    --[[ if commandArgs[1]:lower() == 'roller1' then
         send_command('@input //cor roll 1 "'..state.Roller1.value..'"')
@@ -311,17 +311,6 @@ function job_self_command(commandArgs, eventArgs)
 
 end
 
-local rollset_handle = {
-    melee = 'roller roll1 Chaos Roll;roller roll2 Samurai Roll',
-    magic = 'roller roll1 Wizard\'s Roll;roller roll2 Caster\'s Roll'
-}
-do 
-    function job_state_change(mode, current, previous)
-        if mode == 'rollset' and rollset_handle[current] then
-            send_command(rollset_handle[current])
-        end
-    end
-end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
 -------------------------------------------------------------------------------------------------------------------
