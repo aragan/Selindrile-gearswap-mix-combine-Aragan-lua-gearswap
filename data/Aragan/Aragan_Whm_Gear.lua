@@ -61,7 +61,7 @@ function user_job_setup()
     send_command('bind !f3 gs c BarElement')
     send_command('bind f5 gs c cycle BarStatus')
     send_command('bind !f5 gs c BarStatus')
-	send_command('bind f7 gs c toggle AutoSubMode') --Automatically uses sublimation.
+    send_command('bind f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind @f5 gs c cycle WeaponskillMode')
     send_command('bind ^f2 gs c smartcure')
 	send_command('bind !f5 gs c toggle AutoWSMode')

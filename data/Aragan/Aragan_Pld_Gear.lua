@@ -28,12 +28,12 @@ function user_job_setup()
     state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
 	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation')
     state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
-    state.MagicalDefenseMode:options('MDT_HP','MDT','MDT_Reraise')
-	state.ResistDefenseMode:options('MEVA_HP','MEVA')
+    state.MagicalDefenseMode:options('MDT','MDT_HP','MDT_Reraise')
+	state.ResistDefenseMode:options('MEVA','MEVA_HP')
 	state.IdleMode:options('Tank','Kiting','PDT','PD','PDH','Block','Evasion','MDT','MEVA','Normal')
 	state.Weapons:options('None','Burtgang','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole')
 	state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen'} -- , 'Priwen' }
-	state.AutoBuffMode:options('Off','Auto','Aminon') --,'Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','Odyss','Aminon') --,'Off','Off','Off','Off','Off',
 
     state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','ReverenceGauntlets', 'Refresh', 'Resist', 'EnemyTPaccumulation','MP','Twilight'}
 	
@@ -1003,6 +1003,8 @@ sets.idle.Evasion={
 	sets.passive.EnemyTPaccumulation =  {
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
 	}
+	sets.passive.Twilight = {head="Crepuscular Helm", body="Crepuscular Mail",}
+
 	sets.MP_Knockback = {}
     sets.Twilight = {head="Crepuscular Helm", body="Crepuscular Mail",}
 	sets.EnemyCritRate = {
@@ -1247,7 +1249,7 @@ sets.defense.Turtle ={
 	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	left_ring="Moonlight Ring",
 	right_ring="Moonlight Ring",
-	back="Tactical Mantle",}
+	back="Null Shawl",}
 --1179 / 1315 avec enlight up
 	sets.engaged.Acc = {
 	ammo="Amar Cluster",
@@ -1278,7 +1280,7 @@ sets.defense.Turtle ={
 	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	left_ring="Moonlight Ring",
 	right_ring="Moonlight Ring",
-	back="Tactical Mantle",
+	back="Null Shawl",
    }
  --1179 / 1315 avec enlight up
 	sets.engaged.STP = {  
@@ -1290,13 +1292,13 @@ sets.defense.Turtle ={
 	hands="Flam. Manopolas +2",
 	legs="Flamma Dirs +2",
 	feet="Flam. Gambieras +2",
-	neck="Ainia Collar",
+	neck="Lissome Necklace",
 	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 	left_ear="Dedition Earring",
 	right_ear="Telos Earring",
 	left_ring="Chirich Ring +1",
 	right_ring="Chirich Ring +1",
-	back="Tactical Mantle",
+	back="Null Shawl",
  }
   --1179 / 1315 avec enlight up
  sets.engaged.CRIT = {
@@ -1349,8 +1351,18 @@ sets.defense.Turtle ={
 	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	left_ring="Moonlight Ring",
 	right_ring="Moonlight Ring",
-	back="Tactical Mantle",}
-		
+	back="Null Shawl",}
+
+    sets.engaged.STP.Tank = set_combine(sets.engaged.STP, {
+		head={ name="Sakpata's Helm", augments={'Path: A',}},
+		body={ name="Sakpata's Plate", augments={'Path: A',}},
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
+	})
+
 	sets.engaged.DDTank = {
 		ammo="Aurgelmir Orb +1",
    head="Hjarrandi Helm",
@@ -1364,8 +1376,18 @@ sets.defense.Turtle ={
    right_ear="Telos Earring",
    left_ring="Moonlight Ring",
    right_ring="Moonlight Ring",
-   back="Tactical Mantle",}
-		
+   back="Null Shawl",}
+
+	sets.engaged.STP.DDTank = set_combine(sets.engaged.STP, {
+		head="Hjarrandi Helm",
+		body="Hjarrandi Breast.",
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
+	})
+
 	sets.engaged.Acc.DDTank = {
 		head="Sakpata's Helm",neck="Loricate Torque +1",ear1="Mache Earring +1",ear2="Telos Earring",
 		body="Tartarus Platemail",hands="Sakpata's Gauntlets",ring1="Defending Ring",ring2="Patricius Ring",

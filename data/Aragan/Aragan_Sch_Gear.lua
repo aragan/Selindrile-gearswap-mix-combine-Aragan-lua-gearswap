@@ -149,7 +149,7 @@ function user_job_setup()
 
     --use //listbinds    .. to show command keys
     -- Additional local binds
-    send_command('bind f7 input //Sublimator')-- addon name Sublimator
+    send_command('bind f7 gs c toggle AutoSubMode')-- addon name Sublimator
     send_command('bind ^` input /ja Immanence <me>')
     send_command('bind !` gs c toggle MagicBurst')
     send_command('bind f11 gs c cycle CastingMode')

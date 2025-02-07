@@ -160,7 +160,7 @@ function global_on_load()
 	send_command('bind !3 gs c toggle AutoRuneMode')
 	send_command('bind !4 gs c cycle passive')
 	send_command('bind !5 gs c toggle stance')
-
+	send_command('bind ^3 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind ^f1 gs c toggle AutoStunMode')
 	send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
