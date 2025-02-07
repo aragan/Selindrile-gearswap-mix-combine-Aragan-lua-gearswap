@@ -74,7 +74,7 @@ function user_job_setup()
 	send_command('bind ^@!\\\\ gs c toggle LuzafRing')
     send_command('bind ^2 gs c toggle LuzafRing')
 	send_command('bind @f7 gs c toggle RngHelper')
-	send_command('bind !f1 gs c toggle RngHelperQuickDraw')
+	send_command('bind !f1 gs c toggle RngHelper;gs c toggle RngHelperQuickDraw')
     send_command('bind !a gs c toggle phalanxset') 
 
 	--send_command('bind !r gs c weapons DualSavageWeapons;gs c update')
@@ -93,9 +93,10 @@ function user_job_setup()
     send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
     send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
     send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
-    send_command('bind ^z gs c rollset')--;input //gs c Rollset
+    send_command('bind ^z gs c Rollset')--;input //gs c Rollset
+    send_command('bind !6 gs c cycle Rollset;awit;input //gs c Rollset')
+    send_command('bind f1 gs c cycle Rollset;awit;input //gs c Rollset')
 
-    --send_command('bind f1 gs c cycle rollset')
     --send_command('alias melee input //roller roll1 Chaos Roll;wait .1;input //roller roll2 Samurai Roll')
     --send_command('alias magic input //roller roll1 Wizard\'s Roll;wait .1;input //roller roll2 Caster\'s Roll')
     -- Define the roll commands in a table
