@@ -98,6 +98,7 @@ end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+    send_command('lua l PLD-HUD')
 
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Sentinel = buffactive.Sentinel or false
@@ -130,7 +131,7 @@ function job_setup()
 	autofood = 'Miso Ramen'
 	
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","CastingMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","ResistDefenseMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","CastingMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","ResistDefenseMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -180,6 +181,9 @@ function job_precast(spell, spellMap, eventArgs)
 end
 
 function job_post_precast(spell, spellMap, eventArgs)
+	if spellMap == 'Cure' and not buffactive['Majesty'] then
+		send_command('@wait 1;input /ja "Majesty" <me>')
+    end
 	if spell.type == 'WeaponSkill' then
 
 		local WSset = standardize_set(get_precast_set(spell, spellMap))
@@ -240,6 +244,7 @@ function job_post_precast(spell, spellMap, eventArgs)
             end
         end
     end
+
 end
 
 function job_post_midcast(spell, spellMap, eventArgs)
@@ -251,7 +256,9 @@ function job_post_midcast(spell, spellMap, eventArgs)
 	if (spell.skill == 'Elemental Magic' or spell.skill == 'Divine Magic') and (state.MagicBurst.value or AEBurst) then
         equip(sets.magicburst)
     end
-
+	if state.CastingMode.value == 'Enmity' then
+		equip(sets.Enmity)
+	end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
@@ -286,6 +293,134 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
 end
 function job_buff_change(buff, gain)
 	update_melee_groups()
+end
+
+-- Handling Elemental spells within Gearswap.
+-- Format: gs c elemental <nuke, helix, skillchain1, skillchain2, weather>
+function handle_elemental(cmdParams)
+    -- cmdParams[1] == 'elemental'
+    -- cmdParams[2] == ability to use
+
+    if not cmdParams[2] then
+        add_to_chat(123,'Error: No elemental command given.')
+        return
+    end
+    local command = cmdParams[2]:lower()
+	
+	if command == 'spikes' then
+		windower.chat.input('/ma "'..data.elements.spikes_of[state.ElementalMode.value]..' Spikes" <me>')
+		return
+	elseif command == 'enspell' then
+		windower.chat.input('/ma "En'..data.elements.enspell_of[state.ElementalMode.value]..'" <me>')
+		return
+	--Leave out target, let shortcuts auto-determine it.
+	elseif command == 'weather' then
+		if player.sub_job == 'RDM' then
+			windower.chat.input('/ma "Phalanx" <me>')
+		else
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			if (player.target.type == 'SELF' or not player.target.in_party) and buffactive[data.elements.storm_of[state.ElementalMode.value]] and not buffactive['Klimaform'] and spell_recasts[287] < spell_latency then
+				windower.chat.input('/ma "Klimaform" <me>')
+			else
+				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
+			end
+		end
+		return
+	end
+
+	local target = '<t>'
+	if cmdParams[3] then
+		if tonumber(cmdParams[3]) then
+			target = tonumber(cmdParams[3])
+		else
+			target = table.concat(cmdParams, ' ', 3)
+			target = get_closest_mob_id_by_name(target) or '<t>'
+		end
+	end
+
+    if command == 'nuke' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		
+		if state.ElementalMode.value == 'Light' then
+			if spell_recasts[29] < spell_latency and actual_cost(get_spell_table_by_name('Banish II')) < player.mp then
+				windower.chat.input('/ma "Banish II" '..target..'')
+			elseif spell_recasts[28] < spell_latency and actual_cost(get_spell_table_by_name('Banish')) < player.mp then
+				windower.chat.input('/ma "Banish" '..target..'')
+			else
+				add_to_chat(123,'Abort: Banishes on cooldown or not enough MP.')
+			end
+
+		else
+			if player.job_points[(res.jobs[player.main_job_id].ens):lower()].jp_spent > 99 and spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..' II').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..' II')) < player.mp then
+				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..' II" '..target..'')
+			else
+				local tiers = {' II',''}
+				for k in ipairs(tiers) do
+					if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
+						windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
+						return
+					end
+				end
+				add_to_chat(123,'Abort: All '..data.elements.nuke_of[state.ElementalMode.value]..' nukes on cooldown or or not enough MP.')
+			end
+		end
+			
+	elseif command == 'ninjutsu' then
+		windower.chat.input('/ma "'..data.elements.ninjutsu_nuke_of[state.ElementalMode.value]..': Ni" '..target..'')
+			
+	elseif command == 'smallnuke' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+	
+		local tiers = {''}
+		for k in ipairs(tiers) do
+			if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
+				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
+				return
+			end
+		end
+		add_to_chat(123,'Abort: All '..data.elements.nuke_of[state.ElementalMode.value]..' nukes on cooldown or or not enough MP.')
+		
+	elseif command:contains('tier') then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		local tierlist = {['tier1']='',['tier2']=' II',['tier3']=' III'}
+		
+		windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..tierlist[command]..'" '..target..'')
+		
+	elseif command:contains('aga') or command == 'aja' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		local tierkey = {'aga2','aga1'}
+		local tierlist = {['aga2']='ga II',['aga1']='ga',}
+		if command == 'aga' then
+			for i in ipairs(tierkey) do
+				if spell_recasts[get_spell_table_by_name(data.elements.nukega_of[state.ElementalMode.value]..''..tierlist[tierkey[i]]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nukega_of[state.ElementalMode.value]..''..tierlist[tierkey[i]]..'')) < player.mp then
+					windower.chat.input('/ma "'..data.elements.nukega_of[state.ElementalMode.value]..''..tierlist[tierkey[i]]..'" '..target..'')
+					return
+				end
+			end
+		else
+			windower.chat.input('/ma "'..data.elements.nukega_of[state.ElementalMode.value]..tierlist[command]..'" '..target..'')
+		end
+
+	elseif command == 'ara' then
+		windower.chat.input('/ma "'..data.elements.nukera_of[state.ElementalMode.value]..'ra" '..target..'')
+		
+	elseif command == 'helix' then
+		windower.chat.input('/ma "'..data.elements.helix_of[state.ElementalMode.value]..'helix" '..target..'')
+	
+	elseif command == 'ancientmagic' then
+		windower.chat.input('/ma "'..data.elements.ancient_nuke_of[state.ElementalMode.value]..'" '..target..'')
+		
+	elseif command == 'ancientmagic2' then
+		windower.chat.input('/ma "'..data.elements.ancient_nuke_of[state.ElementalMode.value]..' II" '..target..'')
+		
+	elseif command == 'enfeeble' then
+		windower.chat.input('/ma "'..data.elements.elemental_enfeeble_of[state.ElementalMode.value]..'" '..target..'')
+	
+	elseif command == 'bardsong' then
+		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' Threnody" '..target..'')
+	else
+        add_to_chat(123,'Unrecognized elemental command.')
+    end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -730,7 +865,13 @@ buff_spell_lists = {
 		--{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
 	},
-	
+	Aminon = {	
+		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
+		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
+		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
+		{Name='Stoneskin',Buff='Stoneskin',SpellID=54,When='Always'},
+		{Name='Aquaveil',Buff='Aquaveil',SpellID=55,When='Always'},
+	},
 	Default = {
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,Reapply=false},
 		--{Name='Reprisal',Buff='Reprisal',SpellID=97,Reapply=false},
