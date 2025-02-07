@@ -90,6 +90,7 @@ its do all ja first then do u  songset
 ------------
 
 for cor add state.Roller1 state.Roller2 have all rolls send to roller addon 
+and state.Rollset change 2 roll in 1 click 
 
 cycle Roll
 
@@ -97,11 +98,13 @@ cycle Roll
     send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
     send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
     send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
+    send_command('bind f1 gs c cycle Rollset;awit;input //gs c Rollset')
 
 macro
 
 /con gs c Roller1
 /con gs c Roller2
+/con gs c Rollset
 /con input //roll
 
 -----
