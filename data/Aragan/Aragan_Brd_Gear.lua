@@ -64,9 +64,12 @@ function user_job_setup()
     send_command('bind f7 gs c cycle ExtraSongsMode')
 	send_command('bind !f7 gs c cycleback ExtraSongsMode')
 
+    send_command('bind ^4 gs c cycle ElementalMode') --Changes element that the other commands use.
+	send_command('bind ^3 gs c Elemental BardSong')  --Casts Threnody based on chosen element.
+	
     send_command('bind f1 gs c cycle HippoMode')
-    send_command('bind ^3 gs c cycle Etude')
-    send_command('bind ^4 gs c Etude')
+    send_command('bind ^2 gs c cycle Etude')
+    --send_command('bind ^4 gs c Etude')
     send_command('bind f3 gs c cycle Carol')
     send_command('bind !f3 gs c Carol')
     send_command('bind f4 gs c cycle Threnody')
@@ -725,7 +728,7 @@ sets.precast.WS['Shattersoul'] = {
 
     sets.idle.DT = {        
 	head={ name="Nyame Helm", augments={'Path: B',}},
-    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     body="Adamantite Armor",
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -740,11 +743,11 @@ sets.precast.WS['Shattersoul'] = {
 
 sets.idle.HP = {
     ammo="Staunch Tathlum +1",
-    head="Nyame Helm",
+	head={ name="Nyame Helm", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     body="Adamantite Armor",
-    hands="Nyame Gauntlets",
-    legs="Nyame Flanchard",
-    feet="Nyame Sollerets",
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Unmoving Collar +1", augments={'Path: A',}},
     waist="Plat. Mog. Belt",
     left_ear="Tuisto Earring",

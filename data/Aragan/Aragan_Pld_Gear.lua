@@ -24,20 +24,21 @@ function user_job_setup()
     -- Options: Override default values	
 	state.OffenseMode:options('Normal', 'TP', 'Acc', 'STP', 'CRIT')
     state.HybridMode:options('Tank','DDTank','Normal')
-    state.WeaponskillMode:options('Match','Normal', 'PDL', 'Acc')
-    state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP')
-	state.Passive:options('None','AbsorbMP')
-    state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminion', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
+    state.WeaponskillMode:options('Match','Normal', 'PDL', 'Acc','Enmity')
+    state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
+	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation')
+    state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
     state.MagicalDefenseMode:options('MDT_HP','MDT','MDT_Reraise')
 	state.ResistDefenseMode:options('MEVA_HP','MEVA')
 	state.IdleMode:options('Tank','Kiting','PDT','PD','PDH','Block','Evasion','MDT','MEVA','Normal')
-	state.Weapons:options('None','Burtgang','MalignanceSword','Naegling','Reikiko','Malevolence','Club','Caladbolg','MalignancePole')
+	state.Weapons:options('None','Burtgang','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole')
 	state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen'} -- , 'Priwen' }
+	state.AutoBuffMode:options('Off','Auto','Aminon') --,'Off','Off','Off','Off','Off',
 
     state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','ReverenceGauntlets', 'Refresh', 'Resist', 'EnemyTPaccumulation','MP','Twilight'}
 	
-	gear.fastcast_jse_back = {name="Rudianos's Mantle",augments={'INT+20','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','"Fast Cast"+10',}}
-	gear.enmity_jse_back = {name="Rudianos's Mantle",augments={'HP+60','Eva.+20 /Mag. Eva.+20','HP+20','Enmity+10',}}
+	gear.fastcast_jse_back = {}
+	gear.enmity_jse_back = {}
 
 	--use //listbinds    .. to show command keys
 	-- Additional local binds
@@ -66,7 +67,9 @@ function user_job_setup()
 	send_command('bind @s gs c toggle SrodaBelt')
 	send_command('bind f1 gs c cycle HippoMode')
 	send_command('bind f2 gs c toggle AutoRuneMode')
-	send_command('bind f3 gs c cycle RuneElement')
+	--send_command('bind f3 gs c cycle RuneElement')
+	send_command('bind f4 gs c cycle ElementalMode;gs c cycle RuneElement')
+
 	send_command('bind !f3 gs c toggle AutoTankMode')
 	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
@@ -74,7 +77,7 @@ function user_job_setup()
 	send_command('bind @f1 gs c toggle AutoEngageMode')
 	send_command('bind @f2 gs c toggle AutoBuffMode')
 	send_command('bind @f3 gs c toggle AutoTrustMode')
-	send_command('bind @f4 gs c toggle 	AutoFoodMode')
+	send_command('bind @f4 gs c toggle AutoFoodMode')
 	send_command('bind ^f1 gs c toggle AutoStunMode')
 	send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
@@ -101,7 +104,9 @@ function init_gear_sets()
 	sets.weapons.Club = {main="Mafic Cudgel"}
     sets.weapons.Caladbolg = {main="Caladbolg", sub="Utu Grip",}
     sets.weapons.MalignancePole = {main="Malignance Pole", sub="Utu Grip",}
+	sets.weapons.SakpataSword = {main="Sakpata's Sword"}
 
+	
 	sets.Normal = {}
 	sets.Aegis = {sub="Aegis"}
 	sets.Ochain = {sub="Ochain"}
@@ -135,20 +140,35 @@ function init_gear_sets()
 	right_ring="Defending Ring",
 	back="Rudianos's Mantle",}
 		
-    sets.Enmity.DT = {		ammo="Staunch Tathlum +1",
-	head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-	body={ name="Sakpata's Plate", augments={'Path: A',}},
-	hands="Chev. Gauntlets +3",
-	legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
-	feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
-	neck="Moonlight Necklace",
-	waist="Audumbla Sash",
-	left_ear="Tuisto Earring",
-	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-	right_ring="Defending Ring",
+    sets.Enmity.DT = {			ammo="Staunch Tathlum +1",
+	head="Sakpata's Helm",
+	body="Adamantite Armor",
+	hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+	legs="Sakpata's Cuisses",
+	feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+	neck="Unmoving Collar +1", 
+	waist="Flume Belt +1",
+	left_ear="Tuisto Earring", 
+	right_ear="Cryptic Earring",
+	left_ring="Apeile Ring +1",
+	right_ring="Shadow Ring", 
 	back="Rudianos's Mantle",}
-		
+
+	sets.DT = {			
+	ammo="Staunch Tathlum +1",
+	head="Sakpata's Helm",
+	body="Adamantite Armor",
+	hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+	legs="Sakpata's Cuisses",
+	feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+	neck="Unmoving Collar +1", 
+	waist="Flume Belt +1",
+	left_ear="Tuisto Earring", 
+	right_ear="Cryptic Earring",
+	left_ring="Apeile Ring +1",
+	right_ring="Shadow Ring", 
+	back="Rudianos's Mantle",
+}
     -- Precast sets to enhance JAs
     sets.precast.JA['Invincible'] = set_combine(sets.Enmity,{legs="Cab. Breeches +3"})
     sets.precast.JA['Holy Circle'] = set_combine(sets.Enmity,{feet="Rev. Leggings +3"})
@@ -232,13 +252,18 @@ function init_gear_sets()
 	right_ring="Kishar Ring",
 	back="Moonlight Cape",}
 		
-    sets.precast.FC.DT = sets.precast.FC
+    sets.precast.FC.DT = set_combine(sets.precast.FC, {
+		head="Chevalier's Armet +3",
+		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+		left_ear="Tuisto Earring",
+	})
 		
     sets.precast.FC['Enhancing Magic'] = set_combine(sets.precast.FC, {waist="Siegel Sash"})
 	sets.precast.FC['Enhancing Magic'].DT = set_combine(sets.precast.FC.DT, {waist="Siegel Sash"})
 	
 	sets.precast.FC.Cure = set_combine(sets.precast.FC, {ear1="Nourish. Earring",ear2="Nourish. Earring +1",body="Jumalik Mail"})
-  
+	sets.precast.FC.Cure.DT = set_combine(sets.precast.FC.DT, {ear1="Nourish. Earring",ear2="Nourish. Earring +1",body="Jumalik Mail"})
+
     -- Weaponskill sets
     -- Default set for any weaponskill that isn't any more specifically defined
 	sets.precast.WS = {   
@@ -262,11 +287,12 @@ function init_gear_sets()
 		left_ring="Sroda Ring", 
 	 })
 	 sets.precast.WS.None = {}
-		
+	 sets.precast.WS.Enmity = set_combine(sets.Enmity, {})
+
     sets.precast.WS.DT = {ammo="Staunch Tathlum +1",
         head="Souv. Schaller +1",neck="Loricate Torque +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
         body="Rev. Surcoat +3",hands="Souv. Handsch. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
-        back="Moonlight Cape",waist="Creed Baudrier",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
+        back="Moonlight Cape",waist="Plat. Mog. Belt",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
 
     sets.precast.WS.Acc = {
         head="Ynglinga Sallet",neck="Combatant's Torque",ear1="Mache Earring +1",ear2="Telos Earring",
@@ -517,12 +543,9 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     sets.midcast.FastRecast = {ammo="Staunch Tathlum +1",
 		head="Carmine Mask +1",neck="Orunmila's Torque",ear1="Etiolation Earring",ear2="Loquac. Earring",
 		body="Rev. Surcoat +3",hands="Leyline Gloves",ring1="Gelatinous Ring +1",ring2="Kishar Ring",
-		back="Moonlight Cape",waist="Creed Baudrier",legs="Enif Cosciales",feet="Odyssean Greaves"}
+		back="Moonlight Cape",waist="Plat. Mog. Belt",legs="Enif Cosciales",feet="Odyssean Greaves"}
 		
-	sets.midcast.FastRecast.DT = {ammo="Staunch Tathlum +1",
-        head="Souv. Schaller +1",neck="Loricate Torque +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
-        body="Rev. Surcoat +3",hands="Souv. Handsch. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
-        back="Moonlight Cape",waist="Creed Baudrier",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
+	sets.midcast.FastRecast.DT = set_combine(sets.DT, {})
 
     sets.midcast.Flash = set_combine(sets.Enmity, {})
 	sets.midcast.Flash.SIRD = set_combine(sets.Enmity.SIRD, {})
@@ -553,7 +576,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     sets.midcast.Cure = {ammo="Staunch Tathlum +1",
 		head="Loess Barbuta +1",neck="Sacro Gorget",ear1="Nourish. Earring",ear2="Nourish. Earring +1",
 		body="Jumalik Mail",hands="Macabre Gaunt. +1",ring1="Defending Ring",ring2="Moonlight Ring",
-		back="Rudianos's Mantle",waist="Creed Baudrier",legs="Carmine Cuisses +1",feet="Odyssean Greaves"}
+		back="Rudianos's Mantle",waist="Plat. Mog. Belt",legs="Carmine Cuisses +1",feet="Odyssean Greaves"}
 		
     sets.midcast.Cure.SIRD = {    ammo="Staunch Tathlum +1",
     head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
@@ -569,10 +592,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     back="Moonlight Cape",}
 		
-    sets.midcast.Cure.DT = {ammo="Staunch Tathlum +1",
-        head="Souv. Schaller +1",neck="Loricate Torque +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
-        body="Rev. Surcoat +3",hands="Souv. Handsch. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
-    	back="Moonlight Cape",waist="Creed Baudrier",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
+    sets.midcast.Cure.DT = set_combine(sets.DT, {})
 	
 	sets.midcast.Cure.ConserveMP = set_combine(sets.midcast.Cure,sets.ConserveMP, {
 		ammo="Pemphredo Tathlum",
@@ -609,11 +629,13 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 		head="Loess Barbuta +1",neck="Unmoving Collar +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
         body="Rev. Surcoat +3",hands="Souv. Handsch. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
         back="Moonlight Cape",waist="Creed Baudrier",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
+		sets.midcast.Reprisal.DT = set_combine(sets.DT, {
+			sub="Priwen",hands="Regal Gauntlets",body="Shab. Cuirass +1",})
 
 	sets.Self_Healing = {ammo="Staunch Tathlum +1",
 		head="Souv. Schaller +1",neck="Sacro Gorget",ear1="Nourish. Earring",ear2="Nourish. Earring +1",
 		body="Souv. Cuirass +1",hands="Macabre Gaunt. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
-		back="Moonlight Cape",waist="Creed Baudrier",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
+		back="Moonlight Cape",waist="Plat. Mog. Belt",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
 		
 	sets.Self_Healing.SIRD = {    ammo="Staunch Tathlum +1",
     head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
@@ -629,10 +651,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     back="Moonlight Cape",}
 		
-	sets.Self_Healing.DT = {ammo="Staunch Tathlum +1",
-        head="Souv. Schaller +1",neck="Loricate Torque +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
-        body="Rev. Surcoat +3",hands="Souv. Handsch. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
-        back="Moonlight Cape",waist="Creed Baudrier",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
+	sets.Self_Healing.DT = set_combine(sets.DT, {})
 		
 	sets.Self_Healing.ConserveMP = set_combine(sets.Self_Healing,sets.ConserveMP, {
 		ammo="Pemphredo Tathlum",
@@ -680,7 +699,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
    left_ring="Stikini Ring +1",
    back="Rudianos's Mantle"}
 
-   sets.midcast['Enhancing Magic'].DT = sets.midcast['Enhancing Magic'].SIRD 
+   sets.midcast['Enhancing Magic'].DT = set_combine(sets.DT, {})
    sets.midcast['Enhancing Magic'].ConserveMP = set_combine(sets.midcast['Enhancing Magic'],sets.ConserveMP, {
 	ammo="Pemphredo Tathlum",
     legs={ name="Augury Cuisses +1", augments={'Path: A',}},
@@ -699,7 +718,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     neck="Stone Gorget",
 })
 sets.midcast.Stoneskin.SIRD  = set_combine(sets.midcast['Enhancing Magic'].SIRD,sets.midcast.Stoneskin,sets.SIRD, {})
-sets.midcast.Stoneskin.DT = set_combine(sets.midcast['Enhancing Magic'].DT,sets.midcast.Stoneskin,sets.SIRD, {})
+sets.midcast.Stoneskin.DT = set_combine(sets.DT, {})
 sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].DT,sets.midcast.Stoneskin,sets.ConserveMP, {
 	ammo="Pemphredo Tathlum",
     legs={ name="Augury Cuisses +1", augments={'Path: A',}},
@@ -710,10 +729,11 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
     left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
     back="Solemnity Cape",
 })
-
-    sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], { sub="Srivatsa",ring2="Sheltered Ring",})
+    sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], { ring2="Sheltered Ring",})
     sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], { ring2="Sheltered Ring",})
-	
+	sets.midcast.Protect.DT = set_combine(sets.DT, {sub="Srivatsa",ring2="Sheltered Ring"})
+    sets.midcast.Protect.DT = set_combine(sets.DT, {sub="Srivatsa",ring2="Sheltered Ring"})
+
 	sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'], {
 		main="Sakpata's Sword",
 		sub={ name="Priwen", augments={'HP+50','Mag. Evasion+50','Damage Taken -3%',}},
@@ -748,7 +768,7 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 		right_ring="Moonlight Ring",
 		back={ name="Weard Mantle", augments={'VIT+1','Enmity+3','Phalanx +5',}},
 	})
-	sets.midcast.Phalanx.DT = set_combine(sets.midcast.Phalanx.SIRD, {})
+	sets.midcast.Phalanx.DT = set_combine(sets.DT, {})
 	sets.midcast.Phalanx.ConserveMP = set_combine(sets.midcast.Phalanx.SIRD, {})
 	sets.midcast.Phalanx.Duration = set_combine(sets.midcast.Phalanx, {
 		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
@@ -850,7 +870,7 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 
     -- Idle sets
     sets.idle = {ammo="Homiliary",
-	head="Null Masque",neck="Coatl Gorget +1",ear1="Etiolation Earring",ear2="Ethereal Earring",
+	head="Null Masque",neck="Coatl Gorget +1",ear1="Infused Earring",ear2="Ethereal Earring",
 		body="Jumalik Mail",hands="Regal Gauntlets",ring1="Stikini Ring +1",ring2="Stikini Ring +1",
 		back="Moonlight Cape",waist="Null Belt",legs="Carmine Cuisses +1",feet="Hippo. Socks +1"}
 		
@@ -922,7 +942,7 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 	})
 	sets.idle.ReverenceGauntlets = set_combine(sets.idle.Block, {
 		hands="Rev. Gauntlets +3",
- })
+    })
  sets.idle.Resist = set_combine(sets.idle.MDT, {
     ammo="Staunch Tathlum +1",
     head={ name="Founder's Corona", augments={'DEX+10','Accuracy+15','Mag. Acc.+15','Magic dmg. taken -5%',}},
@@ -972,8 +992,18 @@ sets.idle.Evasion={
     -- Extra defense sets.  Apply these on top of melee or defense sets.
 	sets.Knockback = {}
     sets.MP = {head="Chev. Armet +3",neck="Coatl Gorget +1",ear2="Ethereal Earring",waist="Flume Belt +1",feet="Rev. Leggings +3"}
-	sets.passive.AbsorbMP = {head="Chev. Armet +3",neck="Coatl Gorget +1",ear2="Ethereal Earring",waist="Flume Belt +1",feet="Rev. Leggings +3"}
-    sets.MP_Knockback = {}
+	sets.passive.AbsorbMP = {head="Chev. Armet +3",ear2="Ethereal Earring",waist="Flume Belt +1",feet="Rev. Leggings +3"}
+	sets.passive.ReverenceGauntlets = {hands="Rev. Gauntlets +3",}
+	sets.passive.EnemyCritRate = {
+		ammo="Eluder's Sachet",
+		left_ring="Warden's Ring",
+		right_ring="Fortified Ring",
+		back="Reiki Cloak",
+    }
+	sets.passive.EnemyTPaccumulation =  {
+		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+	}
+	sets.MP_Knockback = {}
     sets.Twilight = {head="Crepuscular Helm", body="Crepuscular Mail",}
 	sets.EnemyCritRate = {
 		ammo="Eluder's Sachet",
@@ -1148,7 +1178,7 @@ sets.idle.Evasion={
 	right_ring="Apeile Ring",
 	back="Rudianos's Mantle",
  }
- sets.defense.Aminion = {
+ sets.defense.Aminon = {
     main="Reikiko",
     sub="Aegis",
     ammo="Staunch Tathlum +1",
@@ -1219,8 +1249,7 @@ sets.defense.Turtle ={
 	right_ring="Moonlight Ring",
 	back="Tactical Mantle",}
 --1179 / 1315 avec enlight up
-	sets.engaged.Acc = 
-	{
+	sets.engaged.Acc = {
 	ammo="Amar Cluster",
 	head={ name="Sakpata's Helm", augments={'Path: A',}},
 	body={ name="Sakpata's Plate", augments={'Path: A',}},
@@ -1236,8 +1265,7 @@ sets.defense.Turtle ={
 	back={ name="Weard Mantle", augments={'VIT+1','Enmity+3','Phalanx +5',}},
  }
  --1179 / 1315 avec enlight up
- sets.engaged.TP = 
- { 
+ sets.engaged.TP = { 
 	ammo="Aurgelmir Orb +1",
 	head={ name="Sakpata's Helm", augments={'Path: A',}},
 	body={ name="Sakpata's Plate", augments={'Path: A',}},
@@ -1253,8 +1281,8 @@ sets.defense.Turtle ={
 	back="Tactical Mantle",
    }
  --1179 / 1315 avec enlight up
-	sets.engaged.STP = 
- {  main="Naegling",
+	sets.engaged.STP = {  
+	main="Naegling",
 	sub="Blurred Shield +1",
 	ammo="Aurgelmir Orb +1",
 	head="Flam. Zucchetto +2",
@@ -1271,8 +1299,7 @@ sets.defense.Turtle ={
 	back="Tactical Mantle",
  }
   --1179 / 1315 avec enlight up
- sets.engaged.CRIT =
- {
+ sets.engaged.CRIT = {
 	ammo="Coiste Bodhar",
 	head={ name="Blistering Sallet +1", augments={'Path: A',}},
 	body="Hjarrandi Breast.",

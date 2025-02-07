@@ -72,8 +72,11 @@ state.RP = M(false, "Reinforcement Points Mode")
 
 state.StormSurge = M(false, 'Stormsurge')
 
-
 state.Medicine = M(false,'Medicine')
+
+NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
+
+gear.TVRring = "Cornelia's Ring"
 
 --[[Binds you may want to change.
 	Bind special characters.

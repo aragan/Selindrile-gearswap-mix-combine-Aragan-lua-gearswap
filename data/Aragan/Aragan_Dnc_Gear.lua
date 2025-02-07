@@ -16,7 +16,7 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'Regain', 'DT')
     state.HybridMode:options('Normal', 'PDT')
     state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL')
-	state.IdleMode:options('Normal','PDT', 'DT','Regen', 'HP', 'Evasion', 'Enmity', 'EnemyCritRate')
+	state.IdleMode:options('DT','Normal','PDT','Regen', 'HP', 'Evasion', 'Enmity', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('Evasion', 'PDT', 'DT', 'Enmity', 'HP', 'Regain')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
@@ -613,23 +613,25 @@ function init_gear_sets()
 
     -- Idle sets
 
-    sets.idle = {
-        head={ name="Gleti's Mask", augments={'Path: A',}},
+    sets.idle = {        
+        ammo="Staunch Tathlum +1",
+        head="Null Masque",
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
         hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
         legs={ name="Gleti's Breeches", augments={'Path: A',}},
         feet={ name="Gleti's Boots", augments={'Path: A',}},
-        neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Flume Belt +1",
+        neck="Rep. Plat. Medal",
+        waist="Null Belt",
         left_ear="Infused Earring",
-        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-        right_ring="Paguroidea Ring",
+        right_ear="Infused Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
         back="Moonlight Cape",
     }
     
-    sets.idle.PDT = {        
-        range="Trollbane",  
+    sets.idle.PDT = {            
+         ammo="Staunch Tathlum +1",
+        --range="Trollbane",  
         head={ name="Nyame Helm", augments={'Path: B',}},
         body="Adamantite Armor",
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -678,8 +680,6 @@ function init_gear_sets()
     }
     
     sets.idle.HP = {
-        main={ name="Twashtar", augments={'Path: A',}},
-        sub={ name="Aeneas", augments={'Path: A',}},
         ammo="Eluder's Sachet",
         head={ name="Nyame Helm", augments={'Path: B',}},
         body="Adamantite Armor",
@@ -724,7 +724,7 @@ function init_gear_sets()
         sets.idle.Enmity = set_combine(sets.defense.Enmity, {})
     
 		
-    sets.idle.Sphere = set_combine(sets.idle, {body="Mekosu. Harness"})
+    sets.idle.Sphere = set_combine(sets.idle, {})
     
     -- Defense sets
 
