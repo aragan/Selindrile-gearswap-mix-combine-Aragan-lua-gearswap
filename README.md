@@ -1,14 +1,15 @@
 
-Aragan (Asura) --------------- [Author Primary]
+--                                     Aragan (Asura) --------------- [Author Primary]                                    --
 
-{{{{{{{this lua have all codes}}}}}}}}}
+--                                       {{{{{{{this lua have all codes}}}}}}}}}                                          --
 	---------------------------------------                        ---------------------------------------  
 	--        A T T E N T I O N          --                        --      P L E A S E     R E A D      --
 	---------------------------------------                        ---------------------------------------  
-
+u need my lib file its not work with orginal selindrile lib file i make everythink can display and add hippo feet for auto move
+ 
 Listen carefully, it is unnatural, it is supernatural ,its powerfull , it is advanced and superior to everyone, and they are primitive without it, it is difficult to reach it, it is smooth like water, it is solid like a mountain, it is light like the wind, it is burning like fire.. it was made for a long period of time, it came out of the power of darkness, only the light.. you cannot be defeated, and it is in your hands, the power is with you.
 
-{{{{{{{this lua have all codes}}}}}}}}}
+--                                              {{{{{{{this lua have all codes}}}}}}}}}                                 --
 
 u only change my name in lua and file and add u name to work 
 Aragan_sch_gear  change this name in all and use u name and file and global
@@ -108,6 +109,19 @@ macro
 /con input //roll
 
 -----
+add in my macro for silindrile gearswap all macro job pld brd drk dnc geo rdm cor bst  
+
+aminon ws macro 
+
+/attack on 
+/wait 1 
+/ws "Savage Blade" <bt>
+/wait 2 
+/attack off
+
+u need install my macro rar for silindrile gearswap to have rdy all
+-------------
+
 if u have all jobs for easy have free slot inventory 
 
 add itmizer addon bind 
