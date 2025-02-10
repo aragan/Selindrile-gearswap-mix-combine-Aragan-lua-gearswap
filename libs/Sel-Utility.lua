@@ -1413,29 +1413,29 @@ function check_trust()
 		local party = windower.ffxi.get_party()
 		if party.p5 == nil then
 			local spell_recasts = windower.ffxi.get_spell_recasts()
-		
-			if spell_recasts[979] < spell_latency and not have_trust("Selh'teus") then
-				windower.chat.input('/ma "Selh\'teus" <me>')
+			
+			if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
+				windower.chat.input('/ma "Ygnas" <me>')
 				tickdelay = os.clock() + 4.5
 				return true
-			elseif spell_recasts[1012] < spell_latency and not have_trust("Nashmeira") then
-				windower.chat.input('/ma "Nashmeira II" <me>')
+			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+				windower.chat.input('/ma "Sylvie (UC)" <me>')
 				tickdelay = os.clock() + 4.5
 				return true
-			elseif spell_recasts[1018] < spell_latency and not have_trust("Iroha") then
-				windower.chat.input('/ma "Iroha II" <me>')
+			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
+				windower.chat.input('/ma "Koru-Moru" <me>')
 				tickdelay = os.clock() + 4.5
 				return true
-			elseif spell_recasts[1017] < spell_latency and not have_trust("Arciela") then
-				windower.chat.input('/ma "Arciela II" <me>')
+			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+				windower.chat.input('/ma "Joachim" <me>')
 				tickdelay = os.clock() + 4.5
 				return true
-			elseif spell_recasts[947] < spell_latency and not have_trust("UkaTotlihn") then
-				windower.chat.input('/ma "Uka Totlihn" <me>')
+			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+				windower.chat.input('/ma "Qultada" <me>')
 				tickdelay = os.clock() + 4.5
 				return true
-			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette") then
-				windower.chat.input('/ma "Lilisette II" <me>')
+			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
+				windower.chat.input('/ma "Lilisette" <me>')
 				tickdelay = os.clock() + 4.5
 				return true
 			else

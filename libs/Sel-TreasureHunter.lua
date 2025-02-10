@@ -90,7 +90,7 @@ if player.main_job == 'THF' then
     state.TreasureMode:options('None','Tag','SATA','Fulltime')
     state.TreasureMode:set('Tag')
 else
-    state.TreasureMode:options('None','Tag')
+    state.TreasureMode:options('None','Tag','Fulltime')
 end
 
 -- Tracking vars for TH.
@@ -99,7 +99,9 @@ info.last_player_target_index = 0
 state.th_gear_is_locked = false
 
 -- Required gear set.  Expand this in the job file when defining sets.
-sets.TreasureHunter = {}
+sets.TreasureHunter = { 
+ammo="Per. Lucky Egg", 
+waist="Chaac Belt"}
 
 -- Event registration is done at the bottom of this file.
 
@@ -286,10 +288,7 @@ function on_incoming_chunk_for_th(id, data, modified, injected, blocked)
 			end
             -- 6 == actor defeats target
             -- 20 == target falls to the ground
-            if info.tagged_mobs[target_id] then
-                if _settings.debug_mode then add_to_chat(123,'Mob '..target_id..' died. Removing from tagged mobs table.') end
-                info.tagged_mobs[target_id] = nil
-            end
+
         end
     end
 end
@@ -297,8 +296,7 @@ end
 
 -- Clear out the entire tagged mobs table when zoning.
 function on_zone_change_for_th(new_zone, old_zone)
-    if _settings.debug_mode then add_to_chat(123,'Zoning. Clearing tagged mobs table.') end
-    info.tagged_mobs:clear()
+
 end
 
 
@@ -340,20 +338,7 @@ end
 function cleanup_tagged_mobs()
     -- If it's been more than 3 minutes since an action on or by a tagged mob,
     -- remove them from the tagged mobs list.
-    local current_time = os.time()
-    local remove_mobs = S{}
-    -- Search list and flag old entries.
-    for target_id,action_time in pairs(info.tagged_mobs) do
-        local time_since_last_action = current_time - action_time
-        if time_since_last_action > 180 then
-            remove_mobs:add(target_id)
-            if _settings.debug_mode then add_to_chat(123,'Over 3 minutes since last action on mob '..target_id..'. Removing from tagged mobs list.') end
-        end
-    end
-    -- Clean out mobs flagged for removal.
-    for mob_id,_ in pairs(remove_mobs) do
-        info.tagged_mobs[mob_id] = nil
-    end
+
 end
 
 

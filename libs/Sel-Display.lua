@@ -172,7 +172,6 @@ function update_job_states()
 		ExtraSongsMode = "Songs",
 		AutoStunMode = "Auto Stun",
 		LuzafRing = "Luzaf's Ring",
-		HippoMode = "HippoMode",
 		AutoDefenseMode = "Auto Defense",
 		AutoTrustMode = "Auto Trust",
 		JugMode = "Pet",
@@ -204,7 +203,19 @@ function update_job_states()
 		PetWSGear = "PetWSGear",
 		DanceStance = "DanceStance",
 		Stance = "Stance",
-		PWUnlock = "PWUnlock"
+		PWUnlock = "PWUnlock",
+
+		Crafting = "Crafting",
+		HippoMode = "HippoMode",
+		SrodaBelt = "SrodaBelt",
+		SrodaNecklace = "SrodaNecklace",
+		StormSurge = "StormSurge",
+		Songset = "Songset: "..state.Songset.value.."",
+		Rollset = "Rollset: "..state.Rollset.value.."",
+		Avatars = "Avatars: "..state.Avatars.value.."",
+		NM = "NM",
+		SleepMode = "SleepMode",
+		ShieldMode = "ShieldMode",
     }
 
     stateBox:clear()
@@ -377,6 +388,10 @@ function update_job_states()
 		elseif n == 'Stance' then
 			if state.Stance.value ~= "None" then
 				stateBox:append(string.format("%sStance: %s%s    ", clr.w, clr.h, state.Stance.value))
+			end
+		elseif n == 'RecoverMode' then
+			if state.RecoverMode.value ~= 'Never' then
+				stateBox:append(string.format("%s%s: ${%s}    ", clr.w, labels[n], n))
 			end
 		else
 			if labels[n] then

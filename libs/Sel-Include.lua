@@ -99,7 +99,7 @@ function init_include()
     -- General melee offense/defense modes, allowing for hybrid set builds, as well as idle/resting/weaponskill.
     -- This just defines the vars and sets the descriptions.  List modes with no values automatically
     -- get assigned a 'Normal' default value.
-	state.CraftingMode		  = M{['description'] = 'Crafting Mode','None','Alchemy','Bonecraft','Clothcraft','Cooking','Fishing','Goldsmithing','Leathercraft','Smithing','Woodworking'}
+	state.CraftingMode		  = M{['description'] = 'Crafting Mode','None','Cooking','Fishing','Goldsmithing','Smithing','Woodworking'} --'Leathercraft','Alchemy','Bonecraft','Clothcraft'
 	state.CraftQuality  	  = M{['description'] = 'Crafting Quality','Normal','HQ','NQ'}
 	state.OffenseMode         = M{['description'] = 'Offense Mode'}
 	state.HybridMode          = M{['description'] = 'Hybrid Mode'}
@@ -153,7 +153,8 @@ function init_include()
 	state.SelfWarp2Block 	  = M(false, 'Block Warp2 on Self')
 	state.MiniQueue		 	  = M(true, 'MiniQueue')
 	state.PWUnlock		 	  = M(false, 'PWUnlock')
-	
+	state.AutoEquipBurst      = M(true)
+
 
 	state.AutoBuffMode 		  = M{['description'] = 'Auto Buff Mode','Off','Auto'}
 	state.RuneElement 		  = M{['description'] = 'Rune Element','Ignis','Gelus','Flabra','Tellus','Sulpor','Unda','Lux','Tenebrae'}
@@ -167,6 +168,8 @@ function init_include()
 	state.CombatWeapon        = M{['description']='Combat Weapon', ['string']=''}
 	state.CombatForm          = M{['description']='Combat Form', ['string']=''}
 	
+	
+
 	NotifyBuffs = S{}
 	
 	if data.jobs.mage_jobs:contains(player.main_job) then
