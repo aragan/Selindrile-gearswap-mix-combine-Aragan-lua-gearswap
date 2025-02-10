@@ -88,14 +88,6 @@ function job_setup()
 	state.Buff['Manafont'] = buffactive['Manafont'] or false
 	state.Buff['Manawell'] = buffactive['Manawell'] or false
 
-    elemental_ws = S{"Flash Nova", "Sanguine Blade","Seraph Blade","Burning Blade","Red Lotus Blade"
-    , "Shining Strike", "Aeolian Edge", "Gust Slash", "Cyclone","Energy Steal","Energy Drain"
-    , "Leaden Salute", "Wildfire", "Hot Shot", "Flaming Arrow", "Trueflight", "Blade: Teki", "Blade: To"
-    , "Blade: Chi", "Blade: Ei", "Blade: Yu", "Frostbite", "Freezebite", "Herculean Slash", "Cloudsplitter"
-    , "Primal Rend", "Dark Harvest", "Shadow of Death", "Infernal Scythe", "Thunder Thrust", "Raiden Thrust"
-    , "Tachi: Goten", "Tachi: Kagero", "Tachi: Jinpu", "Tachi: Koki", "Rock Crusher", "Earth Crusher", "Starburst"
-    , "Sunburst", "Omniscience", "Garland of Bliss"}
-
     LowTierNukes = S{'Stone', 'Water', 'Aero', 'Fire', 'Blizzard', 'Thunder',
         'Stone II', 'Water II', 'Aero II', 'Fire II', 'Blizzard II', 'Thunder II',
         'Stonega', 'Waterga', 'Aeroga', 'Firaga', 'Blizzaga', 'Thundaga'}
@@ -108,7 +100,7 @@ function job_setup()
     element_table = L{'Earth','Wind','Ice','Fire','Water','Lightning'}
 	Absorb = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
 
-	state.DeathMode = M{['description'] = 'Death Mode', 'Off', 'Single', 'Lock'}
+	state.DeathMode = M{ 'Off', 'Single', 'LoKIHLKH'}
 	state.AutoManawell = M(true, 'Auto Manawell Mode')
 	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
     state.MagicBurst = M(false, 'Magic Burst')
@@ -303,8 +295,10 @@ function job_aftercast(spell, spellMap, eventArgs)
 			if state.DisplayMode.value then update_job_states()	end
         end
     end
+    if spell.english == "Death" then
+		send_command('@input /p <t> <recast=Death>')
+	end
 end
-
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for non-casting events.
 -------------------------------------------------------------------------------------------------------------------

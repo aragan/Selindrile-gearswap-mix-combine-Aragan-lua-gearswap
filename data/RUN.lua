@@ -67,20 +67,13 @@ function job_setup()
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.HippoMode = M(false, "hippoMode")
 
-    elemental_ws = S{"Flash Nova", "Sanguine Blade","Seraph Blade","Burning Blade","Red Lotus Blade"
-    , "Shining Strike", "Aeolian Edge", "Gust Slash", "Cyclone","Energy Steal","Energy Drain"
-    , "Leaden Salute", "Wildfire", "Hot Shot", "Flaming Arrow", "Trueflight", "Blade: Teki", "Blade: To"
-    , "Blade: Chi", "Blade: Ei", "Blade: Yu", "Frostbite", "Freezebite", "Herculean Slash", "Cloudsplitter"
-    , "Primal Rend", "Dark Harvest", "Shadow of Death", "Infernal Scythe", "Thunder Thrust", "Raiden Thrust"
-    , "Tachi: Goten", "Tachi: Kagero", "Tachi: Jinpu", "Tachi: Koki", "Rock Crusher", "Earth Crusher", "Starburst"
-    , "Sunburst", "Omniscience", "Garland of Bliss"}
 	rayke_duration = 49
     gambit_duration = 96
 	autows = 'Resolution'
 	autofood = 'Miso Ramen'
 	
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","ResistDefenseMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaBelt"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","CastingMode","ResistDefenseMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -555,9 +548,42 @@ buff_spell_lists = {
 		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Combat'},
 		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
 		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
-		{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
+		--{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
 	},
-
+	Tank = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
+		{Name='Cocoon',		Buff='Defense Boost',	SpellID=547,	When='Always'},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
+		--{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+	},
+	Aminon = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
+		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
+		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
+	},
+	Sortie = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
+		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
+		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
+		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
+	},
+	Full = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
+		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
+		{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
+		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
+		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Blink',		Buff='Blink',			SpellID=53,		When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
+	},
 	Default = {
 		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	Reapply=false},
 		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	Reapply=false},

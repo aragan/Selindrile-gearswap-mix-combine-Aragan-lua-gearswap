@@ -113,12 +113,12 @@ function job_setup()
 
 	barStatus = S{'Barpoison','Barparalyze','Barvirus','Barsilence','Barpetrify','Barblind','Baramnesia','Barsleep','Barpoisonra','Barparalyzra','Barvira','Barsilencera','Barpetra','Barblindra','Baramnesra','Barsleepra'}
 
-	autows = 'Mystic Boon'
+	autows = 'Dagan'
 	autofood = 'Miso Ramen'
 	
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Light','Dark','Fire','Ice','Wind','Earth','Lightning','Water',}
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode"},{"AutoBuffMode","Weapons","OffenseMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","BarElement","BarStatus","BoostSpell","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace"},{"AutoBuffMode","Weapons","OffenseMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","BarElement","BarStatus","BoostSpell","TreasureMode",})
 	
 	function handle_smartcure(cmdParams)
 		if cmdParams[2] then

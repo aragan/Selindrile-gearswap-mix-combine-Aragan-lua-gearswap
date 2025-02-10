@@ -151,17 +151,16 @@ function job_setup()
 	-- Whether to use Luzaf's Ring
 	state.LuzafRing = M(true, "Luzaf's Ring")
     -- Whether a warning has been given for low ammo
-	absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-TP'}
 
 	autows = 'Leaden Salute'
     autonuke = 'Absorb-TP'
 	rangedautows = 'Last Stand'
 	autofood = 'Sublime Sushi'
-	ammostock = 198
+	ammostock = 98
 
     define_roll_values()
 	
-	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
+	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","Rollset","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
 end
 
 
@@ -272,9 +271,12 @@ function job_aftercast(spell, spellMap, eventArgs)
 				disable('main')
 			end
 		end
+
         display_roll_info(spell)
 	end
-	
+    if spell.english == 'Bolter\'s Roll' then
+        send_command('@input //roller off')
+    end
 	if state.UseDefaultAmmo.value then
 		equip({ammo=gear.RAbullet})
 	end

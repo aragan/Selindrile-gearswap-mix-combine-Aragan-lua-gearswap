@@ -98,6 +98,7 @@ function job_setup()
 
 	state.Buff.Entrust = buffactive.Entrust or false
 	state.Buff['Blaze of Glory'] = buffactive['Blaze of Glory'] or false
+	state.MagicBurst = M(false, 'Magic Burst')
     state.AutoEquipBurst = M(true)
     state.HippoMode = M(false, "hippoMode")
 
@@ -109,14 +110,14 @@ function job_setup()
    
 	state.indi =  M{['description']='indi', 'Indi Acumen', 'Indi Fury', 'Indi Refresh', 'Indi Haste', 'Indi INT', 'Indi Wilt', 'Indi Precision', 'Indi Languor', 'Indi Torpor', 'Indi Voidance', 'Indi Focus',
     'Indi Fend', 'Indi Fade', 'Indi Barrier','Indi Regen', 'Indi Attunement'}
-    state.Indi2 =  M{['description']='indi2', 'Indi INT', 'Indi Haste', 'Indi Acumen', 'Indi Fury', 'Indi Refresh', 'Indi Wilt', 'Indi Precision', 'Indi Languor', 'Indi Torpor', 'Indi Voidance', 'Indi Focus',
+    state.indi2 =  M{['description']='indi2', 'Indi INT', 'Indi Haste', 'Indi Acumen', 'Indi Fury', 'Indi Refresh', 'Indi Wilt', 'Indi Precision', 'Indi Languor', 'Indi Torpor', 'Indi Voidance', 'Indi Focus',
     'Indi Fend', 'Indi Fade', 'Indi Barrier', 'Indi Attunement'}
     state.geo =  M{['description']='geo', 'Geo Malaise', 'Geo Frailty', 'Geo Wilt', 'Geo Precision', 'Geo Languor', 'Geo Torpor', 'Geo Voidance', 'Geo Focus',
     'Geo Fend', 'Geo Fade', 'Geo Barrier', 'Geo Attunement'}
 
 	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
 
-	autows = 'Realmrazer'
+	--autows = 'Realmrazer'
 	autofood = 'Miso Ramen'
 	autoindi = 'Torpor'
 	autoentrust = 'Fury'
@@ -135,7 +136,7 @@ function job_setup()
     indi_timer = ''
     indi_duration = 180
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode"})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -550,7 +551,7 @@ function job_self_command(commandArgs, eventArgs)
         send_command('@input /ma "'..state.geo.value..'" <st>')
     elseif commandArgs[1]:lower() == 'indi2' then
         send_command('@input /ja "Entrust" <me>')
-        send_command('@@input /ma "'..state.Indi2.value..'" <st>')
+        send_command('@@input /ma "'..state.indi2.value..'" <st>')
     end
 end
 
@@ -671,7 +672,7 @@ function handle_elemental(cmdParams)
 		windower.chat.input('/ma "'..data.elements.elemental_enfeeble_of[state.ElementalMode.value]..'" '..target..'')
 
 	elseif command == 'bardsong' then
-		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' Threnody" '..target..'')
+		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' Threnody II" '..target..'')
 
     else
         add_to_chat(123,'Unrecognized elemental command.')

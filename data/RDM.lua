@@ -96,7 +96,8 @@ function job_setup()
     state.BarElement = M{['description']='BarElement', 'Barfire', 'Barblizzard', 'Baraero', 'Barstone', 'Barthunder', 'Barwater'}
     state.BarStatus = M{['description']='BarStatus', 'Baramnesia', 'Barvirus', 'Barparalyze', 'Barsilence', 'Barpetrify', 'Barpoison', 'Barblind', 'Barsleep'}
     state.GainSpell = M{['description']='GainSpell', 'Gain-STR', 'Gain-INT', 'Gain-AGI', 'Gain-VIT', 'Gain-DEX', 'Gain-MND', 'Gain-CHR'}
-    state.SleepMode = M{['description']='Sleep Mode', 'Normal', 'MaxDuration'}
+    state.SleepMode = M(false, 'MaxDuration')
+
     state.EnspellMode = M(false, 'Enspell Melee Mode')
 	state.NM = M(false, 'NM')
     state.SrodaNecklace = M(false, 'SrodaNecklace')
@@ -119,7 +120,7 @@ function job_setup()
         'Temper', 'Temper II', 'Enfire', 'Enfire II', 'Enblizzard', 'Enblizzard II', 'Enaero', 'Enaero II',
         'Enstone', 'Enstone II', 'Enthunder', 'Enthunder II', 'Enwater', 'Enwater II'}
 
-	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
+	state.RecoverMode = M('Never','35%', '60%', 'Always')
 	
 	autows = "Savage Blade"
 	autofood = 'Tropical Crep'
@@ -127,7 +128,7 @@ function job_setup()
 	autonuke = 'Absorb-TP'
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","NM","SleepMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -177,6 +178,11 @@ function job_precast(spell, spellMap, eventArgs)
             add_to_chat(123, spell.name..' Canceled: Warcry its up [active]')
         end
     end
+	if spell.skill == 'Enhancing Magic' then
+		if not buffactive.Composure then	
+			windower.chat.input('/ja "Composure" <me>')	
+		end
+	end
 end
 
 function job_post_precast(spell, spellMap, eventArgs)
@@ -949,7 +955,39 @@ buff_spell_lists = {
 		{Name='Haste II',		Buff='Haste',		SpellID=511,	When='Engaged'},
 		{Name='Temper II',		Buff='Multi Strikes',SpellID=895,	When='Engaged'},
 	},
+	Default = {
+		{Name='Refresh III',	Buff='Refresh',		SpellID=894,	When='Idle'},
+		{Name='Haste II',		Buff='Haste',		SpellID=511,	When='Idle'},
+		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Idle'},
+		{Name='Shell V',		Buff='Shell',		SpellID=52,		When='Idle'},
+		{Name='Protect V',		Buff='Protect',		SpellID=47,		When='Idle'},
+	},
+
+	MageBuff = {
+		{Name='Refresh III',	Buff='Refresh',			SpellID=894,	When='Idle'},
+		{Name='Haste II',		Buff='Haste',			SpellID=511,	When='Idle'},
+		{Name='Aquaveil',		Buff='Aquaveil',		SpellID=55,		When='Idle'},
+		{Name='Phalanx',		Buff='Phalanx',			SpellID=106,	When='Idle'},
+		{Name='Stoneskin',		Buff='Stoneskin',		SpellID=54,		When='Idle'},
+		{Name='Blink',			Buff='Blink',			SpellID=53,		When='Idle'},
+		{Name='Gain-INT',		Buff='INT Boost',		SpellID=490,	When='Idle'},
+		{Name='Shell V',		Buff='Shell',			SpellID=52,		When='Idle'},
+		{Name='Protect V',		Buff='Protect',			SpellID=47,		When='Idle'},
+	},
 	
+	MeleeBuff = {
+		{Name='Refresh III',	Buff='Refresh',			SpellID=894,	When='Idle'},
+		{Name='Haste II',		Buff='Haste',			SpellID=511,	When='Idle'},
+		{Name='Temper II',		Buff='Multi Strikes',	SpellID=895,	When='Idle'},
+		{Name='Gain-STR',		Buff='STR Boost',		SpellID=486,	When='Idle'},
+		{Name='Phalanx',		Buff='Phalanx',			SpellID=106,	When='Idle'},
+		{Name='Shell V',		Buff='Shell',			SpellID=52,		When='Idle'},
+		{Name='Protect V',		Buff='Protect',			SpellID=47,		When='Idle'},
+		{Name='Shock Spikes',	Buff='Shock Spikes',	SpellID=251,	When='Idle'},
+		{Name='Enthunder',		Buff='Enthunder',		SpellID=104,	When='Idle'},
+		{Name='Barblizzard',	Buff='Barblizzard',		SpellID=61,		When='Idle'},
+		{Name='Barparalyze',	Buff='Barparalyze',		SpellID=74,		When='Idle'},
+	},
 	Default = {
 		{Name='Refresh III',	Buff='Refresh',		SpellID=894,	Reapply=false},
 		{Name='Haste II',		Buff='Haste',		SpellID=511,	Reapply=false},

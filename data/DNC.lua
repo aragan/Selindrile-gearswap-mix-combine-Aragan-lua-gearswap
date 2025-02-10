@@ -116,7 +116,7 @@ function job_setup()
 	state.Buff['Fan Dance'] = buffactive['Fan Dance'] or false
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
 	
-    state.MainStep = M{['description']='Main Step', 'Box Step','Quickstep','Feather Step','Stutter Step'}
+    state.MainStep = M{['description']='Main Step1', 'Box Step','Quickstep','Feather Step','Stutter Step'}
     state.AltStep = M{['description']='Alt Step', 'Feather Step','Quickstep','Stutter Step','Box Step'}
     state.UseAltStep = M(false, 'Use Alt Step')
     state.CurrentStep = M{['description']='Current Step', 'Main', 'Alt'}
