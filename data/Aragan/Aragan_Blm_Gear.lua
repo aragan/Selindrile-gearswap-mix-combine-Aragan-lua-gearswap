@@ -24,7 +24,7 @@ function user_job_setup()
 	-- Options: Override default values
 	state.CastingMode:options('Normal', 'SIRD', 'Spaekona', 'ConserveMP', 'Proc')
 	state.OffenseMode:options('Normal','TP', 'CRIT', 'Locked')
-	state.HybridMode:options('Normal','DT')
+	state.HybridMode:options('DT','Normal')
 	state.PhysicalDefenseMode:options('PDT', 'MDT')
     state.MagicalDefenseMode:options('MDT')
 	state.Enfeebling = M('None', 'Effect')
@@ -35,21 +35,21 @@ function user_job_setup()
 	gear.stp_jse_back = {}
 
 		-- Additional local binds
-	send_command('bind f3 gs c cycle ElementalMode')
+	send_command('bind f4 gs c cycle ElementalMode')
 	send_command('bind !f4 gs c cycleback ElementalMode') --Robbiewobbie's idea
 	send_command('bind ^f11 gs c cycle Enfeebling')
 	send_command('bind !f11 gs c cycle MagicalDefenseMode;gs c set DefenseMode Magical')
 
 	send_command('bind !f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind !f2 gs c cycle RecoverMode')
-	send_command('bind f4 gs c cycle DeathMode')
-	send_command('bind !f4 gs c set DeathMode Single;gs c set MagicBurstMode Single')
+	send_command('bind f3 gs c cycle DeathMode')
+	send_command('bind !f3 gs c set DeathMode Single;gs c set MagicBurstMode Single')
 	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
 
 	--send_command('bind ^` gs c cycle ElementalMode') 
 	--send_command('bind ~^` gs c cycleback ElementalMode') --Robbiewobbie's idea
-	send_command('bind ^q gs c weapons Khatvanga;gs c set CastingMode OccultAcumen')
-	send_command('bind !q gs c weapons Default;gs c reset CastingMode;gs c reset DeathMode;gs c reset MagicBurstMode')
+	send_command('bind ^0 gs c weapons Khatvanga;gs c set CastingMode OccultAcumen')
+	send_command('bind !9 gs c weapons Default;gs c reset CastingMode;gs c reset DeathMode;gs c reset MagicBurstMode')
 	send_command('bind !\\\\ input /ja "Manawell" <me>')
 	send_command('bind !` input /ma "Aspir III" <t>')
 	send_command('bind @` gs c cycle MagicBurstMode')

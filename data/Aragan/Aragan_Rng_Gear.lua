@@ -13,7 +13,7 @@ keyboard binds and chat
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
 	state.OffenseMode:options('Normal','Acc', 'DA', 'STP', 'Ranged')
-	state.HybridMode:options('Normal', 'PDT')
+	state.HybridMode:options( 'PDT','Normal')
 	state.RangedMode:options('Normal', 'Acc', 'DA', 'STP', 'Ranged')
 	state.WeaponskillMode:options('Match', 'PDL', 'SC')
     state.PhysicalDefenseMode:options('PDT', 'Evasion')
@@ -146,7 +146,7 @@ function init_gear_sets()
 		feet="Meg. Jam. +1",
 		waist="Yemaya Belt",
 		right_ring="Crepuscular Ring",
-		back="Tactical Mantle"} --38
+		back="Null Shawl"} --38
 		
 	sets.precast.RA.Flurry = set_combine(sets.precast.RA, {		body="Oshosi Vest +1",
 	feet="Meg. Jam. +1",})
@@ -157,7 +157,7 @@ legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',
 feet="Arcadian Socks +3",
 waist="Yemaya Belt",
 right_ring="Crepuscular Ring",
-back="Tactical Mantle",})
+back="Null Shawl",})
 
 
 	sets.precast.JA.Jump = {
@@ -172,7 +172,7 @@ back="Tactical Mantle",})
 		right_ear="Crep. Earring",
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
-		back="Tactical Mantle",
+		back="Null Shawl",
 	}
 	sets.precast.JA['High Jump'] = set_combine(sets.precast.JA.Jump, {
 		head="Malignance Chapeau",
@@ -186,7 +186,7 @@ back="Tactical Mantle",})
 		right_ear="Crep. Earring",
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
-		back="Tactical Mantle",}) 
+		back="Null Shawl",}) 
 		
 	sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
 
@@ -447,7 +447,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Telos Earring",
 		left_ring="Ilabrat Ring",
 		right_ring="Regal Ring",
-		back="Tactical Mantle",}
+		back="Null Shawl",}
 	
     sets.midcast.RA.Acc = {
         head="Meghanada Visor +2",
@@ -461,7 +461,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Enervating Earring",
 		left_ring="Cacoethic Ring 1+",
 		right_ring="Dingir Ring",
-		back="Tactical Mantle",}
+		back="Null Shawl",}
 		
 		sets.midcast.RA.MAXACC = {
 			head="Malignance Chapeau",
@@ -614,7 +614,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Sherida Earring",
 		left_ring="Petrov Ring",
 		right_ring="Epona's Ring",
-		back="Tactical Mantle",
+		back="Null Shawl",
 	}
 
 
@@ -630,7 +630,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Sherida Earring",
 		left_ring="Petrov Ring",
 		right_ring="Epona's Ring",
-		back="Tactical Mantle",
+		back="Null Shawl",
 	}
 
 
@@ -675,7 +675,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Dedition Earring",
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
-		back="Tactical Mantle",
+		back="Null Shawl",
 	}
 
 
@@ -691,7 +691,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Sherida Earring",
 		left_ring="Petrov Ring",
 		right_ring="Epona's Ring",
-		back="Tactical Mantle",
+		back="Null Shawl",
 	}
 
 	sets.engaged.DW.Acc = set_combine(sets.engaged.Acc,{
@@ -714,7 +714,7 @@ sets.engaged.DW.Ranged = {
 	right_ear="Telos Earring",
 	left_ring="Epona's Ring",
 	right_ring="Petrov Ring",
-	back="Tactical Mantle",
+	back="Null Shawl",
 		}
 sets.engaged.DW.STP = set_combine(sets.engaged, {
 	waist="Reiki Yotai",

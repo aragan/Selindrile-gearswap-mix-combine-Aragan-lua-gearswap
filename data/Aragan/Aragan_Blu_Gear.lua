@@ -38,8 +38,8 @@ bind add any like
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'SubtleBlow', 'CRIT', 'Refresh')--, 'Learning'
-	state.HybridMode:options('Normal','DT')
-    state.WeaponskillMode:options('Match','Normal', 'PDL', 'SC')
+	state.HybridMode:options('DT','Normal')
+    state.WeaponskillMode:options('Match', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT')
     state.IdleMode:options('Normal', 'DT','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
 	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Enmity')
@@ -690,10 +690,18 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		body="Cohort Cloak +1",
 	})
 	sets.midcast['Dark Magic'] = set_combine(sets.midcast['Blue Magic'].MagicAccuracy, {
-		neck="Erra Pendant",
-		left_ear="Regal Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl"
 	})
 
 

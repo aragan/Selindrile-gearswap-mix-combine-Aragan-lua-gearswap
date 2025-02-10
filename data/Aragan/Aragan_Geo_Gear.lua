@@ -508,7 +508,6 @@ function init_gear_sets()
         ear1="Malignance Earring",
         ear2="Regal Earring",
         ring1="Evanescence Ring",
-        ring2="Kishar Ring",
         body="Geo. Tunic +3",
     })
     

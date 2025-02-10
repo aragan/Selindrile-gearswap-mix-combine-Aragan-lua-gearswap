@@ -12,8 +12,8 @@ keyboard binds and chat
 
 function user_job_setup()
 	state.OffenseMode:options('Normal','Acc')
-	state.HybridMode:options('Normal','PDT','PetTank','BothDD')
-	state.WeaponskillMode:options('Match','Normal', 'Acc', 'PDL')
+	state.HybridMode:options('PDT','Normal','PetTank','BothDD')
+	state.WeaponskillMode:options('Match', 'Acc', 'PDL')
 	state.CastingMode:options('Normal')
 	state.IdleMode:options('Normal', 'MDTMaster', 'Turtle', 'MEva')
 	state.RestingMode:options('Normal')

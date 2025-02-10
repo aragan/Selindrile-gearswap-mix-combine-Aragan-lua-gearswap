@@ -38,7 +38,7 @@ function user_job_setup()
     send_command('bind ^f3 gs c cycleback avatars')
     send_command('bind f2 input //gs c avatars')
     send_command('bind ^f2 input /pet "Release" <me>')
-    send_command('bind f7 input //Sublimator')
+    send_command('bind f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
     send_command('bind @f4 input //gs c siphon')
 
     select_default_macro_book()
@@ -118,7 +118,7 @@ function init_gear_sets()
             waist="Acerbic Sash +1",
         })
         
-            sets.precast.FC.Dispelga = set_combine(sets.precast.FC, {main="Daybreak", sub="Ammurapi Shield"})
+        sets.precast.FC.Dispelga = set_combine(sets.precast.FC, {main="Daybreak", sub="Ammurapi Shield"})
 	
     -- Weaponskill sets
     -- Default set for any weaponskill that isn't any more specifically defined
@@ -374,8 +374,7 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     
     sets.midcast.Aspir = sets.midcast.Drain
 		
-    sets.midcast.Stun = set_combine(sets.midcast['Enfeebling Magic'], {
-       })
+    sets.midcast.Stun = set_combine(sets.midcast['Enfeebling Magic'], {})
 		
     sets.midcast.Stun.Resistant = sets.midcast.Stun
 		

@@ -24,14 +24,15 @@ function user_job_setup()
 
 	state.OffenseMode:options('Normal','Acc','CRIT','FullAcc')
 	state.HybridMode:options('Tank','Tank_HP','Normal', 'DT','DTLite')
-	state.WeaponskillMode:options('Match','Normal','ACC','PDL')
+	state.WeaponskillMode:options('Match','ACC','PDL')
 	state.CastingMode:options('SIRD','Normal')
 	state.PhysicalDefenseMode:options('PDT_HP','PDT','PDH', 'HP', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT_HP','MDT','Resist','MEVA')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
 	state.IdleMode:options('Tank','Normal','KiteTank', 'HP','PDH', 'PDT','Evasion', 'Resist','MEVA', 'Regen', 'Enmity') --,'Normal','Sphere'
 	state.Weapons:options('None','Epeolatry','Lycurgos','Naegling','MalignanceSword','Reikiko','Loxotic','Dolichenus','DualWeapons')
-	
+	state.AutoBuffMode:options('Off','Auto','Tank','Aminon','Sortie','Full') --,'Off','Off','Off','Off','Off',
+
 	state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','MP'}
 
 	gear.enmity_jse_back = {name="Ogma's cape",augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Damage taken-5%',}}
@@ -76,12 +77,11 @@ function init_gear_sets()
     sets.weapons.Loxotic = {main="Loxotic Mace +1", sub="Regis"}
     sets.weapons.Dolichenus = {main="Dolichenus", sub="Regis"}
 	sets.weapons.DualWeapons = {main="Firangi",sub="Reikiko"}
-		--sets.weapons.Aettir = {main="Aettir",sub="Utu Grip"}
+	--sets.weapons.Aettir = {main="Aettir",sub="Utu Grip"}
 	--sets.weapons.Lionheart = {main="Lionheart",sub="Utu Grip"}
 
 	-- neck JSE Necks Reinf
 	sets.RP = {}
-	sets.HippoMode = {}
 	
     sets.Enmity = {    ammo="Iron Gobbet",
     head="Halitus Helm",
@@ -632,12 +632,26 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
     sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring"})
     sets.midcast['Elemental Magic'] = set_combine(sets.precast.JA['Lunge'],{})
     sets.midcast.Pet["Enfeebling Magic"] = set_combine(sets.midcast['Elemental Magic'],{})
+
+	sets.midcast['Dark Magic'] = {
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl"}
+
     sets.midcast.Absorb = {
         ammo="Pemphredo Tathlum",
         neck="Erra Pendant",
         waist="Acuity Belt +1",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-        right_ring="Kishar Ring",
     }
 
 	sets.midcast.Raise = sets.midcast.SIRD
@@ -894,7 +908,6 @@ sets.idle.MEVA = {ammo="Yamarang",
 			waist="Engraved Belt",
 		})
 
-
 	sets.defense.PDT_HP = {ammo="Staunch Tathlum +1",
         head="Nyame Helm",neck="Unmoving Collar +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
         body="Runeist Coat +3",hands="Nyame Gauntlets",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
@@ -932,12 +945,12 @@ sets.idle.MEVA = {ammo="Yamarang",
     right_ear="Sherida Earring",
     left_ring="Niqmaddu Ring",
     right_ring="Epona's Ring",
-    back="Tactical Mantle"}
+    back="Null Shawl"}
 
 	sets.engaged.Acc = {ammo="Yamarang",
             head="Dampening Tam",neck="Combatant's Torque",ear1="Cessance Earring",ear2="Sherida Earring",
             body="Ayanmo Corazza +2",hands="Adhemar Wrist. +1",ring1="Niqmaddu Ring",ring2="Ilabrat Ring",
-			back="Tactical Mantle",waist="Grunfeld Rope",legs="Meg. Chausses +2",feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},}
+			back="Null Shawl",waist="Ioskeha Belt +1",legs="Meg. Chausses +2",feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},}
 	
 	
 		sets.engaged.CRIT = set_combine(sets.engaged.DD, {       ammo="Yetshila +1",
@@ -952,26 +965,18 @@ sets.idle.MEVA = {ammo="Yamarang",
 			right_ear="Brutal Earring",
 			left_ring="Niqmaddu Ring",
 			right_ring="Hetairoi Ring",
-			back="Tactical Mantle",
+			back="Null Shawl",
 		})
 	
-	sets.engaged.FullAcc = {ammo="C. Palug Stone",
-            head="Carmine Mask +1",neck="Combatant's Torque",ear1="Telos Earring",ear2="Mache Earring +1",
-            body="Ayanmo Corazza +2",hands="Meg. Gloves +2",ring1="Ramuh Ring +1",ring2="Ramuh Ring +1",
-            back="Tactical Mantle",waist="Olseni Belt",legs="Carmine Cuisses +1",feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},}
-			
+
     sets.engaged.DTLite = {ammo="Aurgelmir Orb +1",
             head="Aya. Zucchetto +2",neck="Loricate Torque +1",ear1="Brutal Earring",ear2="Sherida Earring",
             body="Ayanmo Corazza +2",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Epona's Ring",
-            back="Tactical Mantle",waist="Windbuffet Belt +1",legs="Meg. Chausses +2",feet="Nyame Sollerets"}
+            back="Null Shawl",waist="Windbuffet Belt +1",legs="Meg. Chausses +2",feet="Nyame Sollerets"}
     sets.engaged.Acc.DTLite = {ammo="Yamarang",
             head="Aya. Zucchetto +2",neck="Loricate Torque +1",ear1="Cessance Earring",ear2="Sherida Earring",
             body="Ayanmo Corazza +2",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Ilabrat Ring",
-            back="Tactical Mantle",waist="Windbuffet Belt +1",legs="Meg. Chausses +2",feet="Nyame Sollerets"}
-	sets.engaged.FullAcc.DTLite = {ammo="C. Palug Stone",
-            head="Aya. Zucchetto +2",neck="Loricate Torque +1",ear1="Telos Earring",ear2="Mache Earring +1",
-            body="Ayanmo Corazza +2",hands="Meg. Gloves +2",ring1="Defending Ring",ring2="Ramuh Ring +1",
-            back="Tactical Mantle",waist="Olseni Belt",legs="Meg. Chausses +2",feet="Nyame Sollerets"}
+            back="Null Shawl",waist="Windbuffet Belt +1",legs="Meg. Chausses +2",feet="Nyame Sollerets"}
 
     sets.engaged.Tank = {ammo="Staunch Tathlum +1",
             head="Nyame Helm",

@@ -23,12 +23,12 @@ keyboard binds and chat
 function user_job_setup()
     state.OffenseMode:options('Normal', 'MaxAcc', 'Shield')
     state.CastingMode:options('Duration', 'Normal', 'ConserveMP', 'SIRD', 'Enmity')
-    state.IdleMode:options('Normal','PDT', 'MDT', 'DT', 'HP', 'Evasion', 'MP', 'Refresh', 'Sphere')
+    state.IdleMode:options( 'DT','Normal','PDT', 'MDT', 'HP', 'Evasion', 'MP', 'Refresh', 'Sphere')
 	state.PhysicalDefenseMode:options('PDT','DT','HP', 'Evasion', 'MP')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('None','DualWeapons','MeleeWeapons','Queller','Daybreak')
-	state.WeaponskillMode:options('Normal', 'PDL')
+	state.WeaponskillMode:options('Match', 'PDL')
 
 	gear.obi_cure_waist = "Austerity Belt +1"
 	gear.obi_cure_back = "Alaunus's Cape"
@@ -53,7 +53,7 @@ function user_job_setup()
 	send_command('bind ^\\\\ input /ma "Protectra V" <me>')
 	send_command('bind @\\\\ input /ma "Shellra V" <me>')
 	send_command('bind !\\\\ input /ma "Reraise IV" <me>')
-    send_command('bind !s gs c toggle SrodaNecklace')
+    send_command('bind @s gs c toggle SrodaNecklace')
     send_command('bind f1 gs c cycle HippoMode')
     send_command('bind f2 gs c cycle BoostSpell')
     send_command('bind !f2 gs c BoostSpell')
@@ -998,7 +998,7 @@ function init_gear_sets()
 
     -- Resting sets
 	sets.resting = {     ammo="Homiliary",
-	head="Befouled Crown",
+    head="Null Masque",
 	body="Shamash Robe",
 	hands="Aya. Manopolas +2",
 	legs="Assid. Pants +1",
@@ -1014,7 +1014,7 @@ function init_gear_sets()
 			main="Daybreak",
 			sub="Culminus",
 			ammo="Staunch Tathlum +1",
-			head="Befouled Crown",
+            head="Null Masque",
 			body="Shamash Robe",
 			hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 			legs="Assid. Pants +1",
@@ -1109,7 +1109,7 @@ function init_gear_sets()
     -- Idle sets (default idle set not needed since the other three are defined, but leaving for testing purposes)
     sets.idle = {
         ammo="Homiliary",
-        head="Befouled Crown",
+        head="Null Masque",
         body="Shamash Robe",
         hands={ name="Chironic Gloves", augments={'VIT+4','"Waltz" potency +2%','"Refresh"+2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
         legs="Assid. Pants +1",
@@ -1140,7 +1140,7 @@ function init_gear_sets()
     
     sets.idle.Refresh = {
     ammo="Homiliary",
-    head="Befouled Crown",
+    head="Null Masque",
     body="Shamash Robe",
     hands={ name="Chironic Gloves", augments={'VIT+4','"Waltz" potency +2%','"Refresh"+2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
     legs="Assid. Pants +1",
@@ -1166,7 +1166,7 @@ function init_gear_sets()
     
     sets.idle.Weak = {
     ammo="Homiliary",
-    head="Befouled Crown",
+    head="Null Masque",
     body="Shamash Robe",
     hands={ name="Chironic Gloves", augments={'VIT+4','"Waltz" potency +2%','"Refresh"+2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
     legs="Assid. Pants +1",

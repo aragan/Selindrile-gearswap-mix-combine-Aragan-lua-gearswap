@@ -81,10 +81,10 @@ Scourge (R) > Resolution (MM)
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'STP', 'DA', 'Acc', 'SubtleBlow', 'CRIT')
-    state.WeaponskillMode:options('Normal', 'Acc', 'PDL', 'SC', 'Dread', 'None')
-    state.HybridMode:options('Normal', 'DT', 'DreadSP')
+    state.WeaponskillMode:options('Match', 'Acc', 'PDL', 'SC', 'Dread', 'None')
+    state.HybridMode:options('DT', 'Normal', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
-    state.PhysicalDefenseMode:options( 'PDT', 'HP', 'Enmity','Regain', 'Dread Spikes', 'SEboost', 'Reraise')
+    state.PhysicalDefenseMode:options( 'PDT', 'HP', 'Enmity','Aminon', 'Dread Spikes', 'SEboost', 'Reraise')
     state.MagicalDefenseMode:options('Normal','MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options('Tank','Normal','PDT' ,'Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate', 'Refresh')
@@ -1296,7 +1296,7 @@ sets.defense.SEboost = {
 		right_ring="Archon Ring",
 		back="Moonlight Cape",}
 
-    sets.defense.Regain = {
+    sets.defense.Aminon = {
         ammo="Staunch Tathlum +1",
         head="Ratri Sallet +1",
         body={ name="Sakpata's Plate", augments={'Path: A',}},

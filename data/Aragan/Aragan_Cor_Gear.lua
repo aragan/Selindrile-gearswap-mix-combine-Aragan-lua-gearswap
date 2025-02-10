@@ -29,12 +29,12 @@ macro
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'Ranged', 'CRIT')
-    state.HybridMode:options('Normal', 'PDT')
+    state.HybridMode:options( 'PDT','Normal')
     state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow10','SubtleBlow40')
-    state.WeaponskillMode:options('Match','Normal', 'PDL', 'SC')
+    state.WeaponskillMode:options('Match', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'Resistant')
     state.IdleMode:options('DT','Normal', 'Evasion', 'HP', 'Regen', 'EnemyCritRate')
-    state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP')
+    state.PhysicalDefenseMode:options('PDT','Aminon', 'Evasion', 'HP')
     state.MagicalDefenseMode:options('MDT')
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax','SubtleBlow10','SubtleBlow40'}
 	state.Weapons:options('None','SWORDS','Tauret','Rostam','Kustawi','Ranged')
@@ -74,13 +74,13 @@ function user_job_setup()
 	send_command('bind ^@!\\\\ gs c toggle LuzafRing')
     send_command('bind ^2 gs c toggle LuzafRing')
 	send_command('bind @f7 gs c toggle RngHelper')
-	send_command('bind !f1 gs c toggle RngHelper;gs c toggle RngHelperQuickDraw')
+	send_command('bind @2 gs c toggle RngHelper;gs c toggle RngHelperQuickDraw')
     send_command('bind !a gs c toggle phalanxset') 
 
 	--send_command('bind !r gs c weapons DualSavageWeapons;gs c update')
 	--send_command('bind ^q gs c weapons DualAeolian;gs c update')
 	--send_command('bind !q gs c weapons DualLeadenRanged;gs c update')
-    send_command('bind f1 gs c toggle RngHelper')
+    --send_command('bind f1 gs c toggle RngHelper')
     send_command('bind @pause roller roll')
     send_command('bind f7 gs c cycle Weapongun')
     send_command('bind !f7 gs c cycleback Weapongun')
@@ -96,6 +96,7 @@ function user_job_setup()
     send_command('bind ^z gs c Rollset')--;input //gs c Rollset
     send_command('bind !6 gs c cycle Rollset;awit;input //gs c Rollset')
     send_command('bind f1 gs c cycle Rollset;awit;input //gs c Rollset')
+    send_command('bind !f1 gs c cycleback Rollset;awit;input //gs c Rollset')
 
     --send_command('alias melee input //roller roll1 Chaos Roll;wait .1;input //roller roll2 Samurai Roll')
     --send_command('alias magic input //roller roll1 Wizard\'s Roll;wait .1;input //roller roll2 Caster\'s Roll')
@@ -552,14 +553,13 @@ sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
 sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
-    ammo="Pemphredo Tathlum",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck="Null Loop",
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Digni. Earring",
     right_ear="Crep. Earring",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -611,12 +611,21 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
 
     sets.midcast.Utsusemi = sets.midcast.SpellInterrupt
-    sets.midcast.Absorb = {
-        ammo="Pemphredo Tathlum",
-        neck="Erra Pendant",
+
+	sets.midcast['Dark Magic'] = {
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear="Digni. Earring",
+        right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-        right_ring="Kishar Ring",
-    }
+        right_ring="Stikini Ring +1",
+        back="Null Shawl"}
+    
     -- Ranged gear
     sets.midcast.RA = {  ammo=gear.RAbullet,
     head="Ikenga's Hat",
@@ -850,11 +859,25 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         back="Moonlight Cape",
     }
         
-    sets.defense.MEVA = {ammo=gear.RAbullet,
+    sets.defense.MEVA = {
         head="Nyame Helm",neck="Warder's Charm +1",ear1="Etiolation Earring",ear2="Sanare Earring",
         body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Shadow Ring",
         back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 
+        sets.defense.Aminon = {
+            head="Null Masque",
+            body={ name="Nyame Mail", augments={'Path: B',}},
+            hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+            legs={ name="Nyame Flanchard", augments={'Path: B',}},
+            feet={ name="Nyame Sollerets", augments={'Path: B',}},
+            neck="Rep. Plat. Medal",
+            waist="Carrier's Sash",
+            left_ear="Tuisto Earring",
+            right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+            left_ring="Shadow Ring",
+            right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+            back="Moonlight Cape",
+        }
 
     -- Idle sets
     sets.idle = {
@@ -910,7 +933,6 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         right_ring="Chirich Ring +1",
     })
     sets.idle.EnemyCritRate = set_combine(sets.idle.DT, { 
-        ammo="Eluder's Sachet",
         left_ring="Warden's Ring",
         right_ring="Fortified Ring",
         back="Reiki Cloak",

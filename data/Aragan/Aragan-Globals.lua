@@ -4,6 +4,9 @@
 --	  Aragan (Asura) --------------- [Author Primary]                          -- 
 --                                                                             --
 ---------------------------------------------------------------------------------
+	---------------------------------------                        ---------------------------------------  
+	--        A T T E N T I O N          --                        --      P L E A S E     R E A D      --
+	---------------------------------------                        ---------------------------------------  
 
 --[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
@@ -31,6 +34,10 @@ SC2
 SC3
 /console gs c elemental skillchain3
 -------------
+	---------------------------------------                        ---------------------------------------  
+	--        A T T E N T I O N          --                        --      P L E A S E     R E A D      --
+	---------------------------------------                        ---------------------------------------  
+
 ]]
 
 --Place for settings and custom functions to work across one characters, all jobs.
@@ -63,16 +70,26 @@ state.AutoArts 		  		= M(true, 'AutoArts') 		 --Set this to false if you don't w
 state.AutoLockstyle	 	    = M(true, 'AutoLockstyle Mode') --Set this to false if you don't want gearswap to automatically lockstyle on load and weapon change.
 state.CancelStoneskin 		= M(true, 'Cancel Stone Skin') --Set this to false if you don't want to automatically cancel stoneskin when you're slept.
 state.SkipProcWeapons 		= M(true, 'Skip Proc Weapons') --Set this to false if you want to display weapon sets fulltime rather than just Aby/Voidwatch.
-state.NotifyBuffs	  		= M(false, 'Notify Buffs') 	 --Set this to true if you want to notify your party when you recieve a specific buff/debuff. (List Below)
+state.NotifyBuffs	  		= M(true, 'Notify Buffs') 	 --Set this to true if you want to notify your party when you recieve a specific buff/debuff. (List Below)
 state.UnlockWeapons		  = M(true, 'Unlock Weapons')
 state.CraftingMode		  = M{['description'] = 'Crafting Mode','None','Goldsmithing','Smithing','Cooking','Fishing',}
 state.CraftQuality  	  = M{['description'] = 'Crafting Quality','Normal','HQ','NQ'}
+
+state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
+'haste', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
+state.Rollset = M{['description']='Rollset','None', 'melee', 'magic','dynamis','aminon','exp','tp','speed','acc','ws',
+'pet','petnuke',}
+state.Avatars = M{['description']='Avatars', "Ifrit", "Ramuh", "Titan", "Siren", "Garuda", "Diabolos", "Carbuncle", "Fenrir", "Leviathan", "Shiva", "Odin", "Alexander", "Cait Sith"}
+
 state.WeaponLock = M(false, 'Weapon Lock')
 state.RP = M(false, "Reinforcement Points Mode")
-
 state.StormSurge = M(false, 'Stormsurge')
-
+state.SrodaBelt = M(false, 'SrodaBelt')
+state.SrodaNecklace = M(false, 'SrodaNecklace')
+state.NM = M(false, 'NM')
+state.SleepMode = M{['description']='Sleep Mode', 'Normal', 'MaxDuration'}
 state.Medicine = M(false,'Medicine')
+state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen'} -- , 'Priwen' }
 
 NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
 
@@ -135,9 +152,12 @@ function global_on_load()
 	send_command('bind ^pagedown input //autoitem off') --Turns addon off.
 	send_command('bind ^pageup input //autoitem on') --Turns addon on.
 	send_command('bind ^delete input //aws toggle') --Turns addon autows on odd.
-	--input //lua r AutoWS;input //aws on;
+	send_command('bind !delete input //smrt on;input //smrt') --Turns addon smarttarget on odd.
+	send_command('bind !insert input //smrt off') --Turns addon smarttarget on odd.
 
-	send_command('bind !O input //gs org') 
+	--input //lua r AutoWS;input //aws on;
+	send_command('bind !o input //gs org') 
+	send_command('bind ^w input /wave')
 
 	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
 	
@@ -166,12 +186,12 @@ function global_on_load()
 	send_command('bind ^f3 gs c cycle SkillchainMode')
 	send_command('bind @1 gs c toggle AutoCleanupMode') --Uses certain items and tries to clean up inventory.
 	send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
-	send_command('bind @3 gs c curecheat')
+	send_command('bind @3 gs c cycle RecoverMode')
 	send_command('bind @5 gs c toggle AutoFoodMode')
 	send_command('bind !w gs c toggle WeaponLock')
 	send_command('bind !f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
+	send_command('bind !7 gs c toggle AutoAcceptRaiseMode')
 
-	
 	send_command('bind ^- gs c toggle selectnpctargets')
 	send_command('bind !- gs c cycle pctargetmode')
 	send_command('input //gs org')-- org addon every change job
@@ -258,7 +278,6 @@ send_command('bind !t input /target <bt>') --Targets the battle target.
 send_command('bind ^o fillmode') --Lets you see through walls.
 send_command('bind @m gs c mount Omega')
 
-NotifyBuffs = S{'doom','petrification'}
 
 bayld_items = {'Tlalpoloani','Macoquetza','Camatlatia','Icoyoca','Tlamini','Suijingiri Kanemitsu',
 'Zoquittihuitz','Quauhpilli Helm','Chocaliztli Mask','Xux Hat','Quauhpilli Gloves','Xux Trousers',

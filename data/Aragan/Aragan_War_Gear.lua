@@ -1111,7 +1111,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         right_ear="Telos Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-        back="Tactical Mantle",
+        back="Null Shawl",
     })
 
     sets.engaged.CRIT = set_combine(sets.engaged, {

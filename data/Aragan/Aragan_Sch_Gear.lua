@@ -149,7 +149,7 @@ function user_job_setup()
 
     --use //listbinds    .. to show command keys
     -- Additional local binds
-    send_command('bind f7 gs c toggle AutoSubMode')-- addon name Sublimator
+    send_command('bind f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
     send_command('bind ^` input /ja Immanence <me>')
     send_command('bind !` gs c toggle MagicBurst')
     send_command('bind f11 gs c cycle CastingMode')
@@ -166,7 +166,7 @@ function user_job_setup()
     send_command('bind !; gs c scholar cost')
     send_command('bind f5 gs c cycle HelixMode')
     send_command('bind @r gs c cycle RegenMode')
-    send_command('bind !s gs c toggle StormSurge')
+    send_command('bind @s gs c toggle StormSurge')
     send_command('bind !w gs c toggle WeaponLock')
     send_command('bind ^x gs c toggle RP')  
     send_command('bind ^numpad0 input /Myrkr')

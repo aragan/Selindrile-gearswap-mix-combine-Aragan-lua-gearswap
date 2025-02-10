@@ -24,7 +24,7 @@ function user_job_setup()
     -- Options: Override default values	
 	state.OffenseMode:options('Normal', 'TP', 'Acc', 'STP', 'CRIT')
     state.HybridMode:options('Tank','DDTank','Normal')
-    state.WeaponskillMode:options('Match','Normal', 'PDL', 'Acc','Enmity')
+    state.WeaponskillMode:options('Match', 'PDL', 'Acc','Enmity')
     state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
 	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation')
     state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')

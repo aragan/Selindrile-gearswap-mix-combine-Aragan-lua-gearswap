@@ -28,11 +28,11 @@ its do all ja first then do u  songset
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'Shield', 'CRIT')
-	state.HybridMode:options('Normal','DT')
+	state.HybridMode:options('DT','Normal')
     state.CastingMode:options('Normal','Resistant','AoE')
-	state.PhysicalDefenseMode:options('PDT', 'Evasion','Regain')
+	state.PhysicalDefenseMode:options('PDT', 'Evasion','Aminon')
     state.MagicalDefenseMode:options('MDT')
-    state.WeaponskillMode:options('Normal', 'PDL')
+    state.WeaponskillMode:options('Match', 'PDL')
     state.IdleMode:options('DT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
 	state.Weapons:options('None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan')
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
@@ -610,7 +610,7 @@ sets.precast.WS['Shattersoul'] = {
         right_ring="Stikini Ring +1",
         back="Aurist's Cape +1",
     }
-    sets.midcast['Absorb-TP'] = {
+    sets.midcast['Dark Magic'] = {
     ammo="Pemphredo Tathlum",
     head="Fili Calot +2",
 	body="Fili Hongreline +2",        
@@ -695,7 +695,7 @@ sets.precast.WS['Shattersoul'] = {
         right_ring="Defending Ring",
         back="Moonlight Cape",
     }
-    sets.defense.Regain = {
+    sets.defense.Aminon = {
         head="Null Masque",
         body="Adamantite Armor",
         hands="Regal Gloves",

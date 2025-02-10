@@ -13,14 +13,14 @@ keyboard binds and chat
 
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
-    state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'Regain', 'DT')
-    state.HybridMode:options('Normal', 'PDT')
-    state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL')
+    state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'Aminon', 'DT')
+    state.HybridMode:options( 'PDT','Normal')
+    state.WeaponskillMode:options('Match', 'SC', 'PDL')
 	state.IdleMode:options('DT','Normal','PDT','Regen', 'HP', 'Evasion', 'Enmity', 'EnemyCritRate')
-    state.PhysicalDefenseMode:options('Evasion', 'PDT', 'DT', 'Enmity', 'HP', 'Regain')
+    state.PhysicalDefenseMode:options('Evasion', 'PDT', 'DT', 'Enmity', 'HP', 'Aminon')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('Twashtar','Centovente','Aeneas','Tauret','Swords','Club','H2H','Staff')
+	state.Weapons:options('Twashtar','None','Centovente','Aeneas','Tauret','Swords','Club','H2H','Staff')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Suppa','DWEarrings','DWMax'}
 
 	
@@ -568,7 +568,7 @@ function init_gear_sets()
     
     -- Resting sets
     sets.resting = {
-        head="Meghanada Visor +2",
+    head="Meghanada Visor +2",
     body="Meg. Cuirie +2",
     hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
     legs={ name="Gleti's Breeches", augments={'Path: A',}},
@@ -777,7 +777,7 @@ function init_gear_sets()
         right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
-    sets.defense.Regain = {
+    sets.defense.Aminon = {
         ammo="Staunch Tathlum +1",
         head={ name="Gleti's Mask", augments={'Path: A',}},
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
@@ -927,7 +927,7 @@ sets.engaged.CRIT = {
  left_ring="Chirich Ring +1",
  })
 
- sets.engaged.Regain = {
+ sets.engaged.Aminon = {
     ammo="Staunch Tathlum +1",
     head={ name="Gleti's Mask", augments={'Path: A',}},
     body={ name="Gleti's Cuirass", augments={'Path: A',}},
@@ -1031,7 +1031,7 @@ sets.engaged.DW.CRIT = {
     left_ring="Chirich Ring +1",
  })
 
- sets.engaged.DW.Regain = {
+ sets.engaged.DW.Aminon = {
     ammo="Staunch Tathlum +1",
     head={ name="Gleti's Mask", augments={'Path: A',}},
     body={ name="Gleti's Cuirass", augments={'Path: A',}},
@@ -1070,7 +1070,7 @@ sets.engaged.DW.CRIT = {
     sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
     sets.engaged.SubtleBlow.PDT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid,{ 
     left_ring="Chirich Ring +1",})
-    sets.engaged.Regain.PDT = set_combine(sets.engaged.Regain, sets.engaged.Hybrid,{
+    sets.engaged.Aminon.PDT = set_combine(sets.engaged.Aminon, sets.engaged.Hybrid,{
         neck="Rep. Plat. Medal",
         head={ name="Gleti's Mask", augments={'Path: A',}},
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
@@ -1083,7 +1083,7 @@ sets.engaged.DW.CRIT = {
     sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
     sets.engaged.DW.SubtleBlow.PDT = set_combine(sets.engaged.DW.SubtleBlow, sets.engaged.Hybrid,{ 
     left_ring="Chirich Ring +1",})
-    sets.engaged.DW.Regain.PDT = set_combine(sets.engaged.DW.Regain, sets.engaged.Hybrid,{
+    sets.engaged.DW.Aminon.PDT = set_combine(sets.engaged.DW.Aminon, sets.engaged.Hybrid,{
         neck="Rep. Plat. Medal",
         head={ name="Gleti's Mask", augments={'Path: A',}},
         body={ name="Gleti's Cuirass", augments={'Path: A',}},

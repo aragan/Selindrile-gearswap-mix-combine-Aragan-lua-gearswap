@@ -19,9 +19,9 @@ u can use addon automb
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('None', 'Normal', 'Acc', 'CRIT', 'Enspell', 'SubtleBlow')
-    state.HybridMode:options('Normal','PDT')
-	state.WeaponskillMode:options('Normal', 'PDL', 'SC')
-	state.AutoBuffMode:options('Off','Auto','AutoMelee')
+    state.HybridMode:options('PDT','Normal')
+	state.WeaponskillMode:options('Match', 'PDL', 'SC')
+	state.AutoBuffMode:options('Off','Auto','Default','AutoMelee','MeleeBuff','MageBuff')
 	state.CastingMode:options( 'Duration','Normal', 'Burst', 'SIRD', 'DT')
     state.IdleMode:options('DT','Normal', 'PDT', 'MDT','Regen', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
     state.PhysicalDefenseMode:options('PDT','NukeLock')
@@ -45,6 +45,8 @@ function user_job_setup()
 	send_command('bind f12 gs c cycle CastingMode')
 	send_command('bind f1 gs c cycle HippoMode')
 	send_command('bind @z gs c cycle EnSpell')
+	send_command('bind ^4 gs c cycle EnSpell')
+
     send_command('bind f2 gs c cycle GainSpell')
     send_command('bind f3 gs c cycle BarElement')
     send_command('bind !f4 gs c cycle BarStatus')
@@ -74,11 +76,11 @@ function user_job_setup()
 	send_command('bind ^\\\\ input /ma "Protect V" <t>')
 	send_command('bind @\\\\ input /ma "Shell V" <t>')
 	send_command('bind !\\\\ input /ma "Reraise" <me>')
-	send_command('bind @f10 gs c cycle RecoverMode')
+	send_command('bind @3 gs c cycle RecoverMode')
 	--send_command('bind ^r gs c set skipprocweapons true;gs c reset weaponskillmode;gs c weapons Default;gs c set unlockweapons false')
-	send_command('bind ^q gs c set weapons enspellonly;gs c set unlockweapons true')
+	send_command('bind ^0 gs c set weapons enspellonly;gs c set unlockweapons true')
 	--send_command('bind !r gs c set skipprocweapons true;gs c reset weaponskillmode;gs c set weapons none')
-	send_command('bind !q gs c set skipprocweapons false;gs c set weapons DualProcDaggers;gs c set weaponskillmode proc')
+	send_command('bind !9 gs c set skipprocweapons false;gs c set weapons DualProcDaggers;gs c set weaponskillmode proc')
 	
 
 	select_default_macro_book()
@@ -783,7 +785,6 @@ sets.midcast['Enfeebling Magic'].Potency = {
 		neck="Erra Pendant",
 		waist="Acuity Belt +1",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		right_ring="Kishar Ring",
 	})
 
 	--sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
