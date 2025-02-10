@@ -99,7 +99,8 @@ cycle Roll
     send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
     send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
     send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
-    send_command('bind f1 gs c cycle Rollset;awit;input //gs c Rollset')
+    
+--  send_command('bind f1 gs c cycle Rollset;awit;input //gs c Rollset')
 
 macro
 
