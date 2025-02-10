@@ -129,6 +129,7 @@ if u have all jobs for easy have free slot inventory
 add itmizer addon bind 
 
 send_command('bind ^] input //put storage slip* case all')
+
 send_command('bind ^[ input //get storage slip* all')
 
 //get storage slip* all
