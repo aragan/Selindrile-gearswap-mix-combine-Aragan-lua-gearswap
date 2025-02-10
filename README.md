@@ -121,6 +121,7 @@ aminon ws macro
 
 u need install my macro rar for silindrile gearswap to have rdy all
 https://github.com/aragan/macro-all-jobs/blob/main/1Macro_selindrile%20gearswap%20_all_job_ffxi_-created%20by%20Author%20Aragan.rar
+
 -------------
 
 if u have all jobs for easy have free slot inventory 
