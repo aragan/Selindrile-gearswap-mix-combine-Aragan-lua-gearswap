@@ -18,7 +18,7 @@ u can use addon automb
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('None', 'Normal', 'Acc', 'CRIT', 'Enspell', 'SubtleBlow')
+    state.OffenseMode:options('None', 'Acc','STP', 'CRIT', 'Enspell', 'SubtleBlow')
     state.HybridMode:options('PDT','Normal')
 	state.WeaponskillMode:options('Match', 'PDL', 'SC')
 	state.AutoBuffMode:options('Off','Auto','Default','AutoMelee','MeleeBuff','MageBuff')
@@ -1038,14 +1038,30 @@ sets.engaged.Acc = {
 	hands="Malignance Gloves",
 	legs="Malignance Tights",
 	feet="Malignance Boots",
-	neck="Anu Torque",
-	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    neck="Null Loop",
+    waist="Null Belt",
 	left_ear="Sherida Earring",
 	right_ear="Telos Earring",
 	left_ring="Chirich Ring +1",
 	right_ring="Chirich Ring +1",
-	back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},		}
-	
+    back="Null Shawl",
+}
+	sets.engaged.STP = {
+
+		ammo="Aurgelmir Orb +1",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck="Ainia Collar",
+		waist={ name="Kentarch Belt +1", augments={'Path: A',}},
+		left_ear="Sherida Earring",
+		right_ear="Telos Earring",
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+	}
 sets.engaged.CRIT = {
 	ammo="Coiste Bodhar",
 	head={ name="Blistering Sallet +1", augments={'Path: A',}},

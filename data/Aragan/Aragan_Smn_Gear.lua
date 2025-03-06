@@ -62,7 +62,7 @@ function init_gear_sets()
     sets.TreasureHunter = set_combine(sets.TreasureHunter, {feet=gear.merlinic_treasure_feet})
 	
     -- Precast sets to enhance JAs
-    sets.precast.JA['Astral Flow'] = {head="Glyphic Horn +1"}
+    sets.precast.JA['Astral Flow'] = {head="Glyphic Horn +3"}
     
     sets.precast.JA['Elemental Siphon'] = {
     neck="Incanter's Torque",ear1="Andoaa Earring",
@@ -500,8 +500,8 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     ammo="Sancus Sachet +1",
     head="Beckoner's Horn +2",
     body="Con. Doublet +3",
-    hands={ name="Glyphic Bracers +1", augments={'Inc. Sp. "Blood Pact" magic burst dmg.',}},
-    legs={ name="Glyphic Spats +1", augments={'Increases Sp. "Blood Pact" accuracy',}},
+    hands={ name="Glyphic Bracers +3", augments={'Inc. Sp. "Blood Pact" magic burst dmg.',}},
+    legs={ name="Glyphic Spats +3", augments={'Increases Sp. "Blood Pact" accuracy',}},
     feet="Baayami Sabots",
     neck="Caller's Pendant",
     waist="Fucho-no-Obi",
@@ -514,9 +514,9 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     sets.idle.PDT = {main="Contemplator +1",
     sub="Vox Grip",
     ammo="Sancus Sachet +1",
-    head={ name="Glyphic Horn +1", augments={'Enhances "Astral Flow" effect',}},
+    head={ name="Glyphic Horn +3", augments={'Enhances "Astral Flow" effect',}},
     body={ name="Glyphic Doublet +3", augments={'Reduces Sp. "Blood Pact" MP cost',}},
-    hands={ name="Glyphic Bracers +1", augments={'Inc. Sp. "Blood Pact" magic burst dmg.',}},
+    hands={ name="Glyphic Bracers +3", augments={'Inc. Sp. "Blood Pact" magic burst dmg.',}},
     legs="Assiduity Pants +1",
     feet={ name="Glyph. Pigaches +3", augments={'Inc. Sp. "Blood Pact" magic crit. dmg.',}},
     neck="Caller's Pendant",
@@ -600,9 +600,9 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     main="Contemplator +1",
     sub="Vox Grip",
     ammo="Sancus Sachet +1",
-    head={ name="Glyphic Horn +1", augments={'Enhances "Astral Flow" effect',}},
+    head={ name="Glyphic Horn +3", augments={'Enhances "Astral Flow" effect',}},
     body={ name="Glyphic Doublet +3", augments={'Reduces Sp. "Blood Pact" MP cost',}},
-    hands={ name="Glyphic Bracers +1", augments={'Inc. Sp. "Blood Pact" magic burst dmg.',}},
+    hands={ name="Glyphic Bracers +3", augments={'Inc. Sp. "Blood Pact" magic burst dmg.',}},
     legs="Assiduity Pants +1",
     feet={ name="Glyph. Pigaches +3", augments={'Inc. Sp. "Blood Pact" magic crit. dmg.',}},
     neck="Caller's Pendant",
@@ -742,7 +742,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
     ammo="Sancus Sachet +1",
     head="Tali'ah Turban +2",
     body={ name="Glyphic Doublet +3", augments={'Reduces Sp. "Blood Pact" MP cost',}},
-    hands={ name="Glyphic Bracers +1", augments={'Inc. Sp. "Blood Pact" magic burst dmg.',}},
+    hands={ name="Glyphic Bracers +3", augments={'Inc. Sp. "Blood Pact" magic burst dmg.',}},
     legs="Assid. Pants +1",
     feet={ name="Apogee Pumps +1", augments={'Pet: Attack+25','Pet: "Mag.Atk.Bns."+25','Blood Pact Dmg.+8',}},
     neck="Caller's Pendant",

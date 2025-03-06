@@ -989,14 +989,14 @@ sets.engaged.DT =  {
     hands="Malignance Gloves",
     legs="Malignance Tights",
     feet="Macu. Toe Sh. +2",
-    neck={ name="Etoile Gorget +2", augments={'Path: A',}},
-    waist={ name="Kentarch Belt +1", augments={'Path: A',}},
+    neck="Null Loop",
+    waist="Null Belt",
     left_ear="Telos Earring",
     right_ear="Crep. Earring",
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
-    back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},}
-
+    back="Null Shawl",
+    }
 sets.engaged.DW.STP = {    
     ammo={ name="Coiste Bodhar", augments={'Path: A',}},
     head="Malignance Chapeau",
@@ -1010,7 +1010,7 @@ sets.engaged.DW.STP = {
     right_ear="Balder Earring +1",
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
-    back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    back="Null Shawl",
 }
 sets.engaged.DW.CRIT = {  
     ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -1126,3 +1126,42 @@ end
 
 autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
 ['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
+
+function check_trust()
+	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
+		local party = windower.ffxi.get_party()
+		if party.p5 == nil then
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			
+			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
+				windower.chat.input('/ma "Monberaux" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+				windower.chat.input('/ma "Sylvie (UC)" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
+				windower.chat.input('/ma "Koru-Moru" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+				windower.chat.input('/ma "Joachim" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+				windower.chat.input('/ma "Qultada" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
+				windower.chat.input('/ma "Lilisette" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			else
+				return false
+			end
+		end
+	
+	end
+	return false
+end

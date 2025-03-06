@@ -293,7 +293,7 @@ sets.precast.WS = {
     left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     left_ring="Cornelia's Ring",
     right_ring="Regal Ring",
-    back="Annealed Mantle",
+    back="Null Shawl",
 }
     sets.precast.WS.PDL = {
         ammo="Crepuscular Pebble",
@@ -313,7 +313,7 @@ sets.precast.WS = {
     right_ear="Sherida Earring",
     left_ring="Niqmaddu Ring",
     right_ring="Epona's Ring",
-    back="Annealed Mantle",
+    back="Null Shawl",
 }
     sets.precast.WS['Resolution'].PDL = set_combine(sets.precast.WS['Resolution'], {
         ammo="Crepuscular Pebble",
@@ -332,7 +332,7 @@ sets.precast.WS = {
     right_ear="Sherida Earring",
     left_ring="Niqmaddu Ring",
     right_ring="Regal Ring",
-    back="Annealed Mantle",
+    back="Null Shawl",
 }
     sets.precast.WS['Dimidiation'].PDL = set_combine(sets.precast.WS['Dimidiation'], {
     ammo="Crepuscular Pebble",
@@ -352,7 +352,7 @@ sets.precast.WS = {
     left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     left_ring="Cornelia's Ring",
     right_ring="Regal Ring",
-    back="Annealed Mantle",
+    back="Null Shawl",
 })
     sets.precast.WS['Ground Strike'].PDL = set_combine(sets.precast.WS['Ground Strike'], { 
         ammo="Crepuscular Pebble",
@@ -371,7 +371,7 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
     right_ear="Thrud Earring",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     right_ring="Cornelia's Ring",
-    back="Annealed Mantle",
+    back="Null Shawl",
     })
     sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Savage Blade'], {
         ammo="Crepuscular Pebble",
@@ -998,9 +998,7 @@ sets.idle.MEVA = {ammo="Yamarang",
 			back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 
 	sets.engaged.Acc.Tank = sets.engaged.Tank
-	sets.engaged.FullAcc.Tank = sets.engaged.Tank
 	sets.engaged.Acc.Tank_HP = sets.engaged.Tank_HP
-	sets.engaged.FullAcc.Tank_HP = sets.engaged.Tank_HP
 	
 	    ------------------------------------------------------------------------------------------------
     ---------------------------------------- Hybrid Sets -------------------------------------------
@@ -1023,6 +1021,20 @@ sets.idle.MEVA = {ammo="Yamarang",
     }
    
     sets.engaged.DT = set_combine(sets.engaged, sets.Hybrid)
+    sets.engaged.Acc.DT = set_combine(sets.engaged, {
+		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body="Ashera Harness",
+		hands={ name="Herculean Gloves", augments={'"Triple Atk."+4',}},
+		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+		feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
+        neck="Anu Torque",
+		waist="Ioskeha Belt +1",
+		left_ear="Telos Earring",
+		right_ear="Sherida Earring",
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
+		back="Null Shawl",	})
 
 	--------------------------------------
 	-- Custom buff sets
@@ -1071,37 +1083,40 @@ function select_default_macro_book()
 end
 --Job Specific Trust Overwrite
 function check_trust()
-	if not moving then
-		if state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Elvorseal'] or buffactive['Reive Mark'] or not player.in_combat) then
-			local party = windower.ffxi.get_party()
-			if party.p5 == nil then
-				local spell_recasts = windower.ffxi.get_spell_recasts()
+	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
+		local party = windower.ffxi.get_party()
+		if party.p5 == nil then
+			local spell_recasts = windower.ffxi.get_spell_recasts()
 			
-				if spell_recasts[980] < spell_latency and not have_trust("Yoran-Oran") then
-					windower.send_command('input /ma "Yoran-Oran (UC)" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[952] < spell_latency and not have_trust("Koru-Moru") then
-					windower.send_command('input /ma "Koru-Moru" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[979] < spell_latency and not have_trust("Selh'teus") then
-					windower.send_command('input /ma "Selh\'teus" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
-					windower.send_command('input /ma "Qultada" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[914] < spell_latency and not have_trust("Ulmia") then
-					windower.send_command('input /ma "Ulmia" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				else
-					return false
-				end
+			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
+				windower.chat.input('/ma "Monberaux" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+				windower.chat.input('/ma "Sylvie (UC)" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
+				windower.chat.input('/ma "Koru-Moru" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+				windower.chat.input('/ma "Joachim" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+				windower.chat.input('/ma "Qultada" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
+				windower.chat.input('/ma "Lilisette" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			else
+				return false
 			end
 		end
+	
 	end
 	return false
 end
@@ -1113,3 +1128,7 @@ function user_job_lockstyle()
 		windower.chat.input('/lockstyleset 165')
 	end
 end
+
+
+
+autows_list = {['Naegling']='Savage Blade'}

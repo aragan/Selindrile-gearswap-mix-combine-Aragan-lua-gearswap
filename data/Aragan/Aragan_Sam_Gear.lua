@@ -660,13 +660,11 @@ function init_gear_sets()
 	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	feet={ name="Nyame Sollerets", augments={'Path: B',}},
-        neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
-        waist="Yemaya Belt",
+    neck="Null Loop",
+    waist="Null Belt",
         left_ear="Crep. Earring",
         right_ear="Telos Earring",
-        left_ring="Purity Ring",
-        right_ring="Ilabrat Ring",
-        back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+        back="Null Shawl",
     }
     sets.midcast.RA.Acc = sets.midcast.RA
 
@@ -888,13 +886,13 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
     hands="Wakido Kote +3",
     legs="Kasuga Haidate +2",
     feet="Wakido Sune. +3",
-    neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
-    waist="Ioskeha Belt +1",
+    neck="Null Loop",
+    waist="Ioskeha Belt",
     left_ear={ name="Schere Earring", augments={'Path: A',}},
     right_ear={ name="Kasuga Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+11','Mag. Acc.+11','Weapon skill damage +2%',}},
     left_ring="Regal Ring",
     right_ring="Chirich Ring +1",
-    back={ name="Smertrios's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+    back="Null Shawl",
     }
 
     sets.engaged.SubtleBlow = set_combine(sets.engaged, {        
@@ -967,7 +965,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
         right_ear="Balder Earring +1",
         left_ring="Niqmaddu Ring",
         right_ring="Hetairoi Ring",
-        back="Annealed Mantle",
+        back="Null Shawl",
     }
     
 

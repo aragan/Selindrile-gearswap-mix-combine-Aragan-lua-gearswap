@@ -15,7 +15,7 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'TP', 'ZANISH', 'DOUBLE','CRIT')
 	state.HybridMode:options('Normal','DT')
 	state.RangedMode:options('Normal','Acc')
-    state.WeaponskillMode:options('Normal', 'PDL', 'SC', 'Proc')
+    state.WeaponskillMode:options('Match', 'PDL', 'SC', 'Proc')
     state.CastingMode:options('Normal','SIRD')
     state.IdleMode:options( 'DT','Normal', 'Evasion', 'MDT', 'Regen', 'HP', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP', 'Enmity')
@@ -315,7 +315,7 @@ function init_gear_sets()
     }
     
     sets.precast.WS['Blade: Shun'] = set_combine(sets.precast.WS, sets.Shun)
-    sets.precast.WS['Blade: Shun'].PDL = set_combine(sets.Shun, {
+    sets.precast.WS.PDL['Blade: Shun'] = set_combine(sets.Shun, {
         ammo="Crepuscular Pebble",
         head="Malignance Chapeau",
         hands="Malignance Gloves",
@@ -490,7 +490,6 @@ function init_gear_sets()
     })
     sets.precast.WS['Aeolian Edge'].Proc = {}
     sets.precast.WS['Aeolian Edge'].PDL = set_combine(sets.precast.WS['Aeolian Edge'],{
-
     })
 
     sets.precast.WS['Tachi: Jinpu'] = set_combine(sets.precast.WS['Aeolian Edge'], {
@@ -1144,12 +1143,18 @@ sets.idle.Evasion = {
 
     sets.engaged.Acc = set_combine(sets.engaged, {
         ammo="Yamarang",
-        neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
+        head="Malignance Chapeau",
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+        hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
+        legs="Malignance Tights",
+        feet="Malignance Boots",
+        neck="Null Loop",
+        waist="Null Belt",
         left_ear="Crep. Earring",
-        ear2="Telos Earring",
+        right_ear="Telos Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-        waist="Olseni Belt",
+        back="Null Shawl",
     })
     sets.engaged.TP = {
         ammo="Coiste Bodhar",
@@ -1164,7 +1169,7 @@ sets.idle.Evasion = {
         right_ear="Dedition Earring",
         right_ring="Gere Ring",
         left_ring="Epona's Ring",
-        back="Andartia's Mantle",
+        back="Null Shawl",
     }
     sets.engaged.STP = set_combine(sets.engaged, {
         ammo="Aurgelmir Orb +1",

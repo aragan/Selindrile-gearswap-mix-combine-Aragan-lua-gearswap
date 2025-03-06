@@ -13,67 +13,65 @@ keyboard binds and chat
 --[[
 -- u can too work with addon AutoGEO and Gearinfo for more info on screen
 
+Indi/Geo-Acumen    	Magic Attack Bonus
+Indi/Geo-Attunement 	Magic Evasion
+Indi/Geo-Barrier 	Defense
+Indi/Geo-Fade   	- Down Magic Attack Bonus
+Indi/Geo-Fend   	Magic Defense Bonus
+Indi/Geo-Focus   	Magic Accuracy
+Indi/Geo-Frailty 	- Down Defense
+Indi/Geo-Fury   	Attack & Ranged Attack
+Indi/Geo-Gravity 	Movement Speed
+Indi/Geo-Haste 	    Haste
+Indi/Geo-Languor 	- Down Magic Evasion
+Indi/Geo-Malaise 	- Down Magic Defense Bonus
+Indi/Geo-Paralysis 	Paralysis Proc Rate
+Indi/Geo-Poison 	Poison Damage per Tick
+Indi/Geo-Precision 	Accuracy & Ranged Accuracy
+Indi/Geo-Refresh 	Refresh MP per Tick
+Indi/Geo-Regen 	    Regen HP per Tick
+Indi/Geo-Slip   	- Down Accuracy & Ranged Accuracy
+Indi/Geo-Slow     	Slow
+Indi/Geo-Torpor 	- Down Evasion
+Indi/Geo-Vex    	- Down Magic Accuracy
+Indi/Geo-Voidance 	Evasion
+Indi/Geo-Wilt    	- down enemy Attack & Ranged Attack
+
 Geomancer ALL spells
-Geo Acumen
-Geo AGI
-Geo Attunement
-Geo Barrier
-Geo CHR
-Geo DEX
-Geo Fade
-Geo Fend
-Geo Focus
-Geo Frailty
-Geo Fury
-Geo Gravity
-Geo Haste
-Geo INT
-Geo Languor
-Geo Malaise
-Geo MND
-Geo Paralysis
-Geo Poison
-Geo Precision
-Geo Refresh
-Geo Regen
-Geo Slip
-Geo Slow
-Geo STR
-Geo Torpor
-Geo Vex
-Geo VIT
-Geo Voidance
-Geo Wilt
-Indi Acumen
-Indi AGI
-Indi Attunement
-Indi Barrier
-Indi CHR
-Indi DEX
-Indi Fade
-Indi Fend
-Indi Focus
-Indi Frailty
-Indi Fury
-Indi Gravity
-Indi Haste
-Indi INT
-Indi Languor
-Indi Malaise
-Indi MND
-Indi Paralysis
-Indi Poison
-Indi Precision
-Indi Refresh
-Indi Regen
-Indi Slip
-Indi Slow
-Indi STR
-Indi Torpor
-Indi Vex
-Indi VIT
-Indi Voidance
-Indi Wilt
+
+
+Geo Acumen        Indi Acumen
+Geo Attunement    Indi Attunement
+Geo Barrier       Indi Barrier
+Geo Fade          Indi Fade
+Geo Fend          Indi Fend
+Geo Focus         Indi Focus
+Geo Frailty       Indi Frailty
+Geo Fury          Indi Fury
+Geo Gravity       Indi Gravity
+Geo Haste         Indi Haste
+Geo Languor       Indi Languor
+Geo Malaise       Indi Malaise
+Geo Paralysis     Indi Paralysis
+Geo Poison        Indi Poison
+Geo Precision     Indi Precision
+Geo Refresh       Indi Refresh
+Geo Vex           Indi Vex
+Geo Regen         Indi Regen
+Geo Slip          Indi Slip
+Geo Slow          Indi Slow
+Geo Torpor        Indi Torpor
+Geo Voidance      Indi Voidance
+Geo Wilt          Indi Wilt
+
+Geo STR  Indi STR
+Geo INT  Indi INT
+Geo MND  Indi MND
+Geo AGI  Indi AGI
+Geo CHR  Indi CHR
+Geo DEX  Indi DEX
+Geo VIT  Indi VIT
+
 ]]
 
 function user_job_setup()
@@ -81,11 +79,11 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Melee', 'Shield')
 	state.CastingMode:options('Normal','SIRD', 'ConserveMP')
-    state.IdleMode:options('Normal', 'DT','MDT','HP', 'Regen', 'Refresh', 'Evasion', 'EnemyCritRate','Sphere')
+    state.IdleMode:options('Normal','DT','MDT','HP', 'Regen', 'Refresh', 'Evasion', 'EnemyCritRate','Sphere')
 	state.PhysicalDefenseMode:options('PDT')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('None', 'Idris', 'Maxentius','Bunzi','MalignancePole','Xoanon','TernionDagger')
+	state.Weapons:options('Idris','None', 'Maxentius','Bunzi','MalignancePole','Xoanon','TernionDagger')
 
 	gear.nuke_jse_back = {}
 	gear.idle_jse_back = {}
@@ -146,8 +144,8 @@ function init_gear_sets()
 		sets.Genmei = {sub="Genmei Shield"}
 		sets.Ammurapi = {sub="Ammurapi Shield"}
 
- -- neck JSE Necks Reinforcement Points Mode add u neck here 
- sets.RP = {}
+    -- neck JSE Necks Reinforcement Points Mode add u neck here 
+    sets.RP = {}
 	--------------------------------------
 	-- Precast sets
 	--------------------------------------
@@ -601,7 +599,8 @@ function init_gear_sets()
 	--------------------------------------
 
 	-- Resting sets
-	sets.resting = {        head="Befouled Crown",
+	sets.resting = {        
+    head="Null Masque",
 	body="Shamash Robe",
 	legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
 	neck={ name="Bathy Choker +1", augments={'Path: A',}},
@@ -613,7 +612,7 @@ function init_gear_sets()
 	-- Idle sets
 	sets.idle = {
         range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
-        head="Befouled Crown",
+        head="Null Masque",
         body="Shamash Robe",
         hands={ name="Chironic Gloves", augments={'VIT+4','"Waltz" potency +2%','"Refresh"+2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
         legs="Assid. Pants +1",
@@ -646,13 +645,14 @@ function init_gear_sets()
 
     sets.idle.Regen = set_combine(sets.idle, {
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
         right_ear="Infused Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     })
     sets.idle.Refresh = set_combine(sets.idle, {
         range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
-        head="Befouled Crown",
+        head="Null Masque",
         body="Shamash Robe",
         hands={ name="Chironic Gloves", augments={'VIT+4','"Waltz" potency +2%','"Refresh"+2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
         legs="Assid. Pants +1",
@@ -710,7 +710,23 @@ function init_gear_sets()
 		back="Nantosuelta's Cape",
 		})
 	
-
+        sets.idle.DT.Pet = set_combine(sets.idle, {
+            main="Idris",
+            sub="Genmei Shield",
+            range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
+            head="Azimuth Hood +2",
+            body="Adamantite Armor",
+            hands="Geo. Mitaines +3",
+            legs={ name="Nyame Flanchard", augments={'Path: B',}},
+            feet={ name="Bagua Sandals +3", augments={'Enhances "Radial Arcana" effect',}},
+            neck={ name="Bagua Charm +2", augments={'Path: A',}},
+            waist="Isa Belt",
+            left_ear="Eabani Earring",
+            right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+            left_ring="Stikini Ring +1",
+            right_ring="Defending Ring",
+            back={ name="Nantosuelta's Cape", augments={'MP+60','Mag. Acc+20 /Mag. Dmg.+20','MP+20','Pet: "Regen"+10','Pet: Damage taken -5%',}},
+        })
 
 	-- .Indi sets are for when an Indi-spell is active.
 	sets.idle.Indi = set_combine(sets.idle, {})

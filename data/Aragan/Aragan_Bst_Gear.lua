@@ -387,7 +387,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			right_ear="Sherida Earring",
 			left_ring="Sroda Ring",
 			right_ring="Gere Ring",
-			back="Annealed Mantle",
+			back="Null Shawl",
 		})
 			
 		sets.precast.WS['Ruinator'].Mekira = set_combine(sets.precast.WS['Ruinator'], {head="Gavialis Helm"})
@@ -415,7 +415,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			right_ear="Nukumi Earring",
 			left_ring="Sroda Ring",
 			right_ring="Gere Ring",
-			back="Annealed Mantle",
+			back="Null Shawl",
 		})
 		sets.precast.WS['Decimation'].PDL = set_combine(sets.precast.WS['Decimation'], {
 			ammo="Crepuscular Pebble",
@@ -465,7 +465,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			right_ear="Thrud Earring",
 			left_ring="Sroda Ring",
 			right_ring="Cornelia's Ring",
-			back="Annealed Mantle",
+			back="Null Shawl",
 		})
 	
 		sets.precast.WS['Mistral Axe'] = set_combine(sets.precast.WS['Calamity'], {})
@@ -921,7 +921,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	right_ear="Sherida Earring",
 	left_ring="Gere Ring",
 	right_ring="Epona's Ring",
-	back="Annealed Mantle",}
+	back="Null Shawl",}
 
 	sets.engaged.Acc = {	ammo="Coiste Bodhar",
 	head="Malignance Chapeau",
@@ -935,7 +935,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	right_ear="Sherida Earring",
 	left_ring="Gere Ring",
 	right_ring="Epona's Ring",
-	back="Annealed Mantle",}
+	back="Null Shawl",}
 
 	-- MELEE (SINGLE-WIELD) HYBRID SETS
 	sets.engaged.PDT = set_combine(sets.engaged, {
@@ -969,7 +969,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	right_ear="Sherida Earring",
 	left_ring="Gere Ring",
 	right_ring="Epona's Ring",
-	back="Annealed Mantle",}
+	back="Null Shawl",}
 
 
 	sets.engaged.DW.Acc = {		ammo="Coiste Bodhar",
@@ -984,7 +984,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	right_ear="Sherida Earring",
 	left_ring="Gere Ring",
 	right_ring="Epona's Ring",
-	back="Annealed Mantle",}
+	back="Null Shawl",}
 
 
 	-- MELEE (DUAL-WIELD) HYBRID SETS

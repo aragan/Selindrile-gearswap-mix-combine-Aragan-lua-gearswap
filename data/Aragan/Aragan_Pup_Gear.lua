@@ -920,7 +920,8 @@ range="Trollbane",  }
         right_ear="Balder Earring +1",
         left_ring="Gere Ring",
         right_ring="Niqmaddu Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},    }
+        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},    
+    }
     sets.engaged.Acc = {
         head="Malignance Chapeau",
         body="Malignance Tabard",
@@ -933,7 +934,8 @@ range="Trollbane",  }
         right_ear="Kara. Earring +1",
         left_ring="Gere Ring",
         right_ring="Niqmaddu Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},    }
+        back="Null Shawl",
+    }
     sets.engaged.FullAcc = {
         head="Malignance Chapeau",
         body="Malignance Tabard",
@@ -946,7 +948,7 @@ range="Trollbane",  }
         right_ear="Kara. Earring +1",
         left_ring="Gere Ring",
         right_ring="Niqmaddu Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},   
+        back="Null Shawl",
     }
 	sets.engaged.MaxTP = {
         head={ name="Ryuo Somen +1", augments={'HP+65','"Store TP"+5','"Subtle Blow"+8',}},

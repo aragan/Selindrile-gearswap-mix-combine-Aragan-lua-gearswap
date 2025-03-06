@@ -12,14 +12,14 @@ keyboard binds and chat
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal', 'Acc', 'Fodder', 'SubtleBlow')
+    state.OffenseMode:options('Normal', 'Acc','STP', 'Fodder', 'SubtleBlow')
     state.WeaponskillMode:options('Match','Normal', 'PDL', 'Fodder')
-    state.HybridMode:options('Normal', 'PDT', 'Counter')
+    state.HybridMode:options('PDT', 'Normal','Counter')
     state.PhysicalDefenseMode:options('PDT', 'HP')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options( 'DT','Normal', 'PDT', 'HP', 'Evasion', 'MDT', 'Regen', 'EnemyCritRate')
-	state.Weapons:options('Godhands','Karambit','Club','Staff','ProcStaff','ProcClub','ProcSword','ProcGreatSword','ProcScythe','ProcPolearm','ProcGreatKatana')
+	state.IdleMode:options('DT','Normal', 'PDT', 'HP', 'Evasion', 'MDT', 'Regen', 'EnemyCritRate')
+	state.Weapons:options('None','Godhands','Karambit','Club','Staff','ProcStaff','ProcClub','ProcSword','ProcGreatSword','ProcScythe','ProcPolearm','ProcGreatKatana')
 
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None'}
 
@@ -634,7 +634,7 @@ sets.defense.Evasion = {
         neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
         waist="Moonbow Belt +1",
         left_ear="Sherida Earring",
-        right_ear={ name="Schere Earring", augments={'Path: A',}},
+        right_ear="Mache Earring +1",
         left_ring="Gere Ring",
         right_ring="Epona's Ring",
         back="Segomo's Mantle",
@@ -647,13 +647,13 @@ sets.defense.Evasion = {
         head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         legs="Bhikku Hose +2",
         feet="Anch. Gaiters +3",
-        neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
+        neck="Null Loop",
         waist="Moonbow Belt +1",
         left_ear="Mache Earring +1",
         right_ear="Mache Earring +1",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-        back="Segomo's Mantle",
+        back="Null Shawl",
     }
 
     sets.engaged.Fodder = {
@@ -661,16 +661,33 @@ sets.defense.Evasion = {
         head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         body="Mpaca's Doublet",
         hands="Mpaca's Gloves",
-        legs="Bhikku Hose +2",
+        legs={ name="Mpaca's Hose", augments={'Path: A',}},
         feet="Anch. Gaiters +3",
         neck={ name="Mnk. Nodowa +2", augments={'Path: A',}},
         waist="Moonbow Belt +1",
         left_ear="Sherida Earring",
-        right_ear="Mache Earring +1",
+        right_ear={ name="Schere Earring", augments={'Path: A',}},
         left_ring="Gere Ring",
         right_ring="Niqmaddu Ring",
         back="Segomo's Mantle",
     }
+
+    sets.engaged.STP = {    
+        ammo="Aurgelmir Orb +1",
+        head="Malignance Chapeau",
+        body="Malignance Tabard",
+        hands="Malignance Gloves",
+        legs="Malignance Tights",
+        feet="Malignance Boots",
+        neck="Anu Torque",
+        waist="Moonbow Belt +1",
+        left_ear="Mache Earring +1",
+        right_ear={ name="Schere Earring", augments={'Path: A',}},
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        back="Null Shawl",
+    }
+
     sets.engaged.SubtleBlow = set_combine(sets.engaged, {
         legs={ name="Mpaca's Hose", augments={'Path: A',}},
         waist="Moonbow Belt +1",
@@ -684,14 +701,16 @@ sets.defense.Evasion = {
         head={ name="Mpaca's Cap", augments={'Path: A',}},
         body="Mpaca's Doublet",
         hands="Mpaca's Gloves",
-        legs="Bhikku Hose +2",
+        legs={ name="Mpaca's Hose", augments={'Path: A',}},
         feet="Malignance Boots",
         --right_ring="Defending Ring",
         back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.engaged.PDT = set_combine(sets.engaged, sets.DT)
     sets.engaged.Acc.PDT = set_combine(sets.engaged.Acc, sets.DT)
-    sets.engaged.Fodder.PDT = set_combine(sets.engaged.Fodder, sets.DT)
+    sets.engaged.Fodder.PDT = set_combine(sets.engaged.Fodder, sets.DT,{
+        legs={ name="Mpaca's Hose", augments={'Path: A',}},
+    })
     --sets.engaged.STP.PDT = set_combine(sets.engaged.STP, sets.DT)
     --sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT, sets.Defensive)
     sets.engaged.SubtleBlow.PDT = { 
@@ -786,3 +805,42 @@ function select_default_macro_book()
 	end
 end
 
+
+function check_trust()
+	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
+		local party = windower.ffxi.get_party()
+		if party.p5 == nil then
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			
+			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
+				windower.chat.input('/ma "Monberaux" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+				windower.chat.input('/ma "Sylvie (UC)" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
+				windower.chat.input('/ma "Koru-Moru" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+				windower.chat.input('/ma "Joachim" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+				windower.chat.input('/ma "Qultada" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
+				windower.chat.input('/ma "Lilisette" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			else
+				return false
+			end
+		end
+	
+	end
+	return false
+end

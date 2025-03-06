@@ -5,7 +5,7 @@ function user_job_setup()
     state.HybridMode:options('DT','Normal')
     state.RangedMode:options('Normal', 'Acc')
     state.WeaponskillMode:options('Match','Normal', 'PDL', 'Mod')
-	state.IdleMode:options('Normal','DT','PDT', 'HP', 'Evasion', 'MDT', 'Regen', 'EnemyCritRate')
+	state.IdleMode:options('DT','Normal','PDT', 'HP', 'Evasion', 'MDT', 'Regen', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP','Regain')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
@@ -56,7 +56,7 @@ function init_gear_sets()
 	sets.DWMax = {ear1="Suppanomimi", ear2="Eabani Earring",body="Adhemar Jacket +1",hands="Floral Gauntlets",waist="Reiki Yotai"}
 	sets.Parry = {hands="Turms Mittens +1",ring2="Defending Ring"}
 	sets.Ambush = {} --body="Plunderer's Vest +1"
-    sets.SubtleBlow = {    head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+    sets.SubtleBlow = {head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
     feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
     left_ear="Sherida Earring",
     right_ear="Skulk. Earring +1",
@@ -510,6 +510,11 @@ sets.precast.WS["Empyreal Arrow"] = {
 	sets.midcast.Bio = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 	sets.midcast['Bio II'] = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 
+    sets.Phalanx_Received = {
+		body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
+		hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+		feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+	}
     -- Ranged gear
 
     -- Ranged gear
@@ -526,6 +531,8 @@ sets.precast.WS["Empyreal Arrow"] = {
         right_ear="Crep. Earring",
         left_ring="Dingir Ring",
         right_ring="Cacoethic Ring",
+        back="Null Shawl",
+
     }
 
     sets.midcast.RA.Acc = {
@@ -536,12 +543,14 @@ sets.precast.WS["Empyreal Arrow"] = {
         hands="Malignance Gloves",
         legs="Malignance Tights",
         feet="Malignance Boots",
-        neck="Iskur Gorget",
+        neck="Null Loop",
         waist="Yemaya Belt",
         left_ear="Telos Earring",
         right_ear="Crep. Earring",
         left_ring="Dingir Ring",
         right_ring="Cacoethic Ring",
+        back="Null Shawl",
+
     }
 
 
@@ -551,12 +560,13 @@ sets.precast.WS["Empyreal Arrow"] = {
 
     -- Resting sets
     sets.resting = {
-        head="Meghanada Visor +2",
+        head="Null Masque",
         body="Meg. Cuirie +2",
         hands="Gleti's Gauntlets",
         legs="Gleti's Breeches",
         feet="Meg. Jam. +2",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
         left_ear="Infused Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
@@ -651,20 +661,21 @@ sets.precast.WS["Empyreal Arrow"] = {
 
     sets.idle = {range=empty,
     ammo="Staunch Tathlum +1",
-    head="Gleti's Mask",
-    body="Adamantite Armor",
-    hands="Gleti's Gauntlets",
-    legs="Gleti's Breeches",
-    feet="Gleti's Boots",
-    neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-    waist="Carrier's Sash",
-    left_ear="Tuisto Earring",
-    right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-    right_ring="Defending Ring",
-    left_ring="Moonlight Ring",
+    head={ name="Gleti's Mask", augments={'Path: A',}},
+    body={ name="Gleti's Cuirass", augments={'Path: A',}},
+    hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+    legs={ name="Gleti's Breeches", augments={'Path: A',}},
+    feet={ name="Gleti's Boots", augments={'Path: A',}},
+    neck={ name="Bathy Choker +1", augments={'Path: A',}},
+    waist="Null Belt",
+    right_ear="Infused Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
     back="Moonlight Cape",
     }
     sets.idle.PDT = sets.defense.PDT
+    sets.idle.DT = sets.defense.PDT
+
     sets.idle.HP = {
     ammo="Staunch Tathlum +1",
     head="Nyame Helm",
@@ -691,6 +702,7 @@ sets.precast.WS["Empyreal Arrow"] = {
     })
     sets.idle.Regen = set_combine(sets.idle, {
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
+    waist="Null Belt",
     right_ear="Infused Earring",
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
@@ -733,13 +745,13 @@ sets.precast.WS["Empyreal Arrow"] = {
         hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
         legs="Malignance Tights",
         feet="Malignance Boots",
-        neck="Clotharius Torque",
+        neck="Null Loop",
         waist="Reiki Yotai",
         left_ear="Telos Earring",
         right_ear="Skulk. Earring +1",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-        back="Toutatis's Cape",
+        back="Null Shawl",
     }
         
     sets.engaged.STP = {

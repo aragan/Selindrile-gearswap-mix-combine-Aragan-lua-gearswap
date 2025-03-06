@@ -14,7 +14,7 @@ keyboard binds and chat
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'H2H')
-    state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL','Proc')
+    state.WeaponskillMode:options('Match', 'SC', 'PDL','Proc')
     state.HybridMode:options('Normal', 'PDT')
     state.PhysicalDefenseMode:options('PDT', 'HP','Evasion', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
@@ -236,7 +236,8 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 
 	sets.Self_Healing = {waist="Gishdubar Sash"}
 	sets.Cure_Received = {waist="Gishdubar Sash"}
-				
+    sets.Phalanx_Received = {hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},legs={ name="Sakpata's Cuisses", augments={'Path: A',}},}
+	
 	-- Ranged for xbow
 	sets.precast.RA = {
 		ammo=empty,
@@ -1089,14 +1090,14 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
         legs="Pumm. Cuisses +3",
         feet="Pumm. Calligae +3",
-        neck={ name="War. Beads +2", augments={'Path: A',}},
+        neck="Null Loop",
         waist="Ioskeha Belt +1",
         left_ear="Telos Earring",
         right_ear="Boii Earring +1",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-        back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-     })
+        back="Null Shawl",
+    })
 
     sets.engaged.STP = set_combine(sets.engaged, {
         ammo="Coiste Bodhar",

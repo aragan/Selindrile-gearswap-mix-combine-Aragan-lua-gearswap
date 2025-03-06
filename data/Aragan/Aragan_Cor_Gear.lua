@@ -337,7 +337,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
     left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     left_ring="Ilabrat Ring",
     right_ring="Regal Ring",
-    back="Annealed Mantle",
+    back="Null Shawl"
     }
     sets.precast.WS['Evisceration'].PDL = sets.precast.WS['Evisceration'], {
         body="Ikenga's Vest",
@@ -377,7 +377,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         left_ring="Regal Ring",
         right_ring="Rufescent Ring",
-        back="Annealed Mantle",
+        back="Null Shawl"
 }
 
     sets.precast.WS['Last Stand'] = {
@@ -648,13 +648,13 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     hands="Malignance Gloves",
     legs="Chas. Culottes +3",
     feet="Malignance Boots",
-    neck={ name="Comm. Charm +2", augments={'Path: A',}},
-    waist="Yemaya Belt",
+    neck="Null Loop",
+    waist="Null Belt",
     left_ear="Crep. Earring",
     right_ear="Telos Earring",
     left_ring="Regal Ring",
     right_ring={ name="Cacoethic Ring +1", augments={'Path: A',}},
-    back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    back="Null Shawl",
 }
 sets.midcast.RA.STP = {
     ammo=gear.RAbullet,
@@ -729,13 +729,13 @@ sets.midcast.CorsairShot.Acc = {
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
     feet="Chass. Bottes +2",
-    neck={ name="Comm. Charm +2", augments={'Path: A',}},
-    waist="Skrymir Cord",
+    neck="Null Loop",
+    waist="Null Belt",
     left_ear="Friomisi Earring",
     right_ear="Crematio Earring",
     left_ring="Dingir Ring",
     right_ring="Cornelia's Ring",
-    back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+    back="Null Shawl",
 }
 sets.midcast.CorsairShot.STP = {
     ammo=gear.QDbullet,
@@ -988,13 +988,13 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         hands="Malignance Gloves",
         legs="Malignance Tights",
         feet="Malignance Boots",
-        neck="Iskur Gorget",
-        waist="Kentarch Belt +1",
+        neck="Null Loop",
+        waist="Null Belt",
         left_ear="Cessance Earring",
         right_ear="Telos Earring",
         ring1="Chirich Ring +1",
         ring2="Chirich Ring +1",
-        back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+        back="Null Shawl",
     }
     sets.engaged.CRIT = {
         head={ name="Blistering Sallet +1", augments={'Path: A',}},

@@ -249,10 +249,10 @@ function init_gear_sets()
     hands="Bunzi's Gloves",
     ring1="Hetairoi Ring",
     ring2="Ilabrat Ring",
-    back="Annealed Mantle",
     waist="Fotia Belt",
     legs="Lustr. Subligar +1",
     feet="Lustra. Leggings +1",
+    back="Null Shawl"
     }
     sets.precast.WS['Evisceration'].PDL = set_combine(sets.precast.WS['Evisceration'],{
         body="Bunzi's Robe",
@@ -270,7 +270,7 @@ function init_gear_sets()
     ring1="Hetairoi Ring",
     ring2="Ilabrat Ring",
     waist="Fotia Belt",
-    back="Annealed Mantle",
+    back="Null Shawl"
     }
     sets.precast.WS['Exenterator'].PDL = set_combine(sets.precast.WS['Exenterator'],{
         body="Bunzi's Robe",})
@@ -843,21 +843,21 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
 	neck="Nefarious Collar +1",
 	right_ring="Hetairoi Ring",
 	back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},  
+    })
+    sets.engaged.Acc = set_combine(sets.engaged, {        range="Linos",
+    head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    body="Ashera Harness",
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck="Null Loop",
+    waist="Null Belt",
+    left_ear="Telos Earring",
+    right_ear="Crep. Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+    back="Null Shawl",
   })
-sets.engaged.Acc = set_combine(sets.engaged, {        range="Linos",
-	head={ name="Blistering Sallet +1", augments={'Path: A',}},
-	body="Ashera Harness",
-	hands="Aya. Manopolas +2",
-	legs="Aya. Cosciales +2",
-	feet="Aya. Gambieras +2",
-	neck={ name="Bard's Charm +2", augments={'Path: A',}},
-	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-	left_ear="Telos Earring",
-	right_ear="Cessance Earring",
-	left_ring="Chirich Ring +1",
-	right_ring="Chirich Ring +1",
-	back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-})
 
 
     ---------------------------------------- DW-HASTE ------------------------------------------
@@ -884,16 +884,16 @@ sets.engaged.Acc = set_combine(sets.engaged, {        range="Linos",
     sets.engaged.DW.Acc = set_combine(sets.engaged.Acc ,{
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
         body="Ashera Harness",
-        hands="Aya. Manopolas +2",
-        legs="Aya. Cosciales +2",
-        feet="Aya. Gambieras +2",
-        neck={ name="Bard's Charm +2", augments={'Path: A',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
         waist="Reiki Yotai",
         left_ear="Suppanomimi",
-        right_ear="Cessance Earring",
+        right_ear="Crep. Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-        back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+        back="Null Shawl",
     })
     sets.engaged.DW.CRIT = set_combine(sets.engaged.CRIT, {
     range="Linos",

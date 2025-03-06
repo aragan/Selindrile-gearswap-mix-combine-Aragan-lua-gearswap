@@ -16,11 +16,11 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow')
     state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL')
-    state.HybridMode:options('Normal', 'DT')
+    state.HybridMode:options( 'DT','Normal')
     state.PhysicalDefenseMode:options('PDT', 'HP', 'Reraise', 'Regain')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options('Normal','Regen', 'HP', 'DT', 'MDT', 'Evasion', 'EnemyCritRate')
+	state.IdleMode:options( 'DT','Normal','Regen', 'HP', 'MDT', 'Evasion', 'EnemyCritRate')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Weapons:options('Naegling', 'None', 'Trishula', 'Shining', 'TernionDagger', 'Staff', 'Club', 'DualNaegling', 'DualTernionDagger', 'DualClub')
 	state.Passive = M{['description'] = 'Passive Mode','None','MP','Twilight'}
@@ -523,6 +523,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         legs="Gleti's Breeches",
         feet="Meg. Jam. +2",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
         left_ear="Infused Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
@@ -600,7 +601,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
     sets.defense.Regain = {
         ammo="Staunch Tathlum +1",
-        head={ name="Gleti's Mask", augments={'Path: A',}},
+        head="Null Masque",
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
         hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
         legs={ name="Gleti's Breeches", augments={'Path: A',}},
@@ -624,17 +625,17 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	-- Idle sets
 	sets.idle = {
         ammo="Staunch Tathlum +1",
-        head="Gleti's Mask",
-        body="Adamantite Armor",
-        hands="Gleti's Gauntlets",
-        legs="Nyame Flanchard",
-        feet="Gleti's Boots",
-        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-        waist="Carrier's Sash",
+        head="Null Masque",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+        legs={ name="Gleti's Breeches", augments={'Path: A',}},
+        feet={ name="Gleti's Boots", augments={'Path: A',}},
+        neck="Rep. Plat. Medal",
+        waist="Null Belt",
         left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
         right_ear="Infused Earring",
-        left_ring="Moonlight Ring",
-        right_ring="Defending Ring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
         back="Moonlight Cape",
     }
 
@@ -658,6 +659,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         head="Crepuscular Helm",
         body="Sacro Breastplate",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
         right_ear="Infused Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
@@ -725,14 +727,13 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         hands="Flam. Manopolas +2",
         legs={ name="Ptero. Brais +3", augments={'Enhances "Strafe" effect',}},
         feet="Flam. Gambieras +2",
-        neck="Anu Torque",
+        neck="Null Loop",
         waist="Ioskeha Belt +1",
         left_ear="Cessance Earring",
         right_ear="Telos Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-        back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-    })
+        back="Null Shawl",    })
 
     sets.engaged.STP = set_combine(sets.engaged.Mid, {
         ammo="Coiste Bodhar",
@@ -747,7 +748,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         right_ear="Telos Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-        back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+        back="Null Shawl",
     })
 
     sets.engaged.CRIT = set_combine(sets.engaged, {

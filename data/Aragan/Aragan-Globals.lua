@@ -152,9 +152,16 @@ function global_on_load()
 	send_command('bind ^pagedown input //autoitem off') --Turns addon off.
 	send_command('bind ^pageup input //autoitem on') --Turns addon on.
 	send_command('bind ^delete input //aws toggle') --Turns addon autows on odd.
+	send_command('bind ^insert input //aws reload') --reload addon autows on odd.
+
+	
 	send_command('bind !delete input //smrt on;input //smrt') --Turns addon smarttarget on odd.
 	send_command('bind !insert input //smrt off') --Turns addon smarttarget on odd.
-
+	send_command('bind !pagedown input //autoNukes off') --Turns addon off.addon use for spamm aspir on sortie aminon
+	send_command('bind !pageup input //autoNukes on') --Turns addon on. addon use for spamm aspir on sortie aminon
+	send_command('bind ^4 input //autoNukes on') --Turns addon off.addon use for spamm aspir on sortie aminon
+	send_command('bind ^5 input //autoNukes off') --Turns addon on.addon use for spamm aspir on sortie aminon
+	
 	--input //lua r AutoWS;input //aws on;
 	send_command('bind !o input //gs org') 
 	send_command('bind ^w input /wave')
@@ -227,22 +234,25 @@ function global_unload()
 	send_command('unbind !P')
 	send_command('unbind ^P')
 
-	send_command('lua u AutoCOR')--Turns addon off if job non cor.
 	send_command('lua u Singer')--Turns addon off if job non brd.
 	send_command('lua u PLD-HUD')--Turns addon off if job non pld.
 	send_command('lua u DNC-hud')--Turns addon off if job non dnc.
 	send_command('lua u sch-hud')--Turns addon off if job non sch.
-    send_command('lua u AutoRUN')--Turns addon off if job non /run.
 	send_command('input //parse reset')-- reset parse addon every change job
 
 end
 
+send_command('bind !home lua l trust') --Turns addon trust  on.
+send_command('bind !end lua u trust') --Turns addon trust off.
+
+send_command('bind ^home input //trust start') --Turns addon trust start.
+send_command('bind ^end input //trust stop') --Turns addon trust stop.
 
 send_command('bind home lua l autobuff') --Turns addon  on.
 send_command('bind end lua u autobuff') --Turns addon off.
 
-send_command('bind pageup input //ata on;input //lua load Gaze_check')
-send_command('bind pagedown input //ata off;input //lua unload Gaze_check')
+send_command('bind pageup input //ata on;input //lua load Gaze_check')--Turns addon  auto attack target on. to be killer machine in Odyssey or Dynamis.
+send_command('bind pagedown input //ata off;input //lua unload Gaze_check')--Turns addon  auto attack target off.
 
 send_command('bind !@^f7 gs c toggle AutoWSMode') --Turns auto-ws mode on and off.
 send_command('bind !^f7 gs c toggle AutoFoodMode') --Turns auto-ws mode on and off.
@@ -326,6 +336,35 @@ function user_midcast(spell, action, spellMap, eventArgs)
 	if spell.action_type == 'Magic' and sets.midcast and sets.midcast.FastRecast then
 		equip(sets.midcast.FastRecast)
 	end
+end
+function job_aftercast(spell, spellMap, eventArgs)
+	if pet.isvalid then
+		if (spell.action_type == 'Magic' and player.hpp < Breath_HPP) or spell.english == 'Steady Wing' or spell.english == 'Restoring Breath' then
+			petWillAct = os.clock()
+			equip(sets.HealingBreath)
+			eventArgs.handled = true
+		elseif spell.english == 'Smiting Breath' and sets.SmitingBreath then
+			petWillAct = os.clock()
+			equip(sets.SmitingBreath)
+			eventArgs.handled = true
+		end
+	end
+	if spell.type == 'WeaponSkill' then
+		if spell.english == "Shell Crusher" or spell.english == "Armor Break" then
+			if player.tp == 3000 then  
+				send_command('timers create "Defense Down" 540 down')
+			elseif player.tp < 2999 then  
+				send_command('timers create "Defense Down" 360 down')
+			elseif player.tp < 1999 then  
+				send_command('timers create "Defense Down" 180 down')
+			end
+		end
+	end
+	
+	--[[if spell.english == "Meditate" then
+				send_command('wait 169;gs c -cd '..spell.name..': [Ready In 10 Seconds!];wait 10;gs c -cd '..spell.name..': [Ready !]')
+	 ]]
+
 end
 -- Handle notifications of general user state change.
 function job_state_change(stateField, newValue, oldValue)

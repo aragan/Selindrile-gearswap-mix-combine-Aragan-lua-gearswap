@@ -30,10 +30,11 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
     state.MagicalDefenseMode:options('MDT','MDT_HP','MDT_Reraise')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
-	state.IdleMode:options('Tank','Kiting','PDT','PD','PDH','Block','Evasion','MDT','MEVA','Normal')
-	state.Weapons:options('None','Burtgang','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole')
+	state.IdleMode:options('Tank','Kiting','DT','PDT','PDH','Block','Evasion','MDT','MEVA','Normal')
+	state.Weapons:options('None','Burtgang','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole',
+	'Shining','DualNaegling','DualReikiko','DualReikikoThibron','DualNaeglingThibron')
 	state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen'} -- , 'Priwen' }
-	state.AutoBuffMode:options('Off','Auto','Odyss','Aminon') --,'Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','Odyss','Defense','Aminon') --,'Off','Off','Off','Off','Off',
 
     state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','ReverenceGauntlets', 'Refresh', 'Resist', 'EnemyTPaccumulation','MP','Twilight'}
 	
@@ -102,11 +103,18 @@ function init_gear_sets()
     sets.weapons.Reikiko = {main="Reikiko"}
     sets.weapons.Malevolence = {main="Malevolence"}
 	sets.weapons.Club = {main="Mafic Cudgel"}
-    sets.weapons.Caladbolg = {main="Caladbolg", sub="Utu Grip",}
-    sets.weapons.MalignancePole = {main="Malignance Pole", sub="Utu Grip",}
+    sets.weapons.Caladbolg = {main="Caladbolg", sub="Alber Strap",}
+	sets.weapons.Shining = {main="Shining One", sub="Alber Strap"}
+    sets.weapons.MalignancePole = {main="Malignance Pole", sub="Alber Strap",}
 	sets.weapons.SakpataSword = {main="Sakpata's Sword"}
 
 	
+    sets.weapons.DualReikiko = {main="Reikiko", sub="Demers. Degen +1"}
+    sets.weapons.DualNaegling = {main="Naegling", sub="Demers. Degen +1"}
+
+	sets.weapons.DualReikikoThibron = {main="Reikiko", sub="Thibron"}
+    sets.weapons.DualNaeglingThibron = {main="Naegling", sub="Thibron"}
+
 	sets.Normal = {}
 	sets.Aegis = {sub="Aegis"}
 	sets.Ochain = {sub="Ochain"}
@@ -297,7 +305,7 @@ function init_gear_sets()
     sets.precast.WS.Acc = {
         head="Ynglinga Sallet",neck="Combatant's Torque",ear1="Mache Earring +1",ear2="Telos Earring",
         body="Nyame Mail",hands="Sakpata's Gauntlets",	left_ring="Regal Ring",right_ring="Cornelia's Ring",
-        back="Annealed Mantle",waist="Olseni Belt",legs="Carmine Cuisses +1",feet="Sulev. Leggings +2"}
+        back="Null Shawl",waist="Olseni Belt",legs="Carmine Cuisses +1",feet="Sulev. Leggings +2"}
 	
    -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
 
@@ -315,7 +323,7 @@ function init_gear_sets()
 	right_ear="Cessance Earring",
 	left_ring="Petrov Ring",
 	right_ring="Regal Ring",
-	back="Annealed Mantle",
+	back="Null Shawl",
 	}
 	sets.precast.WS['Requiescat'].PDL = set_combine(sets.precast.WS['Requiescat'], {
 	   hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
@@ -338,7 +346,7 @@ function init_gear_sets()
 	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 	left_ring="Sroda Ring", 
 	right_ring="Cornelia's Ring",
-	back="Annealed Mantle",
+	back="Null Shawl",
 	}
 	sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Savage Blade'], {
 	   ammo="Crepuscular Pebble",
@@ -363,7 +371,7 @@ function init_gear_sets()
 	   right_ear={ name="Lugra Earring +1", augments={'Path: A',}},
 	   left_ring="Regal Ring",
 	   right_ring="Hetairoi Ring",
-	   back="Annealed Mantle",
+	   back="Null Shawl",
 	}
 	sets.precast.WS['Chant du Cygne'].PDL = set_combine(sets.precast.WS['Chant du Cygne'], {
 	   ammo="Crepuscular Pebble",
@@ -417,7 +425,7 @@ function init_gear_sets()
 	   right_ear="Brutal Earring",
 	   left_ring="Rufescent Ring",
 	   right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-	   back="Annealed Mantle",
+	   back="Null Shawl",
 	})
 	sets.precast.WS['Shattersoul'].PDL = set_combine(sets.precast.WS["Requiescat"].PDL, {
 	   ammo="Crepuscular Pebble",
@@ -879,7 +887,7 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 		body="Sakpata's Breastplate",hands="Sakpata's Gauntlets",ring1="Gelatinous Ring +1",ring2="Warden's Ring",
 		back="Moonlight Cape",waist="Flume Belt +1",legs="Sakpata's Cuisses",feet="Sakpata's Leggings"}
 	
-	sets.idle.PD = {    
+	sets.idle.DT = {    
 			main="Burtgang",
 			ammo="Staunch Tathlum +1",
 			head="Chev. Armet +3",
@@ -921,11 +929,20 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 		body="Nyame Mail",hands="Nyame Gauntlets",ring1="Archon Ring",ring2="Shadow Ring",
 		back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 
-	sets.idle.Tank = {ammo="Staunch Tathlum +1",
-		head="Chev. Armet +3",neck="Warder's Charm +1",ear1="Creed Earring",ear2="Thureous Earring",
-		body="Sakpata's Breastplate",hands="Souv. Handsch. +1",ring1="Gelatinous Ring +1",ring2="Shadow Ring",
-		back="Shadow Mantle",waist="Flume Belt +1",legs="Chev. Cuisses +3",feet="Souveran Schuhs +1"}
-		
+	sets.idle.Tank = {    ammo="Staunch Tathlum +1",
+    head="Chev. Armet +3",
+    body={ name="Sakpata's Plate", augments={'Path: A',}},
+    hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+    legs="Chev. Cuisses +3",
+    feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+    neck={ name="Loricate Torque +1", augments={'Path: A',}},
+    waist="Flume Belt +1",
+    left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    right_ear="Chev. Earring +1",
+    left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    right_ring="Moonlight Ring",
+    back="Rudianos's Mantle",
+   }		
 	sets.idle.Kiting = {ammo="Eluder's Sachet",
 		head="Sakpata's Helm",neck="Unmoving Collar +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
 		body="Sakpata's Breastplate",hands="Sakpata's Gauntlets",ring1="Gelatinous Ring +1",ring2="Warden's Ring",
@@ -1258,26 +1275,26 @@ sets.defense.Turtle ={
 	hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 	legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
 	feet={ name="Sakpata's Leggings", augments={'Path: A',}},
-	neck="Lissome Necklace",
+	neck="Null Loop",
 	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 	left_ear="Crep. Earring",
 	right_ear="Telos Earring",
 	left_ring="Chirich Ring +1",
 	right_ring="Chirich Ring +1",
-	back={ name="Weard Mantle", augments={'VIT+1','Enmity+3','Phalanx +5',}},
- }
+	back="Null Shawl",
+}
  --1179 / 1315 avec enlight up
  sets.engaged.TP = { 
 	ammo="Aurgelmir Orb +1",
-	head={ name="Sakpata's Helm", augments={'Path: A',}},
-	body={ name="Sakpata's Plate", augments={'Path: A',}},
+	head="Hjarrandi Helm",
+	body="Hjarrandi Breast.",
 	hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 	legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
 	feet={ name="Sakpata's Leggings", augments={'Path: A',}},
-	neck="Lissome Necklace",
-	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-	left_ear="Cessance Earring",
-	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	neck="Ainia Collar",
+	waist="Tempus Fugit +1",
+	left_ear="Dedition Earring",
+	right_ear="Telos Earring",
 	left_ring="Moonlight Ring",
 	right_ring="Moonlight Ring",
 	back="Null Shawl",
@@ -1287,11 +1304,11 @@ sets.defense.Turtle ={
 	main="Naegling",
 	sub="Blurred Shield +1",
 	ammo="Aurgelmir Orb +1",
-	head="Flam. Zucchetto +2",
-	body="Volte Harness",
-	hands="Flam. Manopolas +2",
-	legs="Flamma Dirs +2",
-	feet="Flam. Gambieras +2",
+	head={ name="Sakpata's Helm", augments={'Path: A',}},
+	body={ name="Sakpata's Plate", augments={'Path: A',}},
+	hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+	legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+	feet={ name="Sakpata's Leggings", augments={'Path: A',}},
 	neck="Lissome Necklace",
 	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 	left_ear="Dedition Earring",
@@ -1314,7 +1331,7 @@ sets.defense.Turtle ={
 	right_ear="Brutal Earring",
 	left_ring="Defending Ring",
 	right_ring="Hetairoi Ring",
-	back="Annealed Mantle",}
+	back="Null Shawl"}
  
 
     sets.engaged.DW = set_combine(sets.engaged, {    
@@ -1441,4 +1458,45 @@ end
 
 autows_list = {['Naegling']='Savage Blade',['Burtgang']='Atonement',['MalignanceSword']='Sanguine Blade',['Reikiko']='Chant du Cygne',
      ['Malevolence']='Aeolian Edge',['Club']='Judgment',['Caladbolg']='Torcleaver',
-	 ['MalignancePole']='Shell Crusher'}
+	 ['MalignancePole']='Shell Crusher',['Shining']='Impulse Drive'}
+
+	 
+
+function check_trust()
+	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
+		local party = windower.ffxi.get_party()
+		if party.p5 == nil then
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			
+			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
+				windower.chat.input('/ma "Monberaux" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+				windower.chat.input('/ma "Sylvie (UC)" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
+				windower.chat.input('/ma "Koru-Moru" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+				windower.chat.input('/ma "Joachim" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+				windower.chat.input('/ma "Qultada" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
+				windower.chat.input('/ma "Lilisette" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			else
+				return false
+			end
+		end
+	
+	end
+	return false
+end

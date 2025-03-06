@@ -272,7 +272,7 @@ back="Null Shawl",})
     right_ear="Odr Earring",
     left_ring="Mummu Ring",
     right_ring="Regal Ring",
-	back="Annealed Mantle",
+	back="Null Shawl",
 }
 	sets.precast.WS["Flaming Arrow"] = sets.precast.WS.Wildfire
 	sets.precast.WS["Hot Shot"] = sets.precast.WS.Wildfire
@@ -334,7 +334,7 @@ back="Null Shawl",})
 			right_ear="Amini Earring +1",
 			left_ring="Mummu Ring",
 			right_ring="Regal Ring",
-			back="Annealed Mantle",
+			back="Null Shawl",
 		}
 
 -- Elemental Weapon Skill --elemental_ws--
@@ -463,7 +463,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ring="Dingir Ring",
 		back="Null Shawl",}
 		
-		sets.midcast.RA.MAXACC = {
+	sets.midcast.RA.MAXACC = {
 			head="Malignance Chapeau",
 			body="Malignance Tabard",
 			hands="Malignance Gloves",
@@ -476,8 +476,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 			left_ring="Cacoethic Ring 1+",
 			right_ring="Crepuscular Ring",
 			back="Belenus's Cape",
-		}
-		sets.midcast.RA.Critical = set_combine(sets.midcast.RA, {
+	}
+	sets.midcast.RA.Critical = set_combine(sets.midcast.RA, {
 			head="Meghanada Visor +2",
 			body="Nisroch Jerkin",
 			hands="Mummu Wrists +2",
@@ -491,17 +491,23 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 			right_ring="Dingir Ring",
 			back="Belenus's Cape",
 	
-		})
+	})
 	
-		sets.midcast.RA.Fomalhaut = set_combine(sets.midcast.RA)
+	sets.midcast.RA.Fomalhaut = set_combine(sets.midcast.RA)
 	
-		sets.midcast.RA.Earp = set_combine(sets.midcast.RA)
-		sets.midcast.RA.Holliday = set_combine(sets.midcast.RA)
+	sets.midcast.RA.Earp = set_combine(sets.midcast.RA)
+	sets.midcast.RA.Holliday = set_combine(sets.midcast.RA)
+
+	sets.midcast.RA.Ullr = set_combine(sets.midcast.RA, {})
+
+	sets.midcast.RA['Hangaku-no-Yumi'] = set_combine(sets.midcast.RA, {})
 	
-		sets.midcast.RA.Ullr = set_combine(sets.midcast.RA, {})
-	
-		sets.midcast.RA['Hangaku-no-Yumi'] = set_combine(sets.midcast.RA, {})
-		
+	sets.Phalanx_Received = {
+		body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
+		hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+		feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+	}
+
 	--These sets will overlay based on accuracy level, regardless of other options.
 	sets.buff.Camouflage = {}
 	sets.buff.Camouflage.Acc = {}
@@ -646,7 +652,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Sherida Earring",
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
-		back="Annealed Mantle",
+		back="Null Shawl",
 	}
 	sets.engaged.CRIT = {	
 		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -660,7 +666,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Eabani Earring",
 		left_ring="Petrov Ring",
 		right_ring="Epona's Ring",
-		back="Annealed Mantle",
+		back="Null Shawl",
 	}
 
 	sets.engaged.STP = {	

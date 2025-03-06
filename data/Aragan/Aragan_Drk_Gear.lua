@@ -823,7 +823,7 @@ sets.precast.WS['Entropy'] = {
     right_ear="Balder Earring +1",
     left_ring="Regal Ring",
     right_ring="Niqmaddu Ring",
-    back="Annealed Mantle",
+    back="Null Shawl",
 } 
 sets.precast.WS['Entropy'].Acc = set_combine(sets.precast.WS['Entropy'], {})
 
@@ -920,7 +920,7 @@ sets.precast.WS['Nightmare Scythe'] = {
     right_ear="Schere Earring",
     left_ring="Niqmaddu Ring",
     right_ring="Regal Ring",
-    back="Annealed Mantle",
+    back="Null Shawl",
 }
   
     sets.precast.WS['Resolution'].Dread  = sets.defense['Dread Spikes']
@@ -1431,7 +1431,7 @@ sets.defense.SEboost = {
 		right_ear="Schere Earring",
 		left_ring="Hetairoi Ring",
 		right_ring="Niqmaddu Ring",
-		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+        back="Null Shawl",
 	})
 	sets.engaged.CRIT = set_combine(sets.engaged, {
 		ammo="Yetshila +1",
@@ -1466,20 +1466,20 @@ sets.defense.SEboost = {
 	})
 		  
 	sets.engaged.Acc = {
-			ammo={ name="Coiste Bodhar", augments={'Path: A',}},
-			head="Sulevia's Mask +2",
-			body="Crepuscular Mail",
-			hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-			legs="Ig. Flanchard +3",
-			feet="Flam. Gambieras +2",
-			neck={ name="Abyssal Beads +2", augments={'Path: A',}},
-			waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-			left_ear="Crep. Earring",
-			right_ear="Telos Earring",
-			left_ring="Chirich Ring +1",
-			right_ring="Chirich Ring +1",
-			back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
+        ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+        head="Heath. Burgeon. +2",
+        body="Crepuscular Mail",
+        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+        legs="Ig. Flanchard +3",
+        feet="Flam. Gambieras +2",
+        neck="Null Loop",
+        waist="Ioskeha Belt +1",
+        left_ear="Crep. Earring",
+        right_ear="Telos Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        back="Null Shawl",
+        }
 	
 	sets.engaged.SubtleBlow = set_combine(sets.engaged, {        
 		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},

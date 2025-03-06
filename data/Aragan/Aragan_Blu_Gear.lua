@@ -41,7 +41,7 @@ function user_job_setup()
 	state.HybridMode:options('DT','Normal')
     state.WeaponskillMode:options('Match', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT')
-    state.IdleMode:options('Normal', 'DT','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
+    state.IdleMode:options('DT','Normal','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
 	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
@@ -138,23 +138,23 @@ function init_gear_sets()
     sets.buff['Chain Affinity'] = {head="Mavi Kavuk +2", feet="Assimilator's Charuqs"}
     sets.buff.Convergence = {head="Luh. Keffiyeh +3"}
     sets.buff.Diffusion = {feet="Luhlaza Charuqs +3"}
-    sets.buff.Enchainment = {body="Luhlaza Jubbah"}
+    sets.buff.Enchainment = {}
     sets.buff.Efflux = {legs="Hashishin Tayt +3",}
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
 
 	sets.HPDown = {head="Pixie Hairpin +1",neck="Loricate Torque +1",ear1="Mendicant's Earring",ear2="Evans Earring",
 		body="Jhakri Robe +2",hands="Jhakri Cuffs +2",ring1="Mephitas's Ring +1",ring2="Mephitas's Ring",
-		back="Swith Cape +1",waist="Flume Belt +1",legs="Jhakri Slops +2",feet="Jhakri Pigaches +2"}
+		back="Moonlight Cape",waist="Flume Belt +1",legs="Jhakri Slops +2",feet="Jhakri Pigaches +2"}
 		
-	sets.HPCure = {main="Bunzi's Rod",sub="Nibiru Cudgel",ammo="Pemphredo Tathlum",
+	sets.HPCure = {ammo="Pemphredo Tathlum",
 		head="Carmine Mask +1",neck="Incanter's Torque",ear1="Etiolation Earring",ear2="Mendi. Earring",
-		body="Vrikodara Jupon",hands="Telchine Gloves",ring1="Janniston Ring",ring2="Menelaus's Ring",
+		body="Jhakri Robe +2",hands="Telchine Gloves",ring1="Mephitas's Ring +1",ring2="Menelaus's Ring",
 		back="Moonlight Cape",waist="Carrier's Sash",legs="Carmine Cuisses +1",feet="Medium's Sabots"}
 
 	-- Precast Sets
 
 	-- Precast sets to enhance JAs
-	sets.precast.JA['Azure Lore'] = {hands="Mirage Bazubands +2"}
+	sets.precast.JA['Azure Lore'] = {}
 
 
 	-- Waltz set (chr and vit)
@@ -168,15 +168,11 @@ function init_gear_sets()
 	-- Don't need any special gear for Healing Waltz.
 	sets.precast.Waltz['Healing Waltz'] = {}
 
-	sets.precast.Step = {ammo="Falcon Eye",
-					head="Carmine Mask +1",neck="Mirage Stole +2",ear1="Regal Earring",ear2="Telos Earring",
-					body="Assim. Jubbah +3",hands="Assim. Bazu. +3",ring1="Ramuh Ring +1",ring2="Ramuh Ring +1",
-					back=gear.da_jse_back,waist="Olseni Belt",legs="Carmine Cuisses +1",feet="Malignance Boots"}
+	sets.precast.Step = {  head="Malignance Chapeau",neck="Mirage Stole +2",ear1="Regal Earring",ear2="Digni. Earring",
+	body="Malignance Tabard",hands="Malignance Gloves",ring1="Stikini Ring +1",ring2="Stikini Ring +1",
+	back="Moonlight Cape",waist="Olseni Belt",legs="Malignance Tights",feet="Malignance Boots"}
 
-	sets.precast.Flourish1 = {ammo="Falcon Eye",
-			       head="Malignance Chapeau",neck="Mirage Stole +2",ear1="Regal Earring",ear2="Digni. Earring",
-                   body="Malignance Tabard",hands="Malignance Gloves",ring1="Stikini Ring +1",ring2="Stikini Ring +1",
-			       back="Cornflower Cape",waist="Olseni Belt",legs="Malignance Tights",feet="Malignance Boots"}
+	sets.precast.Flourish1 = 	sets.precast.Step
 
 	-- Fast cast sets for spells
 
@@ -267,8 +263,9 @@ right_ear="Brutal Earring",
 left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 right_ring="Rufescent Ring",
-back="Annealed Mantle",
+back="Null Shawl"
 })
+
 sets.precast.WS['Requiescat'].PDL = set_combine(sets.precast.WS, {
     ammo="Crepuscular Pebble",
     body="Gleti's Cuirass",
@@ -944,13 +941,14 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.NightIdle = {}
 
 	-- Gear for learning spells: +skill and AF hands.
-	sets.Learning = {hands="Assim. Bazu. +1"}
+	sets.Learning = {    hands="Malignance Gloves",}
 
 	-- Resting sets
 	sets.resting = {
-		head="Rawhide Mask",
+		head="Null Masque",
 		body="Shamash Robe",
 		neck={ name="Bathy Choker +1", augments={'Path: A',}},
+		waist="Null Belt",
 		left_ear="Infused Earring",
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",}
@@ -968,13 +966,13 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 -- Idle sets
 sets.idle = {     
     ammo="Staunch Tathlum +1",
-    head={ name="Rawhide Mask", augments={'HP+50','Accuracy+15','Evasion+20',}},
+    head="Null Masque",
     body="Shamash Robe",
     hands="Malignance Gloves",
     legs="Malignance Tights",
     feet="Malignance Boots",
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
-    waist="Carrier's Sash",
+    back="Null Shawl",
     left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
     right_ear="Infused Earring",
     left_ring="Stikini Ring +1",
@@ -983,8 +981,6 @@ sets.idle = {
 }
 
 sets.idle.Evasion = {
-    main="Naegling",
-    sub="Sakpata's Sword",
     ammo="Amar Cluster",
     head="Malignance Chapeau",
     body="Malignance Tabard",
@@ -1038,6 +1034,7 @@ sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, {
 })
 sets.idle.Regen = set_combine(sets.idle, {
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
+	waist="Null Belt",
     right_ear="Infused Earring",
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
@@ -1197,15 +1194,15 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 		head="Malignance Chapeau",
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
-		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck={ name="Mirage Stole +2", augments={'Path: A',}},
-		waist="Olseni Belt",
+		neck="Null Loop",
+		waist="Null Belt",
 		left_ear="Crep. Earring",
 		right_ear="Telos Earring",
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
-		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+		back="Null Shawl",
 	}
 	sets.engaged.STP = set_combine(sets.engaged, {
 		ammo="Aurgelmir Orb +1",
@@ -1213,8 +1210,8 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
 		waist="Gerdr Belt",
-		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-		})
+		back="Null Shawl",
+	})
 	
 	sets.engaged.CRIT = {
 		ammo="Coiste Bodhar",
@@ -1246,7 +1243,7 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 		ammo="Mavi Tathlum",
 		head="Luh. Keffiyeh +3",
 		body="Assim. Jubbah +3",
-		hands="Assim. Bazu. +2",
+		hands="Malignance Gloves", --5/5
 		legs="Hashishin Tayt +3",
 		feet="Luhlaza Charuqs +3",
 		neck={ name="Mirage Stole +2", augments={'Path: A',}},
@@ -1295,7 +1292,7 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 		hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck={ name="Mirage Stole +2", augments={'Path: A',}},
+		neck="Null Loop",
 		left_ear="Suppanomimi",
 		right_ear="Telos Earring",
 		left_ring="Chirich Ring +1",
@@ -1341,7 +1338,7 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 	sets.engaged.DW.Learning =  set_combine(sets.engaged.DW, sets.Learning, {
 		head="Luh. Keffiyeh +3",
 		body="Assim. Jubbah +3",
-		hands="Assim. Bazu. +2",
+		hands="Malignance Gloves", --5/5
 		legs="Hashishin Tayt +3",
 		feet="Luhlaza Charuqs +3",
 		neck={ name="Mirage Stole +2", augments={'Path: A',}},
@@ -1378,7 +1375,7 @@ sets.engaged.Learning.DT = set_combine(sets.engaged.Learning, sets.engaged.Hybri
     ammo="Staunch Tathlum +1",
     head={ name="Luh. Keffiyeh +3", augments={'Enhances "Convergence" effect',}},
     body="Assim. Jubbah +3",
-    hands="Assim. Bazu. +2",
+    hands="Malignance Gloves", --5/5
     legs="Hashishin Tayt +3",
     feet={ name="Luhlaza Charuqs +3", augments={'Enhances "Diffusion" effect',}},
     neck={ name="Mirage Stole +2", augments={'Path: A',}},
