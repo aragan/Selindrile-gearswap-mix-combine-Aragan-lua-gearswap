@@ -95,7 +95,7 @@ function job_setup()
 
 	absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
 
-	autows = 'Stardiver'
+	autows = 'Savage Blade'
 	autofood = 'Soy Ramen'
 
 	Breath_HPP = 60
@@ -196,6 +196,31 @@ function job_aftercast(spell, spellMap, eventArgs)
 			eventArgs.handled = true
 		end
 	end
+	--Countdowns--
+	if not spell.interrupted then
+		if spell.english == "Angon" then
+			send_command('timers create "Angon Defense Down" 90 down')
+		end
+	end
+			--[[if spell.english == "Meditate" then
+				send_command('wait 169;gs c -cd '..spell.name..': [Ready In 10 Seconds!];wait 10;gs c -cd '..spell.name..': [Ready !]')
+			elseif spell.english == "Sekkanoki" then
+				send_command('wait 289;gs c -cd '..spell.name..': [Ready In 10 Seconds!];wait 10;gs c -cd '..spell.name..': [Ready !]')
+			elseif spell.english == "Jump" then
+				send_command('wait 49;gs c -cd '..spell.name..': [Ready!]')
+			elseif spell.english == "High Jump" then
+				send_command('wait 100;gs c -cd '..spell.name..': [Ready!!]')
+			elseif spell.english == "Spirit Jump" then
+				send_command('wait 49;gs c -cd '..spell.name..': [Ready!]')
+			elseif spell.english == "Soul Jump" then
+				send_command('wait 100;gs c -cd '..spell.name..': [Ready!!]')
+			elseif spell.english == "Angon" then
+				send_command('timers create "Angon Defense Down" 90 down')
+			elseif spell.type == "WeaponSkill" then
+				SkillchainPending = true
+				SkillchainTimer = os.time()    -- sets SkillchainTimer variable to the current time of the operating system (in seconds)
+			end ]]
+		
 end
 
 function job_buff_change(buff, gain)
@@ -376,3 +401,11 @@ function find_breath_hpp()
 		end
 	end
 end
+
+windower.register_event('hpp change', -- code add from Aragan Asura
+function(new_hpp,old_hpp)
+    if new_hpp < 5 then
+        equip(sets.Reraise)
+    end
+end
+)

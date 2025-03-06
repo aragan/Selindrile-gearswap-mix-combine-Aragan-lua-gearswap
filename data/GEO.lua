@@ -83,7 +83,6 @@ function get_sets()
         "Shinobi-Tabi",
         "Shihei",
         "Remedy",
-        "Wh. Rarab Cap +1",
         "Emporox's Ring",
         "Red Curry Bun",
         "Instant Reraise",
@@ -115,9 +114,11 @@ function job_setup()
     state.geo =  M{['description']='geo', 'Geo Malaise', 'Geo Frailty', 'Geo Wilt', 'Geo Precision', 'Geo Languor', 'Geo Torpor', 'Geo Voidance', 'Geo Focus',
     'Geo Fend', 'Geo Fade', 'Geo Barrier', 'Geo Attunement'}
 
-	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
+	state.RecoverMode = M('Never','35%', '60%', 'Always')
 
-	--autows = 'Realmrazer'
+	autonuke = 'Absorb-TP'
+
+	autows = 'Judgement'
 	autofood = 'Miso Ramen'
 	autoindi = 'Torpor'
 	autoentrust = 'Fury'

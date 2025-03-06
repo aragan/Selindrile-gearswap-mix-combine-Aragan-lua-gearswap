@@ -69,7 +69,7 @@ function job_setup()
 
 	rayke_duration = 49
     gambit_duration = 96
-	autows = 'Resolution'
+	--autows = 'Resolution'
 	autofood = 'Miso Ramen'
 	
 	update_melee_groups()

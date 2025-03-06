@@ -841,6 +841,11 @@ buff_spell_lists = {
 		{Name='Stoneskin',Buff='Stoneskin',SpellID=54,When='Always'},
 		{Name='Aquaveil',Buff='Aquaveil',SpellID=55,When='Always'},
 	},
+	Defense = {	
+		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
+		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
+		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
+	},
 	Default = {
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,Reapply=false},
 		--{Name='Reprisal',Buff='Reprisal',SpellID=97,Reapply=false},

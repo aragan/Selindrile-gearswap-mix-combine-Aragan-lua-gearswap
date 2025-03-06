@@ -226,11 +226,23 @@ end
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 
 function job_filtered_action(spell, eventArgs)
-
+	if spell.skill == 'Healing Magic' then
+        if state.CastingMode.value == 'DT' then
+            equip()
+        end
+    end
 end
 
 function job_pretarget(spell, spellMap, eventArgs)
 
+end
+
+function job_filter_precast(spell, spellMap, eventArgs)
+	if spell.skill == 'Healing Magic' then
+        if state.CastingMode.value == 'DT' then
+            equip()
+        end
+    end
 end
 
 function job_precast(spell, spellMap, eventArgs)
@@ -256,6 +268,11 @@ function job_precast(spell, spellMap, eventArgs)
 	if state.CastingMode.value == 'Proc' then
 		classes.CustomClass = 'Proc'
 	end
+	if spell.skill == 'Healing Magic' then
+        if state.CastingMode.value == 'DT' then
+            equip()
+        end
+    end
 end
 
 function job_post_precast(spell, spellMap, eventArgs)
@@ -269,6 +286,11 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 	end
+	if spell.skill == 'Healing Magic' then
+        if state.CastingMode.value == 'DT' then
+            equip()
+        end
+    end
 end
 
 function job_post_midcast(spell, spellMap, eventArgs)
@@ -318,6 +340,7 @@ function job_post_midcast(spell, spellMap, eventArgs)
 			equip(sets.midcast.Impact)
 		end
 	end
+
 end
 
 function job_aftercast(spell, spellMap, eventArgs)

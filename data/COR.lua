@@ -126,7 +126,6 @@ function job_setup()
 
     state.phalanxset = M(false,true)
 
-    send_command('lua l AutoCOR')
     state.Roller1 = M{['description']='Roller', 'Chaos Roll', 'Samurai Roll','Fighter\'s Roll',
     'Wizard\'s Roll', 'Warlock\'s Roll','Miser\'s Roll',
       'Companion\'s Roll','Puppet Roll', 'Beast Roll', 'Drachen Roll',

@@ -86,7 +86,7 @@ function get_sets()
 
 
 
-		attack2            = 1000 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
+		attack2 = 500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
 	
 	
 
@@ -125,6 +125,7 @@ end
 
 function job_filtered_action(spell, eventArgs)
 
+
 end
 
 function job_pretarget(spell, spellMap, eventArgs)
@@ -134,6 +135,18 @@ function job_pretarget(spell, spellMap, eventArgs)
     elseif spell.english == 'Sange' and (player.equipment.ammo == 'Togakushi Shuriken' or player.equipment.ammo == 'Happo Shuriken') then
 		cancel_spell()
 		add_to_chat(123,'Abort: Don\'t throw your good ammo!')
+    end
+end
+
+function job_filter_precast(spell, spellMap, eventArgs)
+	attack = player.attack
+	if attack > attack2 then
+        active_ws = sets.precast.WS.PDL
+    else
+        active_ws = sets.precast.WS
+    end
+	if active_ws[spell.name] then
+        equip(active_ws[spell.name])
     end
 end
 
@@ -147,6 +160,7 @@ function job_precast(spell, spellMap, eventArgs)
 		end
 	end
 
+
 	local player = windower.ffxi.get_player()
     local attack = player.attack
     local defense = player.defense
@@ -156,10 +170,8 @@ function job_precast(spell, spellMap, eventArgs)
 	-- Determine which WS sets to use based on your attack in your TP set (or idle set if WSing unengaged).
 	attack = player.attack
 	if attack > attack2 then
-        AtkFlag = 2
         active_ws = sets.precast.WS.PDL
     else
-        AtkFlag = 1
         active_ws = sets.precast.WS
     end
 	
@@ -167,11 +179,9 @@ function job_precast(spell, spellMap, eventArgs)
 	target = windower.ffxi.get_mob_by_target("t") or windower.ffxi.get_mob_by_target("st") or self
 		
     -- Cancel weapon skill if enemy is further than 7 yalms away to prevent losing TP. This value should be larger for "large" model enemies such as Fafnir.
-    if active_ws[spell.name] then
-
-        
-    equip(active_ws[spell.name])
-    end
+	--[[if active_ws[spell.name] then
+        equip(active_ws[spell.name])
+    end]]
 end
 
 function check_param()
@@ -255,7 +265,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		end
 	end	
 	if spell.type == 'WeaponSkill' then
-        if state.WeaponskillMode.value == 'vagary' then
+        if state.WeaponskillMode.value == 'Proc' then
             equip()
 
 		end
@@ -796,8 +806,8 @@ windower.register_event('incoming text',function(org)
 	--abyssea stagger
 	if string.find(org, "staggers") then
 
-		windower.send_command('input /p Stagger! <call14>!')
-		send_command('input //gs c Weapons Default')
+		windower.send_command('input /p Stagger! <call14>!')  -- code add by (Aragan@Asura)
+		send_command('input //gs c Weapons Tauret;gs c set WeaponskillMode Match;gc c OffenseMode CRIT')
 
 	end
 end)

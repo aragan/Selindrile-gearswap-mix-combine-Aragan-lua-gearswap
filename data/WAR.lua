@@ -501,6 +501,18 @@ function check_buff()
 		
 	return false
 end
+
+windower.register_event('incoming text',function(org)     
+
+	--abyssea stagger
+	if string.find(org, "staggers") then
+
+		windower.send_command('input /p Stagger! <call14>!') -- code add by (Aragan@Asura)
+		send_command('input //gs c Weapons DualMalevo;gs c set WeaponskillMode Match')--;gc c OffenseMode CRIT;GS C AotuWSMode False
+
+	end
+end)
+
 -- Handle notifications of general user state change.
 function job_state_change(stateField, newValue, oldValue)
     if state.WeaponLock.value == true then
