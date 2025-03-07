@@ -30,7 +30,14 @@ Aragan file will work ..
 that to can switch between 2 any lua easy 
 
 -----------
+
+add :
+code panacea auto used for ody nms + code cancel ws if nm or mob  far distance for all melee and ranged ws for save tp lose + code monshade ear if get 3k tp change + code auto kitting when move + code auto remedy when silenced . auto holy water if doom curse and more + add Reinforcement Points Mode for Su5 weapons and neck JSE CP jb cape + PDL Physical Damage Limit f4 command change it + WeaponskillMode SC + OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT + HybridMode:options('Normal', 'PDT',  'SubtleBlow f9-ctrl+f9 command change it + IdleMode:options('Normal', 'PDT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere') f12 command change it + add gear set Absorb-TP in all job for aminon mega boss +  auto wakeup if u sleep  with Vim Torque +1  auto equip for Jobs:     Warrior / Paladin / Dark Knight / Samurai / Dragoon + auto equip magic burst gear if skillchain window open for mages job and whm pld drk + and more code + display under screen all mods + auto call HUD pld sch dnc + auto call organizer inventory equip u job when change job + add WeaponSet all jobs all weapon need f6 command change it + add code Hippo. Socks +1 for pull mobs f1 command change it
+
+----------
 add code gearswap automatically detect open MB window and apply set.
+
+add code gearswap  AutoMedicinemode automatically use panacea or remedy if get debuff.
 
 add bind to work addon autoitem for auto use medicine for Odyssey nms 
 
@@ -111,7 +118,7 @@ macro
 
 -----
 add in my macro for silindrile gearswap all macro job pld brd drk dnc geo rdm cor bst  
-
+name ws start with A like Asavage or Aruda and other ws
 aminon ws macro 
 
 /attack on 
@@ -147,5 +154,6 @@ and install all addons all plugin all bot tako project and easyfarm and cureplea
 and install my init in script and use it for active my addon need it only .
 finaly any ask u can meet me in discord i add my discord under icon github account 
 my discord https://discord.gg/pcYCEHGT
+or Aragan support server https://discord.gg/RUBknQ52JZ
 https://soundcloud.com/araganffxi
 
