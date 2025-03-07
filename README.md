@@ -154,6 +154,8 @@ and install all addons all plugin all bot tako project and easyfarm and cureplea
 and install my init in script and use it for active my addon need it only .
 finaly any ask u can meet me in discord i add my discord under icon github account 
 my discord https://discord.gg/pcYCEHGT
-or Aragan support server https://discord.gg/RUBknQ52JZ
+or Aragan support server https://discord.gg/RUBknQ52JZ 
+
+Aragan Epic music ffxi Album
 https://soundcloud.com/araganffxi
 
