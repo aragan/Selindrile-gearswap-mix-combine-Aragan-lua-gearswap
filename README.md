@@ -1,7 +1,7 @@
 
---                                     Aragan (Asura) --------------- [Author Primary]                                    --
+-- Aragan (Asura) --- [Author Primary]                                    --
 
---                                       {{{{{{{this gearswap have all codes}}}}}}}}}                                          --
+--    {{{{{{{this gearswap have all codes}}}}}}}}}                                          --
 	---------------------------------------                        ---------------------------------------  
 	--        A T T E N T I O N          --                        --      P L E A S E     R E A D      --
 	---------------------------------------                        ---------------------------------------  
