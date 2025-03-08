@@ -12,6 +12,7 @@
 Listen carefully, it is unnatural, it is supernatural, it is advanced and superior to everyone, and they are primitive without it, it is difficult to reach it, it is smooth like water, it is solid like a mountain, it is light like the wind, it is burning like fire.. it was made for a long period of time, it came out of the power of darkness, only the light.. you cannot be defeated, and it is in your hands, the power is with you.
 
 {{{{{{{this lua have all codes}}}}}}}}}
+
 =======================
 u need my lib file its not work with orginal selindrile lib file i make everythink can display and add hippo feet for auto move
  
