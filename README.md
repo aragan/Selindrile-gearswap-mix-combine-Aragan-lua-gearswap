@@ -129,10 +129,15 @@ name ws start with A like Asavage or Aruda and other ws
 aminon ws macro 
 
 /attack on 
+
 /wait 1 
+
 /ws "Savage Blade" <bt>
+
 /wait 2 
+
 /attack off
+
 
 u need install my macro rar for silindrile gearswap to have rdy all
 https://github.com/aragan/macro-all-jobs/blob/main/1Macro_selindrile%20gearswap%20_all_job_ffxi_-created%20by%20Author%20Aragan.rar
