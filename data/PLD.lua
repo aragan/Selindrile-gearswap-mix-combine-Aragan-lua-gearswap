@@ -65,7 +65,6 @@ function get_sets()
 		"Foreshock Sword",
 		"Hepatizon Axe +1",
 		"Sword Strap",
-		"Mafic Cudgel",
 		"Gyudon",
 		"Reraiser",
 		"Hi-Reraiser",

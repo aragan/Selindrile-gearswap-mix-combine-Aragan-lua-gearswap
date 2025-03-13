@@ -70,13 +70,11 @@ function get_sets()
 		"Shinobi-Tabi",
 		"Shihei",
 		"Remedy",
-		"Wh. Rarab Cap +1",
 		"Emporox's Ring",
 		"Red Curry Bun",
 		"Instant Reraise",
 		"Black Curry Bun",
 		"Rolan. Daifuku",
-		"Wind Knife +1",
 		"Reraise Earring",}
 end
 
@@ -90,6 +88,7 @@ function job_setup()
 	state.Buff['Footwork'] = buffactive['Footwork'] or false
 	state.Buff['Boost'] = buffactive['Boost'] or false
 	state.HippoMode = M(false, "hippoMode")
+	--state.AutoMedicineMode = M(false, 'Auto Medicine Mode')
 
 	state.AutoBoost = M(false, 'Auto Boost Mode')
 	
@@ -99,7 +98,7 @@ function job_setup()
     info.impetus_hit_count = 0
     --windower.raw_register_event('action', on_action_for_impetus)
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------

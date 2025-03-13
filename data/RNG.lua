@@ -48,18 +48,14 @@ function get_sets()
 	-- Load and initialize the include file.
 	include('Sel-Include.lua')
 	organizer_items = {
-	    "Earp",
-		"Holliday",
 		"Decimating Bullet",
 		"Beryllium Arrow",
 		"Eminent Arrow",
 		"Eminent Quiver",
-		"Chr. Bul. Pouch",
 		"Dec. Bul. Pouch",
 	    "Em. Bul. Pouch",
 		"Chrono Bullet",
 		"Eminent Bullet",
-		"Hauksbok Arrow",
 		"Gyudon",
 		"Reraiser",
 		"Hi-Reraiser",
@@ -80,7 +76,6 @@ function get_sets()
 		"Shinobi-Tabi",
 		"Shihei",
 		"Remedy",
-		"Wh. Rarab Cap +1",
 		"Emporox's Ring",
 		"Red Curry Bun",
 		"Instant Reraise",

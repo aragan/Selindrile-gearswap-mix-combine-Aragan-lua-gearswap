@@ -86,7 +86,7 @@ function get_sets()
 
 
 
-		attack2 = 500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
+		attack2 = 2500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
 	
 	
 
@@ -101,9 +101,12 @@ function job_setup()
     state.Buff.Yonin = buffactive.Yonin or false
     state.Buff.Innin = buffactive.Innin or false
     state.Buff.Futae = buffactive.Futae or false
+	state.Buff.Hasso = buffactive.Hasso or false
+    state.Buff.Seigan = buffactive.Seigan or false   
+
 	--state.Proc = M(false, 'Proc')
     --state.unProc = M(false, 'unProc')
-	state.Stance = M{['description']='Stance','None','Innin','Yonin',}
+	state.Stance = M{['description']='Stance','Hasso','None','Innin','Yonin',}
 
 	autows = "Blade: Shun"
 	autofood = 'Soy Ramen'
@@ -139,7 +142,7 @@ function job_pretarget(spell, spellMap, eventArgs)
 end
 
 function job_filter_precast(spell, spellMap, eventArgs)
-	attack = player.attack
+	--[[attack = player.attack
 	if attack > attack2 then
         active_ws = sets.precast.WS.PDL
     else
@@ -147,7 +150,7 @@ function job_filter_precast(spell, spellMap, eventArgs)
     end
 	if active_ws[spell.name] then
         equip(active_ws[spell.name])
-    end
+    end]]
 end
 
 function job_precast(spell, spellMap, eventArgs)
@@ -729,12 +732,21 @@ function check_stance()
 			windower.chat.input('/ja "Yonin" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
+		elseif player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or state.Buff['SJ Restriction'] or main_weapon_is_one_handed() or silent_check_amnesia()) then
+			if state.Stance.value == 'Hasso' and abil_recasts[138] < latency then
+				windower.chat.input('/ja "Hasso" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			end
+		elseif state.Stance.value == 'Seigan' and abil_recasts[139] < latency then
+			windower.chat.input('/ja "Seigan" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
 		else
 			return false
 		end
 	end
 
-	return false
 end
 
 function check_buff()
@@ -813,8 +825,8 @@ windower.register_event('incoming text',function(org)
 end)
 
 buff_spell_lists = {
-	Auto = {	
-		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Idle'},
+	Auto = {	--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
 		--{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
 	},
 	

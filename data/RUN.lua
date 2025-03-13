@@ -76,6 +76,86 @@ function job_setup()
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaBelt"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","CastingMode","ResistDefenseMode","TreasureMode",})
 end
 
+buff_spell_lists = {
+	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Combat'},
+		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+		--{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
+	},
+	Tank = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
+		{Name='Cocoon',		Buff='Defense Boost',	SpellID=547,	When='Always'},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
+		--{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+	},
+	Aminon = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
+		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
+		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
+	},
+	Sortie = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
+		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
+		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
+		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
+	},
+	Full = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
+		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
+		{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
+		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
+		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Blink',		Buff='Blink',			SpellID=53,		When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
+	},
+	Default = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	Reapply=false},
+		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	Reapply=false},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		Reapply=false},
+		{Name='Refresh',	Buff='Refresh',			SpellID=109,	Reapply=false},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	Reapply=false},
+	},
+	
+	Tank = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	Reapply=false},
+		{Name='Cocoon',		Buff='Defense Boost',	SpellID=547,	Reapply=false},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		Reapply=false},
+		{Name='Refresh',	Buff='Refresh',			SpellID=109,	Reapply=false},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	Reapply=false},
+	},
+	
+	Full = {
+		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	Reapply=false},
+		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	Reapply=false},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		Reapply=false},
+		{Name='Refresh',	Buff='Refresh',			SpellID=109,	Reapply=false},
+		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		Reapply=false},
+		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		Reapply=false},
+		{Name='Blink',		Buff='Blink',			SpellID=53,		Reapply=false},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	Reapply=false},
+		{Name='Regen IV',	Buff='Regen',			SpellID=477,	Reapply=false},
+	},
+	Melee = {
+		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	Reapply=false},
+		{Name='Haste',		Buff='Haste',			SpellID=57,		Reapply=false},
+		{Name='Refresh',	Buff='Refresh',			SpellID=109,	Reapply=false},
+		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		Reapply=false},
+		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		Reapply=false},
+		{Name='Blink',		Buff='Blink',			SpellID=53,		Reapply=false},
+		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	Reapply=false},
+		{Name='Regen IV',	Buff='Regen',			SpellID=477,	Reapply=false},
+	},
+}
+
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for standard casting events.
 -------------------------------------------------------------------------------------------------------------------
@@ -542,83 +622,3 @@ function check_buffup()
 		return false
 	end
 end
-
-buff_spell_lists = {
-	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Combat'},
-		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
-		--{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
-	},
-	Tank = {
-		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
-		{Name='Cocoon',		Buff='Defense Boost',	SpellID=547,	When='Always'},
-		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
-		--{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Always'},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
-	},
-	Aminon = {
-		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
-		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
-		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
-		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
-	},
-	Sortie = {
-		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
-		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
-		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
-		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
-		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
-		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
-	},
-	Full = {
-		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
-		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
-		{Name='Haste',		Buff='Haste',			SpellID=57,		When='Always'},
-		{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
-		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		When='Always'},
-		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		When='Always'},
-		{Name='Blink',		Buff='Blink',			SpellID=53,		When='Always'},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
-		{Name='Regen IV',	Buff='Regen',			SpellID=477,	When='Always'},
-	},
-	Default = {
-		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	Reapply=false},
-		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	Reapply=false},
-		{Name='Haste',		Buff='Haste',			SpellID=57,		Reapply=false},
-		{Name='Refresh',	Buff='Refresh',			SpellID=109,	Reapply=false},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	Reapply=false},
-	},
-	
-	Tank = {
-		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	Reapply=false},
-		{Name='Cocoon',		Buff='Defense Boost',	SpellID=547,	Reapply=false},
-		{Name='Haste',		Buff='Haste',			SpellID=57,		Reapply=false},
-		{Name='Refresh',	Buff='Refresh',			SpellID=109,	Reapply=false},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	Reapply=false},
-	},
-	
-	Full = {
-		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	Reapply=false},
-		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	Reapply=false},
-		{Name='Haste',		Buff='Haste',			SpellID=57,		Reapply=false},
-		{Name='Refresh',	Buff='Refresh',			SpellID=109,	Reapply=false},
-		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		Reapply=false},
-		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		Reapply=false},
-		{Name='Blink',		Buff='Blink',			SpellID=53,		Reapply=false},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	Reapply=false},
-		{Name='Regen IV',	Buff='Regen',			SpellID=477,	Reapply=false},
-	},
-	Melee = {
-		{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	Reapply=false},
-		{Name='Haste',		Buff='Haste',			SpellID=57,		Reapply=false},
-		{Name='Refresh',	Buff='Refresh',			SpellID=109,	Reapply=false},
-		{Name='Aquaveil',	Buff='Aquaveil',		SpellID=55,		Reapply=false},
-		{Name='Stoneskin',	Buff='Stoneskin',		SpellID=54,		Reapply=false},
-		{Name='Blink',		Buff='Blink',			SpellID=53,		Reapply=false},
-		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	Reapply=false},
-		{Name='Regen IV',	Buff='Regen',			SpellID=477,	Reapply=false},
-	},
-}

@@ -706,7 +706,7 @@ function set_debuff_timer(spell)
     -- Create the custom timer
     if spell.english == "Sleep II" then
         send_command('@timers c "Sleep II ['..spell.target.name..'] ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00259.png')
-    elseif spell.english == "Sleep" or spell.english == "Sleepga" then
+    elseif (spell.english == "Sleep" or spell.english == "Sleepga") then
         send_command('@timers c "Sleep ['..spell.target.name..'] ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00253.png')
 	elseif spell.english == "Gravity" then
         send_command('@timers c "Gravity ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00216.png')

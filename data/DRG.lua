@@ -50,7 +50,6 @@ function get_sets()
 
 	organizer_items = {
         "Airmid's Gorget",
-        "Angon",
         "Gyudon",
         "Reraiser",
         "Hi-Reraiser",

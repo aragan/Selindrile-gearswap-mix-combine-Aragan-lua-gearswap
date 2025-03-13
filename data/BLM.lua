@@ -100,7 +100,7 @@ function job_setup()
     element_table = L{'Earth','Wind','Ice','Fire','Water','Lightning'}
 	Absorb = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
 
-	state.DeathMode = M{ 'Off', 'Single', 'LoKIHLKH'}
+	state.DeathMode = M{ 'Off', 'Single', 'Lock'}
 	state.AutoManawell = M(true, 'Auto Manawell Mode')
 	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
     state.MagicBurst = M(false, 'Magic Burst')
@@ -297,6 +297,9 @@ function job_aftercast(spell, spellMap, eventArgs)
     end
     if spell.english == "Death" then
 		send_command('@input /p <t> <recast=Death>')
+	end
+	if spell.english == "Vidohunir"  then
+		send_command('timers c "magic Defense Down ['..spell.target.name..']" 180 down')
 	end
 end
 -------------------------------------------------------------------------------------------------------------------

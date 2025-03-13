@@ -96,7 +96,6 @@ function get_sets()
         "Shinobi-Tabi",
         "Shihei",
         "Remedy",
-        "Wh. Rarab Cap +1",
         "Emporox's Ring",
         "Red Curry Bun",
         "Instant Reraise",
