@@ -872,9 +872,15 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 	--------------------------------------
 
     sets.resting = {ammo="Homiliary",
-	head="Null Masque",neck="Unmoving Collar +1",ear1="Etiolation Earring",ear2="Ethereal Earring",
-		body="Jumalik Mail",hands="Souv. Handsch. +1",ring1="Defending Ring",ring2="Stikini Ring +1",
-		back="Moonlight Cape",waist="Null Belt",legs="Sulev. Cuisses +2",feet="Cab. Leggings +3"}
+	head="Null Masque",
+	body="Sacro Breastplate",
+	feet="Volte Sollerets",
+	neck={ name="Bathy Choker +1", augments={'Path: A',}},
+	waist="Null Belt",
+	left_ear="Infused Earring",
+	left_ring="Chirich Ring +1",
+	right_ring="Chirich Ring +1",
+	}
 
     -- Idle sets
     sets.idle = {ammo="Homiliary",

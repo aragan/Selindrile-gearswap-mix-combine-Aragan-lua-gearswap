@@ -906,7 +906,11 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
            
      -- Resting sets
      sets.resting = {
-		neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        head="Null Masque",
+        body="Sacro Breastplate",
+        feet="Volte Sollerets",
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
         left_ear="Infused Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
@@ -1029,6 +1033,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     })
     sets.idle.Regen = set_combine(sets.idle, {
         body="Sacro Breastplate",
+        feet="Volte Sollerets",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
         waist="Null Belt",
         left_ear="Infused Earring",

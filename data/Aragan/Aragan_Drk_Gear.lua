@@ -75,12 +75,25 @@ Resolution (MM) > Scourge (R) > Torcleaver (E)
 Scourge (R) > Resolution (MM) > Torcleaver (E)
 Torcleaver (E) > Torcleaver (E)
 Scourge (R) > Resolution (MM)
+
+-- GreatSword 6step 
+Detonation Scission
+
+Crescent Moon > Freezebite > Crescent Moon > Freezebite 
+Crescent Moon > Herculean Slash > Crescent Moon
+Sickle Moon > Freezebite > Sickle Moon > > Freezebite
+
+Impaction Detonation
+Sickle Moon > Herculean Slash > Sickle Moon >
+Herculean Slash > Hard Slash > Herculean Slash
+Freezebite > Hard Slash > Freezebite
+
 --]]
 
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal', 'STP', 'DA', 'Acc', 'SubtleBlow', 'CRIT')
+    state.OffenseMode:options('Normal','TP', 'STP', 'DA', 'Acc', 'SubtleBlow', 'CRIT')
     state.WeaponskillMode:options('Match', 'Acc', 'PDL', 'SC', 'Dread', 'None')
     state.HybridMode:options('DT', 'Normal', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
@@ -88,7 +101,9 @@ function user_job_setup()
     state.MagicalDefenseMode:options('Normal','MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options('Tank','Normal','PDT' ,'Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate', 'Refresh')
-	state.Weapons:options('Normal', 'Caladbolg', 'Lycurgos', 'Liberator', 'Anguta', 'Apocalypse', 'Drepanum', 'AgwuClaymore', 'Naegling', 'Loxotic', 'TernionDagger', 'Dolichenus')
+	state.Weapons:options('Normal', 'Caladbolg', 'Lycurgos', 'Liberator', 'Anguta', 'Apocalypse', 'Drepanum', 
+    'AgwuClaymore', 'Naegling', 'Loxotic', 'TernionDagger', 'Dolichenus',
+    'ProcScythe','ProcGreatSword')
 	state.shield = M{['description']='Weapon Set', 'Normal', 'shield'}
 
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
@@ -141,6 +156,10 @@ sets.weapons.Naegling = {main="Naegling", sub="Blurred Shield +1",}
 sets.weapons.Loxotic = {main="Loxotic Mace +1", sub="Blurred Shield +1",}
 sets.weapons.TernionDagger = {main="Ternion Dagger +1", sub="Blurred Shield +1",}
 sets.weapons.Dolichenus = {main="Dolichenus", sub="Blurred Shield +1",}
+
+sets.weapons.ProcScythe = {main="Maven's Scythe",sub="Sword Strap",}
+sets.weapons.ProcGreatSword = {main="Irradiance Blade",sub="Sword Strap",}
+
 
 sets.Normal = {}
 sets.shield = {sub="Blurred Shield +1"}
@@ -390,7 +409,7 @@ sets.ConserveMP = {
 	})
     sets.midcast['Elemental Magic'] = {
         ammo="Ghastly Tathlum +1",
-        head="Heath. Bur. +2",
+        head="Heath. Burgeon. +2",
         body="Sacro Breastplate",
         hands="Fall. Fin. Gaunt. +3",
         legs="Augury Cuisses +1",
@@ -419,7 +438,7 @@ sets.ConserveMP = {
         })
     sets.magicburst = set_combine(sets.midcast['Elemental Magic'], {
         ammo="Ghastly Tathlum +1",
-        head="Heath. Bur. +2",
+        head="Heath. Burgeon. +2",
         body="Sacro Breastplate",
         hands="Fall. Fin. Gaunt. +3",
         legs="Augury Cuisses +1",
@@ -675,9 +694,12 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         feet="Nyame Sollerets",
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
+    sets.precast.WS['Catastrophe'].None = {}
+
     sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS['Catastrophe'], {})
     sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Catastrophe'].PDL, {})
     sets.precast.WS['Savage Blade'].SC = set_combine(sets.precast.WS['Catastrophe'].SC, {})
+    sets.precast.WS['Savage Blade'].None = {}
 
 
     sets.precast.WS['Spiral Hell'] = set_combine(sets.precast.WS, {
@@ -892,6 +914,8 @@ sets.precast.WS['Freezebite'] = set_combine(sets.precast.WS['Infernal Scythe'], 
     ammo="Aurgelmir Orb +1",
     head="Nyame Helm",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},})
+    sets.precast.WS['Freezebite'].None = {}
+
 sets.precast.WS['Frostbite'] = set_combine(sets.precast.WS['Infernal Scythe'], {
     ammo="Aurgelmir Orb +1",
     head="Nyame Helm",
@@ -1104,27 +1128,44 @@ sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
     right_ring="Cornelia's Ring",
     back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 })
+sets.precast.WS["Burning Blade"].None = {}
 
-sets.precast.WS["Red Lotus Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Shining Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Seraph Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Cloudsplitter"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Primal Rend"] = set_combine(sets.precast.WS["Burning Blade"],{})
-sets.precast.WS["Aeolian Edge"] = set_combine(sets.precast.WS["Burning Blade"],{})
-sets.precast.WS["Cyclone"] = set_combine(sets.precast.WS["Burning Blade"],{})
+
 sets.precast.WS["Gust Slash"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Shining Strike"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Seraph Strike"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flash Nova"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Thunder Thrust"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Raiden Thrust"] = set_combine(sets.precast.WS["Burning Blade"],{})
-sets.precast.WS["Herculean Slash"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Earth Crusher"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Rock Crusher"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
+sets.precast.WS["Tachi: Jinpu"] = set_combine(sets.precast.WS["Burning Blade"],{})
+sets.precast.WS["Tachi: Jinpu"].None = {}
 
+sets.precast.WS["Aeolian Edge"] = set_combine(sets.precast.WS["Burning Blade"],{})
+sets.precast.WS["Aeolian Edge"].None = {}
+
+sets.precast.WS["Cyclone"] = set_combine(sets.precast.WS["Burning Blade"],{})
+sets.precast.WS["Cyclone"].None = {}
+
+sets.precast.WS["Red Lotus Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
+sets.precast.WS["Red Lotus Blade"].None = {}
+
+sets.precast.WS["Herculean Slash"] = set_combine(sets.precast.WS["Burning Blade"],{})
+sets.precast.WS["Herculean Slash"].None = {}
+sets.precast.WS["Crescent Moon"] = set_combine(sets.precast.WS,{})
+sets.precast.WS["Crescent Moon"].None = {}
+sets.precast.WS["Hard Slash"] = set_combine(sets.precast.WS,{})
+sets.precast.WS["Hard Slash"].None = {}
+sets.precast.WS["Fast Blade"] = set_combine(sets.precast.WS,{})
+sets.precast.WS["Fast Blade"].None = {}
 
 sets.precast.WS['Armor Break'] = set_combine(sets.precast.WS, {
     ammo="Pemphredo Tathlum",
@@ -1151,11 +1192,14 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS["Armor Break"], {
            
      -- Resting sets
 	 sets.resting = {
-		head=empty,
-		body={ name="Lugra Cloak +1", augments={'Path: A',}},
+        head="Null Masque",
+		body="Sacro Breastplate",
+		feet="Volte Sollerets",
+		neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
 		left_ear="Infused Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
 	}           
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Telos Earring"}
@@ -1350,7 +1394,7 @@ sets.defense.SEboost = {
 		body="Sacro Breastplate",
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
-		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		feet="Volte Sollerets",
 		neck={ name="Bathy Choker +1", augments={'Path: A',}},
         waist="Null Belt",
 		left_ear="Infused Earring",
@@ -1415,22 +1459,36 @@ sets.defense.SEboost = {
 		right_ring="Moonlight Ring",
 		left_ring="Chirich Ring +1",
 		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-		}
-	  
-		sets.engaged.STP = {
-            ammo="Coiste Bodhar",
-            head="Flam. Zucchetto +2",
-            body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
-            hands="Sakpata's Gauntlets",
-            legs="Ig. Flanchard +3",
-            feet="Carmine Greaves +1",
-            neck="Vim Torque +1",
-            waist="Ioskeha Belt +1",
-            ear1="Schere Earring",
-            ear2="Dedition Earring",
-            ring1="Petrov Ring",
-            ring2="Niqmaddu Ring",
-            back="Null Shawl",
+	}
+    sets.engaged.TP = {
+        ammo="Coiste Bodhar",
+        head="Flam. Zucchetto +2",
+        body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
+        hands="Sakpata's Gauntlets",
+        legs="Ig. Flanchard +3",
+        feet="Carmine Greaves +1",
+        neck="Vim Torque +1",
+        waist="Ioskeha Belt +1",
+        ear1="Brutal Earring",
+        ear2="Dedition Earring",
+        ring1="Petrov Ring",
+        ring2="Niqmaddu Ring",
+        back="Null Shawl",
+	}
+	sets.engaged.STP = {
+        ammo="Coiste Bodhar",
+        head="Flam. Zucchetto +2",
+        body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
+        hands="Sakpata's Gauntlets",
+        legs="Ig. Flanchard +3",
+        feet="Carmine Greaves +1",
+        neck="Vim Torque +1",
+        waist="Ioskeha Belt +1",
+        ear1="Schere Earring",
+        ear2="Dedition Earring",
+        ring1="Petrov Ring",
+        ring2="Niqmaddu Ring",
+        back="Null Shawl",
 	}
 	sets.engaged.DA = set_combine(sets.engaged, {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -1758,7 +1816,13 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 165')
+    if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 152')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
+        windower.chat.input('/lockstyleset 165')
+    else
+        windower.chat.input('/lockstyleset 165') --Catchall
+    end
 end
 
 autows_list = {['Caladbolg']='Torcleaver',['Liberator']='Insurgency',['Anguta']='Cross Reaper',['Apocalypse']='Catastrophe',

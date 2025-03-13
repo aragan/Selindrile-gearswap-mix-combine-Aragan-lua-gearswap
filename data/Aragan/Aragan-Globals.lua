@@ -206,7 +206,7 @@ function global_on_load()
 
 	send_command('bind ^] input //put storage slip* case all')
 	send_command('bind ^[ input //get storage slip* all') --PorterPacker Porter find
-	send_command('bind ^, input //put * sack all') -- gs validate  --to check 	lua r gearswap
+	send_command('bind ^, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
 	send_command('bind ^. input //packer repack') -- PorterPacker addon
 
 	send_command('bind !m gs c toggle AutoMedicineMode')
