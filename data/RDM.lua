@@ -943,6 +943,28 @@ function update_melee_groups()
 	end	
 end
 
+windower.register_event('incoming text',function(org)     
+	--Sortie 	--Vagary
+	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
+		windower.send_command('input //gs c set ElementalMode water')
+	end
+	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
+		windower.send_command('input //gs c set ElementalMode Lightning')
+	end
+	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
+		windower.send_command('input //gs c set ElementalMode Fire')
+	end
+	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
+		windower.send_command('input //gs c set ElementalMode Wind')
+	end
+	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
+		windower.send_command('input //gs c set ElementalMode Earth')
+	end
+	if string.find(org, "Blast of Reticence") then
+		windower.send_command('input //gs c set ElementalMode Ice')
+	end
+end)
+
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 		{Name='Refresh III',	Buff='Refresh',		SpellID=894,	When='Always'},
