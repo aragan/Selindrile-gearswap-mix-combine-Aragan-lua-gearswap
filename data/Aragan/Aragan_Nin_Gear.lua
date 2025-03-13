@@ -8,6 +8,22 @@
 --[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
 keyboard binds and chat 
+
+
+Ninja katana hybrid weapon skills.
+
+    To-Chi-To
+
+    Chi-Teki-Chi-To
+
+    Chi-Teki-To-Chi-To
+
+    To-Teki-Shun-Shun
+
+    Chi-Retsu-Ten-Hi/Metsu
+
+    Chi-Retsu-Shun-Ten-Kamu-Shun-Shun(Heishi)
+
 ]]
 
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
@@ -70,7 +86,7 @@ function init_gear_sets()
 	sets.weapons.ProcGreatSword = {main="Irradiance Blade",sub=empty}
 	sets.weapons.ProcScythe = {main="Maven's Scythe",sub=empty}
 	sets.weapons.ProcPolearm = {main="Sha Wujing's La. +1",sub=empty}
-	sets.weapons.ProcGreatKatana = {main="Zanmato +1",sub=empty}
+	sets.weapons.ProcGreatKatana = {main="Zanmato +1",sub="Sword Strap",}
     sets.weapons.ProcGreatKatana2 = {main="Zanmato +1",sub=empty}
 	sets.weapons.ProcKatana = {main="Debahocho +1",sub=empty}
 	sets.weapons.ProcClub = {main="Caduceus",sub=empty}
@@ -96,9 +112,9 @@ function init_gear_sets()
     back="Reiki Cloak",}
 
     -- Precast sets to enhance JAs
-    sets.precast.JA['Mijin Gakure'] = { legs="Mochizuki Hakama +3" }
+    sets.precast.JA['Mijin Gakure'] = {}
     sets.precast.JA['Futae'] = { hands="Hattori Tekko +2" }
-    sets.precast.JA['Sange'] = {body="Mochi. Chainmail +3"}
+    sets.precast.JA['Sange'] = {}
     sets.precast.JA['Innin'] = {head="Mochi. Hatsuburi +3"}
     sets.precast.JA['Yonin'] = {head="Mochi. Hatsuburi +3"}
     sets.precast.JA['Provoke'] = set_combine(sets.midcast.enmity , {
@@ -188,7 +204,7 @@ function init_gear_sets()
         right_ring="Sroda Ring", 
     })
     sets.precast.WS.Proc =  {
-        ammo="Pemphredo Tathlum",
+        --[[ammo="Pemphredo Tathlum",
         head="Malignance Chapeau", 
         body="Malignance Tabard", 
         hands="Malignance Gloves", 
@@ -200,7 +216,7 @@ function init_gear_sets()
         waist="Eschan Stone",
         right_ring={ name="Beithir Ring", augments={'Path: A',}},
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-        back="Null Shawl",
+        back="Null Shawl",]]
     }
 
 
@@ -719,22 +735,23 @@ sets.precast.WS['Tachi: Koki'].Proc =  set_combine(sets.precast.WS.Proc,{})
 
 sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     ammo="Pemphredo Tathlum",
-    head={ name="Nyame Helm", augments={'Path: B',}},
+    head={ name="Mpaca's Cap", augments={'Path: A',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck="Null Loop",
-    waist="Eschan Stone",
-    left_ear="Digni. Earring",
+    waist="Null Belt",
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Crep. Earring",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     right_ring="Stikini Ring +1",
     back="Null Shawl",
 })
+sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
 
 -- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Lugra Earring",ear2="Lugra Earring +1",}
+	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Mache Earring +1",}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.DayMaxTPWSEars = {ear1="Cessance Earring",ear2="Brutal Earring",}
@@ -748,7 +765,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
     sets.midcast.FastRecast = {}
     sets.SIRD = {
-         sub="Tancho",
+        sub="Tancho +1",
         ammo="Staunch Tathlum +1",
         hands={ name="Rawhide Gloves", augments={'Mag. Acc.+15','INT+7','MND+7',}},
         neck="Moonlight Necklace",
@@ -786,13 +803,14 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands="Hattori Tekko +2",
-    legs={ name="Nyame Flanchard", augments={'Path: B',}},
-    feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
         waist="Orpheus's Sash",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Mujin Band",
-        back="Argocham. Mantle",})
+        back="Argocham. Mantle",
+    })
 
     sets.midcast.NinjutsuDebuff = { 
     ammo="Yamarang",
@@ -1005,7 +1023,7 @@ sets.idle.Regen = set_combine(sets.idle, {
     right_ring="Chirich Ring +1",
     })
 
-sets.idle.Sphere = set_combine(sets.idle, {body="Mekosu. Harness"})
+sets.idle.Sphere = set_combine(sets.idle, {})
 sets.idle.Evasion = {
     ammo="Yamarang",
     head="Malignance Chapeau",
@@ -1161,8 +1179,8 @@ sets.idle.Evasion = {
         head={ name="Ryuo Somen +1", augments={'HP+65','"Store TP"+5','"Subtle Blow"+8',}},
         body={ name="Tatena. Harama. +1", augments={'Path: A',}},
         hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
-        legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-        feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
+        legs="Ryuo Hakama +1",
+        feet={ name="Ryuo Sune-Ate +1", augments={'HP+65','"Store TP"+5','"Subtle Blow"+8',}},
         neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
         waist="Windbuffet Belt +1",
         left_ear="Telos Earring",
@@ -1172,31 +1190,37 @@ sets.idle.Evasion = {
         back="Null Shawl",
     }
     sets.engaged.STP = set_combine(sets.engaged, {
-        ammo="Aurgelmir Orb +1",
-        head={ name="Ryuo Somen +1", augments={'HP+65','"Store TP"+5','"Subtle Blow"+8',}},
-        body="Malignance Tabard",
-        hands="Malignance Gloves",
-        legs="Malignance Tights",
-        feet="Malignance Boots",
-        waist={ name="Kentarch Belt +1", augments={'Path: A',}},
-        left_ring="Chirich Ring +1",
-        right_ring="Chirich Ring +1",
+        ranged=Empty,
+        ammo="Seki Shuriken",
+        head="Ryuo Somen +1",
+        body="Tatena. Harama. +1",
+        hands="Tatena. Gote +1",
+        legs="Ryuo Hakama +1",
+        feet="Tatena. Sune. +1",
+        neck="Ninja Nodowa +2",
+        waist="Sailfi Belt +1",
+        ear1="Telos Earring",
+        ear2="Dedition Earring",
+        ring1="Gere Ring",
+        ring2="Epona's Ring",
         back="Null Shawl",
     })
     sets.engaged.ZANISH = set_combine(sets.engaged, {
-        ammo="Aurgelmir Orb +1",
-        head={ name="Ryuo Somen +1", augments={'HP+65','"Store TP"+5','"Subtle Blow"+8',}},
-        body={ name="Tatena. Harama. +1", augments={'Path: A',}},
-        hands={ name="Tatena. Gote +1", augments={'Path: A',}},
-        legs="Ryuo Hakama +1",
-        feet={ name="Ryuo Sune-Ate +1", augments={'HP+65','"Store TP"+5','"Subtle Blow"+8',}},
-        neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
+        ranged=Empty,
+        ammo="Seki Shuriken",
+        head="Ryuo Somen +1",
+        body="Tatena. Harama. +1",
+        hands="Tatena. Gote +1",
+        legs="Tatena. Haidate +1",
+        feet="Ryuo Sune-Ate +1",
+        neck="Ninja Nodowa +2",
         waist="Sailfi Belt +1",
-        left_ear="Telos Earring",
-        right_ear="Dedition Earring",
-        left_ring="Chirich Ring +1",
-        right_ring="Chirich Ring +1",
+        ear1="Dedition Earring",
+        ear2="Telos Earring",
+        ring1="Epona's Ring",
+        ring2="Gere Ring",
         back="Null Shawl",
+        
     })
     sets.engaged.DOUBLE = set_combine(sets.engaged,{
         ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -1304,8 +1328,8 @@ sets.idle.Evasion = {
 ------------------------------------------------------------------------------------------------
 
 sets.engaged.Hybrid = {
-    head="Malignance Chapeau", --6/6
-    body="Malignance Tabard", --9/9
+    head={ name="Mpaca's Cap", augments={'Path: A',}}, --7/7
+    body="Mpaca's Doublet",    --10/10
     hands="Malignance Gloves", --5/5
     legs="Malignance Tights", --7/7
     feet="Malignance Boots", --4/4
@@ -1384,8 +1408,14 @@ end
 function user_job_lockstyle()
     if world.area:contains("Abyssea") then
         windower.chat.input('/lockstyleset 1')
-    else
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 152')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 144')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
+        windower.chat.input('/lockstyleset 172')
+    else
+        windower.chat.input('/lockstyleset 144') --Catchall
     end
 end
 -- Select default macro book on initial load or subjob change.
@@ -1413,3 +1443,36 @@ autows_list = {['Heishi']='Blade: Shun',['Tauret']='Aeolian Edge',['Naegling']='
 ['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',
 ['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',['Zanmato']='Tachi: Jinpu',
 ['H2H']='Asuran Fists',['CLUB']='Judgment',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end

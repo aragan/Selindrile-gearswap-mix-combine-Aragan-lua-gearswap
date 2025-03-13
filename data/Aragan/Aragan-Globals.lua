@@ -88,7 +88,7 @@ state.SrodaBelt = M(false, 'SrodaBelt')
 state.SrodaNecklace = M(false, 'SrodaNecklace')
 state.NM = M(false, 'NM')
 state.SleepMode = M{['description']='Sleep Mode', 'Normal', 'MaxDuration'}
-state.Medicine = M(false,'Medicine')
+state.AutoMedicineMode = M(false, 'Auto Medicine Mode')
 state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen'} -- , 'Priwen' }
 
 NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
@@ -151,8 +151,8 @@ function global_on_load()
 	send_command('bind !0 input //zonetimer reset') --Turns addon reset time.
 	send_command('bind ^pagedown input //autoitem off') --Turns addon off.
 	send_command('bind ^pageup input //autoitem on') --Turns addon on.
-	send_command('bind ^delete input //aws toggle') --Turns addon autows on odd.
-	send_command('bind ^insert input //aws reload') --reload addon autows on odd.
+	send_command('bind ^delete input //aws toggle') --Turns addon autows on odd. to add ws //aws set "Evisceration" 
+	send_command('bind ^insert input //aws reload') --reload addon autows on odd. --//aws set Evisceration
 
 	
 	send_command('bind !delete input //smrt on;input //smrt') --Turns addon smarttarget on odd.
@@ -205,9 +205,12 @@ function global_on_load()
     send_command('lua r runewidget;rw show')--Turns addon off if job non /run.
 
 	send_command('bind ^] input //put storage slip* case all')
-	send_command('bind ^[ input //get storage slip* all')
+	send_command('bind ^[ input //get storage slip* all') --PorterPacker Porter find
+	send_command('bind ^, input //put * sack all') -- gs validate  --to check 	lua r gearswap
+	send_command('bind ^. input //packer repack') -- PorterPacker addon
 
-	
+	send_command('bind !m gs c toggle AutoMedicineMode')
+
 end
 -- Function to revert binds when unloading.
 function global_unload()
@@ -288,6 +291,10 @@ send_command('bind !t input /target <bt>') --Targets the battle target.
 send_command('bind ^o fillmode') --Lets you see through walls.
 send_command('bind @m gs c mount Omega')
 
+send_command('alias ambuseal input /item "Abdhaljs Seal" <me>')
+send_command('alias rads temps buy Radialens')
+send_command('alias molli temps buy Mollifier')
+send_command('alias temps temps buy')
 
 bayld_items = {'Tlalpoloani','Macoquetza','Camatlatia','Icoyoca','Tlamini','Suijingiri Kanemitsu',
 'Zoquittihuitz','Quauhpilli Helm','Chocaliztli Mask','Xux Hat','Quauhpilli Gloves','Xux Trousers',
@@ -349,18 +356,26 @@ function job_aftercast(spell, spellMap, eventArgs)
 			eventArgs.handled = true
 		end
 	end
-	if spell.type == 'WeaponSkill' then
-		if spell.english == "Shell Crusher" or spell.english == "Armor Break" then
+	-- < this mean low  
+	if spell.type == 'WeaponSkill' and not spell.interrupted then
+		if (spell.english == "Shell Crusher" or spell.english == "Armor Break") then
 			if player.tp == 3000 then  
-				send_command('timers create "Defense Down" 540 down')
-			elseif player.tp < 2999 then  
-				send_command('timers create "Defense Down" 360 down')
-			elseif player.tp < 1999 then  
-				send_command('timers create "Defense Down" 180 down')
+				send_command('timers c "Defense Down '..spell.name..' ['..spell.target.name..'] " 540 down')
+				send_command('@input /p  >>> "Defense Down on '..spell.name..' ['..spell.target.name..']. 9 min. ')
+			elseif player.tp < 2001 then  
+				send_command('timers c "Defense Down '..spell.name..' ['..spell.target.name..']" 360 down')
+				send_command('@input /p  >>> "'..spell.name..' Defense Down on  ' ..tostring(spell.target.name).. '. 6 min. ')
+			elseif player.tp < 1001 then  
+				send_command('timers c "Defense Down '..spell.name..' ['..spell.target.name..']" 180 down')
+				send_command('@input /p  >>> "Defense Down on '..spell.name..' ['..spell.target.name..']. 3 min. ')
 			end
 		end
 	end
-	
+	--[[
+	send_command('@timers c "Gambit ['..spell.target.name..']" '..gambit_duration..' down spells/00136.png')
+	send_command('wait '..gambit_duration..';input /p <t> [Gambit just wore off!];')
+	send_command('@input /p  >>> Gambit on ['..spell.target.name..']. Second left: '..gambit_duration..'')
+	]]
 	--[[if spell.english == "Meditate" then
 				send_command('wait 169;gs c -cd '..spell.name..': [Ready In 10 Seconds!];wait 10;gs c -cd '..spell.name..': [Ready !]')
 	 ]]
@@ -397,10 +412,28 @@ function job_customize_melee_set(meleeSet)
     if state.TreasureMode.value == 'Fulltime' then
         meleeSet = set_combine(meleeSet, sets.TreasureHunter)
     end
+	-- If HP drops under 45% then equip Re-raise head/body
+	if (player.main_job == 'BST' or player.main_job == 'DRG' or player.main_job == 'DRK'
+		or player.main_job == 'PLD' or player.main_job == 'SAM' or player.main_job == 'WAR') then
+        if player.hpp < 5 then --code add from Aragan Asura
+        meleeSet = set_combine(meleeSet, sets.Reraise)
+	    end
+	end
     return meleeSet
 end
 -- Global intercept on buff change.
 function user_buff_change(buff, gain, eventArgs)
+
+	    --[[if buff == "weakness" then
+        if gain then
+            equip(sets.Reraise)
+             disable('body','head')
+            else
+             enable('body','head')
+        end
+        return meleeSet
+    end]]
+
 	-- Create a timer when we gain weakness.  Remove it when weakness is gone.
 	if buff:lower() == 'weakness' then
 		if gain then
@@ -432,7 +465,113 @@ function user_buff_change(buff, gain, eventArgs)
             send_command('input /p '..player.name..' is no longer Sleep!')
         end
     end
-	if buff == "Defense Down" then
+	
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Downn" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			status_change(player.status)
+		end
+	end
+end
+
+--[[		elseif buff == "Warcry" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		elseif buff == "Berserk" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		elseif buff == "Defender" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		elseif buff == "Aggressor" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end]]
+
+
+	--[[if buff == "Defense Down" then
         if gain then  			
             send_command('input /item "Panacea" <me>')
         end
@@ -509,87 +648,24 @@ function user_buff_change(buff, gain, eventArgs)
 			equip(sets.precast.Item['Holy Water'])
         end
     end
-	if state.Medicine.value then
-		if buff == "Defense Down" then
-			if gain then  			
-				send_command('input /item "Panacea" <me>')
-			end
-		elseif buff == "Magic Def. Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Magic Def. Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Max HP Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Evasion Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Magic Evasion Downn" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Dia" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end  
-		elseif buff == "Bio" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Bind" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "slow" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "weight" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Attack Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Accuracy Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		end
-	
-		if buff == "VIT Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "INT Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "MND Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "STR Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "AGI Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		end
-		if not midaction() then
-			status_change(player.status)
-		end
-	end
-end
+	if buff == "poison" then
+        if gain then  
+        send_command('input /item "remedy" <me>')
+        end
+    end]]
+
+
+-- If HP drops under 45% then equip Re-raise head/body
+windower.register_event('hpp change', -- code add from Aragan Asura
+function(new_hpp,old_hpp)
+    if player.main_job == 'BST' or player.main_job == 'DRG' or player.main_job == 'DRK'
+            or player.main_job == 'PLD' or player.main_job == 'SAM' or player.main_job == 'WAR' then
+        if new_hpp < 5 then
+			equip(sets.Reraise)
+        end
+    end
+end)
+
 function is_sc_element_today(spell)
     if spell.type ~= 'WeaponSkill' then
         return

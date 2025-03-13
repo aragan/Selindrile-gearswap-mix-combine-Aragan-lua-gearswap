@@ -16,14 +16,14 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'H2H')
     state.WeaponskillMode:options('Match', 'SC', 'PDL','Proc')
     state.HybridMode:options('Normal', 'PDT')
-    state.PhysicalDefenseMode:options('PDT', 'HP','Evasion', 'Enmity', 'MP', 'Reraise')
+    state.PhysicalDefenseMode:options('PDT', 'HP','Evasion','Empy', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options( 'DT','Normal', 'Tank', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular'}
 	state.Weapons:options('None','Naegling','Loxotic','Shining','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
-    state.Shield = M{['description']='Weapon Set', 'Normal', 'Shield'}
+    state.Shield = M{['description']='Weapon Set', 'Normal', 'BlurredShield', 'AdapaShield', 'SacroBulwark'}
 
 	gear.da_jse_back = {name="Cichol's Mantle",augments={'DEX+20','Accuracy+20 Attack+20','"Dbl.Atk."+10'}}
 	gear.crit_jse_back = {name="Cichol's Mantle",augments={'STR+20','Accuracy+20 Attack+20','Crit.hit rate+10'}}
@@ -66,10 +66,14 @@ sets.weapons.DualMalevo = {main="Malevolence", sub="Malevolence",}
 sets.weapons.DualIkengaAxe = {main="Ikenga's Axe", sub="Demers. Degen +1",}
 
 sets.Normal = {}
-sets.Shield = {sub="Blurred Shield +1"}
+sets.BlurredShield = {sub="Blurred Shield +1"}
+sets.AdapaShield = {sub="Adapa Shield"}
+sets.SacroBulwark = {sub="Sacro Bulwark"}
+sets.BlurredShield = {sub="Blurred Shield +1"}
+
 sets.DefaultShield = {sub="Blurred Shield +1"}
 
-
+ 
 sets.weapons.ProcDagger = {main="Qutrub Knife",sub=empty}
 sets.weapons.ProcDagger2 = {main="Qutrub Knife",sub=empty}
 sets.weapons.ProcSword = {main="Fermion Sword",sub=empty}
@@ -113,10 +117,10 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.precast.JA['Berserk'] = { body="Pummeler's Lorica +3",feet="Agoge Calligae +3",
 	back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},}
 	sets.precast.JA['Warcry'] = { head={ name="Agoge Mask +3", augments={'Enhances "Savagery" effect',}},}
-	sets.precast.JA['Defender'] = {}
-	sets.precast.JA['Aggressor'] = {body="Agoge Lorica"}
+	sets.precast.JA['Defender'] = {hands="Agoge Mufflers +3"}
+	sets.precast.JA['Aggressor'] = {body="Agoge Lorica +3"}
 	sets.precast.JA['Mighty Strikes'] = {hands="Boii Mufflers +3"}
-	sets.precast.JA["Warrior's Charge"] = {}
+	sets.precast.JA["Warrior's Charge"] = {legs="Agoge Cuisses +3"}
 	sets.precast.JA['Tomahawk'] = {ammo="Thr. Tomahawk",feet="Agoge Calligae +3"}
 	sets.precast.JA['Retaliation'] = {}
 	sets.precast.JA['Restraint'] = {hands="Boii Mufflers +3"}
@@ -473,23 +477,23 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     })
     sets.precast.WS['Armor Break'] = set_combine(sets.precast.WS, {
         ammo="Pemphredo Tathlum",
-        head={ name="Sakpata's Helm", augments={'Path: A',}},
-        body={ name="Sakpata's Plate", augments={'Path: A',}},
-        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-        legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
-        feet={ name="Sakpata's Leggings", augments={'Path: A',}},
-        neck="Moonlight Necklace",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs="Boii Cuisses +3",
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
         waist="Eschan Stone",
-        left_ear="Crep. Earring",
-        right_ear="Digni. Earring",
-        left_ring="Stikini Ring +1",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Stikini Ring +1",
-    back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+        back="Null Shawl",
     })
     sets.precast.WS["Shield Break"] = set_combine(sets.precast.WS["Armor Break"], {})
     sets.precast.WS["Weapon Break"] = set_combine(sets.precast.WS["Armor Break"], {})
-
-
+    sets.precast.WS["Full Break"] = set_combine(sets.precast.WS["Armor Break"], {})
+    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS["Armor Break"], {})
 
      -- RESOLUTION
      -- 86-100% STR
@@ -770,7 +774,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
             left_ring="Sroda Ring",
         })
         sets.precast.WS["Ground Strike"] = set_combine(sets.precast.WS['Savage Blade'], {
-        left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Lugra Earring +1",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Cornelia's Ring",    })
@@ -880,29 +884,15 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.precast.WS['Tachi: Jinpu'].Proc = set_combine(sets.precast.WS.Proc,{})
 	sets.precast.WS['Tachi: Koki'].Proc = set_combine(sets.precast.WS.Proc,{})
 	
-    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
-        ammo="Pemphredo Tathlum",
-        head={ name="Nyame Helm", augments={'Path: B',}},
-        body={ name="Nyame Mail", augments={'Path: B',}},
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet={ name="Nyame Sollerets", augments={'Path: B',}},
-        neck="Null Loop",
-        waist="Eschan Stone",
-        left_ear="Digni. Earring",
-        right_ear="Crep. Earring",
-        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-        right_ring="Stikini Ring +1",
-        back="Null Shawl",
-    })
+
     
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Lugra Earring",}
+	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Telos Earring",}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.DayMaxTPWSEars = {ear1="Ishvara Earring",ear2="Brutal Earring",}
 	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayWSEars = {ear1="Brutal Earring",ear2="Moonshade Earring"}
+	sets.DayWSEars = {ear1="Brutal Earring",ear2={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},}
 	
 	--Specialty WS set overwrites.
 	sets.AccWSMightyCharge = {}
@@ -1000,6 +990,13 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 		
 	sets.defense.MEVA = sets.defense.MDT
 
+    sets.defense.Empy = set_combine(sets.defense.PDT, {
+        head="Boii Mask +2",
+        body="Boii Lorica +3",
+        hands="Boii Mufflers +3",
+        legs="Boii Cuisses +3",
+        feet="Boii Calligae +2",
+    })
 
      -- Idle sets
      sets.idle = {
@@ -1215,7 +1212,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	--Extra Special Sets
 	
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
-	sets.buff.Retaliation = { hands="Pummeler's Mufflers +1"}
+	sets.buff.Retaliation = {}-- hands="Pummeler's Mufflers +1"
 	sets.buff.Restraint = {}
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 	
@@ -1258,6 +1255,42 @@ autows_list = {['DualNaegling']='Circle Blade',['Malevo']='Aeolian Edge',['Naegl
 ['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',
 ['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['Loxotic']='Judgment',['DualLoxotic']='Judgment',
 ['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive'}
+
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Warcry"] = {gain = 'Warcry is on.', lose = 'Warcry wore off.', announce_gain = true, announce_lose = false},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end
+
+
 
 --[[
     sets.engaged.Charge = {}

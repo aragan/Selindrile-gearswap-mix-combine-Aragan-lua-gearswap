@@ -14,27 +14,31 @@ sets.crafting.Clothcraft = {head="Midra's Helm +1",neck="Weaver's Torque",sub="P
 sets.crafting.Clothcraft.NQ = {ring1="Tailor's Ring"}
 sets.crafting.Woodworking = {head="Midra's Helm +1",neck="Carver's Torque",sub="Joiner's Escutcheon",body="Carpenter's Smock"}
 sets.crafting.Woodworking.NQ = {ring1="Carpenter's Ring"}
-]]
-sets.Fishing = {range="Lu Sh. F. Rod",neck="Fisher's Torque",body="Fisherman's Smock",hands="Fsh. Gloves",ring1="Noddy Ring",ring2=="Puffin Ring",waist="Fisher's Rope",legs="Fisherman's Hose",feet="Waders"}
 
 sets.Chocobo = {main="Chocobo Wand",head="Egg Helm",neck="Chocobo Torque",body="Blue Race Silks",hands="Chocobo Gloves",waist="Chocobo Rope",legs="Chocobo Hose",feet="Chocobo Boots"}
 sets.Chocobo.skill = {body="S. Blue Race Silks"}
 sets.Chocobo.personal = {body="Red Race Silks"}
 sets.Chocobo.game = {body="Black Race Silks"}
 
+sets.gathering = {body="Field Tunica",hands="Field Gloves",legs="Field Hose",feet="Field Boots"}
+
+]]
+
+sets.Fishing = {range="Lu Sh. F. Rod",neck="Fisher's Torque",body="Fisherman's Smock",hands="Fsh. Gloves",ring1="Noddy Ring",ring2=="Puffin Ring",waist="Fisher's Rope",legs="Fisherman's Hose",feet="Waders"}
+
+
 sets.crafting = {main="Caduceus",ring1="Craftkeeper's Ring",ring2="Orvail Ring +1",}
 sets.crafting.HQ = {ring1="Craftmaster's Ring"}
 
-sets.crafting.Smithing = {main="Caduceus",hand="Smithy's Mitts"}
+sets.crafting.Smithing = {main="Caduceus",head="Shaded Specs.",hand="Smithy's Mitts",neck="Goldsm. Torque",sub="Toreutic Escutcheon",body="Goldsmith's Smock"}
 sets.crafting.Smithing.NQ = {ring1="Goldsmith's Ring"}
 
-sets.crafting.Cooking = {main="Debahocho +1",}
+sets.crafting.Cooking = {main="Debahocho +1",head="Shaded Specs.",hand="Smithy's Mitts",neck="Goldsm. Torque",sub="Toreutic Escutcheon",body="Goldsmith's Smock"}
 sets.crafting.Cooking.NQ = {ring1="Goldsmith's Ring"}
-sets.crafting.Goldsmithing = {main="Caduceus",head="Shaded Specs.",neck="Goldsm. Torque",sub="Toreutic Escutcheon",body="Goldsmith's Smock"}
+sets.crafting.Goldsmithing = {main="Caduceus",head="Shaded Specs.",hand="Smithy's Mitts",neck="Goldsm. Torque",sub="Toreutic Escutcheon",body="Goldsmith's Smock"}
 sets.crafting.Goldsmithing.NQ = {ring1="Goldsmith's Ring"}
 
 sets.Synergy = {}
-sets.gathering = {body="Field Tunica",hands="Field Gloves",legs="Field Hose",feet="Field Boots"}
 
 --Specific items for crafting you may want to use organizer to collect.
 sets.items = {

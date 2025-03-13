@@ -33,7 +33,7 @@ function user_job_setup()
     state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow10','SubtleBlow40')
     state.WeaponskillMode:options('Match', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'Resistant')
-    state.IdleMode:options('DT','Normal', 'Evasion', 'HP', 'Regen', 'EnemyCritRate')
+    state.IdleMode:options('DT','Normal','Empy', 'Evasion', 'HP', 'Regen', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT','Aminon', 'Evasion', 'HP')
     state.MagicalDefenseMode:options('MDT')
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax','SubtleBlow10','SubtleBlow40'}
@@ -162,7 +162,7 @@ function init_gear_sets()
         body="Adamantite Armor",
         hands="Chasseur's Gants +3",
         legs="Desultor Tassets",
-        feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+        feet="Lanun Bottes +3",
         neck="Regal Necklace",
         right_ear="Genmei Earring",
         left_ring="Defending Ring",
@@ -172,8 +172,8 @@ function init_gear_sets()
         
     sets.precast.LuzafRing = {ring2="Luzaf's Ring"}
     
-    sets.precast.CorsairRoll["Caster's Roll"] = set_combine(sets.precast.CorsairRoll, {legs="Chas. Culottes +3",})
-    sets.precast.CorsairRoll["Courser's Roll"] = set_combine(sets.precast.CorsairRoll, {feet="Chass. Bottes +2"})
+    sets.precast.CorsairRoll["Caster's Roll"] = set_combine(sets.precast.CorsairRoll, {legs="Chasseur's Culottes +3",})
+    sets.precast.CorsairRoll["Courser's Roll"] = set_combine(sets.precast.CorsairRoll, {feet="Chasseur's Bottes +2"})
     sets.precast.CorsairRoll["Blitzer's Roll"] = set_combine(sets.precast.CorsairRoll, {head="Chass. Tricorne +2",})
     sets.precast.CorsairRoll["Tactician's Roll"] = set_combine(sets.precast.CorsairRoll, {body="Chasseur's Frac +2",})
     sets.precast.CorsairRoll["Allies' Roll"] = set_combine(sets.precast.CorsairRoll, {hands="Chasseur's Gants +3",})
@@ -183,7 +183,7 @@ function init_gear_sets()
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+    feet="Lanun Bottes +3",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Skrymir Cord",
     left_ear="Friomisi Earring",
@@ -196,15 +196,15 @@ function init_gear_sets()
 	
     sets.precast.CorsairShot.Proc = {ammo=gear.RAbullet,
         head="Wh. Rarab Cap +1",neck="Loricate Torque +1",ear1="Genmei Earring",ear2="Sanare Earring",
-        body="Emet Harness +1",hands="Malignance Gloves",ring1="Defending Ring",ring2="Dark Ring",
-        back="Moonlight Cape",waist="Flume Belt +1",legs="Carmine Cuisses +1",feet="Chass. Bottes +1"}
+        body="Emet Harness +1",hands="Malignance Gloves",ring1="Defending Ring",
+        back="Moonlight Cape",waist="Flume Belt +1",legs="Carmine Cuisses +1",feet="Chasseur's Bottes +2"}
 
     sets.precast.CorsairShot['Light Shot'] = { ammo=gear.QDbullet,
     head="Malignance Chapeau",
     body="Laksa. Frac +3",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
-    feet="Chass. Bottes +2",
+    legs="Chasseur's Culottes +3",
+    feet="Chasseur's Bottes +2",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Eschan Stone",
     left_ear="Crep. Earring",
@@ -213,14 +213,13 @@ function init_gear_sets()
     right_ring="Stikini Ring +1",
     back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
     }
-    sets.precast.CorsairShot['Dark Shot'] = set_combine(sets.precast.CorsairShot['Light Shot'], {feet="Chass. Bottes +2"})
-    --sets.precast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
+    sets.precast.CorsairShot['Dark Shot'] = set_combine(sets.precast.CorsairShot['Light Shot'], {feet="Chasseur's Bottes +2"})
+    --sets.precast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
 
     -- Waltz set (chr and vit)
     sets.precast.Waltz = {
         head="Mummu Bonnet +2",    
         body="Passion Jacket",
-        ring1="Asklepian Ring",
         waist="Gishdubar Sash",}
 		
 	sets.Self_Waltz = {head="Mummu Bonnet +2",body="Passion Jacket"}
@@ -248,10 +247,10 @@ function init_gear_sets()
     head="Chass. Tricorne +2",
     body="Oshosi Vest +1",
     legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
-feet="Meg. Jam. +2",
-neck={ name="Comm. Charm +2", augments={'Path: A',}},
-waist="Yemaya Belt",
-back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    feet="Meghanada Jambeaux +2",
+    neck={ name="Comm. Charm +2", augments={'Path: A',}},
+    waist="Yemaya Belt",
+    back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 }
 		
 	sets.precast.RA.Flurry = set_combine(sets.precast.RA, {    body="Laksa. Frac +3", --0/20
@@ -259,10 +258,10 @@ back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accu
 	sets.precast.RA.Flurry2 = set_combine(sets.precast.RA, {  hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
     head="Chass. Tricorne +2",
     body="Laksa. Frac +3",
- legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
- feet="Meg. Jam. +2",
- waist="Yemaya Belt",
- back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
+    feet="Meghanada Jambeaux +2",
+    waist="Yemaya Belt",
+    back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 })
 
        
@@ -302,7 +301,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         body="Laksa. Frac +3",
         hands="Nyame Gauntlets",
         legs="Nyame Flanchard",
-        feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+        feet="Lanun Bottes +3",
         neck="Fotia Gorget",
         waist="Fotia Belt",
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -370,7 +369,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         hands="Meg. Gloves +2",
         legs="Meg. Chausses +2",
-        feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+        feet="Lanun Bottes +3",
         neck="Fotia Gorget",
         waist="Fotia Belt",
         right_ear="Telos Earring",
@@ -386,7 +385,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
     body="Ikenga's Vest",
     hands="Chasseur's Gants +3",
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
-    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+    feet="Lanun Bottes +3",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Fotia Belt",
     right_ear="Ishvara Earring",
@@ -416,7 +415,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         body="Laksa. Frac +3",
         hands="Chasseur's Gants +3",
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+        feet="Lanun Bottes +3",
         neck="Fotia Gorget",
         waist="Fotia Belt",
         right_ear="Ishvara Earring",
@@ -432,7 +431,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         body="Lanun Frac +3",
         hands="Nyame Gauntlets",
         legs="Nyame Flanchard",
-        feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+        feet="Lanun Bottes +3",
         neck={ name="Comm. Charm +2", augments={'Path: A',}},
         waist="Orpheus's Sash",
         left_ear="Friomisi Earring",
@@ -456,7 +455,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+    feet="Lanun Bottes +3",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Svelt. Gouriz +1",
     right_ear="Friomisi Earring",
@@ -472,7 +471,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+    feet="Lanun Bottes +3",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Svelt. Gouriz +1",
     right_ear="Friomisi Earring",
@@ -498,7 +497,7 @@ sets.precast.WS['Sanguine Blade'] = set_combine(sets.precast.WS, {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+    feet="Lanun Bottes +3",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Svelt. Gouriz +1",
     right_ear="Friomisi Earring",
@@ -520,7 +519,7 @@ sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+    feet="Lanun Bottes +3",
     neck="Baetyl Pendant",
     waist="Orpheus's Sash",
     right_ear="Friomisi Earring",
@@ -560,7 +559,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck="Null Loop",
     waist="Null Belt",
-    left_ear="Digni. Earring",
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Crep. Earring",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     right_ring="Stikini Ring +1",
@@ -585,14 +584,13 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         waist="Rumination Sash", --10
         }
 	sets.midcast.Cure = {
-        head="Carmine Mask +1",neck="Phalaina Locket",ear1="Enchntr. Earring +1",ear2="Mendi. Earring",
-        body="Dread Jupon",hands="Leyline Gloves",ring1="Janniston Ring",ring2="Lebeche Ring",
+        head="Carmine Mask +1",ear2="Mendi. Earring",
+        hands="Leyline Gloves",
         back="Solemnity Cape",waist="Flume Belt +1",legs="Carmine Cuisses +1",feet="Carmine Greaves +1"}
     
     sets.midcast['Enhancing Magic'] = {
             neck="Incanter's Torque",
             waist="Olympus Sash",
-            left_ear="Brachyura Earring",
             right_ear="Andoaa Earring",
             left_ring="Stikini Ring +1",
             right_ring="Stikini Ring +1",
@@ -631,7 +629,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     head="Ikenga's Hat",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     neck="Iskur Gorget",
     waist="Yemaya Belt",
@@ -646,7 +644,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     head="Malignance Chapeau",
     body="Laksa. Frac +3",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     neck="Null Loop",
     waist="Null Belt",
@@ -661,7 +659,7 @@ sets.midcast.RA.STP = {
     head="Ikenga's Hat",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     neck="Iskur Gorget",
     waist="Gerdr Belt",
@@ -712,7 +710,7 @@ sets.midcast.CorsairShot = {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet={ name="Lanun Bottes +3", augments={'Enhances "Wild Card" effect',}},
+    feet="Lanun Bottes +3",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Skrymir Cord",
     left_ear="Friomisi Earring",
@@ -728,7 +726,7 @@ sets.midcast.CorsairShot.Acc = {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet="Chass. Bottes +2",
+    feet="Chasseur's Bottes +2",
     neck="Null Loop",
     waist="Null Belt",
     left_ear="Friomisi Earring",
@@ -758,8 +756,8 @@ sets.midcast.CorsairShot['Light Shot'] = {
     head="Malignance Chapeau",
     body="Laksa. Frac +3",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
-    feet="Chass. Bottes +2",
+    legs="Chasseur's Culottes +3",
+    feet="Chasseur's Bottes +2",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Eschan Stone",
     left_ear="Crep. Earring",
@@ -770,7 +768,7 @@ sets.midcast.CorsairShot['Light Shot'] = {
 }
 
 sets.midcast.CorsairShot['Dark Shot'] = sets.midcast.CorsairShot['Light Shot']
-sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
+sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
 
 
 	sets.buff['Triple Shot'] = {body="Chasseur's Frac +2"}
@@ -792,7 +790,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
     body="Meg. Cuirie +2",
     hands="Meg. Gloves +2",
     legs="Meg. Chausses +2",
-    feet="Meg. Jam. +2",
+    feet="Meghanada Jambeaux +2",
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
     left_ear="Infused Earring",
     ring1="Sheltered Ring",ring2="Paguroidea Ring"
@@ -864,20 +862,21 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Shadow Ring",
         back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 
-        sets.defense.Aminon = {
-            head="Null Masque",
-            body={ name="Nyame Mail", augments={'Path: B',}},
-            hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-            legs={ name="Nyame Flanchard", augments={'Path: B',}},
-            feet={ name="Nyame Sollerets", augments={'Path: B',}},
-            neck="Rep. Plat. Medal",
-            waist="Carrier's Sash",
-            left_ear="Tuisto Earring",
-            right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-            left_ring="Shadow Ring",
-            right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-            back="Moonlight Cape",
-        }
+    sets.defense.Aminon = {
+        head="Null Masque",
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Rep. Plat. Medal",
+        waist="Carrier's Sash",
+        left_ear="Tuisto Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Shadow Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+    }
+
 
     -- Idle sets
     sets.idle = {
@@ -894,7 +893,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         right_ring="Chirich Ring +1",
         back="Moonlight Cape",}
             
-        sets.idle.DT = set_combine(sets.defense.PDT, {})
+    sets.idle.DT = set_combine(sets.defense.PDT, {})
         
     sets.idle.Evasion = set_combine(sets.idle, {
         head="Malignance Chapeau",
@@ -913,18 +912,18 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
     sets.idle.Town ={legs="Carmine Cuisses +1",
         left_ear="Infused Earring",}
     sets.idle.HP =  {
-            head={ name="Nyame Helm", augments={'Path: B',}},
-            body="Adamantite Armor",
-            hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-            legs={ name="Nyame Flanchard", augments={'Path: B',}},
-            feet={ name="Nyame Sollerets", augments={'Path: B',}},
-            neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-            waist="Plat. Mog. Belt",
-            left_ear="Tuisto Earring",
-            right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-            left_ring="Ilabrat Ring",
-            right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-            back="Moonlight Cape",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body="Adamantite Armor",
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Plat. Mog. Belt",
+        left_ear="Tuisto Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Ilabrat Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
     }
     sets.idle.Regen = set_combine(sets.idle.DT, {
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
@@ -938,6 +937,13 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         back="Reiki Cloak",
     })
 
+    sets.idle.Empy = set_combine(sets.idle, {
+        head="Chass. Tricorne +2",
+        body="Chasseur's Frac +2",
+        hands="Chasseur's Gants +3",
+        legs="Chasseur's Culottes +3",
+        feet="Chasseur's Bottes +2",
+    })
 
     sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
@@ -981,7 +987,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         left_ring="Epona's Ring",
         right_ring="Petrov Ring",
         back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
-        }
+    }
     sets.engaged.Acc = {
         head="Malignance Chapeau",
         body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -1014,7 +1020,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         head="Malignance Chapeau",
         body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
-        legs="Chas. Culottes +3",
+        legs="Chasseur's Culottes +3",
         feet="Malignance Boots",
         neck="Iskur Gorget",
         waist="Windbuffet Belt +1",
@@ -1026,10 +1032,10 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
     }
     
     sets.engaged.STP = set_combine(sets.engaged, {
-            left_ear="Dedition Earring",
-            ring1="Chirich Ring +1",
-            ring2="Chirich Ring +1",
-            waist="Kentarch Belt +1",
+        left_ear="Dedition Earring",
+        ring1="Chirich Ring +1",
+        ring2="Chirich Ring +1",
+        waist="Kentarch Belt +1",
     })
     
     -- * DNC Subjob DW Trait: +15%
@@ -1063,7 +1069,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chass. Bottes +2"}
         head="Malignance Chapeau",
         body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
-        legs="Chas. Culottes +3",
+        legs="Chasseur's Culottes +3",
         feet="Malignance Boots",
         neck="Iskur Gorget",
         waist="Windbuffet Belt +1",
@@ -1088,7 +1094,7 @@ sets.engaged.Hybrid = {
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 }
@@ -1097,7 +1103,7 @@ sets.engaged.PDT = set_combine(sets.engaged,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
@@ -1105,7 +1111,7 @@ sets.engaged.Acc.PDT = set_combine(sets.engaged.Acc,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
@@ -1113,7 +1119,7 @@ sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
@@ -1121,7 +1127,7 @@ sets.engaged.Ranged.PDT = set_combine(sets.Ranged,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
@@ -1129,7 +1135,7 @@ sets.engaged.STP.PDT = set_combine(sets.engaged.STP,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
@@ -1137,7 +1143,7 @@ sets.engaged.DW.PDT = set_combine(sets.engaged.DW, {
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
@@ -1145,7 +1151,7 @@ sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.DW.Acc,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
@@ -1162,7 +1168,7 @@ sets.engaged.DW.Ranged.PDT = set_combine(sets.engaged.DW.Ranged,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
-    legs="Chas. Culottes +3",
+    legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
@@ -1222,4 +1228,40 @@ function user_job_lockstyle()
 	end
 end
 
-autows_list = {['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='Aeolian Edge',['Ranged']='Leaden Salute',['Kustawi']='Last Stand',['DualSavageWeapons']='Savage Blade',['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+autows_list = {['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='Aeolian Edge',
+['Ranged']='Leaden Salute',['Kustawi']='Last Stand',['DualSavageWeapons']='Savage Blade',
+['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',
+['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /t Aragan ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /t Aragan ' .. lose_message)
+            end
+        end
+    end
+end

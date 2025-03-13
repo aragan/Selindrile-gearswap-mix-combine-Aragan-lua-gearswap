@@ -97,16 +97,16 @@ function init_gear_sets()
 	sets.DefaultShield = {sub="Nusku Shield"}
 
 	-- Weapons sets
-	sets.weapons.Default = {main="Kustawi +1",sub="Nusku Shield",range="Fomalhaut"}
-	sets.weapons.DualWeapons = {main="Kustawi +1",sub="Kustawi",range="Fomalhaut"}
-	sets.weapons.DualSavageWeapons = {main="Naegling",sub="Blurred Knife +1",range="Fomalhaut"}
-	sets.weapons.DualEviscerationWeapons = {main="Tauret",sub="Blurred Knife +1",range="Fomalhaut"}
-	sets.weapons.DualMalevolence = {main="Malevolence",sub="Malevolence",range="Fomalhaut"}
-	sets.weapons.DualMagicWeapons = {main="Tauret",sub="Naegling",range="Fomalhaut"}
+	sets.weapons.Default = {main="Kustawi +1",sub="Nusku Shield",}
+	sets.weapons.DualWeapons = {main="Kustawi +1",sub="Blurred Knife +1",}
+	sets.weapons.DualSavageWeapons = {main="Naegling",sub="Blurred Knife +1",}
+	sets.weapons.DualEviscerationWeapons = {main="Tauret",sub="Blurred Knife +1",}
+	sets.weapons.DualMalevolence = {main="Malevolence",sub="Malevolence",}
+	sets.weapons.DualMagicWeapons = {main="Tauret",sub="Naegling",}
 
 	sets.weapons.SWORDS = {main="Naegling", sub="Blurred Knife +1"}
     sets.weapons.DAGGERS = {main="Ternion Dagger +1", sub="Malevolence"}
-    sets.weapons.AXE = {main="Perun 1+", sub="Nusku Shield"}
+    sets.weapons.AXE = {main="Perun +1", sub="Nusku Shield"}
 
     sets.Holliday = {range="Holliday"}
     sets.Hangaku = {range="Hangaku-no-Yumi", ammo="Hauksbok Arrow"}
@@ -118,11 +118,11 @@ function init_gear_sets()
 
 	-- Precast sets to enhance JAs
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
-	sets.precast.JA['Bounty Shot'] = {hands="Sylvan Glovelettes +2"}
-	sets.precast.JA['Camouflage'] = {body="Orion Jerkin +1"}
-	sets.precast.JA['Scavenge'] = {feet="Orion Socks +1"}
-	sets.precast.JA['Shadowbind'] = {hands="Orion Bracers +1"}
-	sets.precast.JA['Sharpshot'] = {legs="Orion Braccae +1"}
+	sets.precast.JA['Bounty Shot'] = {}--hands="Sylvan Glovelettes +2"
+	sets.precast.JA['Camouflage'] = {}--body="Orion Jerkin +1"
+	sets.precast.JA['Scavenge'] = {}--feet="Orion Socks +1"
+	sets.precast.JA['Shadowbind'] = {}--hands="Orion Bracers +1"
+	sets.precast.JA['Sharpshot'] = {}--legs="Orion Braccae +1"
 	sets.precast.JA['Eagle Eye Shot'] = {legs="Arc. Braccae +3"}
 
 
@@ -130,7 +130,7 @@ function init_gear_sets()
 
     sets.precast.FC = {
         head="Carmine Mask +1",neck="Baetyl Pendant",ear2="Loquac. Earring",
-        hands="Leyline Gloves",ring1="Prolix Ring",ring2="Lebeche Ring",
+        hands="Leyline Gloves",ring1="Prolix Ring",
         back="Moonlight Cape",waist="Plat. Mog. Belt",feet="Carmine Greaves +1"}
 
 	sets.precast.FC.Utsusemi = set_combine(sets.precast.FC, {neck="Magoraga Beads",body="Passion Jacket"})
@@ -143,14 +143,14 @@ function init_gear_sets()
 		body="Oshosi Vest +1",
 		hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
-		feet="Meg. Jam. +1",
+		feet="Meghanada Jambeaux +2",
 		waist="Yemaya Belt",
 		right_ring="Crepuscular Ring",
 		back="Null Shawl"} --38
 		
-	sets.precast.RA.Flurry = set_combine(sets.precast.RA, {		body="Oshosi Vest +1",
-	feet="Meg. Jam. +1",})
-	sets.precast.RA.Flurry2 = set_combine(sets.precast.RA, {		head="Orion Beret +3",
+	sets.precast.RA.Flurry = set_combine(sets.precast.RA, {body="Oshosi Vest +1",
+	feet="Meghanada Jambeaux +2",})
+	sets.precast.RA.Flurry2 = set_combine(sets.precast.RA, {head="Orion Beret +3",
 	body="Oshosi Vest +1",
 hands={ name="Carmine Fin. Ga. +1", augments={'Rng.Atk.+20','"Mag.Atk.Bns."+12','"Store TP"+6',}},
 legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
@@ -238,7 +238,7 @@ back="Null Shawl",})
 		right_ear="Amini Earring +1",
 		left_ring="Sroda Ring", 
 		right_ring="Cornelia's Ring",
-		back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Damage taken-5%',}},
+		back="Belenus's Cape",
 		})
 
 	sets.precast.WS.Wildfire  = {
@@ -400,19 +400,18 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
 sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
-    ammo="Pemphredo Tathlum",
-    head={ name="Nyame Helm", augments={'Path: B',}},
-    body={ name="Nyame Mail", augments={'Path: B',}},
-    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-    legs={ name="Nyame Flanchard", augments={'Path: B',}},
-    feet={ name="Nyame Sollerets", augments={'Path: B',}},
-    neck="Null Loop",
-    waist="Eschan Stone",
-    left_ear="Digni. Earring",
-    right_ear="Crep. Earring",
-    left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-    right_ring="Stikini Ring +1",
-    back="Null Shawl",
+	head={ name="Nyame Helm", augments={'Path: B',}},
+	body={ name="Nyame Mail", augments={'Path: B',}},
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck="Null Loop",
+	waist="Null Belt",
+	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+	right_ear="Crep. Earring",
+	left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+	right_ring="Stikini Ring +1",
+	back="Null Shawl",
 })
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
@@ -428,15 +427,12 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 	-- Fast recast for spells
 	
-    sets.midcast.FastRecast = {
-		head="Orion Beret +1",ear1="Loquacious Earring",
-		ring1="Prolix Ring",
-		waist="Pya'ekue Belt +1",legs="Orion Braccae +1",feet="Orion Socks +1"}
+    sets.midcast.FastRecast = {}
 		
 	-- Ranged sets
 
     sets.midcast.RA = {
-		head="Arcadian Beret +1",
+		head="Arcadian Beret +3",
 		body="Nisroch Jerkin",
 		hands="Malignance Gloves",
 		legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
@@ -454,12 +450,12 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		body="Nisroch Jerkin",
 		hands="Ikenga's Gloves",
 		legs="Ikenga's Trousers",
-		feet="Meg. Jam. +2",
+		feet="Meghanada Jambeaux +2",
 		neck="Scout's Gorget +2",
 		waist="Yemaya Belt",
 		left_ear="Telos Earring",
 		right_ear="Enervating Earring",
-		left_ring="Cacoethic Ring 1+",
+		left_ring="Cacoethic Ring +1",
 		right_ring="Dingir Ring",
 		back="Null Shawl",}
 		
@@ -473,7 +469,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 			waist="Yemaya Belt",
 			left_ear="Telos Earring",
 			right_ear="Crep. Earring",
-			left_ring="Cacoethic Ring 1+",
+			left_ring="Cacoethic Ring +1",
 			right_ring="Crepuscular Ring",
 			back="Belenus's Cape",
 	}
@@ -511,13 +507,13 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	--These sets will overlay based on accuracy level, regardless of other options.
 	sets.buff.Camouflage = {}
 	sets.buff.Camouflage.Acc = {}
-	sets.buff['Double Shot'] = {}
-	sets.buff['Double Shot'].Acc = {}
+	sets.buff['Double Shot'] = {body="Arc. Jerkin +3",}
+	sets.buff['Double Shot'].Acc = {body="Arc. Jerkin +3",}
 	sets.buff.Barrage = {}
 	sets.buff['Velocity Shot'] = set_combine(sets.midcast.RA, {body="Amini Caban +2",})
 	sets.DoubleShot = {
-		head="Oshosi Mask +1",
-		body="Oshosi Vest +1",
+		head="Arcadian Beret +3",
+		body="Arc. Jerkin +3",
 		hands="Oshosi Gloves +1",
 		legs="Osh. Trousers +1",
 		feet="Osh. Leggings +1",
@@ -539,7 +535,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	body="Meg. Cuirie +2",
 	hands="Gleti's Gauntlets",
 	legs="Gleti's Breeches",
-	feet="Meg. Jam. +2",
+	feet="Meghanada Jambeaux +2",
 	neck={ name="Bathy Choker +1", augments={'Path: A',}},
 	left_ear="Infused Earring",
 	left_ring="Chirich Ring +1",
@@ -773,7 +769,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
-		legs="Chas. Culottes +3",
+		legs="Malignance Tights",
 		feet="Malignance Boots",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
@@ -823,7 +819,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
-		legs="Chas. Culottes +3",
+		legs="Malignance Tights",
 		feet="Malignance Boots",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
@@ -868,4 +864,41 @@ function select_default_macro_book()
 end
 
 
-autows_list = {['SWORDS']='Savage Blade',['DAGGERS']='Trueflight',['Tauret']='Aeolian Edge',['Ranged']='Leaden Salute',['AXE']='Last Stand',['DualSavageWeapons']='Savage Blade',['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+autows_list = {['SWORDS']='Savage Blade',['DAGGERS']='Trueflight',['Tauret']='Aeolian Edge',
+['Ranged']='Leaden Salute',['AXE']='Last Stand',['DualSavageWeapons']='Savage Blade',
+['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',
+['DualLeadenMelee']='Leaden Salute',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Overkill"] = {gain = 'Overkill is on.', lose = 'Overkill wore off.', announce_gain = true, announce_lose = true},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end

@@ -17,9 +17,9 @@ function user_job_setup()
     state.IdleMode:options('Normal', 'PDT', 'Regen', 'Sphere', 'MagicalBloodPactRage', 'PhysicalBloodPactRage')
     state.PhysicalDefenseMode:options('Normal','PDT', 'Regen', 'Mdt', 'MagicalBloodPactRage', 'PhysicalBloodPactRage')
 
-	state.Weapons:options('None','Gridarvor')
+	state.Weapons:options('None','Grioavolr')
 
-    gear.perp_staff = {name="Gridarvor"}
+    gear.perp_staff = {name="Grioavolr"}
 	
 	gear.magic_jse_back = {name="Campestres's Cape",augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: "Regen"+10',}}
 	gear.phys_jse_back = {name="Campestres's Cape",augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Eva.+20 /Mag. Eva.+20','Pet: Haste+10',}}
@@ -52,8 +52,8 @@ function init_gear_sets()
     
     
     	-- Weapons sets
-	sets.weapons.Gridarvor = {main="Gridarvor", sub="Elan Strap +1"}
-	sets.weapons.Khatvanga = {main="Khatvanga",sub="Bloodrain Strap"}
+	sets.weapons.Grioavolr = {main="Grioavolr", sub="Elan Strap +1"}
+	sets.weapons.Khatvanga = {}--main="Khatvanga",
     
     
     -- neck JSE Necks Reinforcement Points Mode add u neck here 
@@ -66,11 +66,13 @@ function init_gear_sets()
     
     sets.precast.JA['Elemental Siphon'] = {
     neck="Incanter's Torque",ear1="Andoaa Earring",
-   hands="Baayami Cuffs",ring1="Evoker's Ring",ring2="Stikini Ring +1",
-    back="Conveyance Cape",waist="Kobo Obi",}
+   hands="Baayami Cuffs",ring1="Stikini Ring +1",ring2="Stikini Ring +1",
+   back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
+
+}
 
 
-    sets.precast.JA['Mana Cede'] = {hands="Beck. Bracers +1"}
+    sets.precast.JA['Mana Cede'] = {}--hands="Beck. Bracers +1"
 
     -- Pact delay reduction gear
     sets.precast.BloodPactWard = {  ammo="Sancus Sachet +1",
@@ -129,8 +131,8 @@ function init_gear_sets()
         hands="Nyame Gauntlets",
         legs="Nyame Flanchard",
         feet="Nyame Sollerets",
-        neck="Caro Necklace",
-        waist="Grunfeld Rope",
+        neck="Fotia Gorget",
+        waist="Fotia Belt",
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Brutal Earring",
         left_ring="Freke Ring",
@@ -159,8 +161,8 @@ function init_gear_sets()
             hands="Nyame Gauntlets",
             legs="Nyame Flanchard",
             feet="Nyame Sollerets",
-            neck="Caro Necklace",
-            waist="Luminary Sash",
+            neck="Fotia Gorget",
+            waist="Fotia Belt",
             left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
             right_ear="Ishvara Earring",
             left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -221,7 +223,21 @@ function init_gear_sets()
         right_ring="Freke Ring",
         back={ name="Aurist's Cape +1", augments={'Path: A',}},
     }
-    
+    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
+    })
     --------------------------------------
     -- Midcast sets
     --------------------------------------
@@ -292,10 +308,9 @@ function init_gear_sets()
     legs="Baayami Slops",
     feet="Bunzi's Sabots",
     neck="Incanter's Torque",
-    waist="Kobo Obi",
     left_ear="Andoaa Earring",
     right_ear="Beck. Earring +1",
-    left_ring="Stikini Ring",
+    left_ring="Stikini Ring +1",
     right_ring="Prolix Ring",
     back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
@@ -339,7 +354,7 @@ sets.midcast['Enfeebling Magic'] = {
 }
     
 sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
-    waist="Fuchi-no-Obi",})
+    waist="Fucho-no-Obi",})
     sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], { left_ear="Sheltered Ring"})
     sets.midcast.Protectra = sets.midcast.Protect
     sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], { left_ear="Sheltered Ring"})
@@ -395,11 +410,11 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     ammo="Sancus Sachet +1",
     head="Baayami Hat",
     body="Baayami Robe",
-    hands="Lamassu Mitts +1",
+    hands="Baayami Cuffs",
     legs="Baayami Slops",
     feet="Baayami Sabots",
     neck="Incanter's Torque",
-    waist="Kobo Obi",
+    
     left_ear="C. Palug Earring",
     left_ring="Stikini Ring +1",
     right_ring="Fervor Ring",
@@ -450,7 +465,7 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     head="C. Palug Crown",
     body="Con. Doublet +3",
     hands={ name="Merlinic Dastanas", augments={'Pet: Attack+9 Pet: Rng.Atk.+9','Blood Pact Dmg.+10','Pet: CHR+1','Pet: "Mag.Atk.Bns."+2',}},
-    legs={ name="Enticer's Pants", augments={'MP+20','Pet: Accuracy+7 Pet: Rng. Acc.+7','Pet: Mag. Acc.+3',}},
+    legs="Enticer's Pants",
     feet={ name="Apogee Pumps +1", augments={'Pet: Attack+25','Pet: "Mag.Atk.Bns."+25','Blood Pact Dmg.+8',}},
     neck={ name="Smn. Collar +2", augments={'Path: A',}},
     waist="Incarnation Sash",
@@ -523,7 +538,7 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     waist="Fucho-no-Obi",
     left_ear="Enmerkar Earring",
     right_ear="Evans Earring",
-    left_ring="Thurandaut Ring",
+    left_ring="Varar Ring +1",
     right_ring="Varar Ring +1",
     back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},}
 
@@ -540,7 +555,7 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
         waist="Isa Belt",
         left_ear="Enmerkar Earring",
         right_ear="Evans Earring",
-        left_ring="Thurandaut Ring",
+        left_ring="Varar Ring +1",
         right_ring="C. Palug Ring",
         back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
     }
@@ -574,7 +589,7 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
         head="C. Palug Crown",
         body="Con. Doublet +3",
         hands={ name="Merlinic Dastanas", augments={'Pet: Attack+9 Pet: Rng.Atk.+9','Blood Pact Dmg.+10','Pet: CHR+1','Pet: "Mag.Atk.Bns."+2',}},
-        legs={ name="Enticer's Pants", augments={'MP+20','Pet: Accuracy+7 Pet: Rng. Acc.+7','Pet: Mag. Acc.+3',}},
+        legs="Enticer's Pants",
         feet={ name="Apogee Pumps +1", augments={'Pet: Attack+25','Pet: "Mag.Atk.Bns."+25','Blood Pact Dmg.+8',}},
         neck={ name="Smn. Collar +2", augments={'Path: A',}},
         waist="Incarnation Sash",
@@ -609,8 +624,8 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
     waist="Isa Belt",
     left_ear="Enmerkar Earring",
     right_ear="Evans Earring",
-    left_ring="Thurandaut Ring",
-    right_ring="Varar Ring +1 +1",
+    left_ring="Varar Ring +1",
+    right_ring="Varar Ring +1",
     back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},}
 
     sets.idle.PDT.Avatar = {
@@ -625,7 +640,7 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
         waist="Isa Belt",
         left_ear="Handler's Earring +1",
         right_ear="Enmerkar Earring",
-        left_ring="Thurandaut Ring",
+        left_ring="Varar Ring +1",
         right_ring="Varar Ring +1",
         back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
@@ -643,7 +658,7 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
         waist="Isa Belt",
         left_ear="Enmerkar Earring",
         right_ear="Evans Earring",
-        left_ring="Thurandaut Ring",
+        left_ring="Varar Ring +1",
         right_ring="C. Palug Ring",
         back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
@@ -673,7 +688,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
     head="C. Palug Crown",
     body="Con. Doublet +3",
     hands={ name="Merlinic Dastanas", augments={'Pet: Attack+9 Pet: Rng.Atk.+9','Blood Pact Dmg.+10','Pet: CHR+1','Pet: "Mag.Atk.Bns."+2',}},
-    legs={ name="Enticer's Pants", augments={'MP+20','Pet: Accuracy+7 Pet: Rng. Acc.+7','Pet: Mag. Acc.+3',}},
+    legs="Enticer's Pants",
     feet={ name="Apogee Pumps +1", augments={'Pet: Attack+25','Pet: "Mag.Atk.Bns."+25','Blood Pact Dmg.+8',}},
     neck={ name="Smn. Collar +2", augments={'Path: A',}},
     waist="Incarnation Sash",
@@ -692,7 +707,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
 }
 
     -- Favor uses Caller's Horn instead of Convoker's Horn for refresh
-    sets.idle.Avatar.Favor = {    head="Beckoner's Horn +2",}
+    sets.idle.Avatar.Favor = {head="Beckoner's Horn +2",}
     sets.idle.Avatar.Melee = {}
 		
 	--Favor always up and head is best in slot idle so no specific items here at the moment.
@@ -731,7 +746,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
         waist="Isa Belt",
         left_ear="Enmerkar Earring",
         right_ear="Handler's Earring +1",
-        left_ring="Thurandaut Ring",
+        left_ring="Varar Ring +1",
         right_ring="C. Palug Ring",
         back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
@@ -749,7 +764,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
     waist="Klouskap Sash +1",
     left_ear="Enmerkar Earring",
     right_ear="Crep. Earring",
-    left_ring="Thurandaut Ring",
+    left_ring="Varar Ring +1",
     right_ring="Varar Ring +1",
     back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
@@ -767,7 +782,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
         waist="Isa Belt",
         left_ear="Enmerkar Earring",
         right_ear="Evans Earring",
-        left_ring="Thurandaut Ring",
+        left_ring="Varar Ring +1",
         right_ring="C. Palug Ring",
         back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
@@ -797,7 +812,7 @@ sets.defense.MagicalBloodPactRage = {
     head="C. Palug Crown",
     body="Con. Doublet +3",
     hands={ name="Merlinic Dastanas", augments={'Pet: Attack+9 Pet: Rng.Atk.+9','Blood Pact Dmg.+10','Pet: CHR+1','Pet: "Mag.Atk.Bns."+2',}},
-    legs={ name="Enticer's Pants", augments={'MP+20','Pet: Accuracy+7 Pet: Rng. Acc.+7','Pet: Mag. Acc.+3',}},
+    legs="Enticer's Pants",
     feet={ name="Apogee Pumps +1", augments={'Pet: Attack+25','Pet: "Mag.Atk.Bns."+25','Blood Pact Dmg.+8',}},
     neck={ name="Smn. Collar +2", augments={'Path: A',}},
     waist="Incarnation Sash",
@@ -890,3 +905,6 @@ function select_default_macro_book(reset)
     -- Default macro set/book
     set_macro_page(1, 14)
 end
+
+autows_list = {['Grioavolr']='Myrkr',['Mpaca']='Myrkr',
+['Xoanon']="Cataclysm",['TernionDagger']='Aeolian Edge',['Club']='Black Halo',}

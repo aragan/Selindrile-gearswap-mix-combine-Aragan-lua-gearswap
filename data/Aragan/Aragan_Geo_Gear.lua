@@ -342,8 +342,8 @@ function init_gear_sets()
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
-        waist="Eschan Stone",
-        left_ear="Digni. Earring",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Stikini Ring +1",
@@ -464,10 +464,7 @@ function init_gear_sets()
 		
     sets.midcast['Elemental Magic'].Fodder = sets.midcast['Elemental Magic']
 		
-    sets.midcast['Elemental Magic'].HighTierNuke = {main="Daybreak",sub="Ammurapi Shield",ammo="Pemphredo Tathlum",
-        head=gear.merlinic_nuke_head,neck="Baetyl Pendant",ear1="Regal Earring",ear2="Malignance Earring",
-        body=gear.merlinic_nuke_body,hands="Amalric Gages +1",ring1="Metamor. Ring +1",ring2="Freke Ring",
-        back=gear.nuke_jse_back,waist=gear.ElementalObi,legs="Merlinic Shalwar",feet="Amalric Nails +1"}
+    sets.midcast['Elemental Magic'].HighTierNuke = sets.midcast['Elemental Magic']
 		
     sets.midcast['Elemental Magic'].HighTierNuke.Resistant = sets.midcast['Elemental Magic']
 
@@ -567,8 +564,8 @@ function init_gear_sets()
 	waist="Olympus Sash",
 	left_ear="Andoaa Earring",
 	right_ear="Mendi. Earring",
-	right_ring="Stikini Ring",
-	left_ring="Stikini Ring",
+	right_ring="Stikini Ring +1",
+	left_ring="Stikini Ring +1",
 	back={ name="Fi Follet Cape +1", augments={'Path: A',}}
 }
 
@@ -588,10 +585,10 @@ function init_gear_sets()
 	
 	sets.midcast.BarElement = set_combine(sets.precast.FC['Enhancing Magic'], {})
 	
-	sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear1="Gifted Earring",ear2="Malignance Earring"})
-	sets.midcast.Protectra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear1="Gifted Earring",ear2="Malignance Earring"})
-	sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear1="Gifted Earring",ear2="Malignance Earring"})
-	sets.midcast.Shellra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear1="Gifted Earring",ear2="Malignance Earring"})
+	sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear2="Malignance Earring"})
+	sets.midcast.Protectra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear2="Malignance Earring"})
+	sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear2="Malignance Earring"})
+	sets.midcast.Shellra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear2="Malignance Earring"})
     sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'], {})
 
 	--------------------------------------
@@ -792,7 +789,7 @@ function init_gear_sets()
 
 	sets.Kiting = {feet="Geo. Sandals +3"}
 	sets.latent_refresh = {waist="Fucho-no-obi"}
-	sets.latent_refresh_grip = {sub="Oneiros Grip"}
+	sets.latent_refresh_grip = {}
 	sets.TPEat = {}
 	sets.DayIdle = {}
 	sets.NightIdle = {}
@@ -841,7 +838,7 @@ function init_gear_sets()
         legs="Nyame Flanchard",
         feet="Nyame Sollerets",
         neck="Lissome Necklace",
-        waist="Grunfeld Rope",
+        waist="Olseni Belt",
         left_ear="Telos Earring",
         right_ear="Mache Earring +1",
         left_ring="Chirich Ring +1",
@@ -856,7 +853,7 @@ function init_gear_sets()
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Lissome Necklace",
-        waist="Grunfeld Rope",
+        waist="Olseni Belt",
         left_ear="Telos Earring",
         right_ear="Mache Earring +1",
         left_ring="Defending Ring",
@@ -905,4 +902,39 @@ function select_default_macro_book()
     set_macro_page(5, 6)
 end
 
-autows_list = {['Idris']='Exudation',['Maxentius']='Black Halo',['Bunzi']="Flash Nova",['TernionDagger']='Aeolian Edge',['Xoanon']='Retribution',['MalignancePole']='Cataclysm'}
+autows_list = {['Idris']='Exudation',['Maxentius']='Black Halo',['Bunzi']="Flash Nova",
+['TernionDagger']='Aeolian Edge',['Xoanon']='Retribution',['MalignancePole']='Cataclysm'}
+
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Indicolure"] = {gain = 'Indicolure is on.', lose = 'Indi-spell wore off.', announce_gain = false, announce_lose = true},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end

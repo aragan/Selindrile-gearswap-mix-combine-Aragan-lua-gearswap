@@ -179,10 +179,10 @@ function init_gear_sets()
     back="Sacro Mantle",}
 
     sets.precast.Flourish2 = {}
-    sets.precast.Flourish2['Reverse Flourish'] = {back="Toetapper Mantle"} --hands="Charis Bangles +2"
+    sets.precast.Flourish2['Reverse Flourish'] = {} --hands="Charis Bangles +2"
 
     sets.precast.Flourish3 = {}
-    sets.precast.Flourish3['Striking Flourish'] = {body="Macu. Casaque +1"}
+    sets.precast.Flourish3['Striking Flourish'] = {}--body="Macu. Casaque +1"
     sets.precast.Flourish3['Climactic Flourish'] = {head="Maculele Tiara +2"}
 
     -- Fast cast sets for spells
@@ -213,7 +213,7 @@ function init_gear_sets()
 
     sets.precast.RA.Acc = {    
         legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},        
-        feet="Meg. Jam. +2",
+        feet="Meghanada Jambeaux +2",
         waist="Yemaya Belt",}   
 
     -- Weaponskill sets
@@ -521,8 +521,8 @@ function init_gear_sets()
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
-        waist="Eschan Stone",
-        left_ear="Digni. Earring",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Stikini Ring +1",
@@ -572,7 +572,7 @@ function init_gear_sets()
     body="Meg. Cuirie +2",
     hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
     legs={ name="Gleti's Breeches", augments={'Path: A',}},
-    feet="Meg. Jam. +2",
+    feet="Meghanada Jambeaux +2",
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
     left_ear="Infused Earring",
     left_ring="Chirich Ring +1",
@@ -593,7 +593,7 @@ function init_gear_sets()
         waist="Yemaya Belt",
         left_ear="Telos Earring",
         right_ear="Crep. Earring",
-        right_ring="Cacoethic Ring",
+        right_ring="Cacoethic Ring +1",
     }
 
     sets.midcast.RA.Acc = {
@@ -608,7 +608,7 @@ function init_gear_sets()
         waist="Yemaya Belt",
         left_ear="Telos Earring",
         right_ear="Crep. Earring",
-        right_ring="Cacoethic Ring",
+        right_ring="Cacoethic Ring +1",
     }
 
     -- Idle sets
@@ -1124,8 +1124,10 @@ function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 164')
 end
 
-autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
-['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
+autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",
+['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
+['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",
+['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
 
 function check_trust()
 	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then

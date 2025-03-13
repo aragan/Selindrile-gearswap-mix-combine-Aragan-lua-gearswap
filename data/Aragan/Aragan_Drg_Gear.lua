@@ -75,7 +75,7 @@ function init_gear_sets()
 	body="Pelt. Plackart +3",
 	ring1="Niqmaddu Ring",
 	ring2="Petrov Ring",
-	waist="Ioskeha Belt",
+    waist="Ioskeha Belt +1",
 	legs="Pteroslaver Brais +3",}
 	sets.precast.JA['Ancient Circle'] = {legs="Vishap Brais +1"}
 	sets.precast.JA['High Jump'] = set_combine(sets.precast.JA.Jump, {
@@ -505,8 +505,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck="Null Loop",
-    waist="Eschan Stone",
-    left_ear="Digni. Earring",
+    waist="Null Belt",
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Crep. Earring",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     right_ring="Stikini Ring +1",
@@ -517,11 +517,11 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	
 	-- Resting sets
 	sets.resting = {
-		head="Meghanada Visor +2",
-        body="Meg. Cuirie +2",
-        hands="Gleti's Gauntlets",
-        legs="Gleti's Breeches",
-        feet="Meg. Jam. +2",
+        head="Null Masque",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+        legs={ name="Gleti's Breeches", augments={'Path: A',}},
+        feet={ name="Gleti's Boots", augments={'Path: A',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
         waist="Null Belt",
         left_ear="Infused Earring",
@@ -881,7 +881,9 @@ function user_job_lockstyle()
 end
 
 
-autows_list = {['Naegling']='Savage Blade',['Trishula']='Stardiver',['Shining']='Impulse Drive',['Polearm']='Impulse Drive',['TernionDagger']='Aeolian Edge',['Club']='Judgment',['DualNaegling']='Savage Blade',['DualTernionDagger']='Aeolian Edge',['DualClub']='Judgment'}
+autows_list = {['Naegling']='Savage Blade',['Trishula']='Stardiver',['Shining']='Impulse Drive',
+['Polearm']='Impulse Drive',['TernionDagger']='Aeolian Edge',['Club']='Judgment',
+['DualNaegling']='Savage Blade',['DualTernionDagger']='Aeolian Edge',['DualClub']='Judgment'}
 
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()

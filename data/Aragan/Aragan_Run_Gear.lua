@@ -33,6 +33,10 @@ function user_job_setup()
 	state.Weapons:options('None','Epeolatry','Lycurgos','Naegling','MalignanceSword','Reikiko','Loxotic','Dolichenus','DualWeapons')
 	state.AutoBuffMode:options('Off','Auto','Tank','Aminon','Sortie','Full') --,'Off','Off','Off','Off','Off',
 
+    autows_list = {['Naegling']='Savage Blade',['Epeolatry']='Dimidiation',['Lycurgos']='Fell Cleave',
+	['MalignanceSword']='Cataclysm',['Reikiko']='Sanguine Blade',['Loxotic']='Judgment',
+	['Dolichenus']='Decimation',['DualWeapons']='Savage Blade',}
+
 	state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','MP'}
 
 	gear.enmity_jse_back = {name="Ogma's cape",augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Damage taken-5%',}}
@@ -135,11 +139,11 @@ function init_gear_sets()
     sets.precast.JA['Valiance'] = sets.precast.JA['Vallation']
     sets.precast.JA['Pflug'] = set_combine(sets.Enmity,{feet="Runeist Bottes +3"})
     sets.precast.JA['Battuta'] = set_combine(sets.Enmity,{head="Futhark Bandeau +3"})
-    sets.precast.JA['Liement'] = set_combine(sets.Enmity,{body="Futhark Coat +1"})
-    sets.precast.JA['Gambit'] = set_combine(sets.Enmity,{hands="Runeist's Mitons +2"})
+    sets.precast.JA['Liement'] = set_combine(sets.Enmity,{})--body="Futhark Coat +1"
+    sets.precast.JA['Gambit'] = set_combine(sets.Enmity,{hands="Runeist Mitons +3"})
     sets.precast.JA['Rayke'] = set_combine(sets.Enmity,{feet="Futhark Boots +3"})
-    sets.precast.JA['Elemental Sforzo'] = set_combine(sets.Enmity,{body="Futhark Coat +1"})
-    sets.precast.JA['Swordplay'] = set_combine(sets.Enmity,{hands="Futhark Mitons +1"})
+    sets.precast.JA['Elemental Sforzo'] = set_combine(sets.Enmity,{})--body="Futhark Coat +1"
+    sets.precast.JA['Swordplay'] = set_combine(sets.Enmity,{})--hands="Futhark Mitons +1"
     sets.precast.JA['Embolden'] = set_combine(sets.Enmity,{})
     sets.precast.JA['Provoke'] = set_combine(sets.Enmity, {})
 	sets.precast.JA['Warcry'] = set_combine(sets.Enmity, {})
@@ -167,11 +171,11 @@ function init_gear_sets()
     sets.precast.JA['Valiance'].DT = sets.precast.JA['Vallation'].DT
     sets.precast.JA['Pflug'].DT = set_combine(sets.Enmity.DT,{feet="Runeist Bottes +3"})
     sets.precast.JA['Battuta'].DT = set_combine(sets.Enmity.DT,{head="Futhark Bandeau +3"})
-    sets.precast.JA['Liement'].DT = set_combine(sets.Enmity.DT,{body="Futhark Coat +1"})
-    sets.precast.JA['Gambit'].DT = set_combine(sets.Enmity.DT,{hands="Runeist's Mitons +2"})
+    sets.precast.JA['Liement'].DT = set_combine(sets.Enmity.DT,{})--body="Futhark Coat +1"
+    sets.precast.JA['Gambit'].DT = set_combine(sets.Enmity.DT,{hands="Runeist Mitons +3"})
     sets.precast.JA['Rayke'].DT = set_combine(sets.Enmity.DT,{feet="Futhark Boots +3"})
-    sets.precast.JA['Elemental Sforzo'].DT = set_combine(sets.Enmity.DT,{body="Futhark Coat +1"})
-    sets.precast.JA['Swordplay'].DT = set_combine(sets.Enmity.DT,{hands="Futhark Mitons +1"})
+    sets.precast.JA['Elemental Sforzo'].DT = set_combine(sets.Enmity.DT,{})--body="Futhark Coat +1"
+    sets.precast.JA['Swordplay'].DT = set_combine(sets.Enmity.DT,{})--hands="Futhark Mitons +1"
     sets.precast.JA['Embolden'].DT = set_combine(sets.Enmity.DT,{})
     sets.precast.JA['Provoke'].DT = set_combine(sets.Enmity.DT, {})
 	sets.precast.JA['Warcry'].DT = set_combine(sets.Enmity.DT, {})
@@ -241,7 +245,7 @@ function init_gear_sets()
     sets.precast.FC = {        ammo="Sapience Orb",
 	head="Rune. Bandeau +3",
 	hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-    body="Erilaz Surcoat +2",
+    body="Erilaz Surcoat +3",
 	neck="Orunmila's Torque",
 	legs="Agwu's Slops",
 	feet="Carmine Greaves +1",
@@ -255,7 +259,7 @@ function init_gear_sets()
 	sets.precast.FC.DT = {       ammo="Sapience Orb",
 	head="Rune. Bandeau +3",
 	hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
-    body="Erilaz Surcoat +2",
+    body="Erilaz Surcoat +3",
 	neck="Orunmila's Torque",
 	legs="Agwu's Slops",
 	feet="Carmine Greaves +1",
@@ -428,15 +432,15 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
 		head="Erilaz Galea +2",
 		body="Erilaz Surcoat +3",
 		hands="Erilaz Gauntlets +2",
-		legs="Eri. Leg Guards +2",
+		legs="Erilaz Leg Guards +2",
 		feet="Erilaz Greaves +2",
-		neck="Erra Pendant",
-		waist="Luminary Sash",
-		left_ear="Crep. Earring",
-		right_ear="Digni. Earring",
-		left_ring="Stikini Ring +1",
+		neck="Null Loop",
+		waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+		right_ear="Crep. Earring",
+		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		right_ring="Stikini Ring +1",
-		back={ name="Ogma's Cape", augments={'HP+60','Eva.+20 /Mag. Eva.+20','Mag. Evasion+10','Enmity+10','Phys. dmg. taken-10%',}},
+		back="Null Shawl",
 	})
     sets.precast.WS["Shield Break"] = set_combine(sets.precast.WS["Armor Break"], {})
     sets.precast.WS["Weapon Break"] = set_combine(sets.precast.WS["Armor Break"], {})
@@ -475,8 +479,8 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
 		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Null Loop",
-		waist="Eschan Stone",
-		left_ear="Digni. Earring",
+		waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Crep. Earring",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		right_ring="Stikini Ring +1",
@@ -496,10 +500,7 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
 
     sets.SrodaBelt = {waist="Sroda Belt"}
 
-    sets.midcast.FastRecast = {ammo="Pemphredo Tathlum",
-            head="Carmine Mask +1",neck="Voltsurge Torque",ear1="Enchntr. Earring +1",ear2="Loquac. Earring",
-            body="Dread Jupon",hands="Leyline Gloves",ring1="Lebeche Ring",ring2="Kishar Ring",
-            back="Moonlight Cape",waist="Flume Belt +1",legs="Aya. Cosciales +2",feet="Carmine Greaves +1"}
+    sets.midcast.FastRecast = {}
 			
 	sets.midcast.FastRecast.DT = {   ammo="Staunch Tathlum +1",
     head="Erilaz Galea +2",
@@ -687,7 +688,7 @@ sets.idle.PDH = {
 	head="Erilaz Galea +2",
 	body="Erilaz Surcoat +3",
 	hands="Erilaz Gauntlets +2",
-	legs="Eri. Leg Guards +2",
+	legs="Erilaz Leg Guards +2",
 	feet="Erilaz Greaves +2",
 	neck={ name="Loricate Torque +1", augments={'Path: A',}},
 	waist="Flume Belt +1",
@@ -767,7 +768,7 @@ sets.idle.MEVA = {ammo="Yamarang",
 	head="Halitus Helm",
 	body={ name="Emet Harness +1", augments={'Path: A',}},
 	hands="Kurys Gloves",
-	legs="Eri. Leg Guards +2",
+	legs="Erilaz Leg Guards +2",
 	feet="Erilaz Greaves +2",
 	neck="Moonlight Necklace",
 	waist="Plat. Mog. Belt",
@@ -791,13 +792,13 @@ sets.idle.MEVA = {ammo="Yamarang",
 	sets.Kiting = {legs="Carmine Cuisses +1"}
 	
 	sets.latent_refresh = {waist="Fucho-no-obi"}
-	sets.latent_refresh_grip = {sub="Oneiros Grip"}
+	sets.latent_refresh_grip = {}--sub="Oneiros Grip"
 	sets.DayIdle = {}
 	sets.NightIdle = {}
 
     -- Extra defense sets.  Apply these on top of melee or defense sets.
     sets.Knockback = {}
-    sets.MP = {ear2="Ethereal Earring",body="Erilaz Surcoat +2",waist="Flume Belt +1"}
+    sets.MP = {ear2="Ethereal Earring",body="Erilaz Surcoat +3",waist="Flume Belt +1"}
 	sets.EnemyCritRate =  {
 		ammo="Eluder's Sachet",
 		left_ring="Warden's Ring",
@@ -828,7 +829,7 @@ sets.idle.MEVA = {ammo="Yamarang",
 		head="Erilaz Galea +2",
 		body="Erilaz Surcoat +3",
 		hands="Erilaz Gauntlets +2",
-		legs="Eri. Leg Guards +2",
+		legs="Erilaz Leg Guards +2",
 		feet="Erilaz Greaves +2",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		waist="Flume Belt +1",
@@ -843,7 +844,7 @@ sets.idle.MEVA = {ammo="Yamarang",
 			head="Halitus Helm",
 			body={ name="Emet Harness +1", augments={'Path: A',}},
 			hands="Kurys Gloves",
-			legs="Eri. Leg Guards +2",
+			legs="Erilaz Leg Guards +2",
 			feet="Erilaz Greaves +2",
 			neck="Moonlight Necklace",
 			waist="Plat. Mog. Belt",
@@ -982,7 +983,7 @@ sets.idle.MEVA = {ammo="Yamarang",
             head="Nyame Helm",
 			body="Nyame Mail",
 			hands="Turms Mittens +1",
-			legs="Eri. Leg Guards +2",
+			legs="Erilaz Leg Guards +2",
 			feet="Turms Leggings +1",
 			neck="Warder's Charm +1",
 			ear1="Odnowa Earring +1",
@@ -1048,7 +1049,7 @@ sets.idle.MEVA = {ammo="Yamarang",
 	sets.buff.Sleep = {} --head="Frenzy Sallet"
 	sets.buff.Battuta = {
 		hands="Turms Mittens +1",
-        legs="Eri. Leg Guards +2",
+        legs="Erilaz Leg Guards +2",
         feet="Turms Leggings +1",
         back="Ogma's Cape",}
 	sets.buff.Embolden = {
@@ -1129,6 +1130,3 @@ function user_job_lockstyle()
 	end
 end
 
-
-
-autows_list = {['Naegling']='Savage Blade'}

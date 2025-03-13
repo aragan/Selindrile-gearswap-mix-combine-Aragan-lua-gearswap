@@ -229,7 +229,7 @@ function init_gear_sets()
     sets.precast.JA['Enlightenment'] = {body="Peda. Gown +3"}
     sets.precast.JA['Sublimation'] = {
     ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-    head={ name="Peda. M.Board +3", augments={'Enh. "Altruism" and "Focalization"',}},
+    head="Pedagogy Mortarboard +3",
     body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
     hands="Regal Cuffs",
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -259,7 +259,7 @@ right_ear="Telos Earring",
     ammo="Sapience Orb",
     head={ name="Merlinic Hood", augments={'Mag. Acc.+9','"Fast Cast"+6','INT+1',}},
     body="Pinga Tunic +1",
-    hands="Acad. Bracers +3",
+    hands="Academic's Bracers +3",
     legs="Pinga Pants +1",
     feet={ name="Regal Pumps +1", augments={'Path: A',}},
     neck="Baetyl Pendant",
@@ -270,14 +270,14 @@ right_ear="Telos Earring",
     right_ring="Prolix Ring",
     back={ name="Fi Follet Cape +1", augments={'Path: A',}},
     }
-    sets.precast.FC.Arts = {head="Peda. M.Board +3", feet="Acad. Loafers +3"}
+    sets.precast.FC.Arts = {head="Pedagogy Mortarboard +3", feet="Academic's loafers +3"}
     sets.precast.FC.Arts.EnhancingDuration = set_combine(sets.precast.FC, {
-        feet="Acad. Loafers +3", waist="Siegel Sash"})
+        feet="Academic's loafers +3", waist="Siegel Sash"})
 
-    sets.precast.FC.Grimoire = {head="Peda. M.Board +3", feet="Acad. Loafers +3"}
+    sets.precast.FC.Grimoire = {head="Pedagogy Mortarboard +3", feet="Academic's loafers +3"}
 
     sets.precast.FC.Grimoire.EnhancingDuration = set_combine(sets.precast.FC, {
-       feet="Acad. Loafers +3", waist="Siegel Sash"})
+       feet="Academic's loafers +3", waist="Siegel Sash"})
 
     sets.precast.FC['Enhancing Magic'] = set_combine(sets.precast.FC, {waist="Siegel Sash"})
     sets.precast.FC.EnhancingDuration = set_combine(sets.precast.FC, {waist="Siegel Sash"})
@@ -287,7 +287,6 @@ right_ear="Telos Earring",
     sets.precast.FC.Cure = set_combine(sets.precast.FC, {
         feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
         ear1="Mendi. Earring", --5
-        ring1="Lebeche Ring", --(2)
         })
 
     sets.precast.FC.Curaga = sets.precast.FC.Cure
@@ -409,19 +408,19 @@ right_ear="Telos Earring",
     }
 
     sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
-		ammo="Pemphredo Tathlum",
-		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		neck="Null Loop",
-		waist="Eschan Stone",
-		left_ear="Digni. Earring",
-		right_ear="Crep. Earring",
-		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		right_ring="Stikini Ring +1",
-		back="Null Shawl",
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
     })
 
     ------------------------------------------------------------------------------------------------
@@ -457,7 +456,7 @@ right_ear="Telos Earring",
         body="Pinga Tunic +1",
         hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
         legs="Pinga Pants +1",
-        feet="Acad. Loafers +3",
+        feet="Academic's loafers +3",
         neck="Clotharius Torque",
         waist="Shinjutsu-no-Obi +1",
         left_ear="Enervating Earring",
@@ -507,7 +506,7 @@ right_ear="Telos Earring",
     sets.midcast.StatusRemoval = {
         ammo="Pemphredo Tathlum",
         head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
-        hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
+        hands="Fanatic Gloves",
         feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
         neck="Debilis Medallion",
         left_ring="Haoma's Ring",
@@ -555,6 +554,9 @@ right_ear="Telos Earring",
         back={ name="Fi Follet Cape +1", augments={'Path: A',}},
         })
 
+        sets.midcast.BarElement = set_combine(sets.midcast['Enhancing Magic'], {
+            legs="Shedir Seraweels",
+        })
     sets.midcast.Regen = set_combine(sets.midcast['Enhancing Magic'], {
         main={ name="Musa", augments={'Path: C',}},
         head="Arbatel Bonnet +2",
@@ -593,7 +595,7 @@ right_ear="Telos Earring",
         head="Telchine Cap",
         body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         hands="Telchine Gloves",
-        legs="Telchine Braconi",
+        legs="Shedir Seraweels",
         feet="Telchine Pigaches",
         neck="Nodens Gorget",
         waist="Embla Sash",
@@ -603,7 +605,7 @@ right_ear="Telos Earring",
         head="Telchine Cap",
         body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
         hands="Telchine Gloves",
-        legs="Telchine Braconi",
+        legs="Shedir Seraweels",
         feet="Telchine Pigaches",
         waist="Embla Sash",
         })
@@ -612,7 +614,7 @@ right_ear="Telos Earring",
 
     sets.midcast.Stormsurge = set_combine(sets.midcast.Storm, {feet={ name="Peda. Loafers +3", augments={'Enhances "Stormsurge" effect',}},})
 
-    sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {left_ear="Brachyura Earring",})
+    sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring"})
     sets.midcast.Protectra = sets.midcast.Protect
     sets.midcast.Shell = sets.midcast.Protect
     sets.midcast.Shellra = sets.midcast.Shell
@@ -714,11 +716,11 @@ right_ear="Telos Earring",
         main={ name="Musa", augments={'Path: C',}},
         sub="Enki Strap",
         ammo="Pemphredo Tathlum",
-        head="Peda. M.Board +3", 
+        head="Pedagogy Mortarboard +3", 
         body={ name="Agwu's Robe", augments={'Path: A',}},
-        hands="Acad. Bracers +3",
+        hands="Academic's Bracers +3",
         legs={ name="Agwu's Slops", augments={'Path: A',}},
-        feet="Acad. Loafers +3",
+        feet="Academic's loafers +3",
         neck={ name="Argute Stole +2", augments={'Path: A',}},
         waist="Witful Belt",
         left_ear="Regal Earring",
@@ -997,7 +999,7 @@ right_ear="Telos Earring",
     ammo="Sapience Orb",
     head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
     body="Pinga Tunic +1",
-    hands="Acad. Bracers +3",
+    hands="Academic's Bracers +3",
     legs="Pinga Pants +1",
     feet={ name="Regal Pumps +1", augments={'Path: A',}},
     neck="Baetyl Pendant",
@@ -1133,15 +1135,15 @@ sets.engaged.DT = {
     sets.buff['Ebullience'] = {head="Arbatel Bonnet +2"}
     sets.buff['Rapture'] = {head="Arbatel Bonnet +2"}
     sets.buff['Perpetuance'] = {hands="Arbatel Bracers +3"}
-    sets.buff['Penury'] = {legs="Arbatel Pants +1"}
-    sets.buff['Parsimony'] = {legs="Arbatel Pants +1"}
+    sets.buff['Penury'] = {}--legs="Arbatel Pants +1"
+    sets.buff['Parsimony'] = {}--legs="Arbatel Pants +1"
     sets.buff['Celerity'] = {feet="Peda. Loafers +3"}
     sets.buff['Alacrity'] = {feet="Peda. Loafers +3"}
     sets.buff['Klimaform'] = {feet="Arbatel Loafers +3"}
 
     sets.buff['Immanence'] = {
-        head="Peda. M.Board +3", 
-        feet="Acad. Loafers +3",
+        head="Pedagogy Mortarboard +3", 
+        feet="Academic's loafers +3",
         body="Nyame Mail",
         hands="Arbatel Bracers +3",
         legs="Nyame Flanchard",
@@ -1240,5 +1242,5 @@ function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 173')
 end
 
-autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',['Drepanum']='Spiral Hell',
+autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',
 ['Xoanon']="Cataclysm",['TernionDagger']='Aeolian Edge',['Club']='Black Halo',}

@@ -23,7 +23,7 @@ function user_job_setup()
 	state.WeaponskillMode:options('Match', 'PDL', 'SC')
 	state.AutoBuffMode:options('Off','Auto','Default','AutoMelee','MeleeBuff','MageBuff')
 	state.CastingMode:options( 'Duration','Normal', 'Burst', 'SIRD', 'DT')
-    state.IdleMode:options('DT','Normal', 'PDT', 'MDT','Regen', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
+    state.IdleMode:options('DT','Normal', 'PDT','Empy', 'MDT','Regen', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
     state.PhysicalDefenseMode:options('PDT','NukeLock')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
@@ -127,7 +127,7 @@ function init_gear_sets()
 	-- Precast Sets
 	
 	-- Precast sets to enhance JAs
-	sets.precast.JA['Chainspell'] = {body="Viti. Tabard +3"}
+	sets.precast.JA['Chainspell'] = {}
 	sets.precast.JA['Sublimation'] = {
 		waist="Embla Sash",}
 	
@@ -405,6 +405,7 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
+
 sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	ammo="Pemphredo Tathlum",
 	head={ name="Nyame Helm", augments={'Path: B',}},
@@ -413,8 +414,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	feet={ name="Nyame Sollerets", augments={'Path: B',}},
 	neck="Null Loop",
-	waist="Eschan Stone",
-	left_ear="Digni. Earring",
+	waist="Null Belt",
+	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 	right_ear="Crep. Earring",
 	left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 	right_ring="Stikini Ring +1",
@@ -461,10 +462,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ear="Leth. Earring +1",
 		back={ name="Sucellos's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
-	sets.midcast.FastRecast = {main=gear.grioavolr_fc_staff,sub="Clerisy Strap +1",range=empty,ammo="Hasty Pinion +1",
-		head="Atrophy Chapeau +3",neck="Voltsurge Torque",ear1="Enchntr. Earring +1",ear2="Malignance Earring",
-		body="Zendik Robe",hands="Gende. Gages +1",ring1="Kishar Ring",ring2="Prolix Ring",
-		back="Swith Cape +1",waist="Witful Belt",legs="Psycloth Lappas",feet="Medium's Sabots"}
+	sets.midcast.FastRecast = {}
 		sets.midcast.Cure = {
 			ammo="Staunch Tathlum +1",
 			head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
@@ -596,14 +594,14 @@ sets.midcast.Shell = sets.midcast.Protect
 sets.midcast.Shellra = sets.midcast.Shell
 sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Skill, {})
 sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
-    sets.midcast['Enhancing Magic'].GainSpell = set_combine(sets.midcast['Enhancing Magic'].SelfDuration, {hands="Vitiation gloves +3"})
+    sets.midcast['Enhancing Magic'].GainSpell = set_combine(sets.midcast['Enhancing Magic'].SelfDuration, {})
 	
     sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
 	sets.midcast.Aquaveil = {hands="Regal Cuffs",}
 	sets.midcast.BarElement = {}
 	sets.midcast.Temper = sets.EnhancingSkill
 	sets.midcast.Enspell = sets.midcast.Temper
-	sets.midcast.BoostStat = {hands="Viti. Gloves +3"}
+	sets.midcast.BoostStat = {}
 	sets.midcast.Protect = {ring2="Sheltered Ring"}
 	sets.midcast.Shell = {ring2="Sheltered Ring"}
 	sets.midcast.Stoneskin = set_combine(sets.midcast['Enhancing Magic'], {
@@ -669,8 +667,8 @@ sets.midcast['Enfeebling Magic'].Skill = {
 	waist="Obstin. Sash",
 	left_ear="Regal Earring",
 	right_ear="Snotra Earring",
-	left_ring="Stikini Ring",
-	right_ring="Stikini Ring",
+	left_ring="Stikini Ring +1",
+	right_ring="Stikini Ring +1",
 	back={ name="Aurist's Cape +1", augments={'Path: A',}},
 }
 sets.midcast['Enfeebling Magic'].Potency = {
@@ -684,8 +682,8 @@ sets.midcast['Enfeebling Magic'].Potency = {
 	waist="Obstin. Sash",
 	left_ear="Regal Earring",
 	right_ear="Snotra Earring",
-	left_ring="Stikini Ring",
-	right_ring="Kishar Ring",
+	left_ring="Stikini Ring +1",
+    right_ring="Kishar Ring",
 	back={ name="Sucellos's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 }
 		
@@ -776,8 +774,8 @@ sets.midcast['Enfeebling Magic'].Potency = {
 		waist="Luminary Sash",
 		left_ear="Digni. Earring",
 		right_ear="Regal Earring",
-		left_ring="Stikini Ring",
-		right_ring="Stikini Ring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
 		back={ name="Aurist's Cape +1", augments={'Path: A',}},
 	}
 	sets.midcast.Absorb = set_combine(sets.midcast['Dark Magic'], {
@@ -811,8 +809,8 @@ sets.midcast['Enfeebling Magic'].Potency = {
 		waist="Luminary Sash",
 		left_ear="Digni. Earring",
 		right_ear="Regal Earring",
-		left_ring="Stikini Ring",
-		right_ring="Stikini Ring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
 		back={ name="Aurist's Cape +1", augments={'Path: A',}},
 	}
 		
@@ -823,12 +821,12 @@ sets.midcast['Enfeebling Magic'].Potency = {
 	
 	sets.HPDown = {head="Pixie Hairpin +1",ear1="Mendicant's Earring",ear2="Evans Earring",
 		body="Jhakri Robe +2",hands="Jhakri Cuffs +2",ring1="Mephitas's Ring +1",ring2="Mephitas's Ring",
-		back="Swith Cape +1",legs="Shedir Seraweels",feet="Jhakri Pigaches +2"}
+		legs="Shedir Seraweels",feet="Jhakri Pigaches +2"}
 		
     sets.HPCure = { 
-        head="Gende. Caubeen +1",neck="Unmoving Collar +1",ear1="Gifted Earring",ear2="Mendi. Earring",
-        body="Viti. Tabard +3",hands="Kaykaus Cuffs",ring1="Gelatinous Ring +1",ring2="Meridian Ring",
-        back="Moonlight Cape",waist="Luminary Sash",legs="Carmine Cuisses +1",feet="Kaykaus Boots"}
+        neck="Unmoving Collar +1",ear2="Mendi. Earring",
+        body="Jhakri Robe +2",hands="Kaykaus Cuffs +1",ring1="Gelatinous Ring +1",
+        back="Moonlight Cape",waist="Luminary Sash",legs="Carmine Cuisses +1",feet="Jhakri Pigaches +2"}
 	
 	sets.buff.Doom = set_combine(sets.buff.Doom, {
 		neck="Nicander's Necklace",
@@ -947,6 +945,14 @@ sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, {
 	right_ring="Fortified Ring",
 	back="Reiki Cloak",
 })
+sets.idle.Empy = set_combine(sets.idle, {
+head="Leth. Chappel +2",		
+body="Lethargy Sayon +3",
+	hands="Lethargy Gantherots +2",
+	legs="Leth. Fuseau +2",
+feet="Leth. Houseaux +2",
+})
+
 sets.idle.Sphere = set_combine(sets.idle, {
 	body="Annoint. Kalasiris",
 })
@@ -984,7 +990,7 @@ sets.idle.Sphere = set_combine(sets.idle, {
 	
 	sets.defense.MEVA = {range=empty,ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",neck="Warder's Charm +1",ear1="Etiolation Earring",ear2="Ethereal Earring",
-		body="Malignance Tabard",hands="Malignance Gloves",ring1="Defending Ring",ring2="Dark Ring",
+		body="Malignance Tabard",hands="Malignance Gloves",ring1="Defending Ring",ring2="Vengeful Ring",
 		back="Moonlight Cape",waist="Carrier's Sash",legs="Malignance Tights",feet="Malignance Boots"}
 
 
@@ -994,8 +1000,8 @@ sets.idle.Sphere = set_combine(sets.idle, {
 
 	sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.latent_refresh = {waist="Fucho-no-obi"}
-	sets.latent_refresh_grip = {sub="Oneiros Grip"}
-	sets.TPEat = {neck="Chrys. Torque"}
+	sets.latent_refresh_grip = {}
+	sets.TPEat = {}
 	sets.DayIdle = {}
 	sets.NightIdle = {}
 	
@@ -1448,3 +1454,38 @@ end
 autows_list = {['SWORDS']='Savage Blade',['Crocea']='Seraph Blade',['Club']='Black Halo',
 ['DAGGERS']='Aeolian Edge',['DualClub']='Black Halo',['DualSWORDS']='Savage Blade',
 ['DualCrocea']='Seraph Blade',['DualDAGGERS']='Aeolian Edge'}
+
+--[[ 
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Enspell"] = {gain = 'Enspell is on.', lose = 'Enspell is off. Fuck you, Mirukuu.', announce_gain = false, announce_lose = true},
+		--["Temper"] = {gain = 'Temper is on.', lose = 'Temper is off.', announce_gain = false, announce_lose = true},
+		--["Gain-MND"] = {gain = 'Gain-MND is on.', lose = 'Gain-MND is off.', announce_gain = false, announce_lose = true},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end]]

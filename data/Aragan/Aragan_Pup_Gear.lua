@@ -40,7 +40,7 @@ function user_job_setup()
     state.WeaponskillMode:options('Match','Normal', 'PDL', 'SC')
     state.PhysicalDefenseMode:options('PDT')
     state.MagicalDefenseMode:options('MDT')
-	state.IdleMode:options('Normal','PDT','EnemyCritRate','Evasion','HP','MDT','Refresh','Sphere')
+	state.IdleMode:options('Normal','PDT','Empy','EnemyCritRate','Evasion','HP','MDT','Refresh','Sphere')
 	state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners')
     state.Animators = M{['description']='Animators', 'AnimatorPI', 'None', 'AnimatorPII', 'NeoAnimator'}
 
@@ -157,21 +157,21 @@ function init_gear_sets()
     Animators.Melee = "Animator P +1"
 
     Artifact_Foire = {}
-    Artifact_Foire.Head_PRegen = "Foire Taj +1"
-    Artifact_Foire.Body_WSD_PTank = "Foire Tobe +1"
+    Artifact_Foire.Head_PRegen = ""
+    Artifact_Foire.Body_WSD_PTank = ""
     Artifact_Foire.Hands_Mane_Overload = "Foire Dastanas +3"
-    Artifact_Foire.Legs_PCure = "Foire Churidars +1"
-    Artifact_Foire.Feet_Repair_PMagic = "Foire Babouches +1"
+    Artifact_Foire.Legs_PCure = ""
+    Artifact_Foire.Feet_Repair_PMagic = ""
 
     Relic_Pitre = {}
     Relic_Pitre.Head_PRegen = "Pitre Taj +3" --Enhances Optimization
     Relic_Pitre.Body_PTP = "Pitre Tobe +3" --Enhances Overdrive
     Relic_Pitre.Hands_WSD = "Pitre Dastanas +3" --Enhances Fine-Tuning
-    Relic_Pitre.Legs_PMagic = "Pitre Churidars +2" --Enhances Ventriloquy
-    Relic_Pitre.Feet_PMagic = "Pitre Babouches +1" --Role Reversal
+    Relic_Pitre.Legs_PMagic = "Pitre Churidars +3" --Enhances Ventriloquy
+    Relic_Pitre.Feet_PMagic = "Pitre Babouches +3" --Role Reversal
 
     Empy_Karagoz = {}
-    Empy_Karagoz.Head_PTPBonus = "Kara. Cappello +2"
+    Empy_Karagoz.Head_PTPBonus = "Karagoz Cappello +2"
     Empy_Karagoz.Body_Overload = "Karagoz Farsetto +2"
     Empy_Karagoz.Hands = "Karagoz Guanti +2"
     Empy_Karagoz.Legs_Combat = "Karagoz Pantaloni +2"
@@ -224,7 +224,7 @@ function init_gear_sets()
     sets.precast.JA["Repair"] = {
         right_ear="Pratik Earring",
         ammo = "Automat. Oil +3",
-        feet = Artifact_Foire.Feet_Repair_PMagic
+        --feet = Artifact_Foire.Feet_Repair_PMagic
     }
 
     sets.precast.JA["Maintenance"] = set_combine(sets.precast.JA["Repair"], { hands="Foire Dastanas +3",})
@@ -234,12 +234,11 @@ function init_gear_sets()
         body = "Karagoz Farsetto +2",
         hands="Foire Dastanas +3",
         back = "Visucius's Mantle",
-        ear1 = "Burana Earring"
     }
 
     sets.precast.JA["Activate"] = {range="Animator P +1",
         feet="Mpaca's Boots",
-    right_ear="Kara. Earring +1",
+    right_ear="Karagoz Earring +1",
     back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},
     }
 
@@ -256,10 +255,10 @@ function init_gear_sets()
         body="Passion Jacket",
     }
     sets.precast.Step = {    
-        head="Kara. Cappello +2",
-        body="Kara. Farsetto +2",
+        head="Karagoz Cappello +2",
+        body="Karagoz Farsetto +2",
         hands="Karagoz Guanti +2",
-    legs="Kara. Pantaloni +2",
+    legs="Karagoz Pantaloni +2",
     feet="Karagoz Scarpe +2",
     neck="Shulmanu Collar",
     waist="Klouskap Sash +1",
@@ -304,7 +303,7 @@ range="Trollbane",  }
         back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
     }
     sets.precast.WS.PDL = set_combine(sets.precast.WS, {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         legs="Malignance Tights",
         left_ring="Sroda Ring", 
     })
@@ -328,7 +327,7 @@ range="Trollbane",  }
         back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
     }
     sets.precast.WS["Stringing Pummel"].PDL = set_combine(sets.precast.WS["Stringing Pummel"], {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         hands="Malignance Gloves",
         legs="Malignance Tights",
         left_ring="Sroda Ring",
@@ -348,7 +347,7 @@ range="Trollbane",  }
         back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
     }
     sets.precast.WS["Asuran Fists"].PDL = set_combine(sets.precast.WS["Asuran Fists"], {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         hands="Malignance Gloves",
         legs="Malignance Tights",
         left_ring="Sroda Ring",
@@ -368,7 +367,7 @@ range="Trollbane",  }
         back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
     }
     sets.precast.WS["Victory Smite"].PDL = set_combine(sets.precast.WS["Victory Smite"], {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         hands="Malignance Gloves",
         legs="Malignance Tights",
         left_ring="Sroda Ring",
@@ -392,7 +391,7 @@ range="Trollbane",  }
             back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
     }
     sets.precast.WS["Shijin Spiral"].PDL = set_combine(sets.precast.WS["Shijin Spiral"], {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         hands="Malignance Gloves",
         legs="Malignance Tights",
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -433,7 +432,7 @@ range="Trollbane",  }
         back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
     }
     sets.precast.WS["Howling Fist"].PDL = set_combine(sets.precast.WS["Howling Fist"], {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         hands="Malignance Gloves",
         legs="Malignance Tights",
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -466,14 +465,14 @@ range="Trollbane",  }
 
        sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         ammo="Pemphredo Tathlum",
-        head={ name="Nyame Helm", augments={'Path: B',}},
+        head={ name="Mpaca's Cap", augments={'Path: A',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
-        waist="Eschan Stone",
-        left_ear="Digni. Earring",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Stikini Ring +1",
@@ -525,7 +524,7 @@ range="Trollbane",  }
         main={ name="Xiucoatl", augments={'Path: C',}},
         body={ name="Cohort Cloak +1", augments={'Path: A',}},
         hands="Karagoz Guanti +2",
-        legs="Kara. Pantaloni +2",
+        legs="Karagoz Pantaloni +2",
         feet="Karagoz Scarpe +2",
         neck="Incanter's Torque",
         waist="Rumination Sash",
@@ -622,7 +621,7 @@ range="Trollbane",  }
             feet="Hermes' Sandals +1",
     }
     sets.idle = {
-        head={ name="Nyame Helm", augments={'Path: B',}},
+        head="Null Masque",
         body="Adamantite Armor",
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -653,7 +652,7 @@ range="Trollbane",  }
         body="Annoint. Kalasiris",
     })
 	sets.idle.Refresh = {
-        head={ name="Rawhide Mask", augments={'HP+50','Accuracy+15','Evasion+20',}},
+        head="Null Masque",
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -736,16 +735,16 @@ range="Trollbane",  }
 
     sets.idle.Pet.Engaged.Ranged = set_combine(sets.idle.Pet.Engaged, {
         head="Pitre Taj +3",
+        body="Pitre Tobe +3",
+        hands="Mpaca's Gloves",
+        legs="Karagoz Pantaloni +2",
+        feet="Mpaca's Boots",
         neck="Shulmanu Collar",
         ear1="Crep. Earring",
         ear2="Enmerkar Earring",
-        body="Pitre Tobe +3",
-        hands="Mpaca's Gloves",
         ring1="Varar Ring +1",
         ring2="Varar Ring +1",
         waist="Klouskap Sash +1",
-        legs="Kara. Pantaloni +3",
-        feet="Mpaca's Boots",
         back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},    
     })
 	sets.idle.Pet.Engaged.Melee = set_combine(sets.idle.Pet.Engaged, {
@@ -794,7 +793,7 @@ range="Trollbane",  }
         head="Tali'ah Turban +2",
         body={ name="Pitre Tobe +3", augments={'Enhances "Overdrive" effect',}},
         hands="Foire Dastanas +3",
-        legs="Kara. Pantaloni +2",
+        legs="Karagoz Pantaloni +2",
         feet="Mpaca's Boots",
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
@@ -821,10 +820,10 @@ range="Trollbane",  }
         back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}}, 
     })
 	sets.idle.Pet.Engaged.MaxAcc = set_combine(sets.idle.Pet.Engaged, {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         body={ name="Pitre Tobe +3", augments={'Enhances "Overdrive" effect',}},
         hands="Karagoz Guanti +2",
-        legs="Kara. Pantaloni +2",
+        legs="Karagoz Pantaloni +2",
         feet="Karagoz Scarpe +2",
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
@@ -836,15 +835,15 @@ range="Trollbane",  }
     })
 
 	sets.idle.Pet.Engaged.LightTank = set_combine(sets.idle.Pet.Engaged, {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         body={ name="Pitre Tobe +3", augments={'Enhances "Overdrive" effect',}},
         hands="Mpaca's Gloves",
-        legs="Kara. Pantaloni +2",
+        legs="Karagoz Pantaloni +2",
         feet="Mpaca's Boots",
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
         left_ear="Rimeice Earring",
-        right_ear="Kara. Earring +1",
+        right_ear="Karagoz Earring +1",
         left_ring="Overbearing Ring",
         right_ring="C. Palug Ring",
         back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},
@@ -898,6 +897,17 @@ range="Trollbane",  }
         right_ring="Purity Ring",
         back="Moonlight Cape",
     }
+
+
+
+	sets.idle.Empy = set_combine(sets.idle.PDT, {
+        head="Karagoz Cappello +2",
+        body="Karagoz Farsetto +2",
+        hands="Karagoz Guanti +2",
+        legs="Karagoz Pantaloni +2",
+        feet="Karagoz Scarpe +2",
+    })
+
     sets.Kiting = {feet="Hermes' Sandals +1"}
 
     -- Engaged sets
@@ -931,7 +941,7 @@ range="Trollbane",  }
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
         left_ear="Mache Earring +1",
-        right_ear="Kara. Earring +1",
+        right_ear="Karagoz Earring +1",
         left_ring="Gere Ring",
         right_ring="Niqmaddu Ring",
         back="Null Shawl",
@@ -945,7 +955,7 @@ range="Trollbane",  }
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
         left_ear="Mache Earring +1",
-        right_ear="Kara. Earring +1",
+        right_ear="Karagoz Earring +1",
         left_ring="Gere Ring",
         right_ring="Niqmaddu Ring",
         back="Null Shawl",
@@ -959,7 +969,7 @@ range="Trollbane",  }
         neck="Shulmanu Collar",
         waist="Moonbow Belt +1",
         left_ear="Mache Earring +1",
-        right_ear="Kara. Earring +1",
+        right_ear="Karagoz Earring +1",
         left_ring="Niqmaddu Ring",
         right_ring="Gere Ring",
         back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},  
@@ -996,7 +1006,7 @@ range="Trollbane",  }
         head="Malignance Chapeau",
         neck="Bathy Choker +1",
         ear1="Mache Earring +1",
-        ear2="Kara. Earring +2",
+        ear2="Karagoz Earring +1",
         body="Malignance Tabard",
         hands="Karagoz Guanti +2",
         ring1="Chirich Ring +1",
@@ -1039,7 +1049,7 @@ range="Trollbane",  }
         head="Heyoka Cap +1",
         neck="Loricate Torque +1",
         ear1="Crep. Earring",
-        ear2="Kara. Earring +2",
+        ear2="Karagoz Earring +1",
         body="Mpaca's Doublet",
         hands="Karagoz Guanti +2",
         ring1="Defending Ring",
@@ -1080,7 +1090,7 @@ range="Trollbane",  }
         back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},
         }  
     sets.engaged.FullAcc.Pet = {
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         body={ name="Pitre Tobe +3", augments={'Enhances "Overdrive" effect',}},
         hands="Mpaca's Gloves",
         legs="Heyoka Subligar +1",
@@ -1088,7 +1098,7 @@ range="Trollbane",  }
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
         left_ear="Rimeice Earring",
-        right_ear="Kara. Earring +1",
+        right_ear="Karagoz Earring +1",
         left_ring="Varar Ring +1",
         right_ring="Varar Ring +1",
         back={ name="Visucius's Mantle", augments={'Pet: Acc.+20 Pet: R.Acc.+20 Pet: Atk.+20 Pet: R.Atk.+20','Accuracy+20 Attack+20','Pet: Attack+10 Pet: Rng.Atk.+10','Pet: Haste+10',}},
@@ -1097,7 +1107,7 @@ range="Trollbane",  }
         head="Tali'ah Turban +2",
         body={ name="Pitre Tobe +3", augments={'Enhances "Overdrive" effect',}},
         hands="Foire Dastanas +3",
-        legs="Kara. Pantaloni +2",
+        legs="Karagoz Pantaloni +2",
         feet="Mpaca's Boots",
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
@@ -1127,11 +1137,11 @@ range="Trollbane",  }
     neck="Adad Amulet",
     waist="Ukko Sash",
     left_ear="Enmerkar Earring",
-    right_ear="Kara. Earring +1",
+    right_ear="Karagoz Earring +1",
     left_ring="C. Palug Ring",
     right_ring="Tali'ah Ring",
     back="Argocham. Mantle",
-     }
+    }
 
     sets.midcast.Pet["Enfeebling Magic"] = {
         head={ name="Mpaca's Cap", augments={'Path: A',}},
@@ -1186,7 +1196,7 @@ range="Trollbane",  }
         feet="Mpaca's Boots",
         neck="Shulmanu Collar",
         waist="Incarnation Sash",
-        left_ring="Thurandaut Ring",
+        left_ring="Varar Ring +1",
         right_ring="C. Palug Ring",
         left_ear="Kyrene's Earring",    
         right_ear="Sroda Earring",
@@ -1200,15 +1210,15 @@ range="Trollbane",  }
     sets.midcast.Pet.WSFTP = {        
         main={ name="Xiucoatl", augments={'Path: C',}},
         ammo="Automat. Oil +3",
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         hands="Mpaca's Gloves",
-        legs="Kara. Pantaloni +2",
+        legs="Karagoz Pantaloni +2",
         feet="Mpaca's Boots",
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
-        left_ear="Kara. Earring +1",
+        left_ear="Karagoz Earring +1",
         left_ear="Kyrene's Earring",
-        left_ring="Thurandaut Ring",
+        left_ring="Varar Ring +1",
         right_ring="C. Palug Ring",
         back={ name="Dispersal Mantle", augments={'STR+1','Pet: TP Bonus+480',}},
     }
@@ -1220,15 +1230,15 @@ range="Trollbane",  }
     sets.midcast.Pet.WS = {             
         main={ name="Xiucoatl", augments={'Path: C',}},
         ammo="Automat. Oil +3",
-        head="Kara. Cappello +2",
+        head="Karagoz Cappello +2",
         hands="Mpaca's Gloves",
-        legs="Kara. Pantaloni +2",
+        legs="Karagoz Pantaloni +2",
         feet="Mpaca's Boots",
         neck="Shulmanu Collar",
         waist="Klouskap Sash +1",
-        left_ear="Kara. Earring +1",
+        left_ear="Karagoz Earring +1",
         left_ear="Kyrene's Earring",
-        left_ring="Thurandaut Ring",
+        left_ring="Varar Ring +1",
         right_ring="C. Palug Ring",
         back={ name="Dispersal Mantle", augments={'STR+1','Pet: TP Bonus+480',}},
     }
@@ -1266,8 +1276,8 @@ range="Trollbane",  }
         head="Heyoka Cap +1",
         ear1="Rimeice Earring",
         ear2="Domes. Earring",
-        body="He. Harness",
-        hands="He. Mittens",
+        body="Heyoka Harness",
+        hands="Heyoka Mittens",
         legs="Heyoka Subligar +1",
     }
 

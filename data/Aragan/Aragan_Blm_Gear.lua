@@ -28,7 +28,7 @@ function user_job_setup()
 	state.PhysicalDefenseMode:options('PDT', 'MDT')
     state.MagicalDefenseMode:options('MDT')
 	state.Enfeebling = M('None', 'Effect')
-	state.IdleMode:options('DT','Normal','DT', 'PDT', 'MDT', 'HB', 'MB', 'Evasion', 'EnemyCritRate', 'Sphere')
+	state.IdleMode:options('DT','Normal','DT','Empy', 'PDT', 'MDT', 'HB', 'MB', 'Evasion', 'EnemyCritRate', 'Sphere')
 	state.Weapons:options('None','Mpaca', 'Marin', 'Drepanum', 'Maliya', 'Club','TernionDagger')
 
 	gear.nuke_jse_back = {}
@@ -186,80 +186,80 @@ function init_gear_sets()
         back={ name="Aurist's Cape +1", augments={'Path: A',}},}
         
     sets.precast.WS['Myrkr'] = {
-            ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-            head="Pixie Hairpin +1",
-            body={ name="Ros. Jaseran +1", augments={'Path: A',}},
-            hands="Regal Cuffs",
-            legs={ name="Psycloth Lappas", augments={'MP+80','Mag. Acc.+15','"Fast Cast"+7',}},
-            feet="Nyame Sollerets",
-            neck="Sanctity Necklace",
-            waist={ name="Shinjutsu-no-Obi +1", augments={'Path: A',}},
-            left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-            right_ear="Etiolation Earring",
-            left_ring="Mephitas's Ring",
-            right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
-            back={ name="Aurist's Cape +1", augments={'Path: A',}},
-        }
+        ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+        head="Pixie Hairpin +1",
+        body={ name="Ros. Jaseran +1", augments={'Path: A',}},
+        hands="Regal Cuffs",
+        legs={ name="Psycloth Lappas", augments={'MP+80','Mag. Acc.+15','"Fast Cast"+7',}},
+        feet="Nyame Sollerets",
+        neck="Sanctity Necklace",
+        waist={ name="Shinjutsu-no-Obi +1", augments={'Path: A',}},
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Etiolation Earring",
+        left_ring="Mephitas's Ring",
+        right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+        back={ name="Aurist's Cape +1", augments={'Path: A',}},
+    }
     sets.precast.WS['Spinning Scythe'] = {
-            ammo="Oshasha's Treatise",
-            head="Nyame Helm",
-            body="Nyame Mail",
-            hands="Nyame Gauntlets",
-            legs="Nyame Flanchard",
-            feet="Nyame Sollerets",
-            neck="Fotia Gorget",
-            waist="Fotia Belt",
-            left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-            right_ear="Ishvara Earring",
-            left_ring="Rufescent Ring",
-            right_ring="Cornelia's Ring",
-            back={ name="Aurist's Cape +1", augments={'Path: A',}},}
+        ammo="Oshasha's Treatise",
+        head="Nyame Helm",
+        body="Nyame Mail",
+        hands="Nyame Gauntlets",
+        legs="Nyame Flanchard",
+        feet="Nyame Sollerets",
+        neck="Fotia Gorget",
+        waist="Fotia Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Ishvara Earring",
+        left_ring="Rufescent Ring",
+        right_ring="Cornelia's Ring",
+        back={ name="Aurist's Cape +1", augments={'Path: A',}},}
 
     sets.precast.WS['Cataclysm'] = {
-            ammo="Pemphredo Tathlum",
-            head="Pixie Hairpin +1",
-            body="Nyame Mail",
-            hands="Nyame Gauntlets",
-            legs="Nyame Flanchard",
-            feet="Nyame Sollerets",
-            neck="Sibyl Scarf",
-            waist="Orpheus's Sash",
-            left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-            right_ear="Regal Earring",
-            left_ring="Cornelia's Ring",
-            right_ring="Archon Ring",
-            back="Taranus's Cape",}
+        ammo="Pemphredo Tathlum",
+        head="Pixie Hairpin +1",
+        body="Nyame Mail",
+        hands="Nyame Gauntlets",
+        legs="Nyame Flanchard",
+        feet="Nyame Sollerets",
+        neck="Sibyl Scarf",
+        waist="Orpheus's Sash",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Regal Earring",
+        left_ring="Cornelia's Ring",
+        right_ring="Archon Ring",
+        back="Taranus's Cape",}
        
     sets.precast.WS['Infernal Scythe'] = {
-            ammo="Pemphredo Tathlum",
-            head="Pixie Hairpin +1",
-            body="Nyame Mail",
-            hands="Nyame Gauntlets",
-            legs="Nyame Flanchard",
-            feet="Nyame Sollerets",
-            neck="Sibyl Scarf",
-            waist="Orpheus's Sash",
-            left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-            right_ear="Regal Earring",
-            left_ring="Cornelia's Ring",
-            right_ring="Archon Ring",
-            back="Taranus's Cape",}
+        ammo="Pemphredo Tathlum",
+        head="Pixie Hairpin +1",
+        body="Nyame Mail",
+        hands="Nyame Gauntlets",
+        legs="Nyame Flanchard",
+        feet="Nyame Sollerets",
+        neck="Sibyl Scarf",
+        waist="Orpheus's Sash",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Regal Earring",
+        left_ring="Cornelia's Ring",
+        right_ring="Archon Ring",
+        back="Taranus's Cape",}
         
     sets.precast.WS['Cross Reaper']	= {
-                ammo="Oshasha's Treatise",
-                head="Nyame Helm",
-                body="Nyame Mail",
-                hands="Nyame Gauntlets",
-                legs="Nyame Flanchard",
-                feet="Nyame Sollerets",
-                neck="Fotia Gorget",
-                waist="Fotia Belt",
-                left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-                right_ear="Ishvara Earring",
-                left_ring="Epaminondas's Ring",
-                right_ring="Cornelia's Ring",
-                back={ name="Aurist's Cape +1", augments={'Path: A',}},
-            }
+        ammo="Oshasha's Treatise",
+        head="Nyame Helm",
+        body="Nyame Mail",
+        hands="Nyame Gauntlets",
+        legs="Nyame Flanchard",
+        feet="Nyame Sollerets",
+        neck="Fotia Gorget",
+        waist="Fotia Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Ishvara Earring",
+        left_ring="Epaminondas's Ring",
+        right_ring="Cornelia's Ring",
+        back={ name="Aurist's Cape +1", augments={'Path: A',}},
+    }
     sets.precast.WS['Black Halo'] = {
         ammo="Oshasha's Treatise",
         head="Nyame Helm",
@@ -328,7 +328,7 @@ function init_gear_sets()
 
     sets.precast.WS['Vorpal Scythe'] = set_combine(sets.precast.WS['Spinning Scythe'], {
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         neck="Nefarious Collar +1",
         left_ring="Hetairoi Ring",
     })
@@ -341,13 +341,14 @@ function init_gear_sets()
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
-        waist="Eschan Stone",
-        left_ear="Digni. Earring",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Stikini Ring +1",
         back="Null Shawl",
     })
+    sets.precast.WS['Vidohunir'] = sets.precast.WS["Shell Crusher"]
 
 	sets.MaxTPMyrkr = {}
     
@@ -376,7 +377,7 @@ function init_gear_sets()
     sets.midcast.Cure = {      
 	ammo="Pemphredo Tathlum",
 	head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
-	hands="Inyan. Dastanas +2",
+    hands="Telchine Gloves",
 	legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
 	feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
 	neck="Incanter's Torque",
@@ -433,7 +434,7 @@ function init_gear_sets()
         left_ear="Earthcry Earring",
         waist="Siegel Sash",
         neck="Nodens Gorget",})	
-	sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'], {head="Amalric Coif +1"})
+	sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'], {})--head="Amalric Coif +1"
 	sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'], {feet="Inspirited Boots",waist="Gishdubar Sash",back="Grapevine Cape",})
 
     sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'], {})
@@ -690,8 +691,8 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
     })
 
     sets.midcast.BardSong = {ammo="Ghastly Tathlum +1",
-        head="Amalric Coif +1",neck="Sanctity Necklace",ear1="Digni. Earring",ear2="Regal Earring",
-        body="Zendik Robe",hands="Regal Cuffs",ring1="Stikini Ring +1",ring2="Metamor. Ring +1",
+        neck="Sanctity Necklace",ear1="Digni. Earring",ear2="Regal Earring",
+        hands="Regal Cuffs",ring1="Stikini Ring +1",ring2="Metamor. Ring +1",
         waist="Luminary Sash",legs="Merlinic Shalwar",feet="Medium's Sabots"}
 		
 		sets.midcast.Impact = set_combine(sets.midcast['Elemental Magic'], {
@@ -990,6 +991,16 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
         right_ring="Vengeful Ring",
         back="Moonlight Cape",
     })
+
+    sets.idle.Empy = set_combine(sets.idle, { 
+        head="Wicce Petasos +2",
+        body="Wicce Coat +3",
+        hands="Wicce Gloves +2",
+        legs="Wicce Chausses +3",
+        feet="Wicce Sabots +2",
+
+    })
+
     -- Defense sets
 
     sets.defense.PDT = {
@@ -1044,12 +1055,9 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 	
 	sets.HPDown = {head="Pixie Hairpin +1",ear1="Genmei Earring",ear2="Evans Earring",
 		body="Jhakri Robe +2",hands="Jhakri Cuffs +2",ring1="Mephitas's Ring +1",ring2="Mephitas's Ring",
-		back="Swith Cape +1",legs="Shedir Seraweels",feet="Jhakri Pigaches +2"}
+	legs="Shedir Seraweels",feet="Jhakri Pigaches +2"}
 		
-	sets.HPCure = {ammo="Hasty Pinion +1",
-		head="Nyame Helm",neck="Nodens Gorget",ear1="Etiolation Earring",ear2="Ethereal Earring",
-		body="Vrikodara Jupon",hands="Telchine Gloves",ring1="Kunaji Ring",ring2="Meridian Ring",
-		back="Tempered Cape +1",waist="Plat. Mog. Belt",legs="Psycloth Lappas",feet="Vanya Clogs"}
+	sets.HPCure = {}
 	
 	sets.buff.Doom = set_combine(sets.buff.Doom, {
 		neck="Nicander's Necklace",
@@ -1152,4 +1160,39 @@ function user_job_lockstyle()
 end
 
 
-autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',['Drepanum']='Spiral Hell',['Maliya']='Spinning Scythe',['TernionDagger']='Aeolian Edge',['Club']='Black Halo',}
+autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',['Drepanum']='Spiral Hell',
+['Maliya']='Spinning Scythe',['TernionDagger']='Aeolian Edge',['Club']='Black Halo',}
+
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Subtle Sorcery"] = {gain = 'Subtle Sorcery is on.', lose = 'Subtle Sorcery wore off.', announce_gain = true, announce_lose = true},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end

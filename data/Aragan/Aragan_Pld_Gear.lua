@@ -182,21 +182,21 @@ function init_gear_sets()
     sets.precast.JA['Holy Circle'] = set_combine(sets.Enmity,{feet="Rev. Leggings +3"})
     sets.precast.JA['Sentinel'] = set_combine(sets.Enmity,{feet="Cab. Leggings +3"})
     sets.precast.JA['Rampart'] = set_combine(sets.Enmity,{head="Cab. Coronet +3"}) --(Also Vit?)
-    sets.precast.JA['Fealty'] = set_combine(sets.Enmity,{body="Cab. Surcoat +3"})
+    sets.precast.JA['Fealty'] = set_combine(sets.Enmity,{})--body="Cab. Surcoat +3"
     sets.precast.JA['Divine Emblem'] = set_combine(sets.Enmity,{feet="Chev. Sabatons +3"})
-    sets.precast.JA['Cover'] = set_combine(sets.Enmity, {body="Cab. Surcoat +3"}) --head="Rev. Coronet +1",
+    sets.precast.JA['Cover'] = set_combine(sets.Enmity, {}) --head="Rev. Coronet +1",
 	
     sets.precast.JA['Invincible'].DT = set_combine(sets.Enmity.DT,{legs="Cab. Breeches +3"})
     sets.precast.JA['Holy Circle'].DT = set_combine(sets.Enmity.DT,{feet="Rev. Leggings +3"})
     sets.precast.JA['Sentinel'].DT = set_combine(sets.Enmity.DT,{feet="Cab. Leggings +3"})
     sets.precast.JA['Rampart'].DT = set_combine(sets.Enmity.DT,{head="Cab. Coronet +3"}) 
-    sets.precast.JA['Fealty'].DT = set_combine(sets.Enmity.DT,{body="Cab. Surcoat +3"})
+    sets.precast.JA['Fealty'].DT = set_combine(sets.Enmity.DT,{})
     sets.precast.JA['Divine Emblem'].DT = set_combine(sets.Enmity.DT,{feet="Chev. Sabatons +3"})
-    sets.precast.JA['Cover'].DT = set_combine(sets.Enmity.DT, {body="Cab. Surcoat +3"}) 
+    sets.precast.JA['Cover'].DT = set_combine(sets.Enmity.DT, {}) 
 	
     -- add mnd for Chivalry
     sets.precast.JA['Chivalry'] = {ammo="Paeapua",
-		head="Nyame Helm",neck="Unmoving Collar +1",ear1="Nourish. Earring",ear2="Nourish. Earring +1",
+		head="Nyame Helm",neck="Unmoving Collar +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
 		body="Rev. Surcoat +3",hands="Cab. Gauntlets +1",ring1="Stikini Ring +1",ring2="Rufescent Ring",
 		back="Rudianos's Mantle",waist="Luminary Sash",legs="Nyame Flanchard",feet="Carmine Greaves +1"}
 		
@@ -226,7 +226,7 @@ function init_gear_sets()
     -- Waltz set (chr and vit)
     sets.precast.Waltz = {ammo="Aurgelmir Orb +1",
 		head="Nyame Helm",neck="Unmoving Collar +1",ear1="Odnowa Earring +1",ear2="Tuisto Earring",
-		body="Rev. Surcoat +3",hands="Regal Gauntlets",ring1="Asklepian Ring",
+		body="Rev. Surcoat +3",hands="Regal Gauntlets",ring1="Stikini Ring +1",
 		back="Moonlight Cape",waist="Chaac Belt",legs="Nyame Flanchard",feet="Nyame Sollerets"}
         
     -- Don't need any special gear for Healing Waltz.
@@ -234,13 +234,13 @@ function init_gear_sets()
     
     sets.precast.Step = {ammo="Aurgelmir Orb +1",
         head="Carmine Mask +1",neck="Combatant's Torque",ear1="Mache Earring +1",ear2="Telos Earring",
-        body="Flamma Korazin +2",hands="Regal Gauntlets",ring1="Ramuh Ring +1",ring2="Ramuh Ring +1",
-        back="Ground. Mantle +1",waist="Olseni Belt",legs="Carmine Cuisses +1",feet="Flam. Gambieras +2"}
+        body="Flamma Korazin +2",hands="Regal Gauntlets",
+        waist="Olseni Belt",legs="Carmine Cuisses +1",feet="Flam. Gambieras +2"}
 		
 	sets.precast.JA['Violent Flourish'] = {ammo="Aurgelmir Orb +1",
-        head="Flam. Zucchetto +2",neck="Erra Pendant",ear1="Gwati Earring",ear2="Digni. Earring",
+        head="Flam. Zucchetto +2",neck="Erra Pendant",ear2="Digni. Earring",
         body="Flamma Korazin +2",hands="Flam. Manopolas +2",ring1="Defending Ring",ring2="Stikini Ring +1",
-        back="Ground. Mantle +1",waist="Olseni Belt",legs="Flamma Dirs +2",feet="Flam. Gambieras +2"}
+        waist="Olseni Belt",legs="Flamma Dirs +2",feet="Flam. Gambieras +2"}
 		
 	sets.precast.JA['Animated Flourish'] = set_combine(sets.Enmity, {})
 
@@ -269,8 +269,8 @@ function init_gear_sets()
     sets.precast.FC['Enhancing Magic'] = set_combine(sets.precast.FC, {waist="Siegel Sash"})
 	sets.precast.FC['Enhancing Magic'].DT = set_combine(sets.precast.FC.DT, {waist="Siegel Sash"})
 	
-	sets.precast.FC.Cure = set_combine(sets.precast.FC, {ear1="Nourish. Earring",ear2="Nourish. Earring +1",body="Jumalik Mail"})
-	sets.precast.FC.Cure.DT = set_combine(sets.precast.FC.DT, {ear1="Nourish. Earring",ear2="Nourish. Earring +1",body="Jumalik Mail"})
+	sets.precast.FC.Cure = set_combine(sets.precast.FC, {ear1="Mendi. Earring",ear2="Nourish. Earring +1",body="Jumalik Mail"})
+	sets.precast.FC.Cure.DT = set_combine(sets.precast.FC.DT, {ear1="Mendi. Earring",ear2="Nourish. Earring +1",body="Jumalik Mail"})
 
     -- Weaponskill sets
     -- Default set for any weaponskill that isn't any more specifically defined
@@ -303,8 +303,8 @@ function init_gear_sets()
         back="Moonlight Cape",waist="Plat. Mog. Belt",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
 
     sets.precast.WS.Acc = {
-        head="Ynglinga Sallet",neck="Combatant's Torque",ear1="Mache Earring +1",ear2="Telos Earring",
-        body="Nyame Mail",hands="Sakpata's Gauntlets",	left_ring="Regal Ring",right_ring="Cornelia's Ring",
+        head="Nyame Helm",neck="Combatant's Torque",ear1="Mache Earring +1",ear2="Telos Earring",
+        body="Nyame Mail",hands="Sakpata's Gauntlets",left_ring="Regal Ring",right_ring="Cornelia's Ring",
         back="Null Shawl",waist="Olseni Belt",legs="Carmine Cuisses +1",feet="Sulev. Leggings +2"}
 	
    -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
@@ -509,8 +509,8 @@ function init_gear_sets()
 		legs={ name="Nyame Flanchard", augments={'Path: B',}},
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Null Loop",
-		waist="Eschan Stone",
-		left_ear="Digni. Earring",
+		waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 		right_ear="Crep. Earring",
 		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 		right_ring="Stikini Ring +1",
@@ -582,7 +582,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 	sets.midcast['Frightful Roar'].DT = sets.midcast['Frightful Roar']	
 	sets.midcast['Frightful Roar'].SIRD = sets.midcast['Frightful Roar']
     sets.midcast.Cure = {ammo="Staunch Tathlum +1",
-		head="Loess Barbuta +1",neck="Sacro Gorget",ear1="Nourish. Earring",ear2="Nourish. Earring +1",
+		head="Loess Barbuta +1",neck="Sacro Gorget",ear1="Mendi. Earring",ear2="Nourish. Earring +1",
 		body="Jumalik Mail",hands="Macabre Gaunt. +1",ring1="Defending Ring",ring2="Moonlight Ring",
 		back="Rudianos's Mantle",waist="Plat. Mog. Belt",legs="Carmine Cuisses +1",feet="Odyssean Greaves"}
 		
@@ -641,7 +641,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 			sub="Priwen",hands="Regal Gauntlets",body="Shab. Cuirass +1",})
 
 	sets.Self_Healing = {ammo="Staunch Tathlum +1",
-		head="Souv. Schaller +1",neck="Sacro Gorget",ear1="Nourish. Earring",ear2="Nourish. Earring +1",
+		head="Souv. Schaller +1",neck="Sacro Gorget",ear1="Mendi. Earring",ear2="Nourish. Earring +1",
 		body="Souv. Cuirass +1",hands="Macabre Gaunt. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
 		back="Moonlight Cape",waist="Plat. Mog. Belt",legs="Souv. Diechlings +1",feet="Souveran Schuhs +1"}
 		
@@ -653,8 +653,8 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
     neck="Moonlight Necklace",
     waist="Audumbla Sash",
-    left_ear={ name="Chev. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+11','Mag. Acc.+11','Damage taken-3%',}},
-    right_ear={ name="Nourish. Earring +1", augments={'Path: A',}},
+    right_ear="Chev. Earring +1",
+    left_ear={ name="Nourish. Earring +1", augments={'Path: A',}},
     right_ring="Defending Ring",
     left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     back="Moonlight Cape",}
@@ -683,7 +683,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
    hands="Regal Gauntlets",
    legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
    feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
-   neck="Enhancing Torque",
+   neck="Incanter's Torque",
    waist="Olympus Sash",
    right_ear="Andoaa Earring",
    right_ring="Stikini Ring +1",
@@ -873,7 +873,7 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 
     sets.resting = {ammo="Homiliary",
 	head="Null Masque",neck="Unmoving Collar +1",ear1="Etiolation Earring",ear2="Ethereal Earring",
-		body="Jumalik Mail",hands="Souv. Handsch. +1",ring1="Defending Ring",ring2="Dark Ring",
+		body="Jumalik Mail",hands="Souv. Handsch. +1",ring1="Defending Ring",ring2="Stikini Ring +1",
 		back="Moonlight Cape",waist="Null Belt",legs="Sulev. Cuisses +2",feet="Cab. Leggings +3"}
 
     -- Idle sets
@@ -997,7 +997,7 @@ sets.idle.Evasion={
 	sets.Adoulin = {body="Councilor's Garb",}
 
 	sets.latent_refresh = {waist="Fucho-no-obi"}
-	sets.latent_refresh_grip = {sub="Oneiros Grip"}
+	sets.latent_refresh_grip = {}
 	sets.latent_regen = {ring1="Apeile Ring +1",ring2="Apeile Ring"}
 	sets.DayIdle = {}
 	sets.NightIdle = {}
@@ -1424,7 +1424,7 @@ sets.defense.Turtle ={
 	--------------------------------------
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
 	sets.buff.Sleep = {neck="Vim Torque +1"}
-    sets.buff.Cover = {body="Cab. Surcoat +3"}
+    sets.buff.Cover = {}
 end
 
 -- Select default macro book on initial load or subjob change.
@@ -1456,7 +1456,8 @@ function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 177')
 end
 
-autows_list = {['Naegling']='Savage Blade',['Burtgang']='Atonement',['MalignanceSword']='Sanguine Blade',['Reikiko']='Chant du Cygne',
+autows_list = {['Naegling']='Savage Blade',['Burtgang']='Atonement',['MalignanceSword']='Sanguine Blade',
+['Reikiko']='Chant du Cygne',
      ['Malevolence']='Aeolian Edge',['Club']='Judgment',['Caladbolg']='Torcleaver',
 	 ['MalignancePole']='Shell Crusher',['Shining']='Impulse Drive'}
 
@@ -1499,4 +1500,39 @@ function check_trust()
 	
 	end
 	return false
+end
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Fealty"] = {gain = 'Fealty is on.', lose = 'Fealty wore off.', announce_gain = false, announce_lose = true},
+		["Phalanx"] = {gain = 'Phalanx is on.', lose = 'Phalanx wore off.', announce_gain = false, announce_lose = true},
+		["Crusade"] = {gain = 'Crusade is on.', lose = 'Crusade wore off.', announce_gain = false, announce_lose = true},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
 end

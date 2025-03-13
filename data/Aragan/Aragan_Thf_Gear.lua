@@ -92,12 +92,12 @@ function init_gear_sets()
     -- Precast sets to enhance JAs
     sets.precast.JA['Collaborator'] = {head="Skulker's Bonnet +2",}
     sets.precast.JA['Accomplice'] = {head="Skulker's Bonnet +2",}
-    sets.precast.JA['Flee'] = {feet="Pillager's Poulaines +1"}
+    sets.precast.JA['Flee'] = {}--feet="Pillager's Poulaines +1"
     sets.precast.JA['Hide'] = {body="Pillager's Vest +3"}
-    sets.precast.JA['Conspirator'] = {body="Skulker's Vest"} 
+    sets.precast.JA['Conspirator'] = {} --body="Skulker's Vest"
     sets.precast.JA['Steal'] = {}
 	sets.precast.JA['Mug'] = {}
-    sets.precast.JA['Despoil'] = {legs="Raider's Culottes +2",feet="Skulk. Poulaines +2",}
+    sets.precast.JA['Despoil'] = {feet="Skulk. Poulaines +2",}
     sets.precast.JA['Perfect Dodge'] = {hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}},}
     sets.precast.JA['Feint'] = {} -- {legs="Assassin's Culottes +2"}
 
@@ -106,7 +106,7 @@ function init_gear_sets()
 
     -- Waltz set (chr and vit)
     sets.precast.Waltz = {ammo="Yamarang",
-    head="Mummu Bonnet +1",
+    head="Mummu Bonnet +2",
     body="Gleti's Cuirass",
     legs="Dashing Subligar",}
 
@@ -141,7 +141,8 @@ function init_gear_sets()
 	}
 
     sets.precast.RA.Acc = {       
-        legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},        feet="Meg. Jam. +2",
+        legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
+        feet="Meghanada Jambeaux +2",
         waist="Yemaya Belt",}
 
 
@@ -447,8 +448,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck="Null Loop",
-    waist="Eschan Stone",
-    left_ear="Digni. Earring",
+    waist="Null Belt",
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Crep. Earring",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     right_ring="Stikini Ring +1",
@@ -530,7 +531,7 @@ sets.precast.WS["Empyreal Arrow"] = {
         left_ear="Telos Earring",
         right_ear="Crep. Earring",
         left_ring="Dingir Ring",
-        right_ring="Cacoethic Ring",
+        right_ring="Cacoethic Ring +1",
         back="Null Shawl",
 
     }
@@ -548,7 +549,7 @@ sets.precast.WS["Empyreal Arrow"] = {
         left_ear="Telos Earring",
         right_ear="Crep. Earring",
         left_ring="Dingir Ring",
-        right_ring="Cacoethic Ring",
+        right_ring="Cacoethic Ring +1",
         back="Null Shawl",
 
     }
@@ -564,7 +565,7 @@ sets.precast.WS["Empyreal Arrow"] = {
         body="Meg. Cuirie +2",
         hands="Gleti's Gauntlets",
         legs="Gleti's Breeches",
-        feet="Meg. Jam. +2",
+        feet="Meghanada Jambeaux +2",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
         waist="Null Belt",
         left_ear="Infused Earring",
@@ -707,7 +708,7 @@ sets.precast.WS["Empyreal Arrow"] = {
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
     })
-    sets.idle.Sphere = set_combine(sets.idle, {body="Mekosu. Harness"})
+    sets.idle.Sphere = set_combine(sets.idle, {})
     
     sets.idle.Weak = set_combine(sets.idle, {})
     
@@ -802,7 +803,7 @@ sets.precast.WS["Empyreal Arrow"] = {
         left_ear="Telos Earring",
         right_ear="Crep. Earring",
         left_ring="Dingir Ring",
-        right_ring="Cacoethic Ring",
+        right_ring="Cacoethic Ring +1",
         back="Toutatis's Cape",
     }
 
@@ -864,4 +865,6 @@ function user_job_lockstyle()
 	end
 end
 
-autows_list = {['Twashtar']="Rudra's Storm",['Tauret']='Evisceration',['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['SwordThrowing']='Savage Blade',['Evisceration']='Evisceration',['ProcWeapons']='Wasp Sting',['Bow']='Empyreal Arrow'}
+autows_list = {['Twashtar']="Rudra's Storm",['Tauret']='Evisceration',['Naegling']='Savage Blade',
+['Aeneas']="Aeolian Edge",['SwordThrowing']='Savage Blade',['Evisceration']='Evisceration',
+['ProcWeapons']='Wasp Sting',['Bow']='Empyreal Arrow'}

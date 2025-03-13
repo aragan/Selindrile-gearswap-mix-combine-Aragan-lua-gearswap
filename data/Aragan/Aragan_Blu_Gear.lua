@@ -41,7 +41,7 @@ function user_job_setup()
 	state.HybridMode:options('DT','Normal')
     state.WeaponskillMode:options('Match', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT')
-    state.IdleMode:options('DT','Normal','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
+    state.IdleMode:options('DT','Normal','Empy','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
 	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
@@ -135,7 +135,7 @@ function init_gear_sets()
     sets.precast.JA['Provoke'] = sets.Enmity
 
     sets.buff['Burst Affinity'] = {legs="Assim. Shalwar +3", feet="Hashi. Basmak +2"}
-    sets.buff['Chain Affinity'] = {head="Mavi Kavuk +2", feet="Assimilator's Charuqs"}
+    sets.buff['Chain Affinity'] = {head="Hashishin Kavuk +2", }
     sets.buff.Convergence = {head="Luh. Keffiyeh +3"}
     sets.buff.Diffusion = {feet="Luhlaza Charuqs +3"}
     sets.buff.Enchainment = {}
@@ -192,7 +192,7 @@ function init_gear_sets()
 	
 	sets.precast.FC['Blue Magic'] = set_combine(sets.precast.FC, {
 		body="Hashishin Mintan +2",
-		hands="Hashi. Bazu. +2",
+		hands="Hashishin Bazubands +2",
 	})
 	sets.precast.FC['Enhancing Magic'] = set_combine(sets.precast.FC, {waist="Siegel Sash"})
 	sets.precast.FC.Cure = set_combine(sets.precast.FC, { ear1="Mendi. Earring"})
@@ -471,8 +471,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	feet={ name="Nyame Sollerets", augments={'Path: B',}},
 	neck="Null Loop",
-	waist="Eschan Stone",
-	left_ear="Digni. Earring",
+    waist="Null Belt",
+	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
 	right_ear="Crep. Earring",
 	left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
 	right_ring="Stikini Ring +1",
@@ -503,7 +503,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.DT={
 		ammo="Staunch Tathlum +1",
 		body="Hashishin Mintan +2",
-		hands="Hashi. Bazu. +2",
+		hands="Hashishin Bazubands +2",
 		legs="Hashishin Tayt +3",
 		waist="Plat. Mog. Belt",
 		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
@@ -554,7 +554,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.midcast['Blue Magic'].Physical = {  ammo="Aurgelmir Orb +1",
     head="Gleti's Mask",
     body="Hashishin Mintan +2",
-    hands="Hashi. Bazu. +2",
+    hands="Hashishin Bazubands +2",
     legs="Hashishin Tayt +3",
     feet="Luhlaza Charuqs +3",
     neck="Rep. Plat. Medal",
@@ -573,7 +573,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 	sets.midcast['Blue Magic'].PhysicalAcc = {    head="Gleti's Mask",
     body="Hashishin Mintan +2",
-    hands="Hashi. Bazu. +2",
+    hands="Hashishin Bazubands +2",
     legs="Hashishin Tayt +3",
     feet="Luhlaza Charuqs +3",
     neck={ name="Mirage Stole +2", augments={'Path: A',}},
@@ -624,7 +624,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.midcast['Blue Magic'].Magical = {    ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
     head="Hashishin Kavuk +2",
     body="Hashishin Mintan +2",
-    hands="Hashi. Bazu. +2",
+    hands="Hashishin Bazubands +2",
     legs={ name="Luhlaza Shalwar +3", augments={'Enhances "Assimilation" effect',}},
     feet="Hashi. Basmak +2",
     neck="Sibyl Scarf",
@@ -936,7 +936,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	-- Sets to return to when not performing an action.
 
 	sets.latent_refresh = {waist="Fucho-no-obi"}
-	sets.latent_refresh_grip = {sub="Oneiros Grip"}
+	sets.latent_refresh_grip = {}
 	sets.DayIdle = {}
 	sets.NightIdle = {}
 
@@ -1043,6 +1043,14 @@ sets.idle.MDT = set_combine(sets.defense.MDT, {})
 sets.idle.Enmity = set_combine(sets.defense.Enmity, {})
 sets.idle.Town = {legs="Carmine Cuisses +1",
 left_ear="Infused Earring",}
+
+sets.idle.Empy = set_combine(sets.idle, { 
+head="Hashishin Kavuk +2",
+body="Hashishin Mintan +2",
+hands="Hashishin Bazubands +2",
+legs="Hashishin Tayt +3",
+feet="Hashi. Basmak +2",
+})
 
 sets.idle.Learning = set_combine(sets.idle, sets.Learning, { 
     main="Iris", 
@@ -1426,3 +1434,37 @@ end
 
 autows_list = {['Naegling']='Savage Blade',['Naegling2']='Expiacion',['Maxentius']='Black Halo',['Nuking']='Seraph Strike',
      ['MaccWeapons']='Chant Du Cygne',['Naegbron']='Black Halo',['Naegmace']='Chant Du Cygne'}
+
+	 
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Nat. Meditation"]   = {gain = 'Nat. Meditation is on.', lose = 'Nat. Meditation wore off.', announce_gain = false, announce_lose = true},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end

@@ -62,14 +62,14 @@ function init_gear_sets()
 	-- Precast Sets
 	
 	-- Precast sets to enhance JAs on use
-    sets.precast.JA['Hundred Fists'] = {legs="Hesychast's Hose +1"}
-    sets.precast.JA['Boost'] = {hands="Anchorite's Gloves +1"}
+    sets.precast.JA['Hundred Fists'] = {}--legs="Hesychast's Hose +1"
+    sets.precast.JA['Boost'] = {}--hands="Anchorite's Gloves +1"
     sets.precast.JA['Dodge'] = {feet="Anch. Gaiters +3"}
-    sets.precast.JA['Focus'] = {head="Anchorite's Crown +1"}
-    sets.precast.JA['Counterstance'] = {feet="Hesychast's Gaiters +1"}
+    sets.precast.JA['Focus'] = {}--head="Anchorite's Crown +1"
+    sets.precast.JA['Counterstance'] = {}--feet="Hesychast's Gaiters +1"
     sets.precast.JA['Footwork'] = {feet="Anch. Gaiters +3"}
-    sets.precast.JA['Formless Strikes'] = {body="Hesychast's Cyclas"}
-    sets.precast.JA['Mantra'] = {feet="Hesychast's Gaiters +1"}
+    sets.precast.JA['Formless Strikes'] = {}--body="Hesychast's Cyclas"
+    sets.precast.JA['Mantra'] = {}--feet="Hesychast's Gaiters +1"
 
     sets.precast.JA['Chi Blast'] = {head="Nyame Helm",
     body="Nyame Mail",
@@ -138,6 +138,13 @@ function init_gear_sets()
         range="Trollbane",  
     }
        
+
+    sets.Phalanx_Received = {
+	body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
+	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+	}
+
 	-- Weaponskill sets
 	-- Default set for any weaponskill that isn't any more specifically defined
 	sets.precast.WS = {
@@ -371,14 +378,14 @@ function init_gear_sets()
 
     sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         ammo="Pemphredo Tathlum",
-        head={ name="Nyame Helm", augments={'Path: B',}},
+        head={ name="Mpaca's Cap", augments={'Path: A',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
         waist="Eschan Stone",
-        left_ear="Digni. Earring",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Stikini Ring +1",
@@ -735,7 +742,7 @@ sets.defense.Evasion = {
 		ammo="Amar Cluster",
 		head="Hiza. Somen +2",
 		body="Mpaca's Doublet",
-		hands={ name="Rao Kote", augments={'Accuracy+10','Attack+10','Evasion+15',}},
+        hands={ name="Rao Kote +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
         legs="Bhikku Hose +2",
 		feet="Hiza. Sune-Ate +2",
 		neck={ name="Bathy Choker +1", augments={'Path: A',}},
@@ -749,7 +756,7 @@ sets.defense.Evasion = {
     sets.engaged.Acc.Counter = {ammo="Amar Cluster",
 	head="Hiza. Somen +2",
 	body="Mpaca's Doublet",
-	hands={ name="Rao Kote", augments={'Accuracy+10','Attack+10','Evasion+15',}},
+    hands={ name="Rao Kote +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
     legs="Bhikku Hose +2",
 	feet="Hiza. Sune-Ate +2",
     neck="Anu Torque",

@@ -30,7 +30,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Reraise')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-    state.IdleMode:options('DT','Normal','Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate')
+    state.IdleMode:options('DT','Normal','Empy','Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate')
 	state.Weapons:options('Masamune','None','Dojikiri','Polearm','Amanomurakumo','TernionDagger','Club','ProcWeapon')
 
 	gear.ws_jse_back = {name="Smertrios's Mantle",augments={'STR+20','Accuracy+20 Attack+20','Weapon skill damage +10%',}}
@@ -61,7 +61,7 @@ function init_gear_sets()
     sets.weapons.Polearm = {main="Shining One", sub="Utu Grip"}
     sets.weapons.TernionDagger = {main="Ternion Dagger +1"}
     sets.weapons.Club = {main="Mafic Cudgel"}
-    sets.weapons.ProcWeapon = {main="Norifusa",sub="Bloodrain Strap"}
+    sets.weapons.ProcWeapon = {main="Norifusa",}
 
 	--sets.weapons.Bow = {main="Norifusa +1",sub="Utu Grip",range="Cibitshavore",ammo="Eminent Arrow"}
 
@@ -76,8 +76,8 @@ function init_gear_sets()
 }
     sets.precast.JA['Warding Circle'] = {head="Wakido Kabuto +1"}
     sets.precast.JA['Blade Bash'] = {hands="Sakonji Kote +3"}
-	sets.precast.JA['Sekkanoki'] = {hands="Kasuga Kote +2"}
-	sets.precast.JA['Sengikori'] = {feet="Kas. Sune-Ate +2"}
+	sets.precast.JA['Sekkanoki'] = {}
+	sets.precast.JA['Sengikori'] = {feet="Kas. Sune-Ate +3"}
 	
     sets.precast.Step = {
         head="Flam. Zucchetto +2",ear1="Mache Earring +1",ear2="Telos Earring",
@@ -380,14 +380,14 @@ function init_gear_sets()
         -- CHR Mod 60% CHR / 40% STR
         sets.precast.WS['Tachi: Ageha'] = set_combine(sets.precast.WS, {
             ammo="Pemphredo Tathlum",
-            head={ name="Blistering Sallet +1", augments={'Path: A',}},
+            head={ name="Mpaca's Cap", augments={'Path: A',}},
             body="Kasuga Domaru +2",
             hands="Flam. Manopolas +2",
             legs="Kasuga Haidate +2",
             feet="Kas. Sune-Ate +3",
             neck={ name="Sam. Nodowa +2", augments={'Path: A',}},
-            waist="Eschan Stone",
-            left_ear="Digni. Earring",
+            waist="Null Belt",
+            left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
             right_ear="Crep. Earring",
             left_ring="Stikini Ring +1",
             right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -615,7 +615,7 @@ function init_gear_sets()
     
         sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
             ammo="Pemphredo Tathlum",
-            head={ name="Nyame Helm", augments={'Path: B',}},
+            head={ name="Mpaca's Cap", augments={'Path: A',}},
             body={ name="Nyame Mail", augments={'Path: B',}},
             hands={ name="Nyame Gauntlets", augments={'Path: B',}},
             legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -624,7 +624,7 @@ function init_gear_sets()
             waist="Eschan Stone",
             left_ear="Digni. Earring",
             right_ear="Crep. Earring",
-            left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+            left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
             right_ring="Stikini Ring +1",
             back="Null Shawl",
         })
@@ -838,6 +838,13 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
         head="Crepuscular Helm",
         body="Crepuscular Mail",
     })
+    sets.idle.Empy = set_combine(sets.idle, {
+        head="Kasuga Kabuto +2",            
+        body="Kasuga Domaru +2",
+        hands="Kasuga Kote +2",
+        legs="Kasuga Haidate +2",
+        feet="Kas. Sune-Ate +3",
+    })
     sets.idle.HP =  { 
         ammo="Staunch Tathlum +1",
         head="Crepuscular Helm",
@@ -853,6 +860,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
         right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
+
 
     -- Engaged sets
 
@@ -887,7 +895,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
     legs="Kasuga Haidate +2",
     feet="Wakido Sune. +3",
     neck="Null Loop",
-    waist="Ioskeha Belt",
+    waist="Ioskeha Belt +1",
     left_ear={ name="Schere Earring", augments={'Path: A',}},
     right_ear={ name="Kasuga Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+11','Mag. Acc.+11','Weapon skill damage +2%',}},
     left_ring="Regal Ring",
@@ -1007,13 +1015,13 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
 	sets.engaged.DTLite = {ammo="Staunch Tathlum +1",
         head="Nyame Helm",neck="Loricate Torque +1",ear1="Etiolation Earring",ear2="Sanare Earring",
         body="Nyame Mail",hands="Wakido Kote +3",ring1="Defending Ring",ring2="Patricius Ring",
-        back="Moonlight Cape",waist="Ioskeha Belt",legs="Wakido Haidate +3",feet="Nyame Sollerets"}
+        back="Moonlight Cape",waist="Ioskeha Belt +1",legs="Wakido Haidate +3",feet="Nyame Sollerets"}
     
  
     sets.engaged.Acc.DTLite = {ammo="Staunch Tathlum +1",
         head="Nyame Helm",neck="Loricate Torque +1",ear1="Etiolation Earring",ear2="Sanare Earring",
         body="Nyame Mail",hands="Wakido Kote +3",ring1="Defending Ring",ring2="Patricius Ring",
-        back="Moonlight Cape",waist="Ioskeha Belt",legs="Wakido Haidate +3",feet="Nyame Sollerets"}
+        back="Moonlight Cape",waist="Ioskeha Belt +1",legs="Wakido Haidate +3",feet="Nyame Sollerets"}
 
         
     -- Melee sets for in Adoulin, which has an extra 10 Save TP for weaponskills.
@@ -1117,6 +1125,40 @@ autows_list = {['Masamune']='Tachi: Fudo',['Dojikiri']='Tachi: Jinpu',['Amanomur
 ['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',
 ['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',
 ['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['Loxotic ']='Judgment',['DualLoxotic']='Judgment',['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive'}
+
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Yaegasumi"] = {gain = 'Yaegasumi is on.', lose = 'Yaegasumi wore off.', announce_gain = true, announce_lose = true},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end
 
 --Job Specific Trust Overwrite
 function check_trust()

@@ -33,9 +33,9 @@ function user_job_setup()
 	gear.obi_cure_waist = "Austerity Belt +1"
 	gear.obi_cure_back = "Alaunus's Cape"
 
-	gear.obi_nuke_waist = "Sekhmet Corset"
-	gear.obi_high_nuke_waist = "Yamabuki-no-Obi"
-	gear.obi_nuke_back = "Toro Cape"
+	gear.obi_nuke_waist = ""
+	gear.obi_high_nuke_waist = ""
+	gear.obi_nuke_back = ""
 
 		-- Additional local binds
 	send_command('bind ^` input /ma "Arise" <t>')
@@ -93,7 +93,7 @@ function init_gear_sets()
     ammo="Sapience Orb",
     head="Ebers Cap +2",
     body="Inyanga Jubbah +2",
-    hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
+    hands="Fanatic Gloves",
     legs="Aya. Cosciales +2",
     feet={ name="Regal Pumps +1", augments={'Path: A',}},
     neck={ name="Clr. Torque +2", augments={'Path: A',}},
@@ -145,7 +145,7 @@ function init_gear_sets()
 	sets.precast.FC.Dispelga = set_combine(sets.precast.FC, {main="Daybreak",sub="Genmei Shield"})
 
     -- Precast sets to enhance JAs
-    sets.precast.JA.Benediction = {body="Piety Bliaut +1"}
+    sets.precast.JA.Benediction = {}
 
     -- Waltz set (chr and vit)
     sets.precast.Waltz = {
@@ -376,8 +376,8 @@ function init_gear_sets()
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
-        waist="Eschan Stone",
-        left_ear="Digni. Earring",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Stikini Ring +1",
@@ -437,7 +437,7 @@ function init_gear_sets()
     ammo="Pemphredo Tathlum",
     head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
     body="Vedic Coat",
-    hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
+    hands="Fanatic Gloves",
     legs="Ebers Pant. +2",
     feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
     neck="Reti Pendant",
@@ -503,7 +503,7 @@ function init_gear_sets()
     ammo="Pemphredo Tathlum",
     head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
     body="Vedic Coat",
-    hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
+    hands="Fanatic Gloves",
     legs="Ebers Pant. +2",
     feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
     neck="Reti Pendant",
@@ -565,7 +565,7 @@ function init_gear_sets()
     ammo="Pemphredo Tathlum",
     head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
     body="Vedic Coat",
-    hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
+    hands="Fanatic Gloves",
     legs="Ebers Pant. +2",
     feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
     neck="Reti Pendant",
@@ -629,7 +629,7 @@ function init_gear_sets()
 		ammo="Pemphredo Tathlum",
 		head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
 		body="Vedic Coat",
-		hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
+        hands="Fanatic Gloves",
 		legs="Ebers Pant. +2",
 		feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
 		neck="Reti Pendant",
@@ -690,7 +690,7 @@ function init_gear_sets()
 	sets.midcast.Cursna = {        ammo="Pemphredo Tathlum",
 	head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
 	body="Ebers Bliaut +2",
-	hands={ name="Fanatic Gloves", augments={'MP+50','Healing magic skill +8','"Conserve MP"+5','"Fast Cast"+5',}},
+    hands="Fanatic Gloves",
 	legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
 	feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
 	neck="Debilis Medallion",
@@ -721,7 +721,7 @@ function init_gear_sets()
         feet="Theo. Duckbills +3",
         waist="Embla Sash",
     }
-	sets.midcast.Erase = set_combine(sets.midcast.StatusRemoval, {neck="Cleric's Torque"})
+	sets.midcast.Erase = set_combine(sets.midcast.StatusRemoval, {neck={ name="Clr. Torque +2", augments={'Path: A',}},})
 
     -- 110 total Enhancing Magic Skill; caps even without Light Arts
 	sets.midcast['Enhancing Magic'] = {  
@@ -737,8 +737,8 @@ function init_gear_sets()
     waist="Olympus Sash",
     left_ear="Andoaa Earring",
     right_ear="Mendi. Earring",
-    right_ring="Stikini Ring",
-    left_ring="Stikini Ring",
+    right_ring="Stikini Ring +1",
+    left_ring="Stikini Ring +1",
     back={ name="Fi Follet Cape +1", augments={'Path: A',}},}
 
     sets.midcast['Enhancing Magic'].SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.SIRD) 
@@ -753,18 +753,18 @@ function init_gear_sets()
         legs="Telchine Braconi",
         feet="Theo. Duckbills +3",
         neck="Nodens Gorget",
-		legs="Haven Hose",
+		legs="Shedir Seraweels",
         waist="Siegel Sash",
 		right_ear="Earthcry Earring",
         left_ear="Andoaa Earring",
-        right_ring="Stikini Ring",
-        left_ring="Stikini Ring",
+        right_ring="Stikini Ring +1",
+        left_ring="Stikini Ring +1",
         back={ name="Fi Follet Cape +1", augments={'Path: A',}},}
         sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast.Stoneskin,sets.SIRD) 
         sets.midcast.Stoneskin.Duration = set_combine(sets.midcast.Stoneskin,sets.Duration) 
 
 
-		sets.midcast.Auspice = set_combine(sets.midcast['Enhancing Magic'], {feet="Ebers Duckbills +1"})
+		sets.midcast.Auspice = set_combine(sets.midcast['Enhancing Magic'], {feet="Ebers Duckbills +2"})
 		sets.midcast.Auspice.Duration = set_combine(sets.midcast['Enhancing Magic'].Duration, {
 			ammo="Pemphredo Tathlum",
 			head="Telchine Cap",
@@ -774,8 +774,8 @@ function init_gear_sets()
 			feet="Ebers Duckbills +2",
 			neck="Incanter's Torque",
 			left_ear="Andoaa Earring",
-			right_ring="Stikini Ring",
-			left_ring="Stikini Ring",
+			right_ring="Stikini Ring +1",
+			left_ring="Stikini Ring +1",
 			back={ name="Fi Follet Cape +1", augments={'Path: A',}},
 	}) 
 	
@@ -786,13 +786,13 @@ function init_gear_sets()
         head="Telchine Cap",
         body="Telchine Chas.",
         hands="Regal Cuffs",
-        legs="Telchine Braconi",
+        legs="Shedir Seraweels",
         feet="Theo. Duckbills +3",
         neck="Incanter's Torque",
         waist="Embla Sash",
         left_ear="Andoaa Earring",
         left_ring="Mephitas's Ring",
-        right_ring="Stikini Ring",
+        right_ring="Stikini Ring +1",
         back={ name="Fi Follet Cape +1", augments={'Path: A',}},}
 
     sets.midcast.Aquaveil.SIRD = set_combine(sets.midcast.Aquaveil,sets.SIRD)
@@ -814,10 +814,10 @@ function init_gear_sets()
     sets.midcast.Regen.Duration = set_combine(sets.midcast['Enhancing Magic'],sets.Duration, { 
         hands="Ebers Mitts +2",}) 
 	
-	sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",feet="Piety Duckbills +1",ear1="Gifted Earring",waist="Sekhmet Corset"})
-	sets.midcast.Protectra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",feet="Piety Duckbills +1",ear1="Gifted Earring",waist="Sekhmet Corset"})
-	sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",legs="Piety Pantaln. +1",ear1="Gifted Earring",waist="Sekhmet Corset"})
-	sets.midcast.Shellra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",legs="Piety Pantaln. +1",ear1="Gifted Earring",waist="Sekhmet Corset"})
+	sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring"})
+	sets.midcast.Protectra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring"})
+	sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring"})
+	sets.midcast.Shellra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring"})
 	
 	sets.midcast.BarElement = set_combine(sets.midcast['Enhancing Magic'], {
 		main={ name="Gada", augments={'Indi. eff. dur. +1','VIT+1','"Mag.Atk.Bns."+19',}},
@@ -825,13 +825,13 @@ function init_gear_sets()
 		head="Ebers Cap +2",
 		body="Ebers Bliaut +2",
 		hands="Telchine Gloves",
-		legs="Ebers Pant. +2",
+		legs="Shedir Seraweels",
 		feet="Ebers Duckbills +2",
 		neck="Incanter's Torque",
 		waist="Embla Sash",
 		left_ear="Andoaa Earring",
-		right_ring="Stikini Ring",
-		left_ring="Stikini Ring",
+		right_ring="Stikini Ring +1",
+		left_ring="Stikini Ring +1",
 		back="Alaunus's Cape",
 	})
 
@@ -857,7 +857,7 @@ function init_gear_sets()
         legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
         waist="Obstin. Sash",
         left_ear="Regal Earring",
-        right_ear={ name="Ebers Earring", augments={'System: 1 ID: 1676 Val: 0','Accuracy+10','Mag. Acc.+10',}},
+        right_ear="Ebers Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Kishar Ring",
     })	
@@ -867,7 +867,7 @@ function init_gear_sets()
 		body={ name="Vanya Robe", augments={'HP+50','MP+50','"Refresh"+2',}},
 		hands="Inyan. Dastanas +2",
 		legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
-		feet={ name="Medium's Sabots", augments={'MP+25','MND+2','"Conserve MP"+3',}},
+		feet="Medium's Sabots",
 		neck="Erra Pendant",
 		waist="Fucho-no-Obi",
 		right_ear="Malignance Earring",
@@ -929,7 +929,7 @@ function init_gear_sets()
 	sets.midcast.Aspir.Resistant = sets.midcast.Drain.Resistant
 
 	sets.midcast.Stun = {ammo="Pemphredo Tathlum",
-		head="Bunzi's Hat",neck="Erra Pendant",ear1="Enchntr. Earring +1",ear2="Malignance Earring",
+		head="Bunzi's Hat",neck="Erra Pendant",ear1="Regal Earring",ear2="Malignance Earring",
 		body="Inyanga Jubbah +2",hands="Fanatic Gloves",ring1="Kishar Ring",ring2="Stikini Ring +1",
 		back="Aurist's Cape +1",waist="Witful Belt",legs="Chironic Hose",feet="Regal Pumps +1"}
 
@@ -951,7 +951,7 @@ function init_gear_sets()
 	legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
 	waist="Obstin. Sash",
 	left_ear="Regal Earring",
-	right_ear={ name="Ebers Earring", augments={'System: 1 ID: 1676 Val: 0','Accuracy+10','Mag. Acc.+10',}},
+	right_ear="Ebers Earring",
 	left_ring="Stikini Ring +1",
 	right_ring="Kishar Ring",}
 
@@ -976,7 +976,7 @@ function init_gear_sets()
         legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
         waist="Obstin. Sash",
         left_ear="Regal Earring",
-        right_ear={ name="Ebers Earring", augments={'System: 1 ID: 1676 Val: 0','Accuracy+10','Mag. Acc.+10',}},
+        right_ear="Ebers Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Kishar Ring",})
 	sets.midcast.MndEnfeebles.Resistant = sets.midcast.MndEnfeebles
@@ -1304,7 +1304,7 @@ function init_gear_sets()
 
 	sets.HPDown = {head="Pixie Hairpin +1",ear1="Mendicant's Earring",
 		ring1="Mephitas's Ring +1",ring2="Mephitas's Ring",
-		back="Swith Cape +1",waist="Carrier's Sash",}
+		back="Moonlight Cape",waist="Carrier's Sash",}
 
 	sets.HPCure = {ammo="Pemphredo Tathlum",
 		head="Nyame Helm",neck="Nodens Gorget",ear1="Etiolation Earring",ear2="Ethereal Earring",
@@ -1325,3 +1325,37 @@ end
 
 autows_list = {['DualWeapons']='Realmrazer',['MeleeWeapons']='Black Halo',
 ['Queller']='Dagan',['Daybreak']='Seraph Strike',['Black Halo']='Black Halo',}
+
+
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+	    ["Reraise"] = {gain = 'Reraise is on.', lose = 'Reraise wore off.', announce_gain = true, announce_lose = true},
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end

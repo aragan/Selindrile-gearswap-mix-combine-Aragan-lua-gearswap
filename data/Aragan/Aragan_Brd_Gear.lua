@@ -33,7 +33,7 @@ function user_job_setup()
 	state.PhysicalDefenseMode:options('PDT', 'Evasion','Aminon')
     state.MagicalDefenseMode:options('MDT')
     state.WeaponskillMode:options('Match', 'PDL')
-    state.IdleMode:options('DT', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
+    state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
 	state.Weapons:options('None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan')
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Always','300','1000','Never'}
@@ -210,7 +210,7 @@ function init_gear_sets()
 	-- Precast sets to enhance JAs
 	
 	sets.precast.JA.Nightingale = {feet="Bihu Slippers +3"}
-	sets.precast.JA.Troubadour = {body="Bihu Jstcorps +3"}
+	sets.precast.JA.Troubadour = {body="Bihu Jstcorps. +3"}
 	sets.precast.JA['Soul Voice'] = {legs="Bihu Cannions +3"}
 
 	-- Waltz set (chr and vit)
@@ -438,6 +438,22 @@ sets.precast.WS['Shattersoul'] = {
     left_ring="Rufescent Ring",
     back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},}
 
+    
+    sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
+    })
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Ishvara Earring",ear2="Telos Earring",}
@@ -500,7 +516,7 @@ sets.precast.WS['Shattersoul'] = {
         legs="Fili Rhingrave +2",
         feet="Fili Cothurnes +2",
         neck="Mnbw. Whistle +1",
-        waist="Kobo Obi",
+        waist="Luminary Sash",
         left_ear="Digni. Earring",
         right_ear="Fili Earring +1",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -539,7 +555,6 @@ sets.precast.WS['Shattersoul'] = {
     feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
     neck="Nodens Gorget",
     waist="Luminary Sash",
-    left_ear="Gifted Earring",
     right_ear="Mendi. Earring",
     left_ring="Stikini Ring +1",
     right_ring="Stikini Ring +1",
@@ -636,7 +651,6 @@ sets.precast.WS['Shattersoul'] = {
 		legs="Aya. Cosciales +2",
 		feet="Vanya Clogs",
 		neck="Incanter's Torque",
-		ear2="Meili Earring",
 		ring1="Stikini Ring +1",
 		ring2="Stikini Ring +1",
 	})
@@ -764,6 +778,14 @@ sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, {
     right_ring="Fortified Ring",
     back="Reiki Cloak",
 })
+sets.idle.Empy = set_combine(sets.idle, {
+head="Fili Calot +2",
+body="Fili Hongreline +2",
+hands="Fili Manchettes +2",    
+legs="Fili Rhingrave +2",
+feet="Fili Cothurnes +2",
+})
+
 sets.idle.Regen = set_combine(sets.idle, {
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
     right_ear="Infused Earring",
@@ -942,8 +964,10 @@ function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 168')
 end
 
-autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
-['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
+autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",
+['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
+['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",
+['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",}
 
 
 --Job Specific Trust Overwrite

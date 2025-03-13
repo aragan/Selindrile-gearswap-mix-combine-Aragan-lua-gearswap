@@ -25,10 +25,10 @@ function user_job_setup()
 	
 	autows_list = {['PetPDTAxe']='Ruinator',['DualWeapons']='Ruinator'}
 
-	gear.PHYKumbha1 = {name="Kumbhakarna",augments={'Pet: Attack+20 Pet: Rng.Atk.+20','Pet: "Dbl.Atk."+4 Pet: Crit.hit rate +4','Pet: TP Bonus+180',}}
-	gear.PHYKumbha2 = {name="Kumbhakarna",augments={'Pet: Accuracy+18 Pet: Rng. Acc.+18','Pet: TP Bonus+160',}}
-	gear.PDTMABKumbha = {name="Kumbhakarna",augments={'Pet: "Mag.Atk.Bns."+19','Pet: Phys. dmg. taken -5%','Pet: TP Bonus+180',}}
-	gear.MABKumbha = {name="Kumbhakarna",augments={'Pet: "Mag.Atk.Bns."+20','Pet: Phys. dmg. taken -4%','Pet: TP Bonus+200',}}
+	gear.PHYKumbha1 = {name="Kumbhakarna", augments={'Pet: "Mag.Atk.Bns."+18','Pet: Haste+3','Pet: TP Bonus+160',}}
+	gear.PHYKumbha2 = {name="Kumbhakarna", augments={'Pet: "Mag.Atk.Bns."+16','Pet: Phys. dmg. taken -1%','Pet: TP Bonus+160',}}
+	gear.PDTMABKumbha = {}
+	gear.MABKumbha = {}
 	
 	send_command('lua l PetCharges')
 	send_command('alias lamp input /targetnpc;wait .1; input //tradenpc 1 "Smoldering Lamp";wait 1.4;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey right down;wait .4;setkey right up;wait .1;setkey numpadenter down;wait .1;setkey numpadenter up;')  --//lamp
@@ -87,7 +87,7 @@ function init_gear_sets()
 	sets.precast.JA['Killer Instinct'] = {head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},} --head="Ankusa Helm +1"
 	sets.precast.JA['Bestial Loyalty'] = {
 		hands={ name="Ankusa Gloves +3", augments={'Enhances "Beast Affinity" effect',}},
-		right_ear="Nukumi Earring",
+		right_ear="Nukumi Earring +1",
 	}
 	sets.precast.JA['Call Beast'] = sets.precast.JA['Bestial Loyalty']
 	sets.precast.JA.Familiar = {legs={ name="Ankusa Trousers +3", augments={'Enhances "Familiar" effect',}},}
@@ -122,8 +122,7 @@ function init_gear_sets()
 	sets.precast.Waltz['Healing Waltz'] = {}
 
 		-- STEPS
-	sets.precast.Step = {ammo="Voluspa Tathlum",
-	back="Ground. Mantle +1"}
+	sets.precast.Step = {ammo="Voluspa Tathlum",}
 
 		-- VIOLENT FLOURISH
 	sets.precast.Flourish1 = {}
@@ -136,21 +135,19 @@ function init_gear_sets()
 	feet="Tali'ah Crackows +2",
 	neck="Sanctity Necklace",
 	waist="Eschan Stone",
-	right_ring="Varar Ring +1 +1",}
+	right_ring="Varar Ring +1",}
 
 	sets.precast.FC = {				
 	ammo="Sapience Orb",
 	hands="Leyline Gloves",
 	left_ear="Etiolation Earring",
 	right_ear="Loquac. Earring",
-	left_ring="Thurandaut Ring",
+	left_ring="Varar Ring +1",
 	right_ring="Prolix Ring",
 	neck="Orunmila's Torque",}
 
 	sets.precast.FC['Enhancing Magic'] = set_combine(sets.precast.FC, {
 		hands="Leyline Gloves",
-		legs="Aya. Cosciales +2",
-		feet="Fili Cothurnes +2",
 		neck="Baetyl Pendant",
 		waist="Siegel Sash",
 		left_ear="Etiolation Earring",
@@ -166,7 +163,7 @@ sets.precast.FC.Utsusemi = set_combine(sets.precast.FC, {
 		hands="Leyline Gloves", 
 		left_ear="Etiolation Earring",
 		right_ear="Loquac. Earring",
-		left_ring="Thurandaut Ring",
+		left_ring="Varar Ring +1",
 		right_ring="Prolix Ring",})
 		
 sets.precast.FC.Cure = set_combine(sets.precast.FC, {
@@ -193,7 +190,7 @@ sets.precast.FC.Cure = set_combine(sets.precast.FC, {
     	hands="Leyline Gloves",
 		left_ear="Etiolation Earring",
 		right_ear="Loquac. Earring",
-		left_ring="Thurandaut Ring",
+		left_ring="Varar Ring +1",
 		right_ring="Prolix Ring",}
 
 	sets.midcast.Utsusemi = set_combine(sets.midcast.FastRecast, {})
@@ -369,7 +366,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
 			legs={ name="Gleti's Breeches", augments={'Path: A',}},
 			feet={ name="Gleti's Boots", augments={'Path: A',}},
-			right_ear="Nukumi Earring",
+			right_ear="Nukumi Earring +1",
 			left_ring="Sroda Ring",
 		})
 	
@@ -412,7 +409,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			neck="Fotia Gorget",
 			waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 			left_ear="Sherida Earring",
-			right_ear="Nukumi Earring",
+			right_ear="Nukumi Earring +1",
 			left_ring="Sroda Ring",
 			right_ring="Gere Ring",
 			back="Null Shawl",
@@ -424,7 +421,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
 			legs={ name="Gleti's Breeches", augments={'Path: A',}},
 			feet={ name="Gleti's Boots", augments={'Path: A',}},
-			right_ear="Nukumi Earring",
+			right_ear="Nukumi Earring +1",
 			left_ring="Sroda Ring",
 		})
 		sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
@@ -445,7 +442,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 		sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Savage Blade'], {
 			ammo="Crepuscular Pebble",
 			hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-			right_ear="Nukumi Earring",
+			right_ear="Nukumi Earring +1",
 			left_ring="Sroda Ring",
 		})
 		sets.precast.WS['Rampage '] = set_combine(sets.precast.WS['Decimation'], {})
@@ -553,19 +550,19 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
 	sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
-		ammo="Pemphredo Tathlum",
-		head={ name="Nyame Helm", augments={'Path: B',}},
-		body={ name="Nyame Mail", augments={'Path: B',}},
-		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-		legs={ name="Nyame Flanchard", augments={'Path: B',}},
-		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		neck="Null Loop",
-		waist="Eschan Stone",
-		left_ear="Digni. Earring",
-		right_ear="Crep. Earring",
-		left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-		right_ring="Stikini Ring +1",
-		back="Null Shawl",
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
 	})
 	
 	-- Calamity, Meditate, Sekkanoki > brain > tail, leave, cb, fight > Primal Rend > tegmina > Clerrrdplerrterrr
@@ -596,13 +593,13 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
     waist="Klouskap Sash +1",
     left_ear="Sroda Earring",
     right_ear="Kyrene's Earring",
-    left_ring="Thurandaut Ring",
+    left_ring="Varar Ring +1",
     right_ring="C. Palug Ring",
     back="Artio's Mantle",}
 
-	sets.midcast.Pet.SomeAcc = set_combine(sets.midcast.Pet.WS, {main="Kerehcatl",sub=gear.PHYKumbha2,hands="Regimen Mittens"})
-	sets.midcast.Pet.Acc = set_combine(sets.midcast.Pet.WS, {main="Kerehcatl",sub="Hunahpu",head="Totemic Helm +1",hands="Regimen Mittens"})
-	sets.midcast.Pet.FullAcc = set_combine(sets.midcast.Pet.WS, {main="Kerehcatl",sub="Hunahpu",head="Totemic Helm +1",hands="Regimen Mittens"})
+	sets.midcast.Pet.SomeAcc = set_combine(sets.midcast.Pet.WS, {})
+	sets.midcast.Pet.Acc = set_combine(sets.midcast.Pet.WS, {})
+	sets.midcast.Pet.FullAcc = set_combine(sets.midcast.Pet.WS, {})
 				
 	sets.midcast.Pet.MagicReady = {main={ name="Kumbhakarna", augments={'Pet: "Mag.Atk.Bns."+18','Pet: Haste+3','Pet: TP Bonus+160',}},
     sub={ name="Kumbhakarna", augments={'Pet: "Mag.Atk.Bns."+16','Pet: Phys. dmg. taken -1%','Pet: TP Bonus+160',}},
@@ -630,7 +627,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	neck="Bst. Collar +2",
 	waist="Incarnation Sash",
 	left_ear="Enmerkar Earring",
-	right_ear="Nukumi Earring",
+	right_ear="Nukumi Earring +1",
 	left_ring="C. Palug Ring",
 	right_ring="Tali'ah Ring",
 	back="Artio's Mantle",}
@@ -645,7 +642,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	neck="Bst. Collar +2",
 	waist="Incarnation Sash",
 	left_ear="Enmerkar Earring",
-	right_ear="Nukumi Earring",
+	right_ear="Nukumi Earring +1",
 	left_ring="C. Palug Ring",
 	right_ring="Tali'ah Ring",
 	back="Artio's Mantle",}
@@ -697,7 +694,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 		waist="Isa Belt",
 		left_ear="Rimeice Earring",
 		right_ear="Enmerkar Earring",
-		left_ring="Thurandaut Ring",
+		left_ring="Varar Ring +1",
 		right_ring="Defending Ring",
 		back="Artio's Mantle",
 }
@@ -715,7 +712,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 		right_ear="Sanare Earring",
 		left_ring="Shadow Ring",
 		right_ring="Defending Ring",
-		back="Engulfer Cape +1",
+		back="Moonlight Cape",
 })
 			
 	sets.idle.MEva = set_combine(sets.idle, {
@@ -731,7 +728,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 		right_ear="Sanare Earring",
 		left_ring="Shadow Ring",
 		right_ring="Defending Ring",
-		back="Engulfer Cape +1",
+		back="Moonlight Cape",
 		})
 			
     sets.idle.Refresh = set_combine(sets.idle, {
@@ -740,7 +737,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			
 	sets.idle.Reraise = set_combine(sets.idle, {head="Crepuscular Helm",body="Crepuscular Mail"})
 
-	sets.idle.Pet = set_combine(sets.idle, { main="Glyph Axe",
+	sets.idle.Pet = set_combine(sets.idle, {
         head={ name="Anwig Salade", augments={'Attack+3','Pet: Damage taken -10%','ATTACK+3','PET: "REGEN"+1',}},		
 		body={ name="Emicho Haubert +1", augments={'Pet: Accuracy+20','Pet: Attack+20','Pet: "Dbl. Atk."+4',}},
 		hands="Gleti's Gauntlets",
@@ -750,7 +747,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 		waist="Isa Belt",
 		left_ear="Hypaspist Earring",
 		right_ear={ name="Handler's Earring +1", augments={'Path: A',}},
-		left_ring="Thurandaut Ring",
+		left_ring="Varar Ring +1",
 		right_ring="Defending Ring",
 		back="Artio's Mantle",
 })
@@ -771,7 +768,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 		waist="Isa Belt",
 		left_ear="Hypaspist Earring",
 		right_ear={ name="Handler's Earring +1", augments={'Path: A',}},
-		left_ring="Thurandaut Ring",
+		left_ring="Varar Ring +1",
 		right_ring="Defending Ring",
 		back="Artio's Mantle",
 	})
@@ -786,7 +783,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	waist="Isa Belt",
 	left_ear="Hypaspist Earring",
 	right_ear={ name="Handler's Earring +1", augments={'Path: A',}},
-	left_ring="Thurandaut Ring",
+	left_ring="Varar Ring +1",
 	right_ring="Defending Ring",
 	back="Artio's Mantle",}
 
@@ -800,7 +797,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	waist="Isa Belt",
 	left_ear="Hypaspist Earring",
 	right_ear={ name="Handler's Earring +1", augments={'Path: A',}},
-	left_ring="Thurandaut Ring",
+	left_ring="Varar Ring +1",
 	right_ring="Defending Ring",
 	back="Artio's Mantle",}
 
@@ -834,7 +831,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			waist="Isa Belt",
 			left_ear="Hypaspist Earring",
 			right_ear={ name="Handler's Earring +1", augments={'Path: A',}},
-			left_ring="Thurandaut Ring",
+			left_ring="Varar Ring +1",
 			right_ring="Defending Ring",
 			back="Artio's Mantle",
 		}
@@ -852,7 +849,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			right_ear="Sanare Earring",
 			left_ring="Shadow Ring",
 			right_ring="Defending Ring",
-			back="Engulfer Cape +1",
+			back="Moonlight Cape",
 	})
 	
 
@@ -868,7 +865,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 			waist="Isa Belt",
 			left_ear="Rimeice Earring",
 			right_ear="Enmerkar Earring",
-			left_ring="Thurandaut Ring",
+			left_ring="Varar Ring +1",
 			right_ring="Defending Ring",
 			back="Artio's Mantle",
 	}
@@ -885,7 +882,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 		waist="Isa Belt",
 		left_ear="Hypaspist Earring",
 		right_ear={ name="Handler's Earring +1", augments={'Path: A',}},
-		left_ring="Thurandaut Ring",
+		left_ring="Varar Ring +1",
 		back="Artio's Mantle",
 	}
 
@@ -898,9 +895,15 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	body="Crepuscular Mail",})
 
 	sets.defense.MEVA = {
-		head="Gavialis Helm",neck="Warder's Charm +1",ear1="Sanare Earring",ear2="Etiolation Earring",
-		body="Jumalik Mail",hands="Leyline Gloves",ring1="Vengeful Ring",ring2="Purity Ring",
-		waist="Engraved Belt",legs="Flamma Dirs +2"}
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck="Warder's Charm +1",ear1="Sanare Earring",ear2="Etiolation Earring",
+		ring1="Vengeful Ring",ring2="Purity Ring",
+		waist="Engraved Belt",
+		back="Moonlight Cape",}
 
 	sets.defense.MKiller = set_combine(sets.defense.MDT, {body="Nukumi Gausape +2"})
 

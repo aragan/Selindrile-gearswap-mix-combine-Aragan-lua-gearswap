@@ -157,9 +157,9 @@ sets.Capacity = {}
 	feet={ name="Fall. Sollerets +3", augments={'Enhances "Desperate Blows" effect',}},}
 	sets.precast.JA['Nether Void'] = {Legs="Heath. Flanchard +2"}
 	sets.precast.JA['Blood Weapon'] = {body="Fall. Cuirass +3"}
-	sets.precast.JA['Arcane Circle'] = {feet="Ignominy Sollerets +3"}
-	sets.precast.JA['Weapon Bash'] = {hands="Ignominy Gauntlets +3"}
-	sets.precast.JA['Souleater'] = {head="Ig. Burgeonet +3"}
+	sets.precast.JA['Arcane Circle'] = {}--feet="Ignominy Sollerets +3"
+	sets.precast.JA['Weapon Bash'] = {}--hands="Ignominy Gauntlets +3"
+	sets.precast.JA['Souleater'] = {head="Ignominy Burgeonet +3"}
 	sets.precast.JA['Dark Seal'] = {head="Fall. Burgeonet +3"}
 	sets.precast.JA['Diabolic Eye'] = {hands="Fall. Fin. Gaunt. +3"}
                    
@@ -205,7 +205,7 @@ sets.Capacity = {}
     
 sets.ConserveMP = {
     ammo="Pemphredo Tathlum",
-    legs="Augury Cuisses",
+    legs="Augury Cuisses +1",
     neck="Reti Pendant",
     waist="Austerity Belt +1",
     right_ear="Mendi. Earring",
@@ -265,7 +265,7 @@ sets.ConserveMP = {
 	})
     sets.midcast['Dark Magic'] = {
         ammo="Pemphredo Tathlum",
-        head="Ig. Burgeonet +3",
+        head="Ignominy Burgeonet +3",
         body={ name="Fall. Cuirass +3", augments={'Enhances "Blood Weapon" effect',}},
         hands={ name="Fall. Fin. Gaunt. +3", augments={'Enhances "Diabolic Eye" effect',}},
         legs={ name="Fall. Flanchard +3", augments={'Enhances "Muted Soul" effect',}},
@@ -389,18 +389,18 @@ sets.ConserveMP = {
         left_ring="Evanescence Ring",
 	})
     sets.midcast['Elemental Magic'] = {
-        ammo="Pemphredo Tathlum",
-        head="Nyame Helm",
-        body={ name="Fall. Cuirass +3", augments={'Enhances "Blood Weapon" effect',}},
-        hands={ name="Fall. Fin. Gaunt. +3", augments={'Enhances "Diabolic Eye" effect',}},
-        legs="Nyame Flanchard",
+        ammo="Ghastly Tathlum +1",
+        head="Heath. Bur. +2",
+        body="Sacro Breastplate",
+        hands="Fall. Fin. Gaunt. +3",
+        legs="Augury Cuisses +1",
         feet="Heath. Sollerets +2",
         neck="Sibyl Scarf",
         waist="Orpheus's Sash",
-        left_ear="Friomisi Earring",
-        right_ear="Malignance Earring",
-        left_ring="Locus Ring",
-        right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        ear1="Malignance Earring",
+        ear2="Lugra Earring +1",
+        ring1="Locus Ring",
+        ring2="Metamor. Ring +1",
         back="Argocham. Mantle",
     }
 	sets.midcast['Elemental Magic'].SIRD = set_combine(sets.midcast['Elemental Magic'],sets.SIRD, {
@@ -418,10 +418,18 @@ sets.ConserveMP = {
         waist="Shinjutsu-no-Obi +1",
         })
     sets.magicburst = set_combine(sets.midcast['Elemental Magic'], {
-        head="Nyame Helm",
-        neck={ name="Warder's Charm +1", augments={'Path: A',}},
-        left_ring="Locus Ring",
-        right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        ammo="Ghastly Tathlum +1",
+        head="Heath. Bur. +2",
+        body="Sacro Breastplate",
+        hands="Fall. Fin. Gaunt. +3",
+        legs="Augury Cuisses +1",
+        feet="Heath. Sollerets +2",
+        neck="Warder's Charm +1",
+        waist="Orpheus's Sash",
+        ear1="Halasz Earring",
+        ear2="Malignance Earring",
+        ring1="Mujin Band",
+        ring2="Metamor. Ring +1",
     })
   
    sets.midcast['Enfeebling Magic'] = set_combine(sets.midcast['Dark Magic'], {
@@ -492,7 +500,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
 
     sets.midcast.Cure.ConserveMP = set_combine(sets.midcast.Cure,{
     ammo="Pemphredo Tathlum",
-    legs="Augury Cuisses",
+    legs="Augury Cuisses +1",
     neck="Reti Pendant",
     waist="Austerity Belt +1",
     right_ear="Mendi. Earring",
@@ -553,7 +561,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         feet="Heath. Sollerets +2",
         neck="Fotia Gorget",
         waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-        left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Thrud Earring",
         right_ring="Cornelia's Ring",
         left_ring="Niqmaddu Ring",
@@ -705,7 +713,7 @@ sets.precast.WS['Insurgency'] = {
     feet={ name="Sakpata's Leggings", augments={'Path: A',}},
     neck="Abyssal Beads +2",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-    left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Balder Earring +1",
     left_ring="Regal Ring",
     right_ring="Niqmaddu Ring",
@@ -745,7 +753,7 @@ sets.precast.WS['Insurgency'] = {
         feet={ name="Sakpata's Leggings", augments={'Path: A',}},
         neck="Abyssal Beads +2",
         waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-        left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Thrud Earring",
         left_ring="Regal Ring",
         right_ring="Niqmaddu Ring",
@@ -780,7 +788,7 @@ sets.precast.WS['Quietus'] = {
     feet="Heath. Sollerets +2",
     neck="Abyssal Beads +2",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-    left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Thrud Earring",
     left_ring="Regal Ring",
     right_ring="Niqmaddu Ring",
@@ -916,7 +924,7 @@ sets.precast.WS['Nightmare Scythe'] = {
     feet="Flam. Gambieras +2",
     neck="Abyssal Beads +2",
     waist="Fotia Belt",
-    left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Schere Earring",
     left_ring="Niqmaddu Ring",
     right_ring="Regal Ring",
@@ -945,7 +953,7 @@ sets.precast.WS['Nightmare Scythe'] = {
         feet="Heath. Sollerets +2",
         neck="Abyssal Beads +2",
         waist="Fotia Belt",
-        left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Lugra Earring +1",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Cornelia's Ring",
@@ -992,7 +1000,7 @@ sets.precast.WS['Nightmare Scythe'] = {
     feet="Heath. Sollerets +2",
     neck="Abyssal Beads +2",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-    left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Thrud Earring",
     left_ring="Regal Ring",
     right_ring="Cornelia's Ring",
@@ -1023,7 +1031,7 @@ sets.precast.WS['Nightmare Scythe'] = {
         feet="Nyame Sollerets",
         neck="Abyssal Beads +2",
         waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-        left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear={ name="Lugra Earring +1", augments={'Path: A',}},
         left_ring="Regal Ring",
         right_ring="Niqmaddu Ring",
@@ -1036,7 +1044,7 @@ sets.precast.WS['Nightmare Scythe'] = {
         right_ring="Sroda Ring",
 })
 sets.precast.WS['Spinning Slash'] = set_combine(sets.precast.WS['Spinning Scythe'], {
-    left_ear={ name="Moonshade Earring", augments={'Attack+4','TP Bonus +250',}},
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Lugra Earring +1",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     right_ring="Cornelia's Ring",})
@@ -1117,7 +1125,8 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
-sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
+
+sets.precast.WS['Armor Break'] = set_combine(sets.precast.WS, {
     ammo="Pemphredo Tathlum",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
@@ -1125,13 +1134,18 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck="Null Loop",
-    waist="Eschan Stone",
-    left_ear="Digni. Earring",
+    waist="Null Belt",
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Crep. Earring",
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     right_ring="Stikini Ring +1",
     back="Null Shawl",
 })
+sets.precast.WS["Shield Break"] = set_combine(sets.precast.WS["Armor Break"], {})
+sets.precast.WS["Weapon Break"] = set_combine(sets.precast.WS["Armor Break"], {})
+sets.precast.WS["Full Break"] = set_combine(sets.precast.WS["Armor Break"], {})
+sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS["Armor Break"], {})
+
 
      -- Sets to return to when not performing an action.
            
@@ -1144,17 +1158,17 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ring="Stikini Ring +1",
 	}           
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Lugra Earring",}
+	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Telos Earring"}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.DayMaxTPWSEars = {ear1="Ishvara Earring",ear2="Brutal Earring",}
 	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayWSEars = {ear1="Brutal Earring",ear2="Moonshade Earring",}
+	sets.DayWSEars = {ear1="Brutal Earring",ear2={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},}
      
 
     -- Extra defense sets.  Apply these on top of melee or defense sets.
 	sets.Twilight = {head="Crepuscular Helm", body="Crepuscular Mail",}
-    sets.MP = {head="Chev. Armet +3",neck="Coatl Gorget +1",ear2="Ethereal Earring",waist="Flume Belt +1",feet="Rev. Leggings +3"}
+    sets.MP = {neck="Coatl Gorget +1",ear2="Ethereal Earring",waist="Flume Belt +1",}
 
     -- Defense sets
     sets.defense.PDT = {
@@ -1251,7 +1265,7 @@ sets.defense.SEboost = {
     sets.defense.Enmity = {
         ammo="Iron Gobbet",
         head={ name="Loess Barbuta +1", augments={'Path: A',}},
-        body="Obviation Cuirass",
+        body="Crepuscular Mail",
         hands="Macabre Gaunt. +1",
         legs={ name="Odyssean Cuisses", augments={'Attack+29','"Fast Cast"+5','CHR+10',}},
         feet={ name="Eschite Greaves", augments={'HP+80','Enmity+7','Phys. dmg. taken -4',}},
@@ -1392,7 +1406,7 @@ sets.defense.SEboost = {
 		head="Flam. Zucchetto +2",
 		body="Crepuscular Mail",
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-		legs="Ig. Flanchard +3",
+		legs="Ignominy Flanchard +3",
 		feet="Flam. Gambieras +2",
 		neck="Abyssal Beads +2",
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
@@ -1404,26 +1418,26 @@ sets.defense.SEboost = {
 		}
 	  
 		sets.engaged.STP = {
-		ammo="Aurgelmir Orb +1",
-		head="Flam. Zucchetto +2",
-		body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
-		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-		legs="Flamma Dirs +2",
-		feet="Flam. Gambieras +2",
-		neck="Ainia Collar",
-		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Cessance Earring",
-		right_ear="Dedition Earring",
-		left_ring="Chirich Ring +1",
-		right_ring="Niqmaddu Ring",
-		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+            ammo="Coiste Bodhar",
+            head="Flam. Zucchetto +2",
+            body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
+            hands="Sakpata's Gauntlets",
+            legs="Ig. Flanchard +3",
+            feet="Carmine Greaves +1",
+            neck="Vim Torque +1",
+            waist="Ioskeha Belt +1",
+            ear1="Schere Earring",
+            ear2="Dedition Earring",
+            ring1="Petrov Ring",
+            ring2="Niqmaddu Ring",
+            back="Null Shawl",
 	}
 	sets.engaged.DA = set_combine(sets.engaged, {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Flam. Zucchetto +2",
 		body={ name="Sakpata's Plate", augments={'Path: A',}},
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-		legs="Ig. Flanchard +3",
+		legs="Ignominy Flanchard +3",
 		feet="Flam. Gambieras +2",
 		neck="Abyssal Beads +2",
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
@@ -1454,7 +1468,7 @@ sets.defense.SEboost = {
 		head="Hjarrandi Helm",
 		body="Hjarrandi Breast.",
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-		legs="Ig. Flanchard +3",
+		legs="Ignominy Flanchard +3",
 		feet="Flam. Gambieras +2",
 		neck="Abyssal Beads +2",
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
@@ -1470,7 +1484,7 @@ sets.defense.SEboost = {
         head="Heath. Burgeon. +2",
         body="Crepuscular Mail",
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-        legs="Ig. Flanchard +3",
+        legs="Ignominy Flanchard +3",
         feet="Flam. Gambieras +2",
         neck="Null Loop",
         waist="Ioskeha Belt +1",
@@ -1751,3 +1765,37 @@ autows_list = {['Caladbolg']='Torcleaver',['Liberator']='Insurgency',['Anguta']=
      ['Drepanum']='Spiral Hell',['AgwuClaymore']='Resolution',['Lycurgos']='Fell Cleave',['DualNaegling']='Savage Blade',
      ['DualLoxotica']='Judgment',['DualTernionDagger']='Aeolian Edge',['DualDolichenus']='Decimation',
      ['Naegling']='Savage Blade',['Loxotic']='Judgment',['TernionDagger']='Aeolian Edge',['Dolichenus']='Decimation'}
+
+
+     
+function buff_change(buff, gain)
+    -- Define messages for specific buffs with flags for gain and lose announcements
+    local buff_messages = {
+        ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
+		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Chaos Roll"]   = {gain = 'Chaos Roll is on.', lose = 'Chaos Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Tactician's Roll"] = {gain = 'Tactician\'s Roll is on.', lose = 'Tactician\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
+		
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+        --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+        -- Add more buffs as needed with appropriate flags
+    }
+
+    -- Check for specific buffs and their flags
+    if buff_messages[buff] then
+        if gain and buff_messages[buff].announce_gain then
+            local gain_message = buff_messages[buff].gain
+            if gain_message then
+                windower.send_command('input /p ' .. gain_message)
+            end
+        elseif not gain and buff_messages[buff].announce_lose then
+            local lose_message = buff_messages[buff].lose
+            if lose_message then
+                windower.send_command('input /p ' .. lose_message)
+            end
+        end
+    end
+end
