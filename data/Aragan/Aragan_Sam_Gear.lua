@@ -19,12 +19,16 @@ Kasha > Shoha > Fudo
 Fudo > Kasha > Shoha > fudo
 Shoha > Fudo > Kasha > Shoha > Fudo
 
+--6step
+
+jinpu spam
+
 --]]
 
 -- Setup vars that are user-dependent.
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'triple', 'SubtleBlow', 'Range' )
-    state.HybridMode:options('Normal','DTLite','PDT')
+    state.HybridMode:options('PDT','Normal','DTLite')
     state.WeaponskillMode:options('Match','Normal', 'SC', 'Acc', 'PDL','Proc')
     state.RangedMode:options('Normal', 'Acc')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Reraise')

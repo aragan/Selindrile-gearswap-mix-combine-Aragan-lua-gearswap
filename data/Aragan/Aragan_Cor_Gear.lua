@@ -790,7 +790,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
     body="Meg. Cuirie +2",
     hands="Meg. Gloves +2",
     legs="Meg. Chausses +2",
-    feet="Meghanada Jambeaux +2",
+    feeescht="Meghanada Jambeaux +2",
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
     left_ear="Infused Earring",
     ring1="Sheltered Ring",ring2="Paguroidea Ring"

@@ -1054,14 +1054,11 @@ sets.engaged.DW.CRIT = {
     ---------------------------------------- Hybrid Sets -------------------------------------------
     ------------------------------------------------------------------------------------------------
     sets.engaged.Hybrid = { 
-        head="Malignance Chapeau",
-        body="Malignance Tabard",
-        hands="Malignance Gloves",
-        legs="Malignance Tights",
-        feet="Macu. Toe Sh. +2",
-        neck={ name="Etoile Gorget +2", augments={'Path: A',}},
-        ring1="Moonlight Ring", --5/5
-        ring2="Moonlight Ring", --5/5
+        head="Malignance Chapeau",--9
+        body="Malignance Tabard",--11
+        feet="Macu. Toe Sh. +2", --9
+        ring1="Moonlight Ring", --5
+        ring2="Defending Ring", --10
     }
 
     sets.engaged.PDT = set_combine(sets.engaged, sets.engaged.Hybrid)

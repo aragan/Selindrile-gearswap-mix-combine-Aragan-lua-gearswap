@@ -140,7 +140,7 @@ Distortion
 function user_job_setup()
     state.OffenseMode:options('None','Normal','Acc','DT')
     state.CastingMode:options('Normal','Seidr','magicburst','Enmity','ConserveMP','Sird','SubtleBlow', 'Proc')
-    state.IdleMode:options('DT','Normal', 'Resist','BoostHP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
+    state.IdleMode:options('DT','Normal','Empy', 'Resist','BoostHP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
     state.PhysicalDefenseMode:options('PDT','BoostHP', 'Evasion', 'Resist')
     state.MagicalDefenseMode:options('MDT')
 	state.Weapons:options('Mpaca','Marin','None','Xoanon', 'Club','TernionDagger')
@@ -624,22 +624,21 @@ right_ear="Telos Earring",
         ammo="Pemphredo Tathlum",
         head=empty,
         body="Cohort Cloak +1",
-        hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
-        legs="Jhakri Slops +2",
-        feet="Jhakri Pigaches +2",
+        hands="Regal Cuffs",
+		legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
+        feet="Academic's loafers +3",
         neck="Argute Stole +2",
         ear1="Malignance Earring",
         ear2="Regal Earring",
         ring2="Kishar Ring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-        waist="Luminary Sash",
+        waist="Obstin. Sash",
         back="Aurist's Cape +1",
         }
 
     sets.midcast.IntEnfeebles = set_combine(sets.midcast.MndEnfeebles, {
-        legs="Chironic Hose",
+        --legs="Arbatel Pants +2",
         left_ring="Stikini Ring +1",
-        waist="Acuity Belt +1",
     })
 	sets.midcast.Dia = sets.midcast.MndEnfeebles
 	sets.midcast.Diaga = sets.midcast.MndEnfeebles
@@ -705,6 +704,7 @@ right_ear="Telos Earring",
         legs="Peda. Pants +3",
         feet={ name="Agwu's Pigaches", augments={'Path: A',}},
         neck="Erra Pendant",
+        left_ear="Hirudinea Earring",
         ring1="Evanescence Ring",
         ring2="Archon Ring",
         waist="Fucho-no-obi",
@@ -738,7 +738,7 @@ right_ear="Telos Earring",
         head="Agwu's Cap",
         body="Arbatel Gown +3",
         hands="Agwu's Gages",
-        legs="Agwu's Slops",
+        legs="Arbatel Pants +2",
         feet="Arbatel Loafers +3",
         neck="Argute Stole +2",
         waist="Acuity Belt +1",
@@ -859,6 +859,7 @@ right_ear="Telos Earring",
     sets.midcast.Impact = set_combine(sets.midcast['Elemental Magic'], {
         head=empty,
         body="Twilight Cloak",
+        legs="Arbatel Pants +2",
         right_ring="Archon Ring",
         left_ring="Stikini Ring +1",
         waist="Shinjutsu-no-Obi +1",
@@ -868,13 +869,20 @@ right_ear="Telos Earring",
 
     sets.midcast.Helix = set_combine(sets.midcast['Elemental Magic'], {
         ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+        hands="Arbatel Bracers +3",           
+        legs="Arbatel Pants +2",
         neck="Argute Stole +2",
         waist="Skrymir Cord",
         right_ear="Arbatel Earring +1",
         left_ring="Mallquis Ring",
     })
-	sets.HelixBurst = sets.magic_burst
-	
+	sets.HelixBurst = set_combine(sets.magic_burst, {
+        legs="Arbatel Pants +2",
+        left_ear="Crematio Earring",
+        left_ring="Mallquis Ring",
+        left_ring="Mujin Band",
+        })
+	sets.magic_burst
 	sets.midcast.Helix.Proc = sets.precast.FC
 
     sets.midcast.DarkHelix = set_combine(sets.midcast.Helix, {
@@ -925,14 +933,21 @@ right_ear="Telos Earring",
         right_ring="Paguroidea Ring",
         back="Moonlight Cape",
     })
+    sets.idle.Empy = set_combine(sets.idle, {
+        head="Arbatel Bonnet +2",
+        body="Arbatel Gown +3",
+        hands="Arbatel Bracers +3",           
+        legs="Arbatel Pants +2",
+        feet="Arbatel Loafers +3",
 
+    })
     sets.idle.Resist = set_combine(sets.idle, {
     ammo="Staunch Tathlum +1",
-    head="Nyame Helm",
-    body="Shamash Robe",
-    hands="Nyame Gauntlets",
-    legs="Nyame Flanchard",
-    feet="Nyame Sollerets",
+    head="Arbatel Bonnet +2",
+    body="Arbatel Gown +3",
+    hands="Arbatel Bracers +3",           
+    legs="Arbatel Pants +2",
+    feet="Arbatel Loafers +3",
     waist="Plat. Mog. Belt",
     right_ear="Sanare Earring",
     left_ear="Etiolation Earring",
@@ -1023,7 +1038,7 @@ sets.idle.Sphere = set_combine(sets.idle, {
     sets.resting = set_combine(sets.idle, {
         main="Contemplator +1",
         ammo="Homiliary",
-        head="Befouled Crown",
+        head="Null Masque",
         body="Shamash Robe",
         legs="Assid. Pants +1",
         feet="Herald's Gaiters",
@@ -1053,11 +1068,11 @@ sets.idle.Sphere = set_combine(sets.idle, {
     }
     sets.defense.MDT = {   
     ammo="Staunch Tathlum +1",
-    head="Nyame Helm",
-    body="Shamash Robe",
-    hands="Nyame Gauntlets",
-    legs="Nyame Flanchard",
-    feet="Nyame Sollerets",
+    head="Arbatel Bonnet +2",
+    body="Arbatel Gown +3",
+    hands="Arbatel Bracers +3",           
+    legs="Arbatel Pants +2",
+    feet="Arbatel Loafers +3",
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
     waist="Plat. Mog. Belt",
     left_ear="Sanare Earring",
@@ -1082,7 +1097,7 @@ sets.MoveSpeed = {feet="Herald's Gaiters"}
 sets.engaged.None = {}
 sets.engaged = {
         ammo="Homiliary",
-        head="Befouled Crown",
+        head="Null Masque",
         body="Shamash Robe",
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
         legs="Assid. Pants +1",
@@ -1135,9 +1150,8 @@ sets.engaged.DT = {
     sets.buff['Ebullience'] = {head="Arbatel Bonnet +2"}
     sets.buff['Rapture'] = {head="Arbatel Bonnet +2"}
     sets.buff['Perpetuance'] = {hands="Arbatel Bracers +3"}
-    sets.buff['Penury'] = {}--legs="Arbatel Pants +1"
-    sets.buff['Parsimony'] = {}--legs="Arbatel Pants +1"
-    sets.buff['Celerity'] = {feet="Peda. Loafers +3"}
+    sets.buff['Penury'] = {legs="Arbatel Pants +2"}
+    sets.buff['Parsimony'] = {legs="Arbatel Pants +2"}
     sets.buff['Alacrity'] = {feet="Peda. Loafers +3"}
     sets.buff['Klimaform'] = {feet="Arbatel Loafers +3"}
 

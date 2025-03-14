@@ -494,6 +494,7 @@ function init_gear_sets()
 	hands={ name="Merlinic Dastanas", augments={'"Mag.Atk.Bns."+1','"Drain" and "Aspir" potency +10','CHR+5','Mag. Acc.+4',}},
 	feet={ name="Agwu's Pigaches", augments={'Path: A',}},
 	neck="Erra Pendant",
+    left_ear="Hirudinea Earring",
 	ring1="Evanescence Ring",
 	ring2="Archon Ring",
 	waist="Fucho-no-obi",}

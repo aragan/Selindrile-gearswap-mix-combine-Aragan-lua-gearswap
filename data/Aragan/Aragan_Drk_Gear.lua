@@ -76,17 +76,26 @@ Scourge (R) > Resolution (MM) > Torcleaver (E)
 Torcleaver (E) > Torcleaver (E)
 Scourge (R) > Resolution (MM)
 
--- GreatSword 6step 
+
+
+--6step 
+
+-- GreatSword --6step 
+
 Detonation Scission
 
-Crescent Moon > Freezebite > Crescent Moon > Freezebite 
-Crescent Moon > Herculean Slash > Crescent Moon
-Sickle Moon > Freezebite > Sickle Moon > > Freezebite
+Crescent Moon > Freezebite > Crescent Moon > Freezebite  ~
+Crescent Moon > Herculean Slash > Crescent Moon ~
+Sickle Moon > Freezebite > Sickle Moon > > Freezebite ~
 
 Impaction Detonation
-Sickle Moon > Herculean Slash > Sickle Moon >
-Herculean Slash > Hard Slash > Herculean Slash
-Freezebite > Hard Slash > Freezebite
+Sickle Moon > Herculean Slash > Sickle Moon ~
+Herculean Slash > Hard Slash > Herculean Slash ~
+Freezebite > Hard Slash > Freezebite ~
+
+-- Scythe  --6step 
+
+Nightmare Scythe > Vorpal Scythe > Nightmare Scythe >  Vorpal Scythe > Nightmare Scythe >  Vorpal Scythe > Nightmare Scythe >
 
 --]]
 
@@ -351,6 +360,7 @@ sets.ConserveMP = {
         body={ name="Lugra Cloak +1", augments={'Path: A',}},
         hands={ name="Fall. Fin. Gaunt. +3", augments={'Enhances "Diabolic Eye" effect',}},
         neck="Erra Pendant",
+        left_ear="Hirudinea Earring",
         waist="Austerity Belt +1",
         right_ring="Evanescence Ring",
     })

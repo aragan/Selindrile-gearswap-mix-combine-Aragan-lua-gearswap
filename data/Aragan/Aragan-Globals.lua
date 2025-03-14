@@ -206,7 +206,9 @@ function global_on_load()
 
 	send_command('bind ^] input //put storage slip* case all')
 	send_command('bind ^[ input //get storage slip* all') --PorterPacker Porter find
-	send_command('bind ^, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
+	send_command('bind !, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
+	--send_command('bind !. input //put * Wardrobe3 all;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all') -- gs validate  --to check 	lua r gearswap
+
 	send_command('bind ^. input //packer repack') -- PorterPacker addon
 
 	send_command('bind !m gs c toggle AutoMedicineMode')
@@ -254,7 +256,7 @@ send_command('bind ^end input //trust stop') --Turns addon trust stop.
 send_command('bind home lua l autobuff') --Turns addon  on.
 send_command('bind end lua u autobuff') --Turns addon off.
 
-send_command('bind pageup input //ata on;input //lua load Gaze_check')--Turns addon  auto attack target on. to be killer machine in Odyssey or Dynamis.
+send_command('bind pageup input //ata on;input //lua load Gaze_check;input /p ((Attack is ON.)) >> killer machine ready <<')--Turns addon  auto attack target on. to be killer machine in Odyssey or Dynamis.
 send_command('bind pagedown input //ata off;input //lua unload Gaze_check')--Turns addon  auto attack target off.
 
 send_command('bind !@^f7 gs c toggle AutoWSMode') --Turns auto-ws mode on and off.
@@ -654,6 +656,19 @@ end
         end
     end]]
 
+	function default_zone_change(new_id,old_id)
+		--tickdelay = os.clock() + 10
+
+		if data.areas.cities:contains(world.area)  then
+			send_command('input //lua l invspace;input //lua l invtracker') --Turns addon on.
+		else
+			send_command('input //lua u invspace;input //lua u invtracker') --Turns addon off.
+		end
+		
+		if data.areas.laggy:contains(world.area)  then
+			send_command('input //gs c set AutoDefenseMode true;') --Turns mode on.
+		end
+	end
 
 -- If HP drops under 45% then equip Re-raise head/body
 windower.register_event('hpp change', -- code add from Aragan Asura

@@ -142,7 +142,7 @@ function init_gear_sets()
 
     sets.precast.RA.Acc = {       
         legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
-        feet="Meghanada Jambeaux +2",
+        feet="Meg. Jam. +2",
         waist="Yemaya Belt",}
 
 
@@ -565,7 +565,7 @@ sets.precast.WS["Empyreal Arrow"] = {
         body="Meg. Cuirie +2",
         hands="Gleti's Gauntlets",
         legs="Gleti's Breeches",
-        feet="Meghanada Jambeaux +2",
+        feet="Meg. Jam. +2",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
         waist="Null Belt",
         left_ear="Infused Earring",
