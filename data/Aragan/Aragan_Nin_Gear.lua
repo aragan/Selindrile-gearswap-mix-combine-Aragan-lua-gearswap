@@ -341,6 +341,16 @@ function init_gear_sets()
         left_ear={ name="Lugra Earring +1", augments={'Path: A',}},
 
     })
+    sets.precast.WS['Blade: Shun'].PDL = set_combine(sets.Shun, {
+        ammo="Crepuscular Pebble",
+        head="Malignance Chapeau",
+        hands="Malignance Gloves",
+        legs={ name="Mpaca's Hose", augments={'Path: A',}},   
+        feet="Malignance Boots",    
+        neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
+        left_ear={ name="Lugra Earring +1", augments={'Path: A',}},
+
+    })
     sets.precast.WS['Blade: Shun'].SC = set_combine(sets.Shun, {
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},

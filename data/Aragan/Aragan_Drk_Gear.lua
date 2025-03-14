@@ -102,7 +102,7 @@ Nightmare Scythe > Vorpal Scythe > Nightmare Scythe >  Vorpal Scythe > Nightmare
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal','TP', 'STP', 'DA', 'Acc', 'SubtleBlow', 'CRIT')
+    state.OffenseMode:options('Normal','NOSchereEar', 'STP', 'DA', 'Acc', 'SubtleBlow', 'CRIT')
     state.WeaponskillMode:options('Match', 'Acc', 'PDL', 'SC', 'Dread', 'None')
     state.HybridMode:options('DT', 'Normal', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
@@ -1470,7 +1470,7 @@ sets.defense.SEboost = {
 		left_ring="Chirich Ring +1",
 		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
-    sets.engaged.TP = {
+    sets.engaged.NOSchereEar = { -- FOR SAVE MP TO PROC SORTIE NMS
         ammo="Coiste Bodhar",
         head="Flam. Zucchetto +2",
         body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
