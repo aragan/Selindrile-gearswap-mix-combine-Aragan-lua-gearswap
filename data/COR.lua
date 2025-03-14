@@ -322,6 +322,11 @@ function job_buff_change(buff, gain)
 			classes.CustomRangedGroups:append('AM')
 		end
 	end
+    if buff == "Crooked Cards" then
+        if gain then  			
+           send_command('input /p Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
+        end
+    end
 	if buff == "phalanx" or "Phalanx II" then
         if gain then
             state.phalanxset:set(false)

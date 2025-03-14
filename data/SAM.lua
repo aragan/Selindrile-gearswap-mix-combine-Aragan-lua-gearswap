@@ -286,7 +286,20 @@ function job_buff_change(buff, gain)
     if buff == 'Meikyo Shisui' and not gain then
 		enable('feet')
     end
-
+    if buff == "Charm" then
+        if gain then  			
+           send_command('input /p Charmd, please Sleep me.')		
+        else	
+           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        end
+    end
+	if buff == "Yaegasumi" then
+        if gain then  			
+            send_command('input /p "Yaegasumi" [ON]')		
+        else	
+            send_command('input /p "Yaegasumi" [OFF]')
+        end
+    end
 	update_melee_groups()
 end
 
@@ -370,3 +383,10 @@ function check_buff()
 	return false
 end
 
+windower.register_event('hpp change', -- code add from Aragan Asura
+function(new_hpp,old_hpp)
+    if new_hpp < 5 then
+        equip(sets.Reraise)
+    end
+end
+)

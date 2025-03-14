@@ -86,7 +86,7 @@ function get_sets()
 
 
 
-		attack2 = 2500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
+		attack2 = 500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
 	
 	
 
@@ -173,11 +173,10 @@ function job_precast(spell, spellMap, eventArgs)
 	-- Determine which WS sets to use based on your attack in your TP set (or idle set if WSing unengaged).
 	attack = player.attack
 	if attack > attack2 then
-        active_ws = sets.precast.WS.PDL
+        active_ws = sets.precast.WS.PDL[spell.english]
     else
-        active_ws = sets.precast.WS
+        active_ws = sets.precast.WS[spell.english]
     end
-	
 	self = windower.ffxi.get_mob_by_target("me")
 	target = windower.ffxi.get_mob_by_target("t") or windower.ffxi.get_mob_by_target("st") or self
 		
