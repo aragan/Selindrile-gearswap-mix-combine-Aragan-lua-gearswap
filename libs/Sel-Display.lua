@@ -216,6 +216,7 @@ function update_job_states()
 		NM = "NM",
 		SleepMode = "SleepMode",
 		ShieldMode = "ShieldMode",
+		AutoMedicineMode = "AutoMedicine",
     }
 
     stateBox:clear()

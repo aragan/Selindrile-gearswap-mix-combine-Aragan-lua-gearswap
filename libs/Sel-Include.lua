@@ -134,7 +134,7 @@ function init_include()
 	state.AutoHolyWaterMode   = M(true, 'Auto Holy Water Mode')
 	state.AutoRemoveDoomMode  = M(true, 'Auto Remove Doom Mode')
 	state.AutoWSMode		  = M(false, 'Auto Weaponskill Mode')
-	state.AutoWSRestore		  = M(true, 'Auto Weaponskill Restore Mode')
+	state.AutoWSRestore		  = M(false, 'Auto Weaponskill Restore Mode')
 	state.AutoFoodMode		  = M(false, 'Auto Food Mode')
 	state.AutoSubMode 		  = M(false, 'Auto Sublimation Mode')
 	state.AutoCleanupMode  	  = M(false, 'Auto Cleanup Mode')
@@ -154,6 +154,7 @@ function init_include()
 	state.MiniQueue		 	  = M(true, 'MiniQueue')
 	state.PWUnlock		 	  = M(false, 'PWUnlock')
 	state.AutoEquipBurst      = M(true)
+	state.AutoMedicineMode    = M(false, 'Auto Medicine Mode')
 
 
 	state.AutoBuffMode 		  = M{['description'] = 'Auto Buff Mode','Off','Auto'}
