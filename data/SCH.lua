@@ -900,20 +900,30 @@ function handle_elemental(cmdParams)
 			
 			if state.ElementalMode.value == 'Fire' then
 				windower.chat.input:schedule(1.3,'//ssc f a h mb 5')
+				windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
+
 			elseif state.ElementalMode.value == 'Wind' then
 				windower.chat.input:schedule(1.3,'//ssc a a h mb 5')
+				windower.chat.input('/p '..auto_translate('Detonation')..' -<t>- MB: '..auto_translate('wind')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Lightning' then
 				windower.chat.input:schedule(1.3,'//ssc t a h mb 5')
+				windower.chat.input('/p '..auto_translate('Impaction')..' -<t>- MB: '..auto_translate('Thunder')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Light' then
 				windower.chat.input:schedule(1.3,'//ssc l a h mb 5')
+				windower.chat.input('/p '..auto_translate('Transfixion')..' -<t>- MB: '..auto_translate('Light')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Earth' then
 				windower.chat.input:schedule(1.3,'//ssc s a h mb 5')
+				windower.chat.input('/p '..auto_translate('Scission')..' -<t>- MB: '..auto_translate('earth')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Ice' then
 				windower.chat.input:schedule(1.3,'//ssc b a h mb 5')
+				windower.chat.input('/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Water' then
 				windower.chat.input:schedule(1.3,'//ssc w a h mb h2')
+				windower.chat.input('/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Dark' then
 				windower.chat.input:schedule(1.3,'//ssc d a h mb h2')
+				windower.chat.input('/p '..auto_translate('Compression')..' -<t>- MB: '..auto_translate('Darkness')..' <scall21> OPEN!')
 			else
 				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
 			end
@@ -966,6 +976,34 @@ function handle_elemental(cmdParams)
 			add_to_chat(123,'Abort: Fire is the only element with a consecutive 3-step skillchain.')
 		end
 	
+	elseif command == 'skillchain33' then
+		if player.target.type ~= "MONSTER" then
+			add_to_chat(123,'Abort: You are not targeting a monster.')
+		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
+			add_to_chat(123,'You are silenced, muted, or paralyzed, cancelling skillchain.')
+		elseif (get_current_strategem_count() + immactive) < 3 then
+			add_to_chat(123,'Abort: You have less than three stratagems available.')
+		elseif not (state.Buff['Dark Arts']  or state.Buff['Addendum: Black']) then
+			add_to_chat(123,'Can\'t use elemental skillchain commands without Dark Arts - Activating.')
+			windower.chat.input('/ja "Dark Arts" <me>')
+		elseif state.ElementalMode.value == 'Fire' then
+			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
+			windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
+			windower.chat.input:schedule(1.3,'/ma "Stone" <t>')
+			windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+			windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
+			windower.chat.input:schedule(6.9,'/ma "Fire" <t>')
+			windower.chat.input:schedule(13,'/ja "Immanence" <me>')
+			windower.chat.input:schedule(14.3,'/p '..auto_translate('Fusion')..' -<t>- MB: '..auto_translate('Fire')..' '..auto_translate('Light')..' <scall21> CLOSE!')
+			if windower.ffxi.get_spell_recasts()[283] < (spell_latency + 12) then
+				windower.chat.input:schedule(14.3,'/ma "Ionohelix" <t>')
+			else
+				windower.chat.input:schedule(14.3,'/ma "Thunder" <t>')
+			end
+		else
+			add_to_chat(123,'Abort: Fire is the only element with a consecutive 3-step skillchain.')
+		end
+
 	elseif command == 'skillchain4' then
 		if player.target.type ~= "MONSTER" then
 			add_to_chat(123,'Abort: You are not targeting a monster.')

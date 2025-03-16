@@ -86,7 +86,7 @@ function get_sets()
 
 
 
-		attack2 = 500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
+		attack2 = 3500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
 	
 	
 

@@ -565,7 +565,30 @@ function handle_elemental(cmdParams)
 	elseif command == 'smallnuke' then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 	
-		local tiers = {' II',''}
+		local tiers = {' III',''}
+		for k in ipairs(tiers) do
+			if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
+				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
+				return
+			end
+		end
+		add_to_chat(123,'Abort: All '..data.elements.nuke_of[state.ElementalMode.value]..' nukes on cooldown or or not enough MP.')
+	elseif command == 'proc3' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+	
+		local tiers = {' III',''}
+		for k in ipairs(tiers) do
+			if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
+				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
+				return
+			end
+		end
+		add_to_chat(123,'Abort: All '..data.elements.nuke_of[state.ElementalMode.value]..' nukes on cooldown or or not enough MP.')
+		
+	elseif command == 'proc4' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+	
+		local tiers = {' IV',''}
 		for k in ipairs(tiers) do
 			if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
 				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
@@ -582,7 +605,7 @@ function handle_elemental(cmdParams)
 		
 	elseif command:contains('aga') or command == 'aja' then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
-		local tierkey = {'aja','aga3','aga2','aga1'}
+		local tierkey = {'aga3','aga2','aga1'}
 		local tierlist = {['aja']='ja',['aga3']='ga III',['aga2']='ga II',['aga1']='ga',}
 		if command == 'aga' then
 			for i in ipairs(tierkey) do
@@ -663,6 +686,61 @@ function check_buffup()
 		return false
 	end
 end
+
+windower.register_event('incoming text',function(org)     
+
+	--[[
+tel what proc need
+The fiend appears vulnerable to ice elemental magic!
+proc done
+attack staggers the fiend!
+]]
+	--abyssea stagger
+	if string.find(org, "attack staggers the fiend!") then
+		windower.send_command('input /p Stagger! <call14>!')  -- code add by (Aragan@Asura)
+		send_command('input //gs c set CastingMode Normal;')
+	end
+
+	if string.find(org, "The fiend appears vulnerable to ice elemental magic!") then
+		windower.send_command('input //gs c set ElementalMode Ice')
+	end
+	if string.find(org, "The fiend appears vulnerable to water elemental magic!") then
+		windower.send_command('input //gs c set ElementalMode water')
+	end
+	if string.find(org, "The fiend appears vulnerable to lightning elemental magic!") then
+		windower.send_command('input //gs c set ElementalMode Lightning')
+	end	
+	if string.find(org, "The fiend appears vulnerable to fire elemental magic!") then
+		windower.send_command('input //gs c set ElementalMode Fire')
+	end	
+	if string.find(org, "The fiend appears vulnerable to wind elemental magic!") then
+		windower.send_command('input //gs c set ElementalMode Wind')
+	end	
+	if string.find(org, "The fiend appears vulnerable to earth elemental magic!") then
+		windower.send_command('input //gs c set ElementalMode Earth')
+	end
+
+
+	--Sortie 	--Vagary
+	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
+		windower.send_command('input //gs c set ElementalMode water')
+	end
+	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
+		windower.send_command('input //gs c set ElementalMode Lightning')
+	end
+	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
+		windower.send_command('input //gs c set ElementalMode Fire')
+	end
+	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
+		windower.send_command('input //gs c set ElementalMode Wind')
+	end
+	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
+		windower.send_command('input //gs c set ElementalMode Earth')
+	end
+	if string.find(org, "Blast of Reticence") then
+		windower.send_command('input //gs c set ElementalMode Ice')
+	end
+end)
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat

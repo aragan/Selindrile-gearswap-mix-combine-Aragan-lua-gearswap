@@ -52,7 +52,6 @@ function get_sets()
 	organizer_items = {
 		"Airmid's Gorget",
 		"Moogle Amp.",
-		"Mafic Cudgel",
 		"Varga Purnikawa",
 		"Sakpata's Fists",
 		"Dawn Mulsum",   
