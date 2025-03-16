@@ -198,7 +198,7 @@ add_to_chat(200,'========== soloSkillchain ==========')
 
  
   local wait = {}
-  wait.postImmanence = 1
+  wait.postImmanence = 2
   local commandSoloSC = '' -- 
 
   -- Checking you didn't forget Dark Arts
