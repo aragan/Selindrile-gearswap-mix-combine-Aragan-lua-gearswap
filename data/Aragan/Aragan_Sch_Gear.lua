@@ -150,19 +150,19 @@ function user_job_setup()
     --use //listbinds    .. to show command keys
     -- Additional local binds
     send_command('bind f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
-    send_command('bind ^` input /ja Immanence <me>')
+    --send_command('bind ^` input /ja Immanence <me>')
     send_command('bind !` gs c toggle MagicBurst')
     send_command('bind f11 gs c cycle CastingMode')
     send_command('bind !f11 gs c set DefenseMode Magical')
-    send_command('bind ^- gs c scholar light')
-    send_command('bind ^= gs c scholar dark')
-    send_command('bind ^[ gs c scholar power')
-    send_command('bind ^] gs c scholar accuracy')
+    --send_command('bind ^- gs c scholar light')
+    --send_command('bind ^= gs c scholar dark')
+    --send_command('bind ^[ gs c scholar power')
+    --send_command('bind ^] gs c scholar accuracy')
     send_command('bind ^; gs c scholar speed')
     --send_command('bind !w input /ma "Aspir II" <t>')
-    send_command('bind !o input /ma "Regen V" <stpc>')
-    send_command('bind ![ gs c scholar aoe')
-    send_command('bind !] gs c scholar duration')
+    --send_command('bind !o input /ma "Regen V" <stpc>')
+    --send_command('bind ![ gs c scholar aoe')
+    --send_command('bind !] gs c scholar duration')
     send_command('bind !; gs c scholar cost')
     send_command('bind f5 gs c cycle HelixMode')
     send_command('bind @r gs c cycle RegenMode')
@@ -176,6 +176,8 @@ function user_job_setup()
     send_command('bind ^/ gs disable all')
     send_command('bind !/ gs enable all')
     send_command('bind f4 gs c cycle ElementalMode')
+    send_command('bind @f4 gs c cycleback ElementalMode')
+
     send_command('bind f3 input //gs c Elemental weather')
 		-- Additional local binds
 	send_command('bind ^` gs c cycle ElementalMode')
@@ -228,19 +230,10 @@ function init_gear_sets()
     sets.precast.JA['Tabula Rasa'] = {legs="Peda. Pants +3"}
     sets.precast.JA['Enlightenment'] = {body="Peda. Gown +3"}
     sets.precast.JA['Sublimation'] = {
-    ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-    head="Pedagogy Mortarboard +3",
-    body={ name="Peda. Gown +3", augments={'Enhances "Enlightenment" effect',}},
-    hands="Regal Cuffs",
-    legs={ name="Nyame Flanchard", augments={'Path: B',}},
-    feet={ name="Nyame Sollerets", augments={'Path: B',}},
-    waist="Embla Sash",
-    neck="Unmoving Collar +1",
-    ear1="Eabani Earring",
-    ear2="Etiolation Earring",
-    ring1="Gelatinous Ring +1",
-    ring2="Eihwaz Ring",
-    back="Moonlight Cape",    
+        head="Acad. Mortar. +2", --4
+        body="Peda. Gown +3", --5
+        --ear1="Savant's Earring", --1
+        waist="Embla Sash", --5   
 }
 
 sets.precast.RA = {ammo=empty,
@@ -735,11 +728,11 @@ right_ear="Telos Earring",
     -- Elemental Magic
     sets.midcast['Elemental Magic'] = {
         ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-        head="Agwu's Cap",
+        head={ name="Agwu's Cap", augments={'Path: A',}},
         body="Arbatel Gown +3",
         hands="Agwu's Gages",
-        legs="Arbatel Pants +2",
-        feet="Arbatel Loafers +3",
+        hands={ name="Agwu's Gages", augments={'Path: A',}},
+        legs={ name="Agwu's Slops", augments={'Path: A',}},
         neck="Argute Stole +2",
         waist="Acuity Belt +1",
         left_ear="Regal Earring",
@@ -762,19 +755,36 @@ right_ear="Telos Earring",
     })
     sets.midcast['Elemental Magic'].magicburst = {
         ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-        head="Agwu's Cap",
-        body="Arbatel Gown +3",
-        hands="Agwu's Gages",
-        legs="Agwu's Slops",
+        head={ name="Agwu's Cap", augments={'Path: A',}},
+        body="Agwu's Robe",
+        hands={ name="Agwu's Gages", augments={'Path: A',}},
+        legs={ name="Agwu's Slops", augments={'Path: A',}},
         feet="Arbatel Loafers +3",
         neck="Argute Stole +2",
-        waist="Acuity Belt +1",
+        waist="Skrymir Cord",
         left_ear="Regal Earring",
         right_ear="Malignance Earring",
         left_ring="Mujin Band",
         right_ring="Freke Ring",
         back="Lugh's Cape",
     }
+    
+    sets.magicburst = {
+        ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
+        head={ name="Agwu's Cap", augments={'Path: A',}},
+        body="Arbatel Gown +3",
+        hands={ name="Agwu's Gages", augments={'Path: A',}},
+        legs={ name="Agwu's Slops", augments={'Path: A',}},
+        feet="Arbatel Loafers +3",
+        neck="Argute Stole +2",
+        waist="Acuity Belt +1",
+        left_ear="Regal Earring",
+        right_ear="Malignance Earring",
+        right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        left_ring="Freke Ring",
+        back="Lugh's Cape",
+    }
+
     sets.Proc = {
         ammo=empty,
         main=empty,
@@ -841,21 +851,7 @@ right_ear="Telos Earring",
         right_ring=empty,
         back=empty,
         }
-    sets.magic_burst = {
-        ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-        head={ name="Agwu's Cap", augments={'Path: A',}},
-        body="Arbatel Gown +3",
-        hands={ name="Agwu's Gages", augments={'Path: A',}},
-        legs={ name="Agwu's Slops", augments={'Path: A',}},
-        feet="Arbatel Loafers +3",
-        neck="Argute Stole +2",
-        waist="Acuity Belt +1",
-        left_ear="Regal Earring",
-        right_ear="Malignance Earring",
-        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-        right_ring="Freke Ring",
-        back="Lugh's Cape",
-        }
+
     sets.midcast.Impact = set_combine(sets.midcast['Elemental Magic'], {
         head=empty,
         body="Twilight Cloak",
@@ -876,13 +872,29 @@ right_ear="Telos Earring",
         right_ear="Arbatel Earring +1",
         left_ring="Mallquis Ring",
     })
-	sets.HelixBurst = set_combine(sets.magic_burst, {
+
+    sets.HelixBurst = set_combine(sets.magicburst, {
+        head={ name="Agwu's Cap", augments={'Path: A',}},
+        body="Arbatel Gown +3",
+        hands="Arbatel Bracers +3",           
         legs="Arbatel Pants +2",
+        feet="Arbatel Loafers +3",
+        right_ear="Arbatel Earring +1",
         left_ear="Crematio Earring",
         left_ring="Mallquis Ring",
         left_ring="Mujin Band",
-        })
-	sets.magic_burst
+    })
+    sets.HelixBurst.magicburst = set_combine(sets.magicburst, {
+        head={ name="Agwu's Cap", augments={'Path: A',}},
+        body="Arbatel Gown +3",
+        hands="Arbatel Bracers +3",           
+        legs="Arbatel Pants +2",
+        feet="Arbatel Loafers +3",
+        right_ear="Arbatel Earring +1",
+        left_ear="Crematio Earring",
+        left_ring="Mallquis Ring",
+        left_ring="Mujin Band",    })
+
 	sets.midcast.Helix.Proc = sets.precast.FC
 
     sets.midcast.DarkHelix = set_combine(sets.midcast.Helix, {
@@ -1147,7 +1159,7 @@ sets.engaged.DT = {
 
 
 
-    sets.buff['Ebullience'] = {head="Arbatel Bonnet +2"}
+    sets.buff['Ebullience'] = {head="Arbatel Bonnet +2",body="Agwu's Robe",right_ring="Mujin Band"}
     sets.buff['Rapture'] = {head="Arbatel Bonnet +2"}
     sets.buff['Perpetuance'] = {hands="Arbatel Bracers +3"}
     sets.buff['Penury'] = {legs="Arbatel Pants +2"}
@@ -1220,7 +1232,7 @@ sets.engaged.DT = {
 	
 
     sets.buff.FullSublimation = {
-       --head="Acad. Mortar. +3", --4
+       head="Acad. Mortar. +2", --4
        body="Peda. Gown +3", --5
        --ear1="Savant's Earring", --1
        waist="Embla Sash", --5
@@ -1232,9 +1244,10 @@ sets.engaged.DT = {
     left_ring="Purity Ring",
     right_ring="Blenmot's Ring +1",}
     
-
+	sets.buff['Light Arts'] = {} --legs="Academic's Pants +3"
+	sets.buff['Dark Arts'] = {} --body="Academic's Gown +3" --body="Acad. Gown +1",
     sets.LightArts = {body="Arbatel Gown +3",}
-    sets.DarkArts = {body="Arbatel Gown +3",}
+    sets.DarkArts = {}--body="Acad. Gown +1",
     sets.Obi = {waist="Hachirin-no-Obi"}
     sets.Bookworm = {back="Bookworm's Cape",}
 

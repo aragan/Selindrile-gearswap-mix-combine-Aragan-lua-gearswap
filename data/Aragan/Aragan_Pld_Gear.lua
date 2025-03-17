@@ -672,7 +672,9 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 		back="Solemnity Cape",
 	})
 
-	sets.Cure_Received = {hands="Souv. Handsch. +1",feet="Souveran Schuhs +1"}
+	sets.Cure_Received = {hands="Souv. Handsch. +1",	  
+	legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},	
+	}
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
 
     sets.midcast['Enhancing Magic'] = {main="Colada",

@@ -239,7 +239,9 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     }
 
 	sets.Self_Healing = {waist="Gishdubar Sash"}
-	sets.Cure_Received = {waist="Gishdubar Sash"}
+	sets.Cure_Received = {  
+    legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+    waist="Gishdubar Sash"}
     sets.Phalanx_Received = {hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},legs={ name="Sakpata's Cuisses", augments={'Path: A',}},}
 	
 	-- Ranged for xbow

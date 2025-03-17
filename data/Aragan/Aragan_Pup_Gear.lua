@@ -41,7 +41,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT')
     state.MagicalDefenseMode:options('MDT')
 	state.IdleMode:options('Normal','PDT','Empy','EnemyCritRate','Evasion','HP','MDT','Refresh','Sphere')
-	state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners')
+	state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners','Tauret','CLUB','Staff')
     state.Animators = M{['description']='Animators', 'AnimatorPI', 'None', 'AnimatorPII', 'NeoAnimator'}
 
     state.PetMode = M{['description']='Pet Mode', 'None','Melee','MaxAcc','Ranged','MaxTP','Regen','Bruiser','Tank','LightTank','Magic','Heal','Nuke'}
@@ -145,6 +145,9 @@ function init_gear_sets()
 	sets.weapons.Xiucoatl = {main="Xiucoatl"}
 	sets.weapons.Ohtas = {main="Ohtas"}
 	sets.weapons.Condemners = {main="Condemners"}
+    sets.weapons.Tauret = {main="Tauret", sub="Kustawi +1", }
+    sets.weapons.Staff = {main="Gozuki Mezuki",sub="Niobid Strap"}
+    sets.weapons.CLUB = {main="Mafic Cudgel",sub="Tauret",}
 
     -- .Animators
 	sets.NeoAnimator = {range="Neo Animator"}
@@ -300,7 +303,7 @@ range="Trollbane",  }
         right_ear="Ishvara Earring",
         left_ring="Regal Ring",
         right_ring="Cornelia's Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
+        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.precast.WS.PDL = set_combine(sets.precast.WS, {
         head="Karagoz Cappello +2",
@@ -324,7 +327,7 @@ range="Trollbane",  }
         right_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         left_ring="Niqmaddu Ring",
         right_ring="Regal Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
+        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.precast.WS["Stringing Pummel"].PDL = set_combine(sets.precast.WS["Stringing Pummel"], {
         head="Karagoz Cappello +2",
@@ -344,7 +347,7 @@ range="Trollbane",  }
         right_ear="Sherida Earring",
         left_ring="Regal Ring",
         right_ring="Gere Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
+        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.precast.WS["Asuran Fists"].PDL = set_combine(sets.precast.WS["Asuran Fists"], {
         head="Karagoz Cappello +2",
@@ -364,7 +367,7 @@ range="Trollbane",  }
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         left_ring="Niqmaddu Ring",
         right_ring="Gere Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
+        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.precast.WS["Victory Smite"].PDL = set_combine(sets.precast.WS["Victory Smite"], {
         head="Karagoz Cappello +2",
@@ -388,7 +391,7 @@ range="Trollbane",  }
             left_ear="Mache Earring +1",
             left_ring="Niqmaddu Ring",
             right_ring="Gere Ring",
-            back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
+            back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.precast.WS["Shijin Spiral"].PDL = set_combine(sets.precast.WS["Shijin Spiral"], {
         head="Karagoz Cappello +2",
@@ -429,7 +432,7 @@ range="Trollbane",  }
         right_ear="Brutal Earring",
         left_ring="Niqmaddu Ring",
         right_ring="Gere Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},
+        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.precast.WS["Howling Fist"].PDL = set_combine(sets.precast.WS["Howling Fist"], {
         head="Karagoz Cappello +2",
@@ -930,7 +933,7 @@ range="Trollbane",  }
         right_ear="Balder Earring +1",
         left_ring="Gere Ring",
         right_ring="Niqmaddu Ring",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},    
+        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},    
     }
     sets.engaged.Acc = {
         head="Malignance Chapeau",
@@ -1018,18 +1021,18 @@ range="Trollbane",  }
     }
 
     sets.engaged.DT = {
-    head="Malignance Chapeau",
-    body="Malignance Tabard",
-    hands="Malignance Gloves",
-    legs="Malignance Tights",
-    feet="Malignance Boots",
-    neck={ name="Loricate Torque +1", augments={'Path: A',}},
-    waist="Moonbow Belt +1",
-    left_ear="Mache Earring +1",
-    right_ear="Balder Earring +1",
-    left_ring="Gere Ring",
-    right_ring="Niqmaddu Ring",
-    back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},    
+head="Mpaca's Cap",
+body="Mpaca's Doublet",
+hands="Malignance Gloves",
+legs="Mpaca's Hose",
+feet="Mpaca's Boots",
+neck="Lissome Necklace",
+waist="Moonbow Belt +1",
+ear1="Dedition Earring",
+ear2="Schere Earring",
+ring1="Gere Ring",
+ring2="Epona's Ring",
+    back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},    
     }
     sets.engaged.Acc.DT = {
         head="Malignance Chapeau",
@@ -1043,7 +1046,7 @@ range="Trollbane",  }
         waist="Moonbow Belt +1",
         legs="Malignance Tights",
         feet="Malignance Boots",
-        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','"Dbl.Atk."+10',}},    
+        back={ name="Visucius's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},    
     } 
     sets.engaged.FullAcc.DT ={
         head="Heyoka Cap +1",

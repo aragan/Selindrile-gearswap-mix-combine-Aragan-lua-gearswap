@@ -65,7 +65,7 @@ state.DisplayMode = M(true, 'Display Mode') --Set this to false if you don't wan
 --}
 
 --Options for automation.
-state.ReEquip 		  		= M(false, 'ReEquip Mode')		 --Set this to false if you don't want to equip your current Weapon set when you aren't wearing any weapons.
+state.ReEquip 		  		= M(true, 'ReEquip Mode')		 --Set this to false if you don't want to equip your current Weapon set when you aren't wearing any weapons.
 state.AutoArts 		  		= M(true, 'AutoArts') 		 --Set this to false if you don't want to automatically try to keep up Solace/Arts.
 state.AutoLockstyle	 	    = M(true, 'AutoLockstyle Mode') --Set this to false if you don't want gearswap to automatically lockstyle on load and weapon change.
 state.CancelStoneskin 		= M(true, 'Cancel Stone Skin') --Set this to false if you don't want to automatically cancel stoneskin when you're slept.
@@ -128,6 +128,10 @@ AutoSambaMode
 AutoRuneMode
 
 AutoAcceptRaiseMode
+
+gs c set AutoWSRestore true
+
+
 ]]
 
 -- Function to bind GearSwap binds when loading a GS script.
@@ -187,7 +191,9 @@ function global_on_load()
 	send_command('bind !3 gs c toggle AutoRuneMode')
 	send_command('bind !4 gs c cycle passive')
 	send_command('bind !5 gs c toggle stance')
-	send_command('bind ^3 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
+	send_command('bind ^2 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
+	send_command('bind ^3 gs c cycle RuneElement') -- cycle RuneElement
+
 	send_command('bind ^f1 gs c toggle AutoStunMode')
 	send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
@@ -207,11 +213,13 @@ function global_on_load()
 	send_command('bind ^] input //put storage slip* case all')
 	send_command('bind ^[ input //get storage slip* all') --PorterPacker Porter find
 	send_command('bind !, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
-	--send_command('bind !. input //put * Wardrobe3 all;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all') -- gs validate  --to check 	lua r gearswap
+	send_command('bind !. input //put * Wardrobe4 all') -- gs validate  --to check  --lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
 
 	send_command('bind ^. input //packer repack') -- PorterPacker addon
 
 	send_command('bind !m gs c toggle AutoMedicineMode')
+
+	--send_command('bind @m gs c mount Raptor')
 
 end
 -- Function to revert binds when unloading.
@@ -660,13 +668,24 @@ end
 		--tickdelay = os.clock() + 10
 
 		if data.areas.cities:contains(world.area)  then
-			send_command('input //lua l invspace;input //lua l invtracker') --Turns addon on.
+			send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock') --Turns addon on.
 		else
-			send_command('input //lua u invspace;input //lua u invtracker') --Turns addon off.
+			send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock') --Turns addon off. stats=craftstats addon
 		end
 		
 		if data.areas.laggy:contains(world.area)  then
 			send_command('input //gs c set AutoDefenseMode true;') --Turns mode on.
+		end
+
+		if world.area:contains('Nyzul Isle') then
+			send_command('input //NyzulHelper show;input //NyzulBuddy start;input //iSpy') --Turns addon on.
+		else
+			send_command('input //NyzulHelper hide;input //NyzulBuddy stop;') --Turns addon off. -- input //iSpy
+		end
+		if world.area:contains('Abyssea') then
+			send_command('input //ept show;') --Turns addon on.
+		else
+			send_command('input //ept hide;') --Turns addon off.
 		end
 	end
 
