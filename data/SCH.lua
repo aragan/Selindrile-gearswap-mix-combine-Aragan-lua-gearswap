@@ -213,16 +213,8 @@ function job_post_midcast(spell, spellMap, eventArgs)
     if spell.action_type == 'Magic' then
         apply_grimoire_bonuses(spell, action, spellMap, eventArgs)
     end
-	if spell.skill == 'Elemental Magic' then
+	if  spell.skill == 'Elemental Magic' then
         if spellMap == "Helix" then
-            equip(sets.midcast['Elemental Magic'])
-            if spell.english:startswith('Lumino') then
-                equip(sets.midcast.LightHelix)
-            elseif spell.english:startswith('Nocto') then
-                equip(sets.midcast.DarkHelix)
-            else
-                equip(sets.midcast.Helix)
-            end
             if state.HelixMode.value == 'Duration' then
                 equip(sets.Bookworm)
             end
@@ -237,10 +229,26 @@ function job_post_midcast(spell, spellMap, eventArgs)
         end
     end
     if spell.skill == 'Elemental Magic' and (state.MagicBurst.value or AEBurst) then
-        equip(sets.magicburst)
-        if spell.english == "Impact" then
-            equip(sets.midcast.Impact)
-        end
+		if state.CastingMode.value == "magicburst" then
+			equip(sets.midcast['Elemental Magic'].magicburst)
+			if spell.english == "Impact" then
+				equip(sets.midcast.Impact)
+			end
+			if spellMap == 'Helix' and not state.Buff.Immanence then
+				equip(sets.HelixBurst.magicburst)
+				if spell.english:startswith('Nocto') then
+					equip(sets.midcast.DarkHelix)
+				end
+			end
+		elseif spellMap == 'Helix' and not state.Buff.Immanence then
+				equip(sets.HelixBurst)
+				if spell.english:startswith('Nocto') then
+					equip(sets.midcast.DarkHelix)
+				end
+		else
+			equip(sets.magicburst)
+		end
+
     end
     if spell.skill == 'Enhancing Magic' then
         if classes.NoSkillSpells:contains(spell.english) then
@@ -278,7 +286,7 @@ function job_post_midcast(spell, spellMap, eventArgs)
 			elseif state.CastingMode.value:contains('Resistant') and sets.ResistantMagicBurst then
 				equip(sets.ResistantMagicBurst)
 			else
-				equip(sets.MagicBurst)
+				equip(sets.HelixBurst)
 			end
 		end
 		if not state.CastingMode.value:contains('Resistant') then
@@ -324,6 +332,53 @@ function job_post_midcast(spell, spellMap, eventArgs)
 	
 end
 
+function job_filter_aftercast(spell, spellMap, eventArgs)
+
+    if not spell.interrupted then
+		if spell.type == 'Scholar' then
+			windower.send_command:schedule(1,'gs c showcharge')
+		elseif spell.action_type == 'Magic' then
+			if state.UseCustomTimers.value and spell.english == 'Sleep' or spell.english == 'Sleepga' then
+				windower.send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+			elseif state.UseCustomTimers.value and spell.english == 'Sleep II' then
+				windower.send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
+			elseif spell.english == "Break" then
+				send_command('@timers c "Break ['..spell.target.name..']" 30 down spells/00255.png')
+			elseif spell.english == 'Impact' then
+				send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+			elseif spell.english == "Bind" then
+				send_command('timers create "Bind" 60 down spells/00258.png')
+			elseif spell.english == "Break" then
+				send_command('timers create "Break Petrification" 33 down spells/00255.png')
+			elseif spell.english == "Breakga" then
+				send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
+			elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
+				state.MagicBurstMode:reset()
+				if state.DisplayMode.value then update_job_states()	end
+			end
+		end
+		if spell.english == "Sleep II" then
+            send_command('@timers c "Sleep II ['..spell.target.name..']" 90 down spells/00259.png')
+        elseif spell.english == "Sleep" or spell.english == "Sleepga" then -- Sleep & Sleepga Countdown --
+            send_command('@timers c "Sleep ['..spell.target.name..']" 60 down spells/00253.png')
+        elseif spell.english == "Break" then
+            send_command('@timers c "Break ['..spell.target.name..']" 30 down spells/00255.png')
+        elseif spell.english == 'Impact' then
+            send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+        elseif spell.english == "Bind" then
+            send_command('timers create "Bind" 60 down spells/00258.png')
+        elseif spell.english == "Break" then
+            send_command('timers create "Break Petrification" 33 down spells/00255.png')
+        elseif spell.english == "Breakga" then
+            send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
+        end
+    end
+	if spell.name == 'Tabula Rasa' then
+        send_command('@timers c "Tabula Rasa" 210 down spells/00136.png')
+        send_command('wait 210;input /p <t> [Tabula Rasa just wore off!];')
+        send_command('@wait 1;@input /p  >>> Tabula Rasa  minute left: 3.30')
+	end
+end
 function job_aftercast(spell, spellMap, eventArgs)
     if not spell.interrupted then
 		if spell.type == 'Scholar' then
@@ -367,7 +422,7 @@ function job_aftercast(spell, spellMap, eventArgs)
 	if spell.name == 'Tabula Rasa' then
         send_command('@timers c "Tabula Rasa" 210 down spells/00136.png')
         send_command('wait 210;input /p <t> [Tabula Rasa just wore off!];')
-        send_command('@input /p  >>> Tabula Rasa  minute left: 3.30')
+        send_command('@wait 1;@input /p  >>> Tabula Rasa  minute left: 3.30')
 	end
 end
 
@@ -392,9 +447,9 @@ function job_buff_change(buff, gain)
     end
     if buff == "Tabula Rasa" then
         if gain then
-            send_command('@input /p Tabula Rasa [ON]')
+            send_command('@wait 1;@input /p Tabula Rasa [ON]')
         else	
-            send_command('@input /p Tabula Rasa [OFF]')        
+            send_command('@wait 1;@input /p Tabula Rasa [OFF]')        
         end
     end
     if buff == "doom" then
@@ -721,8 +776,11 @@ function apply_grimoire_bonuses(spell, action, spellMap)
         if state.Buff.Ebullience and spell.english ~= 'Impact' then
             equip(sets.buff['Ebullience'])
         end
-        if state.Buff.Immanence and state.CastingMode.value == "Proc" then
-            equip(sets.buff['Immanence'].Proc)
+		if state.Buff.Immanence then
+		    equip(sets.buff['Immanence'])
+		    send_command('@input /p <t> <recast=Stratagems>')
+	    elseif state.Buff.Immanence and state.CastingMode.value == "Proc" then
+		    equip(sets.buff['Immanence'].Proc)
             send_command('@input /p <t> <recast=Stratagems>')
         elseif state.Buff.Immanence and state.CastingMode.value == "SubtleBlow" then
             equip(sets.buff['Immanence'].SubtleBlow)
@@ -730,9 +788,7 @@ function apply_grimoire_bonuses(spell, action, spellMap)
         elseif state.Buff.Immanence and state.CastingMode.value == "Enmity" then
             equip(sets.buff['Immanence'].Enmity)
             send_command('@input /p <t> <recast=Stratagems>')
-        elseif state.Buff.Immanence then
-            equip(sets.buff['Immanence'])
-            send_command('@input /p <t> <recast=Stratagems>')
+
         end
         if state.Buff.Klimaform and spell.element == world.weather_element then
             equip(sets.buff['Klimaform'])
@@ -856,6 +912,105 @@ function handle_elemental(cmdParams)
 			add_to_chat(123,'Abort: You are not targeting a monster.')
 		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
 			add_to_chat(123,'You are silenced, muted, or paralyzed, cancelling skillchain.')
+		elseif (get_current_strategem_count() + immactive) < 2 then
+			add_to_chat(123,'Abort: You have less than two stratagems available.')
+		elseif not (state.Buff['Dark Arts']  or state.Buff['Addendum: Black']) then
+			add_to_chat(123,'Can\'t use elemental skillchain commands without Dark Arts - Activating.')
+			windower.chat.input('/ja "Dark Arts" <me>')
+		elseif state.ElementalMode.value ~= nil then
+			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
+			
+			if state.ElementalMode.value == 'Fire' then
+				windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Stone" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[281] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Pyrohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Fire" <t>')
+				end
+			elseif state.ElementalMode.value == 'Wind' then
+				windower.chat.input('/p '..auto_translate('Detonation')..' -<t>- MB: '..auto_translate('wind')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Stone" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Detonation')..' -<t>- MB: '..auto_translate('wind')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[280] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Anemohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Aero" <t>')
+				end
+			elseif state.ElementalMode.value == 'Lightning' then
+				windower.chat.input('/p '..auto_translate('Impaction')..' -<t>- MB: '..auto_translate('Thunder')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Water" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Impaction')..' -<t>- MB: '..auto_translate('Thunder')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[283] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Ionohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Thunder" <t>')
+				end
+			elseif state.ElementalMode.value == 'Light' then
+				local spell_recasts = windower.ffxi.get_spell_recasts()
+				if spell_recasts[284] > spell_latency or spell_recasts[285] > spell_latency + 7 then
+					add_to_chat(123,'Abort: Noctohelix or Luminohelix on cooldown.')
+				else
+					windower.chat.input('/p '..auto_translate('Transfixion')..' -<t>- MB: '..auto_translate('Light')..' <scall21> OPEN!')
+					windower.chat.input:schedule(1.3,'/ma "Noctohelix" <t>')
+					windower.chat.input:schedule(6.6,'/ja "Immanence" <me>')
+					windower.chat.input:schedule(7.9,'/p '..auto_translate('Transfixion')..' -<t>- MB: '..auto_translate('Light')..' <scall21> CLOSE!')
+					windower.chat.input:schedule(7.9,'/ma "Luminohelix" <t>')
+				end
+			elseif state.ElementalMode.value == 'Earth' then
+				windower.chat.input('/p '..auto_translate('Scission')..' -<t>- MB: '..auto_translate('earth')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Fire" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Scission')..' -<t>- MB: '..auto_translate('earth')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[278] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Stone" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Stone" <t>')
+				end
+			elseif state.ElementalMode.value == 'Ice' then
+				windower.chat.input('/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Water" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[282] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Blizzard" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Blizzard" <t>')
+				end
+			elseif state.ElementalMode.value == 'Water' then
+				windower.chat.input('/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Stone" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[279] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Hydrohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Water" <t>')
+				end
+			elseif state.ElementalMode.value == 'Dark' then
+				if windower.ffxi.get_spell_recasts()[284] > (spell_latency + 6) then
+					add_to_chat(123,'Abort: Noctohelix on cooldown.')
+				else
+					windower.chat.input('/p '..auto_translate('Compression')..' -<t>- MB: '..auto_translate('Darkness')..' <scall21> OPEN!')
+					windower.chat.input:schedule(1.3,'/ma "Blizzard" <t>')
+					windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+					windower.chat.input:schedule(6.9,'/p '..auto_translate('Compression')..' -<t>- MB: '..auto_translate('Darkness')..' <scall21> CLOSE!')
+					windower.chat.input:schedule(6.9,'/ma "Noctohelix" <t>')
+				end
+			else
+				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
+			end
+		end
+
+	elseif command == 'skillchain11' then
+		if player.target.type ~= "MONSTER" then
+			add_to_chat(123,'Abort: You are not targeting a monster.')
+		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
+			add_to_chat(123,'You are silenced, muted, or paralyzed, cancelling skillchain.')
 		elseif (get_current_stratagem_count() + immactive) < 2 then
 			add_to_chat(123,'Abort: You have less than two stratagems available.')
 		elseif not (state.Buff['Dark Arts']  or state.Buff['Addendum: Black']) then
@@ -899,6 +1054,50 @@ function handle_elemental(cmdParams)
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
 			
 			if state.ElementalMode.value == 'Fire' then
+				windower.chat.input:schedule(1.3,'//ssc f a h')
+				windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
+
+			elseif state.ElementalMode.value == 'Wind' then
+				windower.chat.input:schedule(1.3,'//ssc a a h')
+				windower.chat.input('/p '..auto_translate('Detonation')..' -<t>- MB: '..auto_translate('wind')..' <scall21> OPEN!')
+			elseif state.ElementalMode.value == 'Lightning' then
+				windower.chat.input:schedule(1.3,'//ssc t a h')
+				windower.chat.input('/p '..auto_translate('Impaction')..' -<t>- MB: '..auto_translate('Thunder')..' <scall21> OPEN!')
+			elseif state.ElementalMode.value == 'Light' then
+				windower.chat.input:schedule(1.3,'//ssc l a h')
+				windower.chat.input('/p '..auto_translate('Transfixion')..' -<t>- MB: '..auto_translate('Light')..' <scall21> OPEN!')
+			elseif state.ElementalMode.value == 'Earth' then
+				windower.chat.input:schedule(1.3,'//ssc s a h')
+				windower.chat.input('/p '..auto_translate('Scission')..' -<t>- MB: '..auto_translate('earth')..' <scall21> OPEN!')
+			elseif state.ElementalMode.value == 'Ice' then
+				windower.chat.input:schedule(1.3,'//ssc b a h')
+				windower.chat.input('/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> OPEN!')
+			elseif state.ElementalMode.value == 'Water' then
+				windower.chat.input:schedule(1.3,'//ssc w a h')
+				windower.chat.input('/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> OPEN!')
+			elseif state.ElementalMode.value == 'Dark' then
+				windower.chat.input:schedule(1.3,'//ssc d a h')
+				windower.chat.input('/p '..auto_translate('Compression')..' -<t>- MB: '..auto_translate('Darkness')..' <scall21> OPEN!')
+			else
+				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
+			end
+		end
+		
+	elseif command == 'skillchain11h' then
+		if player.target.type ~= "MONSTER" then
+			add_to_chat(123,'Abort: You are not targeting a monster.')
+		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
+			add_to_chat(123,'You are silenced, muted, or paralyzed, cancelling skillchain.')
+		elseif (get_current_stratagem_count() + immactive) < 2 then
+			add_to_chat(123,'Abort: You have less than two stratagems available.')
+		elseif not (state.Buff['Dark Arts']  or state.Buff['Addendum: Black']) then
+			add_to_chat(123,'Can\'t use elemental skillchain commands without Dark Arts - Activating.')
+			windower.chat.input('/ja "Dark Arts" <me>')
+		elseif state.ElementalMode.value ~= nil then
+			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
+			
+			if state.ElementalMode.value == 'Fire' then
 				windower.chat.input:schedule(1.3,'//ssc f a h mb 5')
 				windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
 				windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
@@ -919,7 +1118,7 @@ function handle_elemental(cmdParams)
 				windower.chat.input:schedule(1.3,'//ssc b a h mb 5')
 				windower.chat.input('/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Water' then
-				windower.chat.input:schedule(1.3,'//ssc w a h mb h2')
+				windower.chat.input:schedule(1.3,'//ssc w a h mb 5')
 				windower.chat.input('/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Dark' then
 				windower.chat.input:schedule(1.3,'//ssc d a h mb h2')
@@ -928,8 +1127,74 @@ function handle_elemental(cmdParams)
 				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
 			end
 		end
-	
+
 	elseif command == 'skillchain2' then
+		if player.target.type ~= "MONSTER" then
+			add_to_chat(123,'Abort: You are not targeting a monster.')
+		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
+			add_to_chat(123,'You are silenced, muted, or paralyzed, cancelling skillchain.')
+		elseif (get_current_strategem_count() + immactive) < 2 then
+			add_to_chat(123,'Abort: You have less than two stratagems available.')
+		elseif not (state.Buff['Dark Arts']  or state.Buff['Addendum: Black']) then
+			add_to_chat(123,'Can\'t use elemental skillchain commands without Dark Arts - Activating.')
+			windower.chat.input('/ja "Dark Arts" <me>')
+			
+			
+		elseif state.ElementalMode.value ~= nil then
+			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
+			
+			if state.ElementalMode.value == 'Fire' or state.ElementalMode.value == 'Light' then
+				windower.chat.input('/p '..auto_translate('Fusion')..' -<t>- MB: '..auto_translate('Fire')..' '..auto_translate('Light')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Fire" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Fusion')..' -<t>- MB: '..auto_translate('Fire')..' '..auto_translate('Light')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[283] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Ionohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Thunder" <t>')
+				end
+			elseif state.ElementalMode.value == 'Wind' or state.ElementalMode.value == 'Lightning' then
+				windower.chat.input('/p '..auto_translate('Fragmentation')..' -<t>- MB: '..auto_translate('wind')..' '..auto_translate('Thunder')..' <scall21> OPEN!')
+				windower.chat.input:schedule(1.3,'/ma "Blizzard" <t>')
+				windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+				windower.chat.input:schedule(6.9,'/p '..auto_translate('Fragmentation')..' -<t>- MB: '..auto_translate('wind')..' '..auto_translate('Thunder')..' <scall21> CLOSE!')
+				if windower.ffxi.get_spell_recasts()[279] < (spell_latency + 6) then
+					windower.chat.input:schedule(6.9,'/ma "Hydrohelix" <t>')
+				else
+					windower.chat.input:schedule(6.9,'/ma "Water" <t>')
+				end
+			elseif state.ElementalMode.value == 'Earth' or state.ElementalMode.value == 'Dark' then
+				if windower.ffxi.get_spell_recasts()[284] > (spell_latency + 6) then
+					add_to_chat(123,'Abort: Noctohelix on cooldown.')
+				else
+					windower.chat.input('/p '..auto_translate('Gravitation')..' -<t>- MB: '..auto_translate('earth')..' '..auto_translate('Darkness')..' <scall21> OPEN!')
+					windower.chat.input:schedule(1.3,'/ma "Aero" <t>')
+					windower.chat.input:schedule(5.6,'/ja "Immanence" <me>')
+					windower.chat.input:schedule(6.9,'/p '..auto_translate('Gravitation')..' -<t>- MB: '..auto_translate('earth')..' '..auto_translate('Darkness')..' <scall21> CLOSE!')
+					windower.chat.input:schedule(6.9,'/ma "Noctohelix" <t>')
+				end
+			elseif state.ElementalMode.value == 'Ice' or state.ElementalMode.value == 'Water' then
+				if windower.ffxi.get_spell_recasts()[285] > spell_latency then
+					add_to_chat(123,'Abort: Luminohelix on cooldown.')
+				else
+					windower.chat.input('/p '..auto_translate('Distortion')..' -<t>- MB: '..auto_translate('ice')..' '..auto_translate('Water')..' <scall21> OPEN!')
+					windower.chat.input:schedule(1.3,'/ma "Luminohelix" <t>')
+					windower.chat.input:schedule(6.6,'/ja "Immanence" <me>')
+					windower.chat.input:schedule(7.9,'/p '..auto_translate('Distortion')..' -<t>- MB: '..auto_translate('ice')..' '..auto_translate('Water')..' <scall21> CLOSE!')
+					if windower.ffxi.get_spell_recasts()[278] < (spell_latency + 6) then
+						windower.chat.input:schedule(7.9,'/ma "Geohelix" <t>')
+					else
+						windower.chat.input:schedule(7.9,'/ma "Stone" <t>')
+					end
+				end
+			else
+				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
+			end
+			
+
+		end
+
+	elseif command == 'skillchain22' then
 		if player.target.type ~= "MONSTER" then
 			add_to_chat(123,'Abort: You are not targeting a monster.')
 		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
@@ -959,24 +1224,8 @@ function handle_elemental(cmdParams)
 
 		end
 		
+
 	elseif command == 'skillchain3' then
-		if player.target.type ~= "MONSTER" then
-			add_to_chat(123,'Abort: You are not targeting a monster.')
-		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
-			add_to_chat(123,'You are silenced, muted, or paralyzed, cancelling skillchain.')
-		elseif (get_current_stratagem_count() + immactive) < 3 then
-			add_to_chat(123,'Abort: You have less than three stratagems available.')
-		elseif not (state.Buff['Dark Arts']  or state.Buff['Addendum: Black']) then
-			add_to_chat(123,'Can\'t use elemental skillchain commands without Dark Arts - Activating.')
-			windower.chat.input('/ja "Dark Arts" <me>')
-		elseif state.ElementalMode.value == 'Fire' then
-			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
-			windower.chat.input:schedule(1.3,'//gs c soloSC 2 Fusion true')
-		else
-			add_to_chat(123,'Abort: Fire is the only element with a consecutive 3-step skillchain.')
-		end
-	
-	elseif command == 'skillchain33' then
 		if player.target.type ~= "MONSTER" then
 			add_to_chat(123,'Abort: You are not targeting a monster.')
 		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
@@ -1004,6 +1253,24 @@ function handle_elemental(cmdParams)
 			add_to_chat(123,'Abort: Fire is the only element with a consecutive 3-step skillchain.')
 		end
 
+
+	elseif command == 'skillchain33' then
+		if player.target.type ~= "MONSTER" then
+			add_to_chat(123,'Abort: You are not targeting a monster.')
+		elseif buffactive.silence or buffactive.mute or buffactive.paralysis then
+			add_to_chat(123,'You are silenced, muted, or paralyzed, cancelling skillchain.')
+		elseif (get_current_stratagem_count() + immactive) < 3 then
+			add_to_chat(123,'Abort: You have less than three stratagems available.')
+		elseif not (state.Buff['Dark Arts']  or state.Buff['Addendum: Black']) then
+			add_to_chat(123,'Can\'t use elemental skillchain commands without Dark Arts - Activating.')
+			windower.chat.input('/ja "Dark Arts" <me>')
+		elseif state.ElementalMode.value == 'Fire' then
+			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
+			windower.chat.input:schedule(1.3,'//gs c soloSC 2 Fusion true')
+		else
+			add_to_chat(123,'Abort: Fire is the only element with a consecutive 3-step skillchain.')
+		end
+	
 	elseif command == 'skillchain4' then
 		if player.target.type ~= "MONSTER" then
 			add_to_chat(123,'Abort: You are not targeting a monster.')
@@ -1436,6 +1703,29 @@ end
 function set_lockstyle()
     send_command('wait 2;input /lockstyleset 173')
 end
+
+windower.register_event('incoming text',function(org)     
+
+	--Sortie 	--Vagary
+	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
+		windower.send_command('input //gs c set ElementalMode water')
+	end
+	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
+		windower.send_command('input //gs c set ElementalMode Lightning')
+	end
+	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
+		windower.send_command('input //gs c set ElementalMode Fire')
+	end
+	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
+		windower.send_command('input //gs c set ElementalMode Wind')
+	end
+	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
+		windower.send_command('input //gs c set ElementalMode Earth')
+	end
+	if string.find(org, "Blast of Reticence") then
+		windower.send_command('input //gs c set ElementalMode Ice')
+	end
+end)
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat

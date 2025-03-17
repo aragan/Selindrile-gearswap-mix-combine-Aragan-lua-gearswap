@@ -123,7 +123,18 @@ end
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 
 function job_filtered_action(spell, eventArgs)
-
+    if not spell.interrupted then
+        if spell.english == 'Sleep' or spell.english == 'Sleepga' then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+        elseif spell.english == 'Sleep II' or spell.english == 'Sleepga II' then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
+		elseif spell.english == "Sleep II" then
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
+		elseif spell.english == "Death" and state.DeathMode.value == 'Single' then
+			state.DeathMode:reset()
+			if state.DisplayMode.value then update_job_states()	end
+        end
+    end
 end
 
 function job_pretarget(spell, spellMap, eventArgs)
@@ -141,6 +152,9 @@ function job_pretarget(spell, spellMap, eventArgs)
 	end
 end
 
+function job_filter_precast(spell, spellMap, eventArgs)
+
+end
 function job_precast(spell, spellMap, eventArgs)
 
 	if spell.action_type == 'Magic' then
@@ -283,13 +297,58 @@ function job_post_midcast(spell, spellMap, eventArgs)
         end
     end
 end
-
+function job_filter_aftercast(spell, spellMap, eventArgs)
+	if spell.action_type == 'Magic' then
+        if Elemental_Aja:contains(spell.english) then	
+            send_command('timers create "'.. spell.english .. '" 105 down spells/01015.png')
+            send_command("@wait 105;input /echo <----- All Cumulative Magic Duration Effects Have Expired ----->")
+        end
+    end
+    if not spell.interrupted then
+        if spell.english == "Sleep" then
+            send_command('timers create "Sleep ' ..tostring(spell.target.name).. ' " 60 down spells/00235.png')
+        elseif spell.english == "Sleepga" then
+            send_command('timers create "Sleepga ' ..tostring(spell.target.name).. ' " 60 down spells/00273.png')
+        elseif spell.english == "Sleep II" then
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
+        elseif spell.english == "Sleepga II" then
+            send_command('timers create "Sleepga II ' ..tostring(spell.target.name).. ' " 90 down spells/00274.png')
+        elseif spell.english == 'Impact' then
+                send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+        elseif Elemental_Debuffs:contains(spell.english) then
+            if spell.english == 'Burn' then
+                send_command('timers create "Burn ' ..tostring(spell.target.name).. ' " 180 down spells/00235.png')
+            elseif spell.english == 'Choke' then
+                send_command('timers create "Choke ' ..tostring(spell.target.name).. ' " 180 down spells/00237.png')
+            elseif spell.english == 'Shock' then
+                send_command('timers create "Shock ' ..tostring(spell.target.name).. ' " 180 down spells/00239.png')
+            elseif spell.english == 'Frost' then
+                send_command('timers create "Frost ' ..tostring(spell.target.name).. ' " 180 down spells/00236.png')
+            elseif spell.english == 'Drown' then
+                send_command('timers create "Drown ' ..tostring(spell.target.name).. ' " 180 down spells/00240.png')
+            elseif spell.english == 'Rasp' then
+                send_command('timers create "Rasp ' ..tostring(spell.target.name).. ' " 180 down spells/00238.png')
+            end
+        elseif spell.english == "Bind" then
+            send_command('timers create "Bind" 60 down spells/00258.png')
+        elseif spell.english == "Break" then
+            send_command('timers create "Break Petrification" 33 down spells/00255.png')
+        elseif spell.english == "Breakga" then
+            send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
+		elseif spell.english == "Death" and state.DeathMode.value == 'Single' then
+			state.DeathMode:reset()
+			if state.DisplayMode.value then update_job_states()	end
+        end
+	end
+end
 function job_aftercast(spell, spellMap, eventArgs)
     if not spell.interrupted then
         if spell.english == 'Sleep' or spell.english == 'Sleepga' then
             send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
         elseif spell.english == 'Sleep II' or spell.english == 'Sleepga II' then
             send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
+		elseif spell.english == "Sleep II" then
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
 		elseif spell.english == "Death" and state.DeathMode.value == 'Single' then
 			state.DeathMode:reset()
 			if state.DisplayMode.value then update_job_states()	end
