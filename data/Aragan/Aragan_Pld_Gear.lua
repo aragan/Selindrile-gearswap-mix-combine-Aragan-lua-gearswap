@@ -43,9 +43,9 @@ function user_job_setup()
 
 	--use //listbinds    .. to show command keys
 	-- Additional local binds
-	send_command('bind ^backspace input /ja "Shield Bash" <t>')
-	send_command('bind @backspace input /ja "Cover" <stpt>')
-	send_command('bind !backspace input /ja "Sentinel" <me>')
+	--send_command('bind ^backspace input /ja "Shield Bash" <t>')
+	--send_command('bind @backspace input /ja "Cover" <stpt>')
+	--send_command('bind !backspace input /ja "Sentinel" <me>')
 	send_command('bind @= input /ja "Chivalry" <me>')
 	send_command('bind != input /ja "Palisade" <me>')
 	send_command('bind ^delete input /ja "Provoke" <stnpc>')
@@ -190,9 +190,9 @@ function init_gear_sets()
     sets.precast.JA['Holy Circle'].DT = set_combine(sets.Enmity.DT,{feet="Rev. Leggings +3"})
     sets.precast.JA['Sentinel'].DT = set_combine(sets.Enmity.DT,{feet="Cab. Leggings +3"})
     sets.precast.JA['Rampart'].DT = set_combine(sets.Enmity.DT,{head="Cab. Coronet +3"}) 
-    sets.precast.JA['Fealty'].DT = set_combine(sets.Enmity.DT,{})
+    sets.precast.JA['Fealty'].DT = set_combine(sets.Enmity.DT,{body="Cab. Surcoat"})
     sets.precast.JA['Divine Emblem'].DT = set_combine(sets.Enmity.DT,{feet="Chev. Sabatons +3"})
-    sets.precast.JA['Cover'].DT = set_combine(sets.Enmity.DT, {}) 
+    sets.precast.JA['Cover'].DT = set_combine(sets.Enmity.DT,{body="Cab. Surcoat"})
 	
     -- add mnd for Chivalry
     sets.precast.JA['Chivalry'] = {ammo="Paeapua",
@@ -543,6 +543,7 @@ function init_gear_sets()
     neck="Reti Pendant",
     waist="Austerity Belt +1",
     left_ear="Mendi. Earring",
+	right_ear="Calamitous Earring",
     left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
     back="Solemnity Cape",
 }
@@ -609,6 +610,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 		neck="Reti Pendant",
 		waist="Austerity Belt +1",
 		left_ear="Mendi. Earring",
+		right_ear="Calamitous Earring",
 		left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
 		back="Solemnity Cape",
 	})
@@ -668,6 +670,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 		neck="Reti Pendant",
 		waist="Austerity Belt +1",
 		left_ear="Mendi. Earring",
+		right_ear="Calamitous Earring",
 		left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
 		back="Solemnity Cape",
 	})

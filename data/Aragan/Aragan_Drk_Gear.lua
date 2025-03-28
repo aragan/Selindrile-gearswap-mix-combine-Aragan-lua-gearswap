@@ -102,22 +102,22 @@ Nightmare Scythe > Vorpal Scythe > Nightmare Scythe >  Vorpal Scythe > Nightmare
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal','NOSchereEar', 'STP', 'DA', 'Acc', 'SubtleBlow', 'CRIT')
+    state.OffenseMode:options('Normal','NOSchereEar', 'STP', 'Acc', 'SubtleBlow','DA', 'CRIT')
     state.WeaponskillMode:options('Match', 'Acc', 'PDL', 'SC', 'Dread', 'None')
     state.HybridMode:options('DT', 'Normal', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
     state.PhysicalDefenseMode:options( 'PDT', 'HP', 'Enmity','Aminon', 'Dread Spikes', 'SEboost', 'Reraise')
     state.MagicalDefenseMode:options('Normal','MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options('Tank','Normal','PDT' ,'Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate', 'Refresh')
+	state.IdleMode:options('Tank','Normal','Empy','PDT' ,'Regen', 'MDT', 'HP', 'Evasion', 'EnemyCritRate', 'Refresh')
 	state.Weapons:options('Normal', 'Caladbolg', 'Lycurgos', 'Liberator', 'Anguta', 'Apocalypse', 'Drepanum', 
     'AgwuClaymore', 'Naegling', 'Loxotic', 'TernionDagger', 'Dolichenus',
     'ProcScythe','ProcGreatSword')
 	state.shield = M{['description']='Weapon Set', 'Normal', 'shield'}
 
-	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
+	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Empy'}
 	state.Passive = M{['description'] = 'Passive Mode','None','MP','Twilight'}
-	state.DrainSwapWeaponMode = M{'Always','Never','300','1000'}
+	state.DrainSwapWeaponMode = M{'Never','Always','300','1000'}
 
 		--use //listbinds    .. to show command keys
 	-- Additional local binds
@@ -236,7 +236,7 @@ sets.ConserveMP = {
     legs="Augury Cuisses +1",
     neck="Reti Pendant",
     waist="Austerity Belt +1",
-    right_ear="Mendi. Earring",
+    right_ear="Calamitous Earring",
     left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
     back="Solemnity Cape",} 
     
@@ -299,7 +299,7 @@ sets.ConserveMP = {
         legs={ name="Fall. Flanchard +3", augments={'Enhances "Muted Soul" effect',}},
         feet="Heath. Sollerets +2",
     neck="Erra Pendant",
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Malignance Earring",
     right_ear="Dignitary's Earring",
     left_ring="Evanescence Ring",
@@ -323,6 +323,15 @@ sets.ConserveMP = {
         ring2="Kishar Ring",
         back="Chuparrosa Mantle",
     })
+    sets.midcast['Absorb-TP'] = set_combine(sets.midcast['Dark Magic'], {
+        -- neck="Sanctity Necklace",
+        -- back="Niht Mantle",
+        hands="Heath. Gauntlets +2",
+        neck="Erra Pendant",
+        ring1="Evanescence Ring", -- 10
+        ring2="Kishar Ring",
+        back="Chuparrosa Mantle",
+    })
 	sets.midcast.Absorb.SIRD = set_combine(sets.midcast.Absorb,sets.SIRD, {
 		ammo="Staunch Tathlum +1",
         legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
@@ -339,7 +348,7 @@ sets.ConserveMP = {
         legs={ name="Fall. Flanchard +3", augments={'Enhances "Muted Soul" effect',}},
         feet="Rat. Sollerets +1",
         neck="Erra Pendant",
-        waist="Eschan Stone",
+        waist="Null Belt",
         left_ear="Malignance Earring",
         right_ear="Digni. Earring",
         left_ring="Kishar Ring",
@@ -469,7 +478,7 @@ sets.ConserveMP = {
     legs={ name="Fall. Flanchard +3", augments={'Enhances "Muted Soul" effect',}},
     feet="Nyame Sollerets",
     neck="Incanter's Torque",
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Malignance Earring",
     right_ear="Crep. Earring",
     left_ring="Kishar Ring",
@@ -533,6 +542,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
     neck="Reti Pendant",
     waist="Austerity Belt +1",
     right_ear="Mendi. Earring",
+    left_ear="Calamitous Earring",
     left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
     back="Solemnity Cape",} )
     
@@ -1436,6 +1446,14 @@ sets.defense.SEboost = {
 	sets.idle.HP = sets.defense.HP
 	sets.idle.Enmity = sets.defense.Enmity
 
+    sets.idle.Empy = set_combine(sets.idle, { 
+        head="Heath. Burgeon. +2",
+        body="Heath. Cuirass +2",
+        hands="Heath. Gauntlets +2",
+        legs="Heath. Flanchard +2",
+        feet="Heath. Sollerets +2",
+
+    })
 	sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, { 
 	   ammo="Eluder's Sachet",
 	   left_ring="Warden's Ring",
@@ -1453,6 +1471,23 @@ sets.defense.SEboost = {
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
 	sets.buff.Sleep = {neck="Vim Torque +1"}
 	sets.buff['Dark Seal'] = {} --head="Fallen's Burgeonet +3"
+
+    -- Extra Melee sets.  Apply these on top of melee sets.
+	sets.Empy = {
+        head="Heath. Burgeon. +2",
+        body="Heath. Cuirass +2",
+        hands="Heath. Gauntlets +2",
+        legs="Heath. Flanchard +2",
+        feet="Heath. Sollerets +2",
+    }
+	--sets.DWEarrings = {ear1="Suppanomimi", ear2="Eabani Earring"}
+	--sets.DWMax = {ear1="Suppanomimi",ear2="Eabani Earring",waist="Reiki Yotai"}
+	
+
+    sets.engaged.Empy = set_combine(sets.engaged, { 
+
+
+    })
      
 	-- Engaged sets
 	sets.engaged ={
@@ -1530,7 +1565,7 @@ sets.defense.SEboost = {
 		right_ring="Niqmaddu Ring",
 		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	})
-	
+
 	sets.engaged.PD = set_combine(sets.engaged, {
 		ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
 		head="Hjarrandi Helm",

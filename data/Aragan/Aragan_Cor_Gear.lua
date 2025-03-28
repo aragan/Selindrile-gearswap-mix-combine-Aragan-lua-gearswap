@@ -64,10 +64,10 @@ function user_job_setup()
 	send_command('bind f4 gs c cycle ElementalMode;gs c cycle RuneElement')
 
 	
-	send_command('bind ^backspace input /ja "Double-up" <me>')
-	send_command('bind @backspace input /ja "Snake Eye" <me>')
-	send_command('bind !backspace input /ja "Fold" <me>')
-	send_command('bind ^@!backspace input /ja "Crooked Cards" <me>')
+	--send_command('bind ^backspace input /ja "Double-up" <me>')
+	--send_command('bind @backspace input /ja "Snake Eye" <me>')
+	--send_command('bind !backspace input /ja "Fold" <me>')
+	--send_command('bind ^@!backspace input /ja "Crooked Cards" <me>')
 	
 	send_command('bind ^\\\\ input /ja "Random Deal" <me>')
     send_command('bind !\\\\ input /ja "Bolter\'s Roll" <me>')
@@ -206,7 +206,7 @@ function init_gear_sets()
     legs="Chasseur's Culottes +3",
     feet="Chasseur's Bottes +2",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Crep. Earring",
     right_ear="Chas. Earring +1",
     left_ring="Stikini Ring +1",
@@ -759,7 +759,7 @@ sets.midcast.CorsairShot['Light Shot'] = {
     legs="Chasseur's Culottes +3",
     feet="Chasseur's Bottes +2",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Crep. Earring",
     right_ear="Chas. Earring +1",
     left_ring="Stikini Ring +1",

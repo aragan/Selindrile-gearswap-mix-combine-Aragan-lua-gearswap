@@ -90,7 +90,7 @@ function init_gear_sets()
     sets.precast.JA['Violent Flourish'] = {ammo="Pemphredo Tathlum",
         head="Flam. Zucchetto +2",neck="Sanctity Necklace",ear1="Digni. Earring",ear2="Moonshade Earring",
         body="Flamma Korazin +2",hands="Flam. Manopolas +2",
-        waist="Eschan Stone",legs="Flamma Dirs +2",feet="Flam. Gambieras +2"}
+        waist="Null Belt",legs="Flamma Dirs +2",feet="Flam. Gambieras +2"}
 
     -- Waltz set (chr and vit)
     sets.precast.Waltz = {
@@ -140,7 +140,7 @@ function init_gear_sets()
         left_ring="Regal Ring",
         right_ring="Cornelia's Ring",
         back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
-        }
+    }
         sets.precast.WS.PDL = set_combine(sets.precast.WS, {
             ammo="Crepuscular Pebble",
             head={ name="Nyame Helm", augments={'Path: B',}},
@@ -625,7 +625,7 @@ function init_gear_sets()
             legs={ name="Nyame Flanchard", augments={'Path: B',}},
             feet={ name="Nyame Sollerets", augments={'Path: B',}},
             neck="Null Loop",
-            waist="Eschan Stone",
+            waist="Null Belt",
             left_ear="Digni. Earring",
             right_ear="Crep. Earring",
             left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -681,7 +681,7 @@ function init_gear_sets()
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet="Sakpata's Leggings",
     neck="Erra Pendant",
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Malignance Earring",
     right_ear="Dignitary's Earring",
     left_ring="Evanescence Ring",
@@ -717,7 +717,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Incanter's Torque",
-        waist="Eschan Stone",
+        waist="Null Belt",
         left_ear="Malignance Earring",
         right_ear="Crep. Earring",
         left_ring="Kishar Ring",

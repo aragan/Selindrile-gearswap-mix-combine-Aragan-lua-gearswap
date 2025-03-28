@@ -78,7 +78,7 @@ function user_job_setup()
 
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Melee', 'Shield')
-	state.CastingMode:options('Normal','SIRD', 'ConserveMP')
+	state.CastingMode:options('Normal','SIRD', 'ConserveMP','OccultAcumen')
     state.IdleMode:options('Normal','DT','MDT','HP', 'Regen', 'Refresh', 'Evasion', 'EnemyCritRate','Sphere')
 	state.PhysicalDefenseMode:options('PDT')
 	state.MagicalDefenseMode:options('MDT')
@@ -107,9 +107,9 @@ function user_job_setup()
 	send_command('bind @f8 gs c toggle AutoNukeMode')
 	send_command('bind @` gs c cycle MagicBurstMode')
 	send_command('bind @f10 gs c cycle RecoverMode')
-	send_command('bind ^backspace input /ja "Entrust" <me>')
-	send_command('bind !backspace input /ja "Life Cycle" <me>')
-	send_command('bind @backspace input /ma "Sleep II" <t>')
+	--send_command('bind ^backspace input /ja "Entrust" <me>')
+	--send_command('bind !backspace input /ja "Life Cycle" <me>')
+	--send_command('bind @backspace input /ma "Sleep II" <t>')
 	send_command('bind ^delete input /ma "Aspir III" <t>')
 	send_command('bind @delete input /ma "Sleep" <t>')
 	send_command('bind f1 gs c cycle Indi2')
@@ -373,11 +373,16 @@ function init_gear_sets()
         body="Vedic Coat",
         legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
         feet={ name="Merlinic Crackows", augments={'Mag. Acc.+3','"Fast Cast"+6','CHR+1','"Mag.Atk.Bns."+4',}},
-        neck="Incanter's Torque",
         waist={ name="Shinjutsu-no-Obi +1", augments={'Path: A',}},
-        left_ear="Mendi. Earring",
+        left_ear="Calamitous Earring",
         right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
     back="Solemnity Cape",}
+
+    sets.OccultAcumen = {
+        ammo="Seraphic Ampulla",
+        head="Mall. Chapeau +2",
+        legs="Perdition Slops",
+    }
 
     sets.midcast.FastRecast = sets.precast.FC
 

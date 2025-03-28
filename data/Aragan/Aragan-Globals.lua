@@ -15,6 +15,9 @@ keyboard binds and chat .
 some jobs work with it some addon.
 
 add bind to work addon autoitem for auto use medicine for Odyssey nms 
+and i made mode automedicinemode auto use medicine
+
+made mode autoReraise auto equip zombie gear Reraise
 
 add bind for reset addon zonetimer for sortie bosses F/H to calc 3min run away before tpmove or use ja run or bind or kitting
 
@@ -79,6 +82,10 @@ state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai
 'haste', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
 state.Rollset = M{['description']='Rollset','None', 'melee', 'magic','dynamis','aminon','exp','tp','speed','acc','ws',
 'pet','petnuke',}
+state.Etude = M{['description']='Etude',  'Herculean Etude', 'Sage Etude', 'Sinewy Etude', 'Learned Etude',
+'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
+'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
+
 state.Avatars = M{['description']='Avatars', "Ifrit", "Ramuh", "Titan", "Siren", "Garuda", "Diabolos", "Carbuncle", "Fenrir", "Leviathan", "Shiva", "Odin", "Alexander", "Cait Sith"}
 
 state.WeaponLock = M(false, 'Weapon Lock')
@@ -89,8 +96,12 @@ state.SrodaNecklace = M(false, 'SrodaNecklace')
 state.NM = M(false, 'NM')
 state.SleepMode = M{['description']='Sleep Mode', 'Normal', 'MaxDuration'}
 state.AutoMedicineMode = M(false, 'Auto Medicine Mode')
-state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen'} -- , 'Priwen' }
+state.AutoReraiseeMode = M(false, 'Auto Reraise Mode')
+--state.ShieldMode:options('Normal','Genmei','Ammurapi')
+attack2 = 3500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this val
 
+--state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen','Genmei','Ammurapi'} -- , 'Priwen' }
+state.ShieldMode = M{['description'] = 'Shield Mode', 'Normal','Aegis','Ochain','Duban','Genmei','Ammurapi'}
 NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
 
 gear.TVRring = "Cornelia's Ring"
@@ -130,8 +141,8 @@ AutoRuneMode
 AutoAcceptRaiseMode
 
 gs c set AutoWSRestore true
-
-
+//gs c useitem head Reraise Hairpin +1
+//gs c useitem ring2 warp ring
 ]]
 
 -- Function to bind GearSwap binds when loading a GS script.
@@ -160,17 +171,19 @@ function global_on_load()
 
 	
 	send_command('bind !delete input //smrt on;input //smrt') --Turns addon smarttarget on odd.
-	send_command('bind !insert input //smrt off') --Turns addon smarttarget on odd.
+	send_command('bind !insert input //smrt off') --Turns addon smarttarget off odd.
 	send_command('bind !pagedown input //autoNukes off') --Turns addon off.addon use for spamm aspir on sortie aminon
 	send_command('bind !pageup input //autoNukes on') --Turns addon on. addon use for spamm aspir on sortie aminon
-	send_command('bind ^4 input //autoNukes on') --Turns addon off.addon use for spamm aspir on sortie aminon
-	send_command('bind ^5 input //autoNukes off') --Turns addon on.addon use for spamm aspir on sortie aminon
+	send_command('bind ^4 input //autoNukes on') --Turns addon on.addon use for spamm aspir on sortie aminon
+	send_command('bind ^5 input //autoNukes off') --Turns addon off.addon use for spamm aspir on sortie aminon
+	
+	send_command('bind ^backspace input //automb on') --Turns addon on.addon automb
+	send_command('bind !backspace input //automb off') --Turns addon off.addon automb
 	
 	--input //lua r AutoWS;input //aws on;
 	send_command('bind !o input //gs org') 
 	send_command('bind ^w input /wave')
 
-	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
 	
 	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f3 gs c toggle AutoTankMode')
@@ -191,6 +204,7 @@ function global_on_load()
 	send_command('bind !3 gs c toggle AutoRuneMode')
 	send_command('bind !4 gs c cycle passive')
 	send_command('bind !5 gs c toggle stance')
+	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
 	send_command('bind ^2 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind ^3 gs c cycle RuneElement') -- cycle RuneElement
 
@@ -215,9 +229,10 @@ function global_on_load()
 	send_command('bind !, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
 	send_command('bind !. input //put * Wardrobe4 all') -- gs validate  --to check  --lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
 
-	send_command('bind ^. input //packer repack') -- PorterPacker addon
+	send_command('bind ^. input //get storage slip* all;wait 1;input //packer repack') -- PorterPacker addon
 
 	send_command('bind !m gs c toggle AutoMedicineMode')
+	send_command('bind !n gs c toggle AutoReraiseeMode')
 
 	--send_command('bind @m gs c mount Raptor')
 
@@ -229,6 +244,9 @@ function global_unload()
 	send_command('unbind f3')
 	send_command('unbind !s')
 	send_command('unbind !r')
+
+	send_command('unbind tab')
+	send_command('unbind `')
 
 
 	send_command('unbind f9')
@@ -325,6 +343,48 @@ bayld_items = {'Tlalpoloani','Macoquetza','Camatlatia','Icoyoca','Tlamini','Suij
 -------------------------------------------------------------------------------------------------------------------
 -- Global event-handling functions.
 -------------------------------------------------------------------------------------------------------------------
+function job_pretarget(spell, action, spellMap, eventArgs)
+	if spell.type == 'step' then
+        local allRecasts = windower.ffxi.get_ability_recasts()
+        local prestoCooldown = allRecasts[236]
+        local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
+
+        --local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
+        
+        if player.main_job_level >= 77 and prestoCooldown < 1 and under3FMs then
+            cast_delay(1.1)
+            send_command('@input /ja "Presto" <me>')
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+	    if spell.type == 'Step' then
+        local allRecasts = windower.ffxi.get_ability_recasts()
+        local prestoCooldown = allRecasts[236]
+        local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
+
+        --local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
+        
+        if player.main_job_level >= 77 and prestoCooldown < 1 and under3FMs then
+            cast_delay(1.1)
+            send_command('@input /ja "Presto" <me>')
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
+
+function user_job_state_change(field, newVal, oldVal)
+	if field == 'ShieldMode' then
+		if newVal == 'Normal' then
+			internal_enable_set("Shield")
+		else
+			internal_disable_set(sets.shield[newVal], "Shield")
+		end
+	end
+end
 
 -- Global intercept on precast.
 function user_precast(spell, action, spellMap, eventArgs)
@@ -341,12 +401,28 @@ function job_precast(spell, action, spellMap, eventArgs)
             add_to_chat(123, spell.name..' Canceled: Warcry its up [active]')
         end
     end
+	attack = player.attack
+	if attack > attack2 then
+		windower.send_command('input //gs c set WeaponskillMode PDL')
+    else
+		windower.send_command('input //gs c set WeaponskillMode Match')
+    end
+
 end
 function job_post_precast(spell)
 	if spell.name == "Holy Water" then
 		 equip(sets.precast.Item['Holy Water'])
-	  end
-  end
+    end
+    attack = player.attack
+	if spell.type == 'WeaponSkill' then
+		if attack > attack2 then
+			equip(sets.precast.WS[spell.name].PDL)
+		else
+			equip(sets.precast.WS[spell.name])
+		end
+	end
+
+end
 -- Global intercept on midcast.
 function user_midcast(spell, action, spellMap, eventArgs)
 	-- Default base equipment layer of fast recast.
@@ -398,8 +474,22 @@ function job_state_change(stateField, newValue, oldValue)
     else
         enable('main','sub')
     end
-	
+	if player.main_job == 'BST' or player.main_job == 'DRG' or player.main_job == 'DRK'
+	   or player.main_job == 'PLD' or player.main_job == 'SAM' or player.main_job == 'WAR' then
+       if player.hpp < 5 then
+	    equip(sets.Reraise)
+		--send_command('gs c update')
+		disable('head','body')
+	    end
+    else
+        enable('head','body')
+    end
 end
+	
+
+
+
+
 -- Modify the default idle set after it was constructed.
 function customize_idle_set(idleSet)
     if state.RP.current == 'on' then
@@ -408,7 +498,12 @@ function customize_idle_set(idleSet)
     else
         enable('neck')
     end
-
+	if state.CraftingMode.value ~= 'None' then
+		idleSet = set_combine(idleSet,sets.crafting[state.CraftingMode.value])
+	
+    elseif state.CraftQuality.value ~= 'Normal' then
+		idleSet = set_combine(idleSet,sets.crafting[state.CraftQuality.value])
+	end
     return idleSet
 end
 -- Modify the default melee set after it was constructed.
@@ -431,18 +526,19 @@ function job_customize_melee_set(meleeSet)
 	end
     return meleeSet
 end
+
 -- Global intercept on buff change.
 function user_buff_change(buff, gain, eventArgs)
-
-	    --[[if buff == "weakness" then
-        if gain then
-            equip(sets.Reraise)
-             disable('body','head')
-            else
-             enable('body','head')
-        end
-        return meleeSet
-    end]]
+	if state.AutoReraiseeMode.value == true then
+		if buff == "weakness" then
+			if gain then
+				equip(sets.Reraise)
+				 disable('body','head')
+				else
+				 enable('body','head')
+			end
+		end
+	end
 
 	-- Create a timer when we gain weakness.  Remove it when weakness is gone.
 	if buff:lower() == 'weakness' then
@@ -719,3 +815,17 @@ function is_sc_element_today(spell)
 end
 
 
+disable_priority = T{
+    "User",
+    "Showset",
+    "Crafting",
+    "Doom",
+    "Sleep",
+    "UseItem",
+    "OneHour",
+    "Shield",
+    "Weapons",
+    "ShowTP",
+    "Ability",
+    "TreasureHunter",
+}:reverse()

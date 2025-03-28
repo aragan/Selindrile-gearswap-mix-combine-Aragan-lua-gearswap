@@ -22,7 +22,25 @@ Ninja katana hybrid weapon skills.
 
     Chi-Retsu-Ten-Hi/Metsu
 
-    Chi-Retsu-Shun-Ten-Kamu-Shun-Shun(Heishi)
+    Chi-Retsu-Shun-Ten-Kamu-Shun-Shun(Heishi) 
+
+    6 step skillchains 
+
+Blade: jin Detonation
+Blade: Yu Scission
+Blade: jin Detonation
+Blade: Yu Scission
+Blade: jin Detonation
+Blade: Yu Scission 
+
+or
+
+Blade: jin Detonation
+Blade: Retsu Scission
+Blade: jin Detonation
+Blade: Retsu Scission
+Blade: jin Detonation
+Blade: Retsu Scission 
 
 ]]
 
@@ -60,9 +78,21 @@ function user_job_setup()
 
 	utsusemi_cancel_delay = .3
 	utsusemi_ni_cancel_delay = .06
-
+    Haste = 0
+    DW_needed = 0
+    DW = false
+    determine_haste_group()
+    update_combat_form()  
 	select_default_macro_book()
 end
+
+autows_list = {['Heishi']='Blade: Shun',['Tauret']='Aeolian Edge',['Naegling']='Savage Blade',
+['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',
+['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',
+['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',
+['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',
+['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',['Zanmato']='Tachi: Jinpu',
+['H2H']='Asuran Fists',['CLUB']='Judgment',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
 
 -- Define sets and vars used by this job file.
 function init_gear_sets()
@@ -160,6 +190,7 @@ function init_gear_sets()
     -- Snapshot for ranged
     sets.precast.RA = {
     ammo=empty,
+    range="Trollbane",  
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -213,7 +244,7 @@ function init_gear_sets()
         left_ear="Crep. Earring",
         right_ear="Digni. Earring",
         neck="Null Loop",
-        waist="Eschan Stone",
+        waist="Null Belt",
         right_ring={ name="Beithir Ring", augments={'Path: A',}},
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         back="Null Shawl",]]
@@ -555,7 +586,7 @@ function init_gear_sets()
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck="Sanctity Necklace",
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Crep. Earring",
     right_ear="Digni. Earring",
     left_ring="Stikini Ring +1",
@@ -761,7 +792,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
 
 -- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Mache Earring +1",}
+	sets.MaxTP = {ear1="Ishvara Earring",ear2="Lugra Earring +1",}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.DayMaxTPWSEars = {ear1="Cessance Earring",ear2="Brutal Earring",}
@@ -773,7 +804,8 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
     -- Midcast sets
     --------------------------------------
 
-    sets.midcast.FastRecast = {}
+    sets.midcast.FastRecast = sets.precast.FC
+
     sets.SIRD = {
         sub="Tancho +1",
         ammo="Staunch Tathlum +1",
@@ -788,9 +820,9 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
     sets.midcast.ElementalNinjutsu = {  
     ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
     head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
-    body={ name="Nyame Mail", augments={'Path: B',}},
+    body="Gyve Doublet",
     hands="Hattori Tekko +2",
-    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    legs="Gyve Trousers",
     feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
     neck="Sibyl Scarf",
     waist="Orpheus's Sash",
@@ -811,9 +843,9 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
 
 	sets.MagicBurst = set_combine(sets.midcast.ElementalNinjutsu, { 
         head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
-        body={ name="Nyame Mail", augments={'Path: B',}},
+        body="Gyve Doublet",
         hands="Hattori Tekko +2",
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        legs="Gyve Trousers",
         feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
         waist="Orpheus's Sash",
@@ -830,7 +862,7 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
     legs="Malignance Tights",
     feet={ name="Mochi. Kyahan +3", augments={'Enh. Ninj. Mag. Acc/Cast Time Red.',}},
     neck="Sanctity Necklace",
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Crep. Earring",
     right_ear="Digni. Earring",
     left_ring="Stikini Ring +1",
@@ -843,13 +875,13 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
     left_ring="Stikini Ring +1",
     right_ring="Stikini Ring +1",})
 
-    sets.midcast.Utsusemi = set_combine(sets.midcast.NinjutsuBuff, {
+    sets.midcast.Utsusemi = set_combine(sets.precast.FC, {
         feet="Hattori Kyahan +2",
         back="Andartia's Mantle",
     })
 
     sets.midcast.Migawari = set_combine(sets.midcast.Ninjutsu, { 
-   neck="Incanter's Torque",
+    neck="Incanter's Torque",
     ammo="Staunch Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
@@ -861,7 +893,7 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
     right_ear="Tuisto Earring",
     left_ring="Stikini Ring +1",
     right_ring="Stikini Ring +1",
-        back="Andartia's Mantle",
+    back="Andartia's Mantle",
     })
 
 
@@ -958,7 +990,6 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
 --idle - defense
 
 sets.idle = {
-    ammo="Staunch Tathlum +1",
     head="Null Masque",
     body="Hiza. Haramaki +2",
     hands={ name="Rao Kote +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
@@ -973,7 +1004,6 @@ sets.idle = {
     back="Moonlight Cape",
 }
 sets.idle.DT = {
-    ammo="Staunch Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -988,7 +1018,6 @@ sets.idle.DT = {
     back="Moonlight Cape",
     }
 sets.idle.MDT = {
-    ammo="Staunch Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -1004,7 +1033,6 @@ sets.idle.MDT = {
     back="Moonlight Cape",
 }
 sets.idle.HP = {
-    ammo="Staunch Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body="Adamantite Armor",
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -1035,7 +1063,6 @@ sets.idle.Regen = set_combine(sets.idle, {
 
 sets.idle.Sphere = set_combine(sets.idle, {})
 sets.idle.Evasion = {
-    ammo="Yamarang",
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1054,7 +1081,6 @@ sets.idle.Evasion = {
 
     -- Defense sets
     sets.defense.PDT = {
-        ammo="Staunch Tathlum +1",
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -1069,7 +1095,6 @@ sets.idle.Evasion = {
         back="Moonlight Cape",
     }
     sets.defense.Enmity = {
-        ammo="Iron Gobbet",
         head="Malignance Chapeau",
         body={ name="Emet Harness +1", augments={'Path: A',}},
         hands="Kurys Gloves",
@@ -1084,7 +1109,6 @@ sets.idle.Evasion = {
         back="Reiki Cloak",
     }
     sets.defense.HP = {
-        ammo="Coiste Bodhar",
         head={ name="Nyame Helm", augments={'Path: B',}},
         body="Adamantite Armor",
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -1099,7 +1123,6 @@ sets.idle.Evasion = {
         back="Moonlight Cape",
     }
     sets.defense.MDT = set_combine(sets.defense.PDT, {
-        ammo="Staunch Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -1333,6 +1356,103 @@ sets.idle.Evasion = {
         back="Andartia's Mantle",
     }
     
+
+------------------------------------------------------------------------------------------------
+    ---------------------------------------- DW-HASTE ------------------------------------------
+------------------------------------------------------------------------------------------------
+sets.engaged.DW.LowHaste = set_combine(sets.engaged.DW, {
+    head="Ryuo Somen +1", --9
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    feet="Hiza. Sune-Ate +2", --8
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+})-- 39%
+sets.engaged.DW.Acc.LowHaste = set_combine(sets.engaged.DW.Acc, {
+    head="Ryuo Somen +1", --9
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    feet="Hiza. Sune-Ate +2", --8
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+})-- 39%
+sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
+    head="Ryuo Somen +1", --9
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    feet="Hiza. Sune-Ate +2", --8
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+})-- 39%
+sets.engaged.DW.TP.LowHaste = set_combine(sets.engaged.DW.TP, {
+    head="Ryuo Somen +1", --9
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    feet="Hiza. Sune-Ate +2", --8
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+})-- 39%
+sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
+    head="Ryuo Somen +1", --9
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    feet="Hiza. Sune-Ate +2", --8
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+})-- 39%
+
+--MID-HASTE
+
+sets.engaged.DW.MidHaste = set_combine(sets.engaged.DW, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.Acc.MidHaste = set_combine(sets.engaged.DW.Acc, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.STP.MidHaste = set_combine(sets.engaged.DW.STP, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.TP.MidHaste = set_combine(sets.engaged.DW.TP, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.CRIT.MidHaste = set_combine(sets.engaged.DW.CRIT, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+
+--HIGH-HASTE
+
+sets.engaged.DW.HighHaste = set_combine(sets.engaged.DW, {
+    waist="Reiki Yotai", --7
+}) -- 7%
+sets.engaged.DW.Acc.HighHaste = set_combine(sets.engaged.DW.Acc, {
+    waist="Reiki Yotai", --7
+}) -- 7%
+sets.engaged.DW.STP.HighHaste = set_combine(sets.engaged.DW.STP, {
+    waist="Reiki Yotai", --7
+}) -- 7%
+sets.engaged.DW.TP.HighHaste = set_combine(sets.engaged.DW.TP, {
+    waist="Reiki Yotai", --7
+}) -- 7%
+sets.engaged.DW.CRIT.HighHaste = set_combine(sets.engaged.DW.CRIT, {
+    waist="Reiki Yotai", --7
+}) -- 7%
+
+sets.engaged.DW.MaxHaste = set_combine(sets.engaged.DW)
+sets.engaged.DW.Acc.MaxHaste = set_combine(sets.engaged.DW.Acc)
+sets.engaged.DW.STP.MaxHaste = set_combine(sets.engaged.DW.STP)
+sets.engaged.DW.TP.MaxHaste = set_combine(sets.engaged.DW.TP)
+sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)
+
 ------------------------------------------------------------------------------------------------
 ---------------------------------------- Hybrid Sets -------------------------------------------
 ------------------------------------------------------------------------------------------------
@@ -1347,8 +1467,8 @@ sets.engaged.Hybrid = {
 }
 
 sets.engaged.DT = set_combine(sets.engaged, {
-    head="Malignance Chapeau", --6/6
-    body="Malignance Tabard", --9/9
+    head={ name="Mpaca's Cap", augments={'Path: A',}}, --7/7
+    body="Mpaca's Doublet",    --10/10
     hands="Malignance Gloves", --5/5
     legs="Malignance Tights", --7/7
     feet="Malignance Boots", --4/4
@@ -1356,6 +1476,7 @@ sets.engaged.DT = set_combine(sets.engaged, {
 })
 sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
 sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
+sets.engaged.TP.DT = set_combine(sets.engaged.TP, sets.engaged.Hybrid)
 sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
 
 
@@ -1363,15 +1484,44 @@ sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
 sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
 sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
 sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
+sets.engaged.DW.TP.DT = set_combine(sets.engaged.DW.TP, sets.engaged.Hybrid)
 sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
-    --------------------------------------
-    -- Custom buff sets
-    --------------------------------------
 
+
+sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.TP.DT.LowHaste = set_combine(sets.engaged.DW.TP.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.TP.DT.MidHaste = set_combine(sets.engaged.DW.TP.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.HighHaste = set_combine(sets.engaged.DW.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.HighHaste = set_combine(sets.engaged.DW.Acc.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.HighHaste = set_combine(sets.engaged.DW.STP.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.TP.DT.HighHaste = set_combine(sets.engaged.DW.TP.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.HighHaste = set_combine(sets.engaged.DW.CRIT.HighHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.TP.DT.MaxHaste = set_combine(sets.engaged.DW.TP.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
 
 ------------------------------------------------------------------------------------------------
 ---------------------------------------- Special Sets ------------------------------------------
 ------------------------------------------------------------------------------------------------
+
+
+
+
+    --------------------------------------
+    -- Custom buff sets
+    --------------------------------------
     
 sets.buff.Migawari = {    
 back="Andartia's Mantle",
@@ -1445,14 +1595,6 @@ function select_default_macro_book()
         set_macro_page(8, 5)
     end
 end
-
-autows_list = {['Heishi']='Blade: Shun',['Tauret']='Aeolian Edge',['Naegling']='Savage Blade',
-['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',['ProcDagger2']='Cyclone',
-['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',['ProcStaff']='Earth Crusher',
-['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',['ProcClub']='Seraph Strike',
-['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',['ProcKatana']='Blade: Ei',
-['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',['Zanmato']='Tachi: Jinpu',
-['H2H']='Asuran Fists',['CLUB']='Judgment',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
 
 
 function buff_change(buff, gain)

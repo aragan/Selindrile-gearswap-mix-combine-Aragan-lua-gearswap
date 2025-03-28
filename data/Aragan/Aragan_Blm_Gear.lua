@@ -22,14 +22,14 @@ u can use addon automb
 
 function user_job_setup()
 	-- Options: Override default values
-	state.CastingMode:options('Normal', 'SIRD', 'Spaekona', 'ConserveMP', 'Proc')
+	state.CastingMode:options('Normal', 'SIRD', 'Spaekona', 'ConserveMP', 'Proc','OccultAcumen')
 	state.OffenseMode:options('Normal','TP', 'CRIT', 'Locked')
 	state.HybridMode:options('DT','Normal')
 	state.PhysicalDefenseMode:options('PDT', 'MDT')
     state.MagicalDefenseMode:options('MDT')
 	state.Enfeebling = M('None', 'Effect')
 	state.IdleMode:options('DT','Normal','DT','Empy', 'PDT', 'MDT', 'HB', 'MB', 'Evasion', 'EnemyCritRate', 'Sphere')
-	state.Weapons:options('None','Mpaca', 'Marin', 'Drepanum', 'Maliya', 'Club','TernionDagger')
+	state.Weapons:options('None','Mpaca', 'Marin','BunziClub', 'MaxentiusClub', 'Drepanum', 'Maliya','TernionDagger')
 
 	gear.nuke_jse_back = {}
 	gear.stp_jse_back = {}
@@ -40,7 +40,7 @@ function user_job_setup()
 	send_command('bind ^f11 gs c cycle Enfeebling')
 	send_command('bind !f11 gs c cycle MagicalDefenseMode;gs c set DefenseMode Magical')
 
-	send_command('bind !f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
+	send_command('bind f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind !f2 gs c cycle RecoverMode')
 	send_command('bind f3 gs c cycle DeathMode')
 	send_command('bind !f3 gs c set DeathMode Single;gs c set MagicBurstMode Single')
@@ -57,14 +57,6 @@ function user_job_setup()
 	send_command('bind @f9 gs c cycle DeathMode')
 	send_command('bind @^` input /ja "Parsimony" <me>')
 	send_command('bind !pause gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
-	send_command('bind ^backspace input /ma "Stun" <t>')
-	send_command('bind !backspace input /ja "Enmity Douse" <t>')
-	send_command('bind @backspace input /ja "Alacrity" <me>')
-	send_command('bind != input /ja "Light Arts" <me>')
-	send_command('bind @= input /ja "Addendum: White" <me>')
-	send_command('bind ^delete input /ja "Dark Arts" <me>')
-	send_command('bind !delete input /ja "Addendum: Black" <me>')
-	send_command('bind @delete input /ja "Manifestation" <me>')
 	send_command('bind !w gs c toggle WeaponLock')
     send_command('bind ^/ gs disable all')
     send_command('bind !/ gs enable all')
@@ -72,8 +64,19 @@ function user_job_setup()
     send_command('bind @c gs c toggle Capacity')
     send_command('bind f1 gs c cycle HippoMode')
     send_command('bind !f6 gs c cycleback Weapons')
+    --[[]	send_command('bind ^backspace input /ma "Stun" <t>')
+	send_command('bind !backspace input /ja "Enmity Douse" <t>')
+	send_command('bind @backspace input /ja "Alacrity" <me>')
+	send_command('bind != input /ja "Light Arts" <me>')
+	send_command('bind @= input /ja "Addendum: White" <me>')
+	send_command('bind ^delete input /ja "Dark Arts" <me>')
+	send_command('bind !delete input /ja "Addendum: Black" <me>')
+	send_command('bind @delete input /ja "Manifestation" <me>')]]
 	select_default_macro_book()
 end
+
+autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',['Drepanum']='Spiral Hell',
+['Maliya']='Spinning Scythe',['TernionDagger']='Aeolian Edge',['MaxentiusClub']='Black Halo',}
 
 function init_gear_sets()
 
@@ -89,7 +92,10 @@ function init_gear_sets()
     sets.weapons.Mpaca = {main="Mpaca's Staff",sub="Enki Strap"}
     sets.weapons.Drepanum = {main="Drepanum",sub="Alber Strap"}
     sets.weapons.Maliya = {main="Maliya Sickle +1",sub="Alber Strap"}
-    sets.weapons.Club = {main="Maxentius",sub="Ammurapi Shield",}
+    sets.weapons.MaxentiusClub = {main="Maxentius",sub="Ammurapi Shield",}
+    sets.weapons.BunziClub = {main={ name="Bunzi's Rod", augments={'Path: A',}},
+    sub="Ammurapi Shield",}
+
     sets.weapons.TernionDagger = {main="Ternion Dagger +1",sub="Ammurapi Shield",}
 
 	-- neck JSE Necks Reinf
@@ -371,7 +377,14 @@ function init_gear_sets()
         body="Spaekona's Coat +3",
         hands="Wicce Gloves +2",
         waist="Shinjutsu-no-Obi +1",
+        left_ear="Calamitous Earring",
         left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+    }
+    sets.OccultAcumen = {
+        ammo="Seraphic Ampulla",
+        head="Mall. Chapeau +2",
+        legs="Perdition Slops",
+
     }
 
     sets.midcast.Cure = {      
@@ -516,7 +529,7 @@ function init_gear_sets()
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         back={ name="Aurist's Cape +1", augments={'Path: A',}},
     })
- 
+
 
 	sets.midcast.IntEnfeebles = set_combine(sets.midcast['Enfeebling Magic'], {head="Ea Hat +1",waist="Acuity Belt +1"})
 	sets.midcast.IntEnfeebles.Resistant = set_combine(sets.midcast['Enfeebling Magic'].Resistant, {head="Ea Hat +1",waist="Acuity Belt +1"})
@@ -755,20 +768,21 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 			back="Taranus's Cape",
 		})
 	
-		sets.midcast['Elemental Magic'].Proc = set_combine(sets.midcast['Elemental Magic'], {
-			head=empty,
-			body=empty,
-			hands=empty,
-			legs=empty,
-			feet=empty,
-			neck=empty,
-			waist=empty,
-			left_ear=empty,
-			right_ear=empty,
-			left_ring=empty,
-			right_ring=empty,
-			back=empty,
-		})
+		sets.midcast['Elemental Magic'].Proc =  {
+            ammo="Pemphredo Tathlum",
+            head="Null Masque",
+            body="Spaekona's Coat +3",
+            hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
+            legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
+            feet={ name="Telchine Pigaches", augments={'Mag. Evasion+21','"Conserve MP"+3','Enh. Mag. eff. dur. +10',}},
+            neck="Reti Pendant",
+            waist={ name="Shinjutsu-no-Obi +1", augments={'Path: A',}},
+            left_ear="Mendi. Earring",
+            right_ear="Infused Earring",
+            left_ring="Mephitas's Ring",
+            right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+            back={ name="Aurist's Cape +1", augments={'Path: A',}},
+		}
 	
 		sets.midcast['Elemental Magic'].Spaekona = set_combine(sets.midcast['Elemental Magic'], {
 			body="Spaekona's Coat +3",
@@ -780,9 +794,8 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 			hands="Wicce Gloves +2",
 			waist="Shinjutsu-no-Obi +1",
 			left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
-			})
+	})
 	
-		
     sets.midcast.Impact.OccultAcumen = set_combine(sets.midcast['Elemental Magic'].OccultAcumen, {head=empty,body="Twilight Cloak"})
 	
 	-- Gear that converts elemental damage done to recover MP.	
@@ -805,6 +818,20 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
         right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         back="Taranus's Cape",
     }
+    sets.magicburst.proc = {
+			head=empty,
+			body=empty,
+			hands=empty,
+			legs=empty,
+			feet=empty,
+			neck=empty,
+			waist=empty,
+			left_ear=empty,
+			right_ear=empty,
+			left_ring=empty,
+			right_ring=empty,
+			back=empty,
+    }
     sets.magicburst.Spaekona = set_combine(sets.midcast.magicburst, {
         body="Spaekona's Coat +3",
     })
@@ -814,8 +841,13 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
         hands="Wicce Gloves +2",
         waist="Shinjutsu-no-Obi +1",
         left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
-        })
-	
+    })
+    sets.element.Earth =  {neck="Quanpur Necklace"}
+
+    sets.element.Earth.magicburst = {
+        neck="Quanpur Necklace",
+    }
+
     -- Sets to return to when not performing an action.
     
     -- Resting sets
@@ -1159,10 +1191,6 @@ end
 function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 174')
 end
-
-
-autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',['Drepanum']='Spiral Hell',
-['Maliya']='Spinning Scythe',['TernionDagger']='Aeolian Edge',['Club']='Black Halo',}
 
 
 function buff_change(buff, gain)

@@ -36,7 +36,8 @@ function user_job_setup()
     state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
 	state.Weapons:options('None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan')
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
-	state.CarnMode = M{'Always','300','1000','Never'}
+	state.CarnMode = M{'Never','Always','300','1000',}
+	state.AutoBuffMode:options('Off','Auto','Regen') --,'Off','Off','Off','Off','Off',
 
 	gear.melee_jse_back = {name="Intarabus's Cape",augments={'Accuracy+20 Attack+20'}}
 	gear.magic_jse_back = {name="Intarabus's Cape",augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}}
@@ -68,17 +69,30 @@ function user_job_setup()
 	send_command('bind ^3 gs c Elemental BardSong')  --Casts Threnody based on chosen element.
 	
     send_command('bind f1 gs c cycle HippoMode')
+    send_command('bind tab gs c cycle Etude')
+    send_command('bind @tab gs c cycleback Etude')
+
+    --[[
     send_command('bind ^2 gs c cycle Etude')
     --send_command('bind ^4 gs c Etude')
     send_command('bind f3 gs c cycle Carol')
     send_command('bind !f3 gs c Carol')
-    send_command('bind f4 gs c cycle Threnody')
     send_command('bind !f4 gs c Threnody')
+    ]]
 	send_command('bind @f4 gs c toggle AutoSongMode')
 	send_command('bind ^f4 gs c toggle AutoDefenseMode')
-    send_command('bind f2 gs c cycle Songset')
-    send_command('bind ^f2 gs c cycleback Songset')
-    send_command('bind !f2 gs c Songset')
+
+    send_command('bind f8 gs c cycle ElementalMode')
+
+    send_command('bind ` gs c cycle Songset;')
+    send_command('bind @` gs c cycleback Songset;')
+
+    send_command('bind f4 gs c songsetnoph')
+    send_command('bind f3 gs c songsetph')
+    --send_command('bind ^f3 gs c cycleback songsetph')
+    send_command('bind f2 gs c songsetphccsv')
+    --send_command('bind ^f4 gs c cycleback songsetphccsv')
+    --send_command('bind !f2 gs c Songset')
 	select_default_macro_book()
 end
 
@@ -477,7 +491,7 @@ sets.precast.WS['Shattersoul'] = {
 	sets.midcast['Horde Lullaby II'].Resistant = {range="Daurdabla"}
 	sets.midcast['Horde Lullaby II'].AoE = {range="Daurdabla"}
 	sets.midcast.Madrigal = {head="Fili Calot +2"}
-	sets.midcast.Paeon = {}
+	sets.midcast.Paeon = {head="Brioso Roundlet +2"}
 	sets.midcast.March = {hands="Fili Manchettes +2"}
 	sets.midcast['Honor March'] = set_combine(sets.midcast.March,{range="Marsyas"})
 	sets.midcast.Minuet = {body="Fili Hongreline +2"}
@@ -485,8 +499,9 @@ sets.precast.WS['Shattersoul'] = {
 	sets.midcast.Carol = {}
 	sets.midcast["Sentinel's Scherzo"] = {feet="Fili Cothurnes +2"}
 	sets.midcast['Magic Finale'] = {range="Daurdabla",
-	neck="Sanctity Necklace",
-    waist="Luminary Sash",
+    neck="Null Loop",
+    waist="Null Belt",
+    neck="Null Loop",
     legs="Fili Rhingrave +2",}
 	sets.midcast.Mazurka = {range="Marsyas"}
 	
@@ -516,7 +531,7 @@ sets.precast.WS['Shattersoul'] = {
         legs="Fili Rhingrave +2",
         feet="Fili Cothurnes +2",
         neck="Mnbw. Whistle +1",
-        waist="Luminary Sash",
+        waist="Null Belt",
         left_ear="Digni. Earring",
         right_ear="Fili Earring +1",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -554,7 +569,6 @@ sets.precast.WS['Shattersoul'] = {
     legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
     feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
     neck="Nodens Gorget",
-    waist="Luminary Sash",
     right_ear="Mendi. Earring",
     left_ring="Stikini Ring +1",
     right_ring="Stikini Ring +1",
@@ -562,11 +576,7 @@ sets.precast.WS['Shattersoul'] = {
 		
 	sets.midcast.Curaga = sets.midcast.Cure
 		
-	sets.Self_Healing = {waist="Gishdubar Sash"}
-	sets.Cure_Received = {waist="Gishdubar Sash"}
-	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
-		
-	sets.midcast['Enhancing Magic'] = {        sub="Ammurapi Shield",
+    sets.midcast['Enhancing Magic'] = {    
 	head="Telchine Cap",
 	body="Telchine Chas.",
 	hands="Telchine Gloves",
@@ -579,7 +589,11 @@ sets.precast.WS['Shattersoul'] = {
 	left_ring="Stikini Ring +1",
 	right_ring="Stikini Ring +1",
 	back={ name="Fi Follet Cape +1", augments={'Path: A',}},}
-		
+
+	sets.Self_Healing = {waist="Gishdubar Sash"}
+	sets.Cure_Received = {waist="Gishdubar Sash"}
+	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
+    sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'], {})
 	
 
     sets.midcast.Regen = set_combine(sets.midcast['Enhancing Magic'], {head="Inyanga Tiara +2"})
@@ -596,15 +610,12 @@ sets.precast.WS['Shattersoul'] = {
 	})
 		
     sets.midcast['Enfeebling Magic'] = {
-        main="Arendsi Fleuret",
-        sub="Ammurapi Shield",
-        range="Linos",
         body={ name="Cohort Cloak +1", augments={'Path: A',}},
         hands="Inyan. Dastanas +2",
         legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
         feet="Medium's Sabots",
         neck="Incanter's Torque",
-        waist="Luminary Sash",
+        waist="Null Belt",
         left_ear="Crep. Earring",
         right_ear="Fili Earring +1",
         left_ring="Stikini Ring +1",
@@ -612,7 +623,6 @@ sets.precast.WS['Shattersoul'] = {
         back="Aurist's Cape +1",
         }
 	sets.midcast['Elemental Magic'] = {
-    ammo="Ghastly Tathlum +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -626,7 +636,6 @@ sets.precast.WS['Shattersoul'] = {
         back="Aurist's Cape +1",
     }
     sets.midcast['Dark Magic'] = {
-    ammo="Pemphredo Tathlum",
     head="Fili Calot +2",
 	body="Fili Hongreline +2",        
     hands="Fili Manchettes +2",
@@ -756,7 +765,6 @@ sets.precast.WS['Shattersoul'] = {
     }
 
 sets.idle.HP = {
-    ammo="Staunch Tathlum +1",
 	head={ name="Nyame Helm", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     body="Adamantite Armor",
@@ -773,7 +781,6 @@ sets.idle.HP = {
 sets.idle.MDT = sets.defense.MDT
 sets.idle.Evasion = sets.defense.Evasion
 sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, { 
-    ammo="Eluder's Sachet",
     left_ring="Warden's Ring",
     right_ring="Fortified Ring",
     back="Reiki Cloak",
@@ -961,7 +968,17 @@ function select_default_macro_book()
     set_macro_page(1, 2)
 end
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 168')
+    if player.equipment.sub:contains('Shield') then
+        if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword/
+        windower.chat.input('/lockstyleset 165')
+        else
+        windower.chat.input('/lockstyleset 165')
+        end
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 164')
+    else
+        windower.chat.input('/lockstyleset 168')
+    end
 end
 
 autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",

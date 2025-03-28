@@ -9,7 +9,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP','Regain')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('Twashtar','None', 'Tauret', 'Aeneas', 'Naegling')
+	state.Weapons:options('Twashtar','None','Centovente', 'Tauret', 'Aeneas', 'Naegling')
 
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Suppa','DWMax','Parry','SubtleBlow'}
 	state.AmbushMode = M(false, 'Ambush Mode')
@@ -46,7 +46,7 @@ function init_gear_sets()
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
 	sets.buff.Sleep = {}
 	
-    sets.buff['Sneak Attack'] = {}
+    sets.buff['Sneak Attack'] = {back="Toutatis's Cape"}
     sets.buff['Trick Attack'] = {}--"Pill. Armlets +3"
 
     -- Extra Melee sets.  Apply these on top of melee sets.
@@ -66,6 +66,7 @@ function init_gear_sets()
 	-- Weapons sets
 
     sets.weapons.Twashtar = {main="Twashtar", sub="Crepuscular Knife",}
+    sets.weapons.Centovente = {main="Twashtar", sub="Centovente",}
     sets.weapons.Tauret = {main="Tauret", sub={ name="Gleti's Knife", augments={'Path: A',}},}
     sets.weapons.Aeneas = {main="Aeneas", sub="Malevolence"}
     sets.weapons.Naegling = {main="Naegling", sub="Centovente"}
@@ -165,13 +166,13 @@ function init_gear_sets()
     right_ring="Ilabrat Ring",
     back="Sacro Mantle",
     }
-    sets.precast.WS.PDL = set_combine(sets.precast.WS, {
+    sets.precast.WS.PDL =  {
         ammo="Crepuscular Pebble",
         head="Skulker's Bonnet +2",
         hands="Gleti's Gauntlets",
         legs="Gleti's Breeches",
         left_ring="Sroda Ring", 
-    })
+    }
 
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
     sets.precast.WS['Exenterator'] = set_combine(sets.precast.WS, {range=empty,
@@ -216,7 +217,7 @@ function init_gear_sets()
         head="Gleti's Mask",
         body="Gleti's Cuirass",
         hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
-        legs={ name="Lustr. Subligar +1", augments={'Accuracy+20','DEX+8','Crit. hit rate+3%',}},
+        legs="Lustr. Subligar +1",
         feet="Nyame Sollerets",
         neck="Fotia Gorget",
         waist="Fotia Belt",
@@ -227,6 +228,13 @@ function init_gear_sets()
         back="Null Shawl",
     })
     sets.precast.WS['Evisceration'].PDL = set_combine(sets.precast.WS['Evisceration'], {range=empty,
+    ammo="Crepuscular Pebble",
+    head="Skulker's Bonnet +2",
+    hands="Gleti's Gauntlets",
+    legs="Gleti's Breeches",
+    left_ring="Sroda Ring", 
+    })
+    sets.precast.WS.PDL['Evisceration'] = set_combine(sets.precast.WS['Evisceration'], {range=empty,
     ammo="Crepuscular Pebble",
     head="Skulker's Bonnet +2",
     hands="Gleti's Gauntlets",
@@ -257,6 +265,13 @@ function init_gear_sets()
     back="Sacro Mantle",
 })
     sets.precast.WS["Rudra's Storm"].PDL = set_combine(sets.precast.WS["Rudra's Storm"], {
+        ammo="Crepuscular Pebble",
+        head="Skulker's Bonnet +2",
+        hands="Gleti's Gauntlets",
+        legs="Gleti's Breeches",
+        left_ring="Sroda Ring", 
+    })
+    sets.precast.WS.PDL["Rudra's Storm"] = set_combine(sets.precast.WS["Rudra's Storm"], {
         ammo="Crepuscular Pebble",
         head="Skulker's Bonnet +2",
         hands="Gleti's Gauntlets",
@@ -730,7 +745,7 @@ sets.precast.WS["Empyreal Arrow"] = {
     hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
     legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
     feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
-    neck="Anu Torque",
+    neck="Iskur Gorget",
     waist="Reiki Yotai",
     left_ear="Dedition Earring",
     right_ear="Skulk. Earring +1",
@@ -762,7 +777,7 @@ sets.precast.WS["Empyreal Arrow"] = {
         hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
         legs="Malignance Tights",
         feet="Malignance Boots",
-        neck="Ainia Collar",
+        neck="Iskur Gorget",
         waist="Reiki Yotai",
         left_ear="Dedition Earring",
         right_ear="Sherida Earring",
@@ -817,8 +832,10 @@ sets.engaged.Hybrid = {
     hands="Malignance Gloves", --5/5
     legs="Malignance Tights", --7/7
     feet="Malignance Boots", --4/4
-    left_ring="Moonlight Ring",
-    ring2="Defending Ring", --10/10
+    left_ring="Moonlight Ring",--5
+    right_ring="Moonlight Ring",--5
+
+    --ring2="Defending Ring", --10/10
 }
 
 sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)

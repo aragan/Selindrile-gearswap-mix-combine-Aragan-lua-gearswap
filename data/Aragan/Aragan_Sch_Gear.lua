@@ -138,12 +138,13 @@ Distortion
 
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
-    state.OffenseMode:options('None','Normal','Acc','DT')
-    state.CastingMode:options('Normal','Seidr','magicburst','Enmity','ConserveMP','Sird','SubtleBlow', 'Proc')
+    state.OffenseMode:options('Normal','STP', 'Acc','CRIT', 'Enspell', 'SubtleBlow')
+    state.HybridMode:options('Normal', 'DT')
+    state.CastingMode:options('Normal','DT','Seidr','magicburst','Enmity','ConserveMP','Sird','SubtleBlow', 'Proc','OccultAcumen')
     state.IdleMode:options('DT','Normal','Empy', 'Resist','BoostHP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
     state.PhysicalDefenseMode:options('PDT','BoostHP', 'Evasion', 'Resist')
     state.MagicalDefenseMode:options('MDT')
-	state.Weapons:options('Mpaca','Marin','None','Xoanon', 'Club','TernionDagger')
+	state.Weapons:options('Mpaca','Marin','None','Musa','Xoanon', 'Club','TernionDagger','DualDaybreak','DualMaxentius')
 
 	gear.nuke_jse_back = {"Lugh's Cape"}
 
@@ -191,9 +192,9 @@ function user_job_setup()
 	send_command('bind @f8 gs c toggle AutoNukeMode')
 	send_command('bind !pause gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind @^` input /ja "Parsimony" <me>')
-	send_command('bind ^backspace input /ma "Stun" <t>')
-	send_command('bind !backspace gs c scholar speed')
-	send_command('bind @backspace gs c scholar aoe')
+	--send_command('bind ^backspace input /ma "Stun" <t>')
+	--send_command('bind !backspace gs c scholar speed')
+	--send_command('bind @backspace gs c scholar aoe')
 	send_command('bind ^= input /ja "Dark Arts" <me>')
 	send_command('bind != input /ja "Light Arts" <me>')
 	send_command('bind ^\\\\ input /ma "Protect V" <t>')
@@ -217,10 +218,12 @@ function init_gear_sets()
     --sets.normal = {}
     sets.weapons.Marin = {main="Marin Staff +1",sub="Enki Strap"}
     sets.weapons.Mpaca = {main="Mpaca's Staff",sub="Enki Strap"}
+    sets.weapons.Musa = {main="Musa", sub="Giuoco Grip"}
     sets.weapons.Xoanon = {main="Xoanon", sub="Alber Strap"}
     sets.weapons.Club = {main="Maxentius",sub="Ammurapi Shield",}
     sets.weapons.TernionDagger = {main="Ternion Dagger +1",sub="Ammurapi Shield",}
-
+	sets.weapons.DualDaybreak = {main="Daybreak", sub="Bunzi's Rod"}
+	sets.weapons.DualMaxentius = {main="Maxentius", sub="Daybreak"}
 
     sets.Capacity = {}
     sets.RP = {}
@@ -232,7 +235,7 @@ function init_gear_sets()
     sets.precast.JA['Sublimation'] = {
         head="Acad. Mortar. +2", --4
         body="Peda. Gown +3", --5
-        --ear1="Savant's Earring", --1
+        ear1="Savant's Earring", --1
         waist="Embla Sash", --5   
 }
 
@@ -263,11 +266,16 @@ right_ear="Telos Earring",
     right_ring="Prolix Ring",
     back={ name="Fi Follet Cape +1", augments={'Path: A',}},
     }
+    --sets.precast.FC.DT = {}
+
     sets.precast.FC.Arts = {head="Pedagogy Mortarboard +3", feet="Academic's loafers +3"}
+    sets.precast.FC.Arts.DT = {head="Pedagogy Mortarboard +3", feet="Academic's loafers +3",}
+
     sets.precast.FC.Arts.EnhancingDuration = set_combine(sets.precast.FC, {
         feet="Academic's loafers +3", waist="Siegel Sash"})
 
     sets.precast.FC.Grimoire = {head="Pedagogy Mortarboard +3", feet="Academic's loafers +3"}
+    sets.precast.FC.Grimoire.DT = {head="Pedagogy Mortarboard +3", feet="Academic's loafers +3",}
 
     sets.precast.FC.Grimoire.EnhancingDuration = set_combine(sets.precast.FC, {
        feet="Academic's loafers +3", waist="Siegel Sash"})
@@ -279,10 +287,21 @@ right_ear="Telos Earring",
 
     sets.precast.FC.Cure = set_combine(sets.precast.FC, {
         feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
+        waist="Plat. Mog. Belt",
         ear1="Mendi. Earring", --5
-        })
+    })
+    sets.precast.FC.Cure.DT =  set_combine(sets.precast.FC.DT, {neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+    waist="Plat. Mog. Belt",
+    left_ear="Tuisto Earring",
+    right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    right_ring="Eihwaz Ring",
+    back="Moonlight Cape",
+})
 
     sets.precast.FC.Curaga = sets.precast.FC.Cure
+    sets.precast.FC.Curaga.DT = sets.precast.FC.Cure.DT
+
     sets.precast.FC.Impact = set_combine(sets.precast.FC, {head=empty, body="Twilight Cloak", waist="Shinjutsu-no-Obi +1"})
     sets.precast.FC.Dispelga = set_combine(sets.precast.FC, {main="Daybreak", sub="Ammurapi Shield"})
     sets.precast.Storm = set_combine(sets.precast.FC, {ring1="Stikini Ring +1"})
@@ -294,6 +313,11 @@ right_ear="Telos Earring",
 	-- Gear that converts elemental damage done to recover MP.	
 	sets.RecoverMP = {body="Seidr Cotehardie",} --body="Seidr Cotehardie"}
 	
+    sets.OccultAcumen = {
+        ammo="Seraphic Ampulla",
+        head="Mall. Chapeau +2",
+        legs="Perdition Slops",
+    }
     ------------------------------------------------------------------------------------------------
     ------------------------------------- Weapon Skill Sets ----------------------------------------
     ------------------------------------------------------------------------------------------------
@@ -436,7 +460,9 @@ right_ear="Telos Earring",
         left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
         right_ring="Naji's Loop",
         back="Solemnity Cape",
-        }
+    }
+	sets.midcast.Cure.DT =  {}
+
     sets.midcast.CureWeather = set_combine(sets.midcast.Cure, {
         waist="Hachirin-no-Obi",})
 
@@ -444,6 +470,7 @@ right_ear="Telos Earring",
     sets.midcast.LightWeatherCure = sets.midcast.CureWeather
     
     sets.midcast.LightDayCure = sets.midcast.CureWeather
+    sets.midcast.LightDayCure.DT =  {}
 
     sets.midcast.Cure.Enmity = set_combine(sets.midcast.Cure, {
         body="Pinga Tunic +1",
@@ -459,12 +486,11 @@ right_ear="Telos Earring",
 
     sets.midcast.Cure.ConserveMP = set_combine(sets.midcast.Cure, {
         head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
-        body="Vedic Coat",
         legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
         feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
-        neck="Incanter's Torque",
         waist="Shinjutsu-no-Obi +1",
         right_ear="Mendi. Earring",
+        left_ear="Calamitous Earring",
         left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
         back="Solemnity Cape",})
 
@@ -547,7 +573,7 @@ right_ear="Telos Earring",
         back={ name="Fi Follet Cape +1", augments={'Path: A',}},
         })
 
-        sets.midcast.BarElement = set_combine(sets.midcast['Enhancing Magic'], {
+    sets.midcast.BarElement = set_combine(sets.midcast['Enhancing Magic'], {
             legs="Shedir Seraweels",
         })
     sets.midcast.Regen = set_combine(sets.midcast['Enhancing Magic'], {
@@ -751,6 +777,7 @@ right_ear="Telos Earring",
         ammo="Pemphredo Tathlum",
         body="Seidr Cotehardie",
         left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+        left_ear="Calamitous Earring",
         waist="Shinjutsu-no-Obi +1",
     })
     sets.midcast['Elemental Magic'].magicburst = {
@@ -1108,35 +1135,71 @@ sets.MoveSpeed = {feet="Herald's Gaiters"}
     ------------------------------------------------------------------------------------------------
 sets.engaged.None = {}
 sets.engaged = {
-        ammo="Homiliary",
-        head="Null Masque",
-        body="Shamash Robe",
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-        legs="Assid. Pants +1",
-        feet="Nyame Sollerets",
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        waist="Carrier's Sash",
-        left_ear="Etiolation Earring",
-        right_ear="Infused Earring",
-        left_ring="Stikini Ring +1",
-        right_ring="Stikini Ring +1",
-        back="Lugh's Cape",
-    }
+    ammo="Amar Cluster",
+    head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    body="Nyame Mail",
+    hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
+    legs="Nyame Flanchard",
+    feet="Battlecast Gaiters",
+    neck="Lissome Necklace",
+    waist="Olseni Belt",
+    left_ear="Crep. Earring",
+    right_ear="Telos Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+    back="Null Shawl",
+}
+sets.engaged.STP = {
+    ammo="Crepuscular Pebble",
+    head="Null Masque",
+    body="Bunzi's Robe",
+    hands="Gazu Bracelets +1",
+    legs="Bunzi's Pants",
+    feet="Battlecast Gaiters",
+    neck="Null Loop",
+    waist="Yemaya Belt",
+    ear1="Dedition Earring",
+    ear2="Crep. Earring",
+    ring1="Chirich Ring +1",
+    ring2="Chirich Ring +1",
+    back="Null Shawl",
+}
 sets.engaged.Acc = {
-        ammo="Amar Cluster",
-        head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        body="Nyame Mail",
-        hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
-        legs="Nyame Flanchard",
-        feet="Battlecast Gaiters",
-        neck="Lissome Necklace",
-        waist="Olseni Belt",
-        left_ear="Crep. Earring",
-        right_ear="Telos Earring",
-        left_ring="Chirich Ring +1",
-        right_ring="Chirich Ring +1",
-        back={ name="Aurist's Cape +1", augments={'Path: A',}},
-    }
+    ammo="Amar Cluster",
+    head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    body="Nyame Mail",
+    hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
+    legs="Nyame Flanchard",
+    feet="Battlecast Gaiters",
+    neck="Null Loop",
+    waist="Null Belt",
+    left_ear="Crep. Earring",
+    right_ear="Telos Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+    back="Null Shawl",
+}
+
+    
+sets.engaged.CRIT = set_combine(sets.engaged, {
+    neck="Nefarious Collar +1",
+})
+
+sets.engaged.Enspell = set_combine(sets.engaged, {
+    head="Umuthi Hat",
+    waist="Orpheus's Sash",
+
+})
+
+sets.engaged.SubtleBlow = set_combine(sets.engaged, {
+    neck={ name="Bathy Choker +1", augments={'Path: A',}},
+    left_ear="Digni. Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+})
+
+
+
 sets.engaged.DT = {
     ammo="Staunch Tathlum +1",
     head="Nyame Helm",
@@ -1152,6 +1215,101 @@ sets.engaged.DT = {
     right_ring="Defending Ring",
     back={ name="Aurist's Cape +1", augments={'Path: A',}},
     }
+
+
+
+------------------------------------------------------------------------------------------------
+  ---------------------------------------- DW-HASTE ------------------------------------------
+------------------------------------------------------------------------------------------------
+    -- * DNC Subjob DW Trait: +15%
+    -- * NIN Subjob DW Trait: +25%
+
+    sets.engaged.DW = set_combine(sets.engaged, {
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+     })
+
+    sets.engaged.DW.Acc = set_combine(sets.engaged.Acc, {
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+     })
+    sets.engaged.DW.STP = set_combine(sets.engaged.STP, {
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+     })
+     sets.engaged.DW.CRIT = set_combine(sets.engaged.CRIT, {
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+     })
+     sets.engaged.DW.Enspell = set_combine(sets.engaged.Enspell, {
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+     })
+     sets.engaged.DW.SubtleBlow = set_combine(sets.engaged.SubtleBlow, {
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+     })
+
+
+
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- Hybrid Sets -------------------------------------------
+------------------------------------------------------------------------------------------------
+
+-- dt -50%
+
+sets.engaged.Hybrid = {
+    ammo="Crepuscular Pebble",
+    head="Null Masque",
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands="Bunzi's Gloves",
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    neck="Null Loop",
+    right_ring="Defending Ring",
+}
+
+sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid,{})
+sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid,{
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+})
+sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid,{})
+sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid,{  
+    neck="Nefarious Collar +1",
+
+})
+sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid,{  
+    neck={ name="Bathy Choker +1", augments={'Path: A',}},
+    left_ear="Digni. Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+})
+sets.engaged.Enspell.DT = set_combine(sets.engaged.Enspell, sets.engaged.Hybrid,{  
+	head="Umuthi Hat",
+    hands="Aya. Manopolas +2",
+    waist="Orpheus's Sash",
+})
+
+
+-- DW dt -50%
+
+sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.Hybrid)
+sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.Hybrid)
+sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.Hybrid)
+sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.Hybrid,{  
+   neck="Nefarious Collar +1",})
+sets.engaged.DW.Enspell.DT = set_combine(sets.engaged.DW.Enspell, sets.engaged.Hybrid,{  
+   head="Umuthi Hat",
+   hands="Aya. Manopolas +2",
+   waist="Orpheus's Sash",})    
+sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.Hybrid,{  
+   neck={ name="Bathy Choker +1", augments={'Path: A',}},
+   left_ear="Digni. Earring",
+   left_ring="Chirich Ring +1",
+   right_ring="Chirich Ring +1",
+})
+
 
     ------------------------------------------------------------------------------------------------
     ---------------------------------------- Special Sets ------------------------------------------
@@ -1234,7 +1392,7 @@ sets.engaged.DT = {
     sets.buff.FullSublimation = {
        head="Acad. Mortar. +2", --4
        body="Peda. Gown +3", --5
-       --ear1="Savant's Earring", --1
+       ear1="Savant's Earring", --1
        waist="Embla Sash", --5
        }
        sets.buff.DTSublimation = {waist="Embla Sash"}

@@ -8,6 +8,30 @@
 --[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
 keyboard binds and chat 
+
+
+
+
+-- sortie 4step sword
+
+ Burning Blade
+Seraph Blade Scission
+Red Lotus Blade Liquefaction
+Flat Blade Fusion
+Savage Blade Light 
+
+or 
+
+--sc 6step
+
+ Savage Blade
+Red Lotus Blad Liquefaction
+Savage BladeS cission
+Red Lotus Blade Liquefaction
+Savage Blade Scission
+Red Lotus Blade Liquefaction
+Savage Blade Scission 
+
 ]]
 
 
@@ -219,7 +243,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Incanter's Torque",
-        waist="Eschan Stone",
+        waist="Null Belt",
         left_ear={ name="Lugra Earring +1", augments={'Path: A',}},
         right_ear="Crep. Earring",
         left_ring="Stikini Ring +1",
@@ -308,12 +332,13 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     left_ear="Crep. Earring",
     right_ear="Digni. Earring",
     neck="Null Loop",
-    waist="Eschan Stone",
+    waist="Null Belt",
     right_ring={ name="Beithir Ring", augments={'Path: A',}},
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
     back="Null Shawl",
     }
-	 sets.Proc = {neck="Fotia Gorget",waist="Fotia Belt",left_ring="Rufescent Ring",right_ring={ name="Beithir Ring", augments={'Path: A',}}}
+
+	--sets.Proc = {neck="Fotia Gorget",waist="Fotia Belt",left_ring="Rufescent Ring",right_ring={ name="Beithir Ring", augments={'Path: A',}}}
 
     sets.precast.WS['Upheaval'] = set_combine(sets.precast.WS, {
     ammo="Knobkierrie",
@@ -344,6 +369,8 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
         left_ring="Sroda Ring",
     })
+    --sets.precast.WS['Upheaval'].Mighty = set_combine(sets.precast.WS['Upheaval'], {})
+
     sets.precast.WS["King's Justice"] = set_combine(sets.precast.WS["Upheaval"], {})
     sets.precast.WS["King's Justice"].PDL= set_combine(sets.precast.WS["Upheaval"], {
         ammo="Crepuscular Pebble",
@@ -485,7 +512,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         legs="Boii Cuisses +3",
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
-        waist="Eschan Stone",
+        waist="Null Belt",
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -897,12 +924,12 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.DayWSEars = {ear1="Brutal Earring",ear2={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},}
 	
 	--Specialty WS set overwrites.
-	sets.AccWSMightyCharge = {}
+	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
 	sets.AccWSCharge = {}
-	sets.AccWSMightyCharge = {}
-	sets.WSMightyCharge = {}
+	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
+	sets.WSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
 	sets.WSCharge = {}
-	sets.WSMighty = {}
+	sets.WSMighty = {ammo="Yetshila +1",feet="Boii Calligae +2",}
 
      -- Sets to return to when not performing an action.
            
@@ -1125,7 +1152,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         body="Hjarrandi Breast.",
     hands="Flam. Manopolas +2",
     legs={ name="Zoar Subligar +1", augments={'Path: A',}},
-    feet="Thereoid Greaves",
+    feet="Boii Calligae +2",
     neck="Nefarious Collar +1",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
     left_ear="Schere Earring",

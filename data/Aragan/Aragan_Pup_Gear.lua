@@ -164,7 +164,7 @@ function init_gear_sets()
     Artifact_Foire.Body_WSD_PTank = ""
     Artifact_Foire.Hands_Mane_Overload = "Foire Dastanas +3"
     Artifact_Foire.Legs_PCure = ""
-    Artifact_Foire.Feet_Repair_PMagic = ""
+    Artifact_Foire.Feet_Repair_PMagic = "Foire Babouches +2",
 
     Relic_Pitre = {}
     Relic_Pitre.Head_PRegen = "Pitre Taj +3" --Enhances Optimization
@@ -226,11 +226,12 @@ function init_gear_sets()
 
     sets.precast.JA["Repair"] = {
         right_ear="Pratik Earring",
+        left_ear="Guignol Earring",
         ammo = "Automat. Oil +3",
-        --feet = Artifact_Foire.Feet_Repair_PMagic
+        feet = Artifact_Foire.Feet_Repair_PMagic
     }
 
-    sets.precast.JA["Maintenance"] = set_combine(sets.precast.JA["Repair"], { hands="Foire Dastanas +3",})
+    sets.precast.JA["Maintenance"] = set_combine(sets.precast.JA["Repair"], {hands="Foire Dastanas +3",})
 
     sets.precast.JA.Maneuver = {
         main={ name="Midnights", augments={'Pet: Attack+25','Pet: Accuracy+25','Pet: Damage taken -3%',}},

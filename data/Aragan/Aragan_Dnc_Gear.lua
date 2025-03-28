@@ -50,6 +50,12 @@ function user_job_setup()
     select_default_macro_book()
 end
 
+
+autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",
+['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
+['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",
+['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
+
 -- Define sets and vars used by this job file.
 function init_gear_sets()
     --------------------------------------
@@ -91,7 +97,7 @@ function init_gear_sets()
 
     -- Waltz set (chr and vit)
     sets.precast.Waltz = {  ammo="Yamarang",
-    head="Mummu Bonnet +2",
+    head={ name="Horos Tiara +2", augments={'Enhances "Trance" effect',}},
     body="Maxixi Casaque +3",
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     legs="Dashing Subligar",
@@ -105,7 +111,8 @@ function init_gear_sets()
     back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 }
 		
-	sets.Self_Waltz = {head="Mummu Bonnet +2",body="Passion Jacket"}
+	sets.Self_Waltz = {head={ name="Horos Tiara +2", augments={'Enhances "Trance" effect',}},
+    body="Passion Jacket"}
         
     -- Don't need any special gear for Healing Waltz.
     sets.precast.Waltz['Healing Waltz'] = {}
@@ -155,7 +162,7 @@ function init_gear_sets()
     legs="Malignance Tights",
     feet="Malignance Boots",
     neck={ name="Etoile Gorget +2", augments={'Path: A',}},
-    waist="Eschan Stone",
+    waist="Null Belt",
     left_ear="Digni. Earring",
     right_ear="Crep. Earring",
     left_ring="Stikini Ring +1",
@@ -1121,10 +1128,6 @@ function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 164')
 end
 
-autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",
-['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
-['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",
-['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
 
 function check_trust()
 	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then

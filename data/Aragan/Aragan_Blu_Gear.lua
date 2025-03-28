@@ -63,9 +63,11 @@ function user_job_setup()
 	send_command('bind @` input /ja "Efflux" <me>')
 	send_command('bind !` input /ja "Burst Affinity" <me>')
 	send_command('bind ^@!` gs c cycle SkillchainMode')
-	send_command('bind ^backspace input /ja "Unbridled Learning" <me>;wait 1;input /ja "Diffusion" <me>;wait 2;input /ma "Mighty Guard" <me>')
-	send_command('bind !backspace input /ja "Unbridled Learning" <me>;wait 1;input /ja "Diffusion" <me>;wait 2;input /ma "Carcharian Verve" <me>')
-	send_command('bind @backspace input /ja "Convergence" <me>')
+	--send_command('bind ^backspace input /ja "Unbridled Learning" <me>;wait 1;input /ja "Diffusion" <me>;wait 2;input /ma "Mighty Guard" <me>')
+	--send_command('bind !backspace input /ja "Unbridled Learning" <me>;wait 1;input /ja "Diffusion" <me>;wait 2;input /ma "Carcharian Verve" <me>')
+	--send_command('bind @backspace input /ja "Convergence" <me>')
+	send_command('bind ^0 input /ja "Unbridled Learning" <me>;wait 1;input /ja "Diffusion" <me>;wait 2;input /ma "Mighty Guard" <me>')
+	send_command('bind ^9 input /ja "Unbridled Learning" <me>;wait 1;input /ja "Diffusion" <me>;wait 2;input /ma "Carcharian Verve" <me>')
 	send_command('bind @f10 gs c toggle LearningMode')
 	send_command('bind ^@!` gs c cycle MagicBurstMode')
 	send_command('bind @f8 gs c toggle AutoNukeMode')
@@ -488,6 +490,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		ammo="Pemphredo Tathlum",
 		body="Vedic Coat",
         left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
+		left_ear="Calamitous Earring",
 		waist="Austerity Belt +1",
 	}
 	sets.SIRD = {

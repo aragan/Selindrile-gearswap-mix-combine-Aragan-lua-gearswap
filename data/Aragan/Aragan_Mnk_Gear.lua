@@ -82,7 +82,7 @@ function init_gear_sets()
         ammo="Iron Gobbet",
         head="Genmei Kabuto",
         body={ name="Tatena. Harama. +1", augments={'Path: A',}},
-        hands={ name="Tatena. Gote +1", augments={'Path: A',}},
+        hands={ name="Hes. Gloves +1", augments={'Enhances "Invigorate" effect',}},
         legs={ name="Tatena. Haidate +1", augments={'Path: A',}},
         feet={ name="Tatena. Sune. +1", augments={'Path: A',}},
         neck={ name="Unmoving Collar +1", augments={'Path: A',}},
@@ -194,7 +194,9 @@ function init_gear_sets()
         legs={ name="Mpaca's Hose", augments={'Path: A',}},
         neck={ name="Mnk. Nodowa +2", augments={'Path: A',}}, 
     })
-
+    sets.precast.WS["Raging Fists"].ImpetusWS = set_combine(sets.precast.WS["Raging Fists"], {
+body="Bhikku Cyclas +2"
+    })
     sets.precast.WS['Howling Fist'] = set_combine(sets.precast.WS, {
     ammo="Coiste Bodhar",
     head={ name="Mpaca's Cap", augments={'Path: A',}},
@@ -273,7 +275,7 @@ function init_gear_sets()
         ammo="Coiste Bodhar",
         head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         body="Mpaca's Doublet",
-          hands="Mpaca's Gloves",
+        hands="Mpaca's Gloves",
         legs={ name="Mpaca's Hose", augments={'Path: A',}},
         feet="Mpaca's Boots",
         neck="Fotia Gorget",
@@ -384,7 +386,7 @@ function init_gear_sets()
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
-        waist="Eschan Stone",
+        waist="Null Belt",
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         right_ear="Crep. Earring",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
@@ -777,10 +779,11 @@ sets.engaged.SubtleBlow.Counter = set_combine(sets.engaged, {
 	
 	sets.engaged.HF = set_combine(sets.engaged, {})
 	sets.engaged.Acc.HF = set_combine(sets.engaged.Acc, {})
-
+    
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
 	sets.buff.Sleep = {}
 	sets.buff.Impetus = {body="Bhikku Cyclas +2"}
+    sets.buff.ImpetusWS = {body="Bhikku Cyclas +2"}
 	sets.buff.Footwork = {feet="Anch. Gaiters +3"}
 	sets.buff.Boost = {} --waist="Ask Sash"
 	
@@ -794,7 +797,7 @@ sets.engaged.SubtleBlow.Counter = set_combine(sets.engaged, {
 
 end
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 160')
+	windower.chat.input('/lockstyleset 159')
 end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()
