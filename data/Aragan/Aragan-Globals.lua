@@ -484,6 +484,12 @@ function job_state_change(stateField, newValue, oldValue)
     else
         enable('head','body')
     end
+	if state.CraftingMode.value ~= 'None' then
+		equip(sets.crafting[state.CraftingMode.value])
+	
+    elseif state.CraftQuality.value ~= 'Normal' then
+		equip(sets.crafting[state.CraftQuality.value])
+	end
 end
 	
 
@@ -491,19 +497,21 @@ end
 
 
 -- Modify the default idle set after it was constructed.
-function customize_idle_set(idleSet)
+function job_customize_idle_set(idleSet)
     if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
     else
         enable('neck')
     end
+	
 	if state.CraftingMode.value ~= 'None' then
 		idleSet = set_combine(idleSet,sets.crafting[state.CraftingMode.value])
 	
     elseif state.CraftQuality.value ~= 'Normal' then
 		idleSet = set_combine(idleSet,sets.crafting[state.CraftQuality.value])
 	end
+
     return idleSet
 end
 -- Modify the default melee set after it was constructed.
@@ -815,6 +823,7 @@ function is_sc_element_today(spell)
 end
 
 
+--[[ 
 disable_priority = T{
     "User",
     "Showset",
@@ -829,3 +838,4 @@ disable_priority = T{
     "Ability",
     "TreasureHunter",
 }:reverse()
+]]
