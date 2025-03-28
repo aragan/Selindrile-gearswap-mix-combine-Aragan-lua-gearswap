@@ -158,7 +158,7 @@ function job_setup()
 
     define_roll_values()
 	
-	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","Rollset","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
+	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","Rollset","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
 end
 
 
@@ -255,7 +255,13 @@ function job_midcast(spell, action, spellMap, eventArgs)
 	end
 
 end
+function job_filter_aftercast(spell, spellMap, eventArgs)
+	if spell.english == "Light Shot" then
+        send_command('@timers c "Light Shot ['..spell.target.name..']" 120 down abilities/00195.png')
+    end
 
+
+end
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 function job_aftercast(spell, spellMap, eventArgs)
     if spell.type == 'CorsairRoll' and not spell.interrupted then

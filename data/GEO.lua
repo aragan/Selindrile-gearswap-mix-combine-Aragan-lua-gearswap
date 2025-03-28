@@ -137,7 +137,7 @@ function job_setup()
     indi_timer = ''
     indi_duration = 180
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode"})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode"})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -309,6 +309,9 @@ function job_post_midcast(spell, spellMap, eventArgs)
 			end
 		end
     end
+	if spell.skill == 'Elemental Magic' and state.CastingMode.value == 'OccultAcumen' then
+		equip(sets.OccultAcumen)
+	end
 	if spellMap == 'Healing' and spell.target.type == 'SELF' then
 		equip(sets.self_healing)
 	elseif state.CastingMode.value == 'SIRD' then
@@ -330,6 +333,39 @@ function job_post_midcast(spell, spellMap, eventArgs)
             equip(sets.midcast.Impact)
         end
     end
+end
+function job_filter_aftercast(spell, spellMap, eventArgs)
+    if not spell.interrupted then
+        if spell.english:startswith('Indi-') then
+            if spell.target.type == 'SELF' then
+                last_indi = string.sub(spell.english,6)
+            end
+            if not classes.CustomIdleGroups:contains('Indi') then
+                classes.CustomIdleGroups:append('Indi')
+            end
+			if state.UseCustomTimers.value then
+				send_command('@timers d "'..spell.target.name..': '..indi_timer..'"')
+				indi_timer = spell.english
+				send_command('@timers c "'..spell.target.name..': '..indi_timer..'" '..indi_duration..' down spells/00136.png')
+			end
+		elseif spell.english:startswith('Geo-') or spell.english == "Mending Halation" or spell.english == "Radial Arcana" then
+			eventArgs.handled = true
+			if spell.english:startswith('Geo-') then
+				last_geo = string.sub(spell.english,5)
+			end
+        elseif state.UseCustomTimers.value and spell.english == 'Sleep' or spell.english == 'Sleepga' then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+        elseif state.UseCustomTimers.value and spell.english == 'Sleep II' or spell.english == 'Sleepga II' then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
+        elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
+            state.MagicBurstMode:reset()
+			if state.DisplayMode.value then update_job_states()	end
+		end
+    end
+
+	if not player.indi then
+        classes.CustomIdleGroups:clear()
+	end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)

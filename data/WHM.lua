@@ -100,13 +100,13 @@ function job_setup()
 	state.AutoCaress = M(true, 'Auto Caress Mode')
 	state.Gambanteinn = M(false, 'Gambanteinn Cursna Mode')
 	state.BlockLowDevotion = M(true, 'Block Low Devotion')
+	state.AutoSubMode = M(true, 'Auto Sublimation Mode')
 
 	state.HippoMode = M(false, "hippoMode")
     state.MagicBurst = M(false, 'Magic Burst')
     state.SrodaNecklace = M(false, 'SrodaNecklace')
 	state.AutoEquipBurst = M(true)
 
-    state.BarElement = M{['description']='BarElement', 'Barfira', 'Barblizzara', 'Baraera', 'Barstonra', 'Barthundra', 'Barwatera'}
     state.BarStatus = M{['description']='BarStatus', 'Baramnesra', 'Barvira', 'Barparalyzra', 'Barsilencera', 'Barpetra', 'Barpoisonra', 'Barblindra', 'Barsleepra'}
     state.BoostSpell = M{['description']='BoostSpell', 'Boost-STR', 'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
 
@@ -117,7 +117,7 @@ function job_setup()
 	
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Light','Dark','Fire','Ice','Wind','Earth','Lightning','Water',}
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace"},{"AutoBuffMode","Weapons","OffenseMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","BarElement","BarStatus","BoostSpell","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","BarStatus","BoostSpell","TreasureMode",})
 	
 	function handle_smartcure(cmdParams)
 		if cmdParams[2] then
@@ -225,7 +225,7 @@ end
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 
 function job_filtered_action(spell, eventArgs)
-	if spell.skill == 'Healing Magic' then
+	if spellMap == 'Cure' or spellMap == 'Curaga' then
         if state.CastingMode.value == 'DT' then
             equip()
         end
@@ -237,7 +237,7 @@ function job_pretarget(spell, spellMap, eventArgs)
 end
 
 function job_filter_precast(spell, spellMap, eventArgs)
-	if spell.skill == 'Healing Magic' then
+	if spellMap == 'Cure' or spellMap == 'Curaga' then
         if state.CastingMode.value == 'DT' then
             equip()
         end
@@ -267,7 +267,7 @@ function job_precast(spell, spellMap, eventArgs)
 	if state.CastingMode.value == 'Proc' then
 		classes.CustomClass = 'Proc'
 	end
-	if spell.skill == 'Healing Magic' then
+	if spellMap == 'Cure' or spellMap == 'Curaga' then
         if state.CastingMode.value == 'DT' then
             equip()
         end
@@ -285,9 +285,9 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 	end
-	if spell.skill == 'Healing Magic' then
+	if spellMap == 'Cure' or spellMap == 'Curaga' then
         if state.CastingMode.value == 'DT' then
-            equip()
+            equip(sets.precast.FC.Cure.DT)
         end
     end
 end
@@ -339,7 +339,27 @@ function job_post_midcast(spell, spellMap, eventArgs)
 			equip(sets.midcast.Impact)
 		end
 	end
+	if spell.skill == 'Healing Magic' then
+        if state.CastingMode.value == 'DT' then
+            equip(sets.midcast.Cure.DT)
+        end
+    end
+end
 
+function job_filter_aftercast(spell, spellMap, eventArgs)
+    if not spell.interrupted then
+        if state.UseCustomTimers.value and spell.english == 'Sleep' or spell.english == 'Sleepga' then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+			if spell.english == "Sleep II" or spell.english == "Sleepga II" then
+				send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
+			elseif spell.english == "Repose" then
+				send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
+			end
+		elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
+            state.MagicBurstMode:reset()
+			if state.DisplayMode.value then update_job_states()	end
+        end
+    end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
@@ -351,8 +371,21 @@ function job_aftercast(spell, spellMap, eventArgs)
 			if state.DisplayMode.value then update_job_states()	end
         end
     end
+	if player.status ~= 'Engaged' and state.WeaponLock.value == false then
+        check_weaponset()
+    end    
 end
+-- Handle notifications of general user state change.
+function job_state_change(stateField, newValue, oldValue)
 
+    if state.WeaponLock.value == true then
+        disable('main','sub')
+    else
+        enable('main','sub')
+    end
+    check_weaponset()
+
+end
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for non-casting events.
 -------------------------------------------------------------------------------------------------------------------
@@ -444,9 +477,23 @@ function job_customize_idle_set(idleSet)
     if state.HippoMode.value == true then 
 	   idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
     end
+	check_weaponset()
+
     return idleSet
 end
 
+function check_weaponset()
+    equip(sets[state.ShieldMode.current])
+end
+function user_job_state_change(field, newVal, oldVal)
+	if field == 'ShieldMode' then
+		if newVal == 'Normal' then
+			internal_enable_set("Shield")
+		else
+			internal_disable_set(sets.shield[newVal], "Shield")
+		end
+	end
+end
 mov = {counter=0}
 if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.x = windower.ffxi.get_mob_by_index(player.index).x
@@ -533,6 +580,9 @@ function handle_elemental(cmdParams)
 		return
 	elseif command == 'enspell' then
 		windower.chat.input('/ma "En'..data.elements.enspell_of[state.ElementalMode.value]..'" <me>')
+		return
+	elseif command == 'barelement' then
+		windower.chat.input('/ma "'..data.elements.BarElement_of[state.ElementalMode.value]..'" <me>')
 		return
 	--Leave out target, let shortcuts auto-determine it.
 	elseif command == 'weather' then
@@ -699,6 +749,26 @@ buff_spell_lists = {
 		{Name='Aurorastorm',	Buff='Aurorastorm',	SpellID=119,	When='Always'},
 		{Name='Refresh',		Buff='Refresh',		SpellID=109,	When='Always'},
 		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Always'},
+	},
+	Fullbuff = {
+		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},
+		{Name='Shellra V',		Buff='Shell',		SpellID=134,	When='Always'},
+		{Name='Protectra V',	Buff='Protect',		SpellID=129,	When='Always'},
+		{Name='Auspice',		Buff='Auspice',		SpellID=96,		When='Always'},
+		{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
+		{Name='Aquaveil',		Buff='Aquaveil',	SpellID=55,		When='Always'},
+		{Name='Aurorastorm',	Buff='Aurorastorm',	SpellID=119,	When='Always'},
+		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Always'},
+		{Name='Blink',			Buff='Blink',		SpellID=53,		When='Always'},
+		{Name='Phalanx',		Buff='Phalanx',		SpellID=106,	When='Always'},
+	},
+	Melee = {
+		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},
+		{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
+		{Name='Boost-STR',		Buff='STR Boost',	SpellID=479,	When='Always'},
+		{Name='Shellra V',		Buff='Shell',		SpellID=134,	When='Always'},
+		{Name='Protectra V',	Buff='Protect',		SpellID=129,	When='Always'},
+		{Name='Auspice',		Buff='Auspice',		SpellID=96,		When='Always'},
 	},
 	Default = {
 		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	Reapply=false},

@@ -152,7 +152,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 		
-        if state.Buff['Impetus'] and (spell.english == "Ascetic's Fury" or spell.english == "Victory Smite") then
+        if state.Buff['Impetus'] and (spell.english == "Ascetic's Fury" or spell.english == "Victory Smite" or spell.english == "Shijin Spiral" or spell.english == "Asuran Fists" or spell.english == "Raging Fists") then
 			if sets.buff.ImpetusWS then
 				equip(sets.buff.ImpetusWS)
 			else

@@ -142,7 +142,7 @@ function job_setup()
 	autofood = 'Tropical Crep'
 	autonuke = 'Absorb-TP'
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","StormSurge",},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","HelixMode","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","StormSurge","AutoMedicineMode",},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","HelixMode","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
     
 
 end
@@ -170,6 +170,11 @@ function job_precast(spell, spellMap, eventArgs)
 		if spellMap == 'Cure' or spellMap == 'Curaga' then
 			gear.default.obi_back = gear.obi_cure_back
 			gear.default.obi_waist = gear.obi_cure_waist
+		elseif spellMap == 'Cure' or spellMap == 'Curaga' then
+			if state.CastingMode.value == 'DT' then
+				equip(sets.precast.FC.Cure.DT)
+			end
+		
 		elseif spell.skill == 'Elemental Magic' and default_spell_map ~= 'ElementalEnfeeble' then
 			if LowTierNukes:contains(spell.english) or spell.english:endswith('helix') then
 				gear.default.obi_back = gear.obi_low_nuke_back
@@ -178,6 +183,7 @@ function job_precast(spell, spellMap, eventArgs)
 				gear.default.obi_back = gear.obi_high_nuke_back
 				gear.default.obi_waist = gear.obi_high_nuke_waist
 			end
+
 		end
 		
         if state.CastingMode.value == 'Proc' then
@@ -185,6 +191,7 @@ function job_precast(spell, spellMap, eventArgs)
         elseif state.CastingMode.value == 'OccultAcumen' then
             classes.CustomClass = 'OccultAcumen'
         end
+
     end
 end
 
@@ -204,7 +211,9 @@ function job_post_precast(spell, spellMap, eventArgs)
 				equip(sets.MaxTP[spell.english] or sets.MaxTP)
 			end
 		end
+
 	end
+
 end
 
 -- Run after the general midcast() is done.
@@ -219,6 +228,9 @@ function job_post_midcast(spell, spellMap, eventArgs)
                 equip(sets.Bookworm)
             end
         end
+		if state.CastingMode.value == 'OccultAcumen' then
+			equip(sets.OccultAcumen)
+		end
 	end
 	
     if spell.skill == 'Enfeebling Magic' then
@@ -329,7 +341,11 @@ function job_post_midcast(spell, spellMap, eventArgs)
 			end
 		end
     end
-	
+	if spellMap == 'Cure' or spellMap == 'Curaga' then
+        if state.CastingMode.value == 'DT' then
+            equip(sets.midcast.Cure.DT)
+        end
+    end
 end
 
 function job_filter_aftercast(spell, spellMap, eventArgs)
@@ -1733,7 +1749,17 @@ buff_spell_lists = {
 		{Name='Stoneskin',	Buff='Stoneskin',	SpellID=54,		When='Always'},
 		{Name='Klimaform',	Buff='Klimaform',	SpellID=287,	When='Combat'},
 	},
-	
+	Fullbuff = {
+		{Name='Reraise III',Buff='Reraise',		SpellID=113,	When='Always'},
+		{Name='Haste',		Buff='Haste',		SpellID=57,		When='Always'},
+		{Name='Refresh',	Buff='Refresh',		SpellID=109,	When='Always'},
+		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
+		{Name='Stoneskin',	Buff='Stoneskin',	SpellID=54,		When='Always'},
+		{Name='Klimaform',	Buff='Klimaform',	SpellID=287,	When='Always'},
+		{Name='Blink',		Buff='Blink',		SpellID=53,		When='Always'},
+		{Name='Regen V',	Buff='Regen',		SpellID=108,	When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',		SpellID=106,	When='Always'},
+	},
 	Default = {
 		{Name='Reraise III',Buff='Reraise',		SpellID=113,	Reapply=false},
 		{Name='Haste',		Buff='Haste',		SpellID=57,		Reapply=false},

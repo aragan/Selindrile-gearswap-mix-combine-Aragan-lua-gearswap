@@ -116,7 +116,7 @@ end
 function job_setup()
 	send_command('lua l Singer')
 
-    state.ExtraSongsMode = M{['description']='Extra Songs','None','Dummy','FullLength','Marsyas'}
+    state.ExtraSongsMode = M{['description']='Extra Songs','FullLength','None','Dummy','FullLength','Marsyas'}
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Always','300','1000','Never'}
 
@@ -138,7 +138,7 @@ function job_setup()
         'Light Carol', 'Light Carol II', 'Dark Carol', 'Dark Carol II',
         }
 
-    state.Threnody = M{['description']='Threnody',
+    state.Threnody1 = M{['description']='Threnody',
         'Fire Threnody II', 'Ice Threnody II', 'Wind Threnody II', 'Earth Threnody II',
         'Ltng. Threnody II', 'Water Threnody II', 'Light Threnody II', 'Dark Threnody II',
         }
@@ -147,13 +147,16 @@ function job_setup()
         'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
         'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
 
-
+	state.Etude1 = M{['description']='Etude',  'Herculean Etude', 'Sage Etude', 'Sinewy Etude', 'Learned Etude',
+        'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
+        'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
 
 	state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
-	 'haste', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
+		'haste','haste4', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
+
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Songset","Passive","RuneElement","ExtraSongsMode","CastingMode","CarnMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Songset","Passive","RuneElement","ExtraSongsMode","ElementalMode","CastingMode","CarnMode","Etude","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -541,15 +544,27 @@ end
 
     -- Allow jobs to override this code
 function job_self_command(commandArgs, eventArgs)
+	if commandArgs[1]:lower() == 'elemental' then
+		handle_elemental(commandArgs)
+		eventArgs.handled = true			
+	end
+
+
     if commandArgs[1]:lower() == 'etude' then
         send_command('@input /ma "'..state.Etude.value..'" <stpc>')
     elseif commandArgs[1]:lower() == 'carol' then
         send_command('@input /ma "'..state.Carol.value..'" <stpc>')
-    elseif commandArgs[1]:lower() == 'threnody' then
+    elseif commandArgs[1]:lower() == 'threnody1' then
         send_command('@input /ma "'..state.Threnody.value..'" <stnpc>')
     end
-	if commandArgs[1]:lower() == 'songset' then
-		send_command('@input //abb "'..state.Songset.value..'" ccsv')
+	if commandArgs[1]:lower() == 'songsetnoph' then
+		send_command('@input //abb "'..state.Songset.value..'" noph')
+	elseif commandArgs[1]:lower() == 'songsetph' then
+		send_command('@input //abb "'..state.Songset.value..'" ph')
+	elseif commandArgs[1]:lower() == 'songsetphccsv' then
+		send_command('@input //abb "'..state.Songset.value..'" ph ccsv')
+	elseif commandArgs[1]:lower() == 'songset' then
+		send_command('@input //abb "'..state.Songset.value..'" ccsv') 
 	end
 end
 
@@ -570,6 +585,10 @@ function handle_elemental(cmdParams)
 		return
 	elseif command == 'enspell' then
 		windower.chat.input('/ma "En'..data.elements.enspell_of[state.ElementalMode.value]..'" <me>')
+		return
+
+	elseif command == 'carol' then
+		windower.chat.input('/ma "'..data.elements.carol_of[state.ElementalMode.value]..' carol II" <stpc>')
 		return
 	--Leave out target, let shortcuts auto-determine it.
 	elseif command == 'weather' then
@@ -609,9 +628,9 @@ function handle_elemental(cmdParams)
 			end
 		else
 			if player.job_points[(res.jobs[player.main_job_id].ens):lower()].jp_spent > 99 and spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..' V').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..' V')) < player.mp then
-				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..' V" '..target..'')
+				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..' II" '..target..'')
 			else
-				local tiers = {' IV',' III',' II',''}
+				local tiers = {' II',''}
 				for k in ipairs(tiers) do
 					if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
 						windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
@@ -671,7 +690,9 @@ function handle_elemental(cmdParams)
 
 	elseif command == 'bardsong' then
 		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' Threnody" '..target..'')
-
+	elseif command == 'threnody' then
+		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' threnody II" '..target..'')
+		
     else
         add_to_chat(123,'Unrecognized elemental command.')
     end
@@ -703,17 +724,17 @@ end)
 function check_song()
 	if state.AutoSongMode.value then
 		if not buffactive.march then
-			windower.chat.input('/ma "Honor March" <me>')
+			windower.chat.input('/ma "Honor March" <me>;wait 5;input /ma "Victory March" <me>')
 			tickdelay = os.clock() + 2
 			return true
 		elseif not buffactive.minuet then
-			windower.chat.input('/ma "Valor Minuet V" <me>')
+			windower.chat.input('//gs c set ExtraSongsMode Dummy;/ma "Valor Minuet V" <me>;wait 5;input /ma "Valor Minuet IV" <me>')
 			tickdelay = os.clock() + 2
 			return true
-		elseif not buffactive.madrigal then
-			windower.send_command('/ma "Blade Madrigal" <me>') --gs c set ExtraSongsMode FullLength;input 
+		--[[elseif not buffactive.madrigal then
+			windower.send_command('//gs c set ExtraSongsMode Dummy;input /ma "Blade Madrigal" <me>') --gs c set ExtraSongsMode FullLength;input 
 			tickdelay = os.clock() + 2
-			return true
+			return true]]
 		else
 			return false
 		end
@@ -727,7 +748,10 @@ function check_buff()
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
 			if not buffactive[buff_spell_lists[state.AutoBuffMode.Value][i].Buff] and (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Always' or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Combat' and (player.in_combat or being_attacked)) or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Engaged' and player.status == 'Engaged') or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Idle' and player.status == 'Idle') or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'OutOfCombat' and not (player.in_combat or being_attacked))) and spell_recasts[buff_spell_lists[state.AutoBuffMode.Value][i].SpellID] < spell_latency and silent_can_use(buff_spell_lists[state.AutoBuffMode.Value][i].SpellID) then
-				windower.chat.input('/ma "'..buff_spell_lists[state.AutoBuffMode.Value][i].Name..'" <me>')
+
+				windower.chat.input:schedule(3,'//input /ma "'..buff_spell_lists[state.AutoBuffMode.Value][i].Name..'" <me>')
+				windower.chat.input('//gs c set ExtraSongsMode Dummy')
+
 				tickdelay = os.clock() + 2
 				return true
 			end
@@ -758,6 +782,7 @@ function check_buffup()
 		for i in pairs(buff_spell_lists[buffup]) do
 			if not buffactive[buff_spell_lists[buffup][i].Buff] and silent_can_use(buff_spell_lists[buffup][i].SpellID) and spell_recasts[buff_spell_lists[buffup][i].SpellID] < spell_latency then
 				windower.chat.input('/ma "'..buff_spell_lists[buffup][i].Name..'" <me>')
+				windower.chat.input('//gs c set ExtraSongsMode Dummy')
 				tickdelay = os.clock() + 2
 				return true
 			end
@@ -772,8 +797,8 @@ end
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
      	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
-		--{Name='Valor Minuet III',Buff='Minuet',			SpellID=396,	When='Idle'},
 		{Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
+		{Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
 		{Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
 
 		--{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Idle'},
@@ -781,12 +806,186 @@ buff_spell_lists = {
 		--{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Idle'},
 		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Idle'},
 	},
+	Regen = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+		{Name='Army\'s Paeon VI',	Buff='Paeon',		SpellID=383,	When='Idle'},
+    },
 	Default = {
-		{Name='Army\'s Paeon VI',	Buff='Paeon',			SpellID=383,	Reapply=false},
-
+		--{Name='Army\'s Paeon VI',	Buff='Paeon',			SpellID=383,	Reapply=false},
+		{Name='Honor March',	Buff='March',			SpellID=417,	Reapply=false},
+		{Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	Reapply=false},
+		{Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	Reapply=false},
+		{Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	Reapply=false},
 		--{Name='Refresh',			Buff='Refresh',			SpellID=109,	Reapply=false},
 		--{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	Reapply=false},
 		--{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		Reapply=false},
 		--{Name='Blink',				Buff='Blink',			SpellID=53,		Reapply=false},
 	},
+	Regen = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+	{Name='Army\'s Paeon VI',	Buff='Paeon',			SpellID=383,	Reapply=false},
+    },
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------
+
+
+
+
+
+--[[  
+
+archive for save info
+
+
+    DaurdSongs = T{"Army's Paeon","Army's Paeon II","Army's Paeon III","Army's Paeon IV","Army's Paeon V",}
+    Daurdabla_Index = 2
+
+
+function equip_song_gear(spell)
+    if DaurdSongs:contains(spell.english) then
+        equip(sets.midcast.Base,sets.midcast.DBuff)
+    else
+    if spell.target.type == 'MONSTER' then
+        equip(sets.midcast.Base,sets.midcast.Debuff,sets.midcast.GBuff)
+    if buffactive.troubadour or buffactive['elemental seal'] then
+        equip(sets.midcast.Duration,{range="Marsyas",ammo="empty"})
+        end
+    if string.find(spell.english,'Lullaby') then equip(sets.midcast.Duration,sets.midcast.Lullaby) end
+        else
+        equip(sets.midcast.Base,sets.midcast.Buff,sets.midcast.GBuff)
+			
+    if spell.english == 'Honor March' then equip(sets.midcast['Honor March'])
+        elseif string.find(spell.english,'Ballad') then equip(sets.midcast.Ballad)
+        elseif string.find(spell.english,'Scherzo') then equip(sets.midcast.Scherzo)
+        elseif string.find(spell.english,'Paeon') then equip(sets.midcast.Paeon)
+        elseif string.find(spell.english,'Prelude') then equip(sets.midcast.Prelude)
+        elseif string.find(spell.english,'Madrigal') then equip(sets.midcast.Madrigal)
+        elseif string.find(spell.english,'Lullaby') then equip(sets.midcast.lullaby)
+		elseif string.find(spell.english,'Etude') then equip(sets.midcast.Etude)
+        end
+		
+    Daurdabla_Index = 2
+
+
+    timer_reg = {}
+	
+    pianissimo_cycle = false
+end
+
+function pretarget(spell)
+    if spell.type == 'BardSong' and spell.target.type and spell.target.type == 'PLAYER' and not buffactive.pianissimo and not spell.target.charmed and not pianissimo_cycle then
+        cancel_spell()
+        pianissimo_cycle = true
+        send_command('input /ja "Pianissimo" <me>;wait 1.5;input /ma "'..spell.name..'" '..spell.target.name..';')
+        return
+    end
+    if spell.name ~= 'Pianissimo' then
+        pianissimo_cycle = false
+    end
+end
+
+	if string.find(spell.english,'Lullaby') then
+        send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+    elseif string.find(spell.english,'Lullaby II') then
+        send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 120 down spells/00220.png')
+    end
+        end
+    end
+end
+
+function self_command(command)
+	if command == 'Daurdabla' then 
+		--if buffactive['Pianissimo'] then
+			
+		--else
+			Daur()
+		--end
+
+----5曲 无基曲情况 NT10分钟 3攻1速 STR----	口令：//console gs c GGMHS
+	    elseif command == 'GGMHS' then
+		send_command('@input /ja "Clarion Call" <me>;wait 2;input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Valor Minuet III" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;wait 4;input /ma "Herculean Etude" <me>;gs c DumsongDone')
+		
+----5曲 无基曲情况 NT10分钟 2攻 2速 1准----	口令：//console gs c GGHVM
+	    elseif command == 'GGHVM' then
+		send_command('@input /ja "Clarion Call" <me>;wait 2;input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Victory March" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;wait 4;input /ma "Blade Madrigal" <me>;gs c DumsongDone')
+
+----4曲 无基曲情况 NT10分钟 攻 攻 V速 强化H速 ---	    口令：//console gs c ggmh
+        elseif command == 'ggmh' then
+		send_command('@input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Victory March" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;gs c DumsongDone')
+
+----5曲 无基曲情况 NT10分钟 攻 攻 攻 强化H速 STR----	口令：//console gs c GGGHSTR
+	    elseif command == 'GGGHSTR' then
+		send_command('@input /ja "Clarion Call" <me>;wait 2;input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Valor Minuet III" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;wait 4;input /ma "Herculean Etude" <me>;gs c DumsongDone')
+
+----4曲 无基曲情况 NT10分钟 攻 攻 STR 强化H速----	     口令：//console gs c ggstrh
+	    elseif command == 'ggstrh' then
+		send_command('@input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Herculean Etude" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;wait 4;gs c DumsongDone')
+
+----5曲 无基曲情况 NT10分钟 攻 攻 STR 强化H速 攻----	口令：//console gs c GGSTRHG
+	    elseif command == 'GGSTRHG' then
+		send_command('@input /ja "Clarion Call" <me>;wait 2;input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Valor Minuet III" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;wait 4;input /ma "Herculean Etude" <me>;gs c DumsongDone')
+
+----4曲 无基曲情况 NT10分钟 攻 攻 攻 强化H速----	    口令：//console gs c gggh
+	    elseif command == 'gggh' then
+		send_command('@input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Valor Minuet III" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;wait 4;gs c DumsongDone')
+
+----5曲 无基曲情况 NT10分钟 攻 攻 攻 强化H速 B准确----	口令：//console gs c GGGHZHUN
+	    elseif command == 'GGGHZHUN' then
+		send_command('@input /ja "Clarion Call" <me>;wait 2;input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Valor Minuet III" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;wait 4;input /ma "Blade Madrigal" <me>;gs c DumsongDone')
+
+----4曲 无基曲情况 NT10分钟 攻 攻 B准确 强化H速 ----	口令：//console gs c ggzh
+        elseif command == 'ggzh' then
+		send_command('@input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Valor Minuet V" <me>;wait 4;input /ma "Valor Minuet IV" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon" <me>;wait 4;input /ma "Blade Madrigal" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;gs c DumsongDone')
+	
+----5曲 无基曲情况 NT10分钟 閃躲 閃躲 V速 强化H速 防御5 ----	口令：//console gs c JAtt
+	    elseif command == 'JAtt' then
+		send_command('@input /ja "Clarion Call" <me>;wait 2;input /ja "Troubadour" <me>;wait 2;input /ja "Nightingale" <me>;wait 2;input /ma "Sheepfoe Mambo" <me>;wait 4;input /ma "Dragonfoe Mambo" <me>;wait 4;input /ma "Army\'s Paeon II" <me>;wait 4;input /ma "Army\'s Paeon" <me>;wait 4;input /ma "Army\'s Paeon III" <me>;wait 4;input /ma "Victory March" <me>;wait 4;input /ja "Marcato" <me>;wait 2;input /ma "Honor March" <me>;wait 4;input /ma "Knight\'s Minne V" <me>;gs c DumsongDone')
+        
+----4曲 有基曲情况  等待8秒 普通曲 V速  攻5  B准  H速 ----      口令：//console gs c MGZM
+	    elseif command == 'MGZM' then
+		send_command('@input /ma "Victory March" <me>;wait 8;input /ma "Valor Minuet V" <me>;wait 8;input /ma "Blade Madrigal" <me>;wait 8;input /ma "Honor March" <me>;gs c DumsongDone')
+
+----4曲 有基曲情况  等待8秒 普通曲 B准  S准  V速  H速 ----      口令：//console gs c ZZMM
+	    elseif command == 'ZZMM' then
+		send_command('@input /ma "Blade Madrigal" <me>;wait 8;input /ma "Sword Madrigal" <me>;wait 8;input /ma "Victory March" <me>;wait 8;input /ma "Honor March" <me>;gs c DumsongDone')
+
+----4曲 有基曲情况  等待8秒 普通曲 攻4  攻5  B准  H速 ----      口令：//console gs c ggzs
+        elseif command == 'ggzs' then
+                send_command('@input /ma "Valor Minuet IV" <me>;wait 8;input /ma "Valor Minuet V" <me>;wait 8;input /ma "Blade Madrigal" <me>;wait 8;input /ma "Honor March" <me>;gs c DumsongDone')
+
+
+----4曲 有基曲情况  等待8秒 普通曲 H弓准  A弓准   攻4  攻5  ----      口令：//console gs c rngs
+	    elseif command == 'rngs' then
+		send_command('@input /ma "Hunter\'s Prelude" <me>;wait 8;input /ma "Archer\'s Prelude" <me>;wait 8;input /ma "Valor Minuet V" <me>;wait 8;input /ma "Valor Minuet IV" <me>;gs c DumsongDone')
+        
+----4曲 有基曲情况  等待8秒 普通曲 MP3  MP2  V速  H速  ----      口令：//console gs c Ball2m2
+	    elseif command == 'Ball2m2' then
+		send_command('@input /ma "Mage\'s Ballad III" <me>;wait 8;input /ma "Mage\'s Ballad II" <me>;wait 8;gs c Daur;wait 8;gs c Daur;wait 8;input /ma "Victory March" <me>;wait 8;input /ma "Honor March" <me>;gs c DumsongDone')
+
+----4曲 基曲  等待8秒 普通曲 HP4 HP3 HP2 HP  ----      口令：//console gs c 4HP
+	    elseif command == '4HP' then
+		send_command('@input /ma "Army\'s Paeon IV" <me>;wait 5;input /ma "Army\'s Paeon III" <me>;wait 5;input /ma "Army\'s Paeon II" <me>;wait 5;input /ma "Army\'s Paeon" <me>;gs c DumsongDone')
+
+	elseif command == 'Dumsong' then
+		send_command('@gs c Daur;wait 8;gs c Daur;wait 8;gs c Daur;wait 8;gs c Daur;gs c DumsongDone')
+	elseif command == 'DumsongDone' then
+		Dumsong = 2
+	elseif command == 'Daur' then
+		Daur()
+	end
+end
+
+]]

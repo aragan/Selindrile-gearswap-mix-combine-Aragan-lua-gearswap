@@ -73,7 +73,7 @@ function job_setup()
 	autofood = 'Miso Ramen'
 	
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaBelt"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","CastingMode","ResistDefenseMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaBelt","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","CastingMode","ResistDefenseMode","TreasureMode",})
 end
 
 buff_spell_lists = {
@@ -243,6 +243,17 @@ function job_post_midcast(spell, spellMap, eventArgs)
     end
 end
 
+function job_filter_aftercast(spell, spellMap, eventArgs)
+    if spell.name == 'Rayke' and not spell.interrupted then
+        send_command('@timers c "Rayke ['..spell.target.name..']" '..rayke_duration..' down spells/00136.png')
+        send_command('wait '..rayke_duration..';input /p <t> [Rayke just wore off!];')
+        send_command('@input /p  >>> Rayke on ['..spell.target.name..']. Second left: '..rayke_duration..'')
+    elseif spell.name == 'Gambit' and not spell.interrupted then
+        send_command('@timers c "Gambit ['..spell.target.name..']" '..gambit_duration..' down spells/00136.png')
+        send_command('wait '..gambit_duration..';input /p <t> [Gambit just wore off!];')
+        send_command('@input /p  >>> Gambit on ['..spell.target.name..']. Second left: '..gambit_duration..'')
+    end
+end
 
 function job_aftercast(spell)
     if spell.name == 'Rayke' and not spell.interrupted then

@@ -96,26 +96,33 @@ end
 function job_setup()
 
 	state.Buff['Brazen Rush'] = buffactive['Brazen Rush'] or false
+	state.Buff.Berserk = buffactive['Berserk'] or false
+	state.Buff.Aggressor = buffactive['Aggressor'] or false
 	state.Buff["Warrior's Charge"] = buffactive["Warrior's Charge"] or false
 	state.Buff['Mighty Strikes'] = buffactive['Mighty Strikes']  or false
+	state.Buff.Warcry = buffactive['Warcry'] or false
+	state.Buff['Blood Rage'] = buffactive['Blood Rage'] or false
 	state.Buff.Retaliation = buffactive['Retaliation'] or false
 	state.Buff.Restraint = buffactive['Restraint'] or false
     state.Buff['Aftermath'] = buffactive['Aftermath'] or false
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
+	state.Buff['Third Eye'] = buffactive['Third Eye'] or false
     state.Buff.Hasso = buffactive.Hasso or false
-    state.Buff.Seigan = buffactive.Seigan or false   
+    state.Buff.Seigan = buffactive.Seigan or false
+	state.Buff['Sneak Attack'] = buffactive['Sneak Attack'] or false
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.RP = M(false, "Reinforcement Points Mode")
-    state.Medicine = M(false,'Medicine')
+    --state.Medicine = M(false,'Medicine')
 
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
+	state.ConquerorMode = M{['description']='Conqueror Mode','Never','500','1000','Always'}
 
     absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
 
 	autows = 'Savage Blade'
 	autofood = 'Soy Ramen'
 	
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode","AutoReraiseeMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","TreasureMode",})
 end
 	
 -------------------------------------------------------------------------------------------------------------------
@@ -144,30 +151,39 @@ function job_filtered_action(spell, eventArgs)
 end
 
 function job_precast(spell, spellMap, eventArgs)
-	if spell.type == 'WeaponSkill' and state.AutoBuffMode.value ~= 'Off' then
-		local abil_recasts = windower.ffxi.get_ability_recasts()
-		if player.tp < 2250 and not buffactive['Blood Rage'] and abil_recasts[2] < latency then
-			eventArgs.cancel = true
-			windower.chat.input('/ja "Warcry" <me>')
-			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
-			tickdelay = os.clock() + 1.25
-			return
-		elseif state.Buff['SJ Restriction'] then
-			return
-		elseif player.sub_job == 'SAM' and player.tp > 1850 and abil_recasts[140] < latency then
-			eventArgs.cancel = true
-			windower.chat.input('/ja "Sekkanoki" <me>')
-			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
-			tickdelay = os.clock() + 1.25
-			return
-		elseif player.sub_job == 'SAM' and abil_recasts[134] < latency then
-			eventArgs.cancel = true
-			windower.chat.input('/ja "Meditate" <me>')
-			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
-			tickdelay = os.clock() + 1.25
-			return
+	if spell.type == 'WeaponSkill' then
+		if state.AutoBuffMode.value ~= 'Off' then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+			if player.tp < 2250 and not state.Buff['Blood Rage'] and not state.Buff.Warcry and abil_recasts[2] < latency then
+				eventArgs.cancel = true
+				windower.chat.input('/ja "Warcry" <me>')
+				windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+				add_tick_delay(1.1)
+				return
+			elseif state.Buff['SJ Restriction'] then
+				return
+			elseif player.sub_job == 'SAM' and player.tp > 1850 and abil_recasts[140] < latency then
+				eventArgs.cancel = true
+				windower.chat.input('/ja "Sekkanoki" <me>')
+				windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+				add_tick_delay(1.1)
+				return
+			elseif player.sub_job == 'SAM' and abil_recasts[134] < latency then
+				eventArgs.cancel = true
+				windower.chat.input('/ja "Meditate" <me>')
+				windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+				add_tick_delay(1.1)
+				return
+			end
+		end
+	elseif spell.type == "JobAbility" then
+		if spell.english == 'Berserk' then
+			if state.ConquerorMode.value == 'Always' or (state.ConquerorMode.value ~= 'Never' and tonumber(state.ConquerorMode.value) > player.tp) then
+				internal_enable_set("Weapons") 
+			end
 		end
 	end
+
 end
 -- Modify the default idle set after it was constructed.
 function customize_idle_set(idleSet)
@@ -262,11 +278,13 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 	end
+	--[[ 
 	if spell.type == 'WeaponSkill' then
-        if state.WeaponskillMode.value == 'vagary' then
+        if state.WeaponskillMode.value == 'Proc' then
             equip()
         end
 	end
+	]]
 end
 
 function job_tick()
@@ -285,8 +303,14 @@ function job_update(cmdParams, eventArgs)
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
-	if not spell.interrupted then
-		if spell.english == 'Warcry' then
+	if spell.type == "JobAbility" then
+		if spell.english == 'Berserk' then
+			if state.ConquerorMode.value ~= 'Never' and not state.UnlockWeapons.value and state.Weapons.value ~= 'None' then
+				equip_weaponset()
+			end
+		end
+	elseif spell.english == 'Warcry' then
+		if not spell.interrupted then
 			lastwarcry = player.name
 		end
 	end

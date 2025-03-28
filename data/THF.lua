@@ -104,7 +104,7 @@ function job_setup()
 	autofood = 'Soy Ramen'
 	
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -130,13 +130,37 @@ end
 function job_pretarget(spell, spellMap, eventArgs)
 
 end
+--[[ 
+function job_filtered_precast(spell, spellMap, eventArgs)
+    -- Determine which WS sets to use based on your attack in your TP set (or idle set if WSing unengaged).
+ 
+    attack = player.attack
+    if attack > attack2 then
+		windower.send_command('input //gs c set WeaponskillMode PDL')
+    else
+		windower.send_command('input //gs c set WeaponskillMode PDL')
+    end
+    equip(active_ws[spell.name])
 
+    -- Cancel weapon skill if enemy is further than 7 yalms away to prevent losing TP. This value should be larger for "large" model enemies such as Fafnir.
+    if active_ws[spell.name] then
+
+    equip(active_ws[spell.name])
+    
+
+    end
+    equip(active_ws["Exenterator"]) -- Default to Blade: Ten weapon skill sets if no set is defined for selected WS.
+
+end
+]]
 function job_precast(spell, spellMap, eventArgs)
 
 end
 
 function job_post_precast(spell, spellMap, eventArgs)
+
     
+
 	if spell.type == 'WeaponSkill' then
 		if (spell.english == 'Aeolian Edge' or spell.english == 'Cyclone') and state.TreasureMode.value ~= 'None' then
 			equip(sets.TreasureHunter)
@@ -203,7 +227,7 @@ end
 -- Called when a player gains or loses a buff.
 -- buff == buff gained or lost
 -- gain == true if the buff was gained, false if it was lost.
---[[function job_buff_change(buff, gain)
+function job_buff_change(buff, gain)
 	update_melee_groups()
     -- Warp ring rule, for any buff being lost
     if S{'Warp', 'Vocation', 'Capacity'}:contains(player.equipment.ring2) then
@@ -213,7 +237,7 @@ end
     else
         enable('ring2')
     end
-end]]
+end
 
 
 -------------------------------------------------------------------------------------------------------------------

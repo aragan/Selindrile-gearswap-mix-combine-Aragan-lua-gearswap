@@ -191,7 +191,7 @@ function job_setup()
 	autows = 'Spirit Taker'
 	autofood = 'Akamochi'
 	
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","PactSpamMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","Avatars","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","PactSpamMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","Avatars","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -287,6 +287,13 @@ function job_post_midcast(spell, spellMap, eventArgs)
 	
 end
 
+function job_filter_aftercast(spell, spellMap, eventArgs)
+    if not spell.interrupted then
+		if state.UseCustomTimers.value and spell.english == 'Sleep' or spell.english == 'Sleepga' then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+        end
+    end
+end
 function job_aftercast(spell, spellMap, eventArgs)
     if not spell.interrupted then
 		if state.UseCustomTimers.value and spell.english == 'Sleep' or spell.english == 'Sleepga' then

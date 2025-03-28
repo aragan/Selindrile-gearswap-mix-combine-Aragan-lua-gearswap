@@ -87,6 +87,7 @@ function job_setup()
 	state.Buff['Mana Wall'] = buffactive['Mana Wall'] or false
 	state.Buff['Manafont'] = buffactive['Manafont'] or false
 	state.Buff['Manawell'] = buffactive['Manawell'] or false
+    state.Buff['Sublimation: Activated'] = buffactive['Sublimation: Activated'] or false
 
     LowTierNukes = S{'Stone', 'Water', 'Aero', 'Fire', 'Blizzard', 'Thunder',
         'Stone II', 'Water II', 'Aero II', 'Fire II', 'Blizzard II', 'Thunder II',
@@ -113,7 +114,7 @@ function job_setup()
 	autofood = 'Pear Crepe'
 	autonuke = 'Absorb-TP'
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoManawell","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoManawell","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -253,6 +254,9 @@ function job_post_midcast(spell, spellMap, eventArgs)
 						end
 					end
 				end
+				if spell.element == 'Earth' then
+					equip(sets.element.Earth)
+				end
 			end
 			
 			if spell.element and sets.element[spell.element] then
@@ -282,6 +286,8 @@ function job_post_midcast(spell, spellMap, eventArgs)
 		equip(sets.SIRD)
 	elseif state.CastingMode.value == 'ConserveMP' then
 		equip(sets.ConserveMP)
+	elseif spell.skill == 'Elemental Magic' and state.CastingMode.value == 'OccultAcumen' then
+		equip(sets.OccultAcumen)
 	end
     if spell.skill == 'Enhancing Magic' and classes.NoSkillSpells:contains(spell.english) then
 		if state.CastingMode.value == 'SIRD' then
@@ -291,7 +297,10 @@ function job_post_midcast(spell, spellMap, eventArgs)
 		end
 	end
 	if spell.skill == 'Elemental Magic' and (state.MagicBurst.value or AEBurst) then
-        equip(sets.magicburst)
+		equip(sets.magicburst)
+		if data.elements.nuke_of ~= 'Earth' then			
+		equip(sets.element.Earth.magicburst)
+		end
         if spell.english == "Impact" then
             equip(sets.midcast.Impact)
         end
@@ -466,6 +475,17 @@ function job_customize_idle_set(idleSet)
     return idleSet
 end
 
+function job_customize_kiting_set(baseSet)
+
+	if state.Buff['Mana Wall'] and ((state.IdleMode.value:contains('DT') or state.IdleMode.value:contains('Tank')) and in_combat)then
+		if sets.buff['Mana Wall'] then
+			baseSet = set_combine(baseSet, sets.buff['Mana Wall'])
+		end
+	end
+
+	return baseSet
+end
+
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
 
@@ -502,6 +522,8 @@ windower.raw_register_event('prerender',function()
     mov.counter = mov.counter + 1;
     if state.HippoMode.value == true then 
         moving = false
+	elseif buffactive['Mana Wall'] then
+		moving = false
 	end
 end)
 

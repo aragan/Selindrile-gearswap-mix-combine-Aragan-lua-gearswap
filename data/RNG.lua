@@ -148,7 +148,7 @@ function job_setup()
 						['MagicAccUnlimited'] ="Hauksbok Bolt"}
 	}
 	
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","HippoMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -454,7 +454,11 @@ function job_midcast(spell, action, spellMap, eventArgs)
 		end
 	end
 end
-
+function job_filter_aftercast(spell, spellMap, eventArgs)
+	if spell.english == "Shadowbind" then
+        send_command('@timers c "Shadowbind ['..spell.target.name..']" 42 down abilities/00122.png')
+    end
+end
 function job_aftercast(spell, spellMap, eventArgs)
 	if state.UseDefaultAmmo.value and player.equipment.range and DefaultAmmo[WeaponType[player.equipment.range]].Default then
 		equip({ammo=DefaultAmmo[WeaponType[player.equipment.range]].Default})

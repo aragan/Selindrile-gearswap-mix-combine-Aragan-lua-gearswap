@@ -84,15 +84,21 @@ function get_sets()
         "Rolan. Daifuku",
         "Reraise Earring",}
 
-
-
-		attack2 = 3500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value
-	
-	
-
 end
 
+attack2 = 3500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
 
+buff_spell_lists = {
+	Auto = {	--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
+		--{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
+	},
+	
+	Default = {
+		--{Name='Myoshu: Ichi',Buff='Subtle Blow Plus',SpellID=507,Reapply=false},
+		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,Reapply=false},
+	},
+}
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
 
@@ -106,7 +112,7 @@ function job_setup()
 
 	--state.Proc = M(false, 'Proc')
     --state.unProc = M(false, 'unProc')
-	state.Stance = M{['description']='Stance','Hasso','None','Innin','Yonin',}
+	state.Stance = M{['description']='Stance','None','Hasso','Innin','Yonin',}
 
 	autows = "Blade: Shun"
 	autofood = 'Soy Ramen'
@@ -115,9 +121,13 @@ function job_setup()
 	utsusemi_ni_cancel_delay = .1
 	
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Water','Lightning','Earth','Wind','Ice','Light','Dark',}
-	
+	determine_haste_group()
+	update_combat_form()  
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","ElementalWheel",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","TreasureMode",})
+	Haste = 0
+    DW_needed = 0
+    DW = false
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","ElementalWheel","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -439,8 +449,12 @@ end
 
 -- Called by the default 'update' self-command.
 function job_update(cmdParams, eventArgs)
+	determine_haste_group()
+	--handle_equipping_gear(player.status)  
 	update_melee_groups()
-
+	if player.sub_job == 'SAM' and state.Stance.value == "None" then
+		state.Stance:set("Hasso")
+	end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -490,6 +504,26 @@ end
         classes.CustomMeleeGroups:append('HighHaste')
     end
 end]]--Removed for now.
+
+
+
+
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 1 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 1 and DW_needed <= 7 then
+            classes.CustomMeleeGroups:append('HighHaste')
+        elseif DW_needed > 7 and DW_needed <= 16 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 16 and DW_needed <= 34 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 34 then
+            classes.CustomMeleeGroups:append('')
+        end
+    end
+end
 
 function job_self_command(commandArgs, eventArgs)
 	gearinfo(commandArgs, eventArgs)
@@ -626,19 +660,33 @@ function gearinfo(commandArgs, eventArgs)
                 Haste = tonumber(commandArgs[3])
             end
         end
-		if type(tonumber(commandArgs[3])) == 'number' then
+		--[[if type(tonumber(commandArgs[3])) == 'number' then
 			local attack = tonumber(commandArgs[3])
 			if attack > 1100 then
 				
 				send_command('input //gs c set WeaponskillMode PDL')
 
 			end
-		end
+		end]]
         if not midaction() then
             job_update()
         end
     end
 end
+
+function job_handle_equipping_gear(playerStatus, eventArgs)
+    determine_haste_group()
+	update_combat_form()
+end
+
+function update_combat_form()  
+	if DW == true then  
+		state.CombatForm:set('DW')  
+	elseif DW == false then  
+		state.CombatForm:reset()  
+	end  
+end
+
 function job_tick()
 	if check_stance() then return true end
 	if check_buff() then return true end
@@ -840,15 +888,3 @@ windower.register_event('incoming text',function(org)
 		windower.send_command('input //gs c set ElementalMode Ice')
 	end
 end)
-
-buff_spell_lists = {
-	Auto = {	--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
-		--{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
-	},
-	
-	Default = {
-		--{Name='Myoshu: Ichi',Buff='Subtle Blow Plus',SpellID=507,Reapply=false},
-		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,Reapply=false},
-	},
-}

@@ -111,7 +111,7 @@ function job_setup()
     state.AutoEquipBurst = M(true)
     state.RP = M(false, "Reinforcement Points Mode")    
 
-	autows = 'Resolution'
+	autows = ''
 	autofood = 'Soy Ramen'
 	autonuke = 'Absorb-TP'
 
@@ -133,7 +133,7 @@ function job_setup()
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Water','Lightning','Earth','Wind','Ice','Light','Dark',}
 	update_melee_groups()
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","Absorbs","Stance","DrainSwapWeaponMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode","AutoReraiseeMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","Absorbs","Stance","DrainSwapWeaponMode","TreasureMode",})
 end
 	
 -------------------------------------------------------------------------------------------------------------------
@@ -180,7 +180,32 @@ function job_precast(spell, spellMap, eventArgs)
 	end
 
 end
-
+function job_filter_aftercast(spell, spellMap, eventArgs)
+    if not spell.interrupted then
+		if (spell.english == 'Drain II' or spell.english == 'Drain III') and state.DrainSwapWeaponMode.value ~= 'Never' then
+			if player.equipment.main and sets.DrainWeapon and player.equipment.main == sets.DrainWeapon.main and player.equipment.main ~= sets.weapons[state.Weapons.value].main then
+				equip_weaponset(state.Weapons.value)
+			end
+        elseif state.UseCustomTimers.value and (spell.english == 'Sleep' or spell.english == 'Sleepga') then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+		elseif spell.english == "Sleep II" then
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
+        elseif spell.english == "Sleepga II" then
+            send_command('timers create "Sleepga II ' ..tostring(spell.target.name).. ' " 90 down spells/00274.png')
+        elseif spell.english == 'Impact' then
+                send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+        elseif spell.english == "Bind" then
+            send_command('timers create "Bind" 60 down spells/00258.png')
+        elseif spell.english == "Break" then
+            send_command('timers create "Break Petrification" 33 down spells/00255.png')
+        elseif spell.english == "Breakga" then
+            send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
+		elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
+            state.MagicBurstMode:reset()
+			if state.DisplayMode.value then update_job_states()	end
+        end
+    end
+end
 function job_aftercast(spell, spellMap, eventArgs)
     if not spell.interrupted then
 		if (spell.english == 'Drain II' or spell.english == 'Drain III') and state.DrainSwapWeaponMode.value ~= 'Never' then

@@ -115,11 +115,13 @@ function job_setup()
 	state.Buff['Saber Dance'] = buffactive['Saber Dance'] or false
 	state.Buff['Fan Dance'] = buffactive['Fan Dance'] or false
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
-	
+	state.MaintainAftermath	  = M(true, 'Maintain Aftermath')
+
     state.MainStep = M{['description']='Main Step1', 'Box Step','Quickstep','Feather Step','Stutter Step'}
     state.AltStep = M{['description']='Alt Step', 'Feather Step','Quickstep','Stutter Step','Box Step'}
     state.UseAltStep = M(false, 'Use Alt Step')
     state.CurrentStep = M{['description']='Current Step', 'Main', 'Alt'}
+    state.SelectStepTarget = M(false, 'Select Step Target')
 
 	state.AutoPrestoMode = M(true, 'Auto Presto Mode')
 	state.DanceStance = M{['description']='Dance Stance','None','Saber Dance','Fan Dance'}
@@ -145,7 +147,7 @@ function job_setup()
 	step_feet_reduction = calculate_step_feet_reduction()
 	
     update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","DanceStance","MainStep","AltStep","CurrentStep","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","DanceStance","MainStep","AltStep","CurrentStep","Passive","RuneElement","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -156,6 +158,23 @@ end
 
 function job_filtered_action(spell, eventArgs)
 
+end
+function job_filtered_pretarget(spell, action, spellMap, eventArgs)
+    if spell.type == 'Step' then
+        local allRecasts = windower.ffxi.get_ability_recasts()
+        local prestoCooldown = allRecasts[236]
+        local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
+
+        --local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
+        
+        if player.main_job_level >= 77 and prestoCooldown < 1 and under3FMs then
+            cast_delay(1.1)
+            send_command('@input /ja "Presto" <me>')
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
 end
 -- Automatically use Presto for steps when it's available and we have less than 3 finishing moves
 function job_pretarget(spell, action, spellMap, eventArgs)
@@ -220,7 +239,50 @@ function job_precast(spell, spellMap, eventArgs)
         end
     end
 end
+function job_filter_precast(spell, spellMap, eventArgs)
+	if spell.type == 'WeaponSkill' and state.AutoBuffMode.value ~= 'Off' and player.tp > (999 + step_cost()) then
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+		if under3FMs() and abil_recasts[220] < latency and (abil_recasts[236] < latency or state.Buff['Presto']) and player.status == 'Engaged' then
+			eventArgs.cancel = true
+			windower.send_command('gs c step')
+			windower.chat.input:schedule(2.3,'/ws "'..spell.english..'" '..spell.target.raw..'')
+			tickdelay = os.clock() + 4.3
+			return
+		elseif not under3FMs() and not state.Buff['Building Flourish'] and abil_recasts[226] < latency then
+			eventArgs.cancel = true
+			windower.chat.input('/ja "Climactic Flourish" <me>')
+			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+			tickdelay = os.clock() + 1.25
+			return
+		elseif not under3FMs() and not state.Buff['Climactic Flourish'] and abil_recasts[222] < latency then
+			eventArgs.cancel = true
+			windower.chat.input('/ja "Building Flourish" <me>')
+			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+			tickdelay = os.clock() + 1.25
+			return
+		elseif player.sub_job == 'SAM' and not state.Buff['SJ Restriction'] and player.tp > 1850 and abil_recasts[140] < latency then
+			eventArgs.cancel = true
+			windower.chat.input('/ja "Sekkanoki" <me>')
+			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+			tickdelay = os.clock() + 1.25
+			return
+		elseif player.sub_job == 'SAM' and not state.Buff['SJ Restriction'] and abil_recasts[134] < latency then
+			eventArgs.cancel = true
+			windower.chat.input('/ja "Meditate" <me>')
+			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+			tickdelay = os.clock() + 1.25
+			return
+		end
+    elseif spell.type == 'Step' and player.main_job_level >= 77 and state.AutoPrestoMode.value and player.tp > 99 and player.status == 'Engaged' and under3FMs() then
+        local abil_recasts = windower.ffxi.get_ability_recasts()
 
+        if abil_recasts[236] < latency and abil_recasts[220] < latency then
+            eventArgs.cancel = true
+			windower.chat.input('/ja "Presto" <me>')
+			windower.chat.input:schedule(1.1,'/ja "'..spell.english..'" '..spell.target.raw..'')
+        end
+    end
+end
 function job_post_precast(spell, spellMap, eventArgs)
 	if spell.type == 'WeaponSkill' then
 		local WSset = standardize_set(get_precast_set(spell, spellMap))
@@ -272,7 +334,19 @@ function job_aftercast(spell, spellMap, eventArgs)
 		end
     end
 end
-
+function job_filter_aftercast(spell, spellMap, eventArgs)
+	-- Lock feet after using Mana Wall.
+	if not spell.interrupted then
+		if spell.type == 'WeaponSkill' and state.Buff['Climactic Flourish'] and not under3FMs() and player.tp < 999 then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+			if abil_recasts[222] < latency then
+				windower.chat.input:schedule(1.5,'/ja "Reverse Flourish" <me>')
+			end
+		elseif state.UseAltStep.value and spell.english == state[state.CurrentStep.current..'Step'].current then
+			state.CurrentStep:cycle()
+		end
+	end
+end
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for non-casting events.
 -------------------------------------------------------------------------------------------------------------------

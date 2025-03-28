@@ -128,7 +128,7 @@ function job_setup()
 	autonuke = 'Absorb-TP'
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","NM","SleepMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","NM","SleepMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -358,6 +358,76 @@ function job_post_midcast(spell, spellMap, eventArgs)
             equip({neck="Sroda necklace"})
         end
     end
+end
+
+function job_filter_aftercast(spell, spellMap, eventArgs)
+    local self = windower.ffxi.get_player()
+	base = 90
+
+    if spell.en == "Sleep II" then
+        base = 90
+    elseif spell.en == "Sleep" or spell.en == "Sleepga" then
+        base = 60
+    end
+    if spell.en == "Gravity" then
+        base = 100
+    end
+    if spell.en == "Gravity II" then
+        base = 100
+    end
+	if spell.en == "Bind" then
+        base = 30
+    end
+    if state.Buff.Saboteur then
+        if state.NM.value then
+            base = base * 1.25
+        else
+            base = base * 2
+        end
+    end
+
+    -- Merit Points Duration Bonus
+    base = base + self.merits.enfeebling_magic_duration*6
+
+    -- Relic Head Duration Bonus
+    if not ((buffactive.Stymie and buffactive.Composure) or state.SleepMode.value == 'MaxDuration') then
+        base = base + self.merits.enfeebling_magic_duration*3
+    end
+
+    -- Job Points Duration Bonus
+    base = base + self.job_points.rdm.enfeebling_magic_duration
+
+    --Enfeebling duration non-augmented gear total
+    gear_mult = 1.40
+    --Enfeebling duration augmented gear total
+    aug_mult = 1.25
+    --Estoquer/Lethargy Composure set bonus
+    --2pc = 1.1 / 3pc = 1.2 / 4pc = 1.35 / 5pc = 1.5
+    empy_mult = 1 --from sets.midcast.Sleep
+
+    if ((buffactive.Stymie and buffactive.Composure) or state.SleepMode.value == 'MaxDuration') then
+        if buffactive.Stymie then
+            base = base + self.job_points.rdm.stymie_effect
+        end
+        empy_mult = 1.35 --from sets.midcast.SleepMaxDuration
+    end
+
+    totalDuration = math.floor(base * gear_mult * aug_mult * empy_mult)
+
+    -- Create the custom timer
+    if spell.english == "Sleep II" then
+        send_command('@timers c "Sleep II ['..spell.target.name..'] ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00259.png')
+    elseif (spell.english == "Sleep" or spell.english == "Sleepga") then
+        send_command('@timers c "Sleep ['..spell.target.name..'] ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00253.png')
+	elseif spell.english == "Gravity" then
+        send_command('@timers c "Gravity ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00216.png')
+	elseif spell.english == "Gravity II" then
+        send_command('@timers c "Gravity II ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00217.png')
+	elseif spell.english == "Bind" then
+        send_command('@timers c "Bind ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00258.png')
+    end
+    --add_to_chat(1, 'Base: ' ..base.. ' Merits: ' ..self.merits.enfeebling_magic_duration.. ' Job Points: ' ..self.job_points.rdm.stymie_effect.. ' Set Bonus: ' ..empy_mult)
+
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
