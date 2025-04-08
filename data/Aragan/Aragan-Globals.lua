@@ -14,11 +14,20 @@ keyboard binds and chat .
 
 some jobs work with it some addon.
 
+add code auto equip to PDL ws set if buff high attack.
+add code auto equip magic burst set when sc window open.
 add bind to work addon autoitem for auto use medicine for Odyssey nms 
 and i made mode automedicinemode auto use medicine
 
 made mode autoReraise auto equip zombie gear Reraise
-
+ 
+add reaction for sortie NM B/D F/H auto switch elemental mode to correct nm weak it if he use spell for job rdm drk blm sch .
+add passive set tartarus death if mob touch u for jobs pld war drk drg sam bst. if u have Tartarus Platemail red wings .
+add passive enspell for some job.
+add code auto swap gearto EnemyCritical idle set if u get hite critcal hit.
+add auto use ja Ebullience for blm job if sub /sch and in fight.
+add code tell msg if u get proc in abyssea and auto swap gear after msg for job war nin blm
+and add in macro special line for proc those job war nin blm. 
 add bind for reset addon zonetimer for sortie bosses F/H to calc 3min run away before tpmove or use ja run or bind or kitting
 
 in macro job blm sch rdm nin drk geo whm pld for fast used i add :
@@ -86,6 +95,8 @@ state.Etude = M{['description']='Etude',  'Herculean Etude', 'Sage Etude', 'Sine
 'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
 'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
 
+state.Spellset = M{['description']='Spellset','vagary', 'aoe', 'aoe2'}
+
 state.Avatars = M{['description']='Avatars', "Ifrit", "Ramuh", "Titan", "Siren", "Garuda", "Diabolos", "Carbuncle", "Fenrir", "Leviathan", "Shiva", "Odin", "Alexander", "Cait Sith"}
 
 state.WeaponLock = M(false, 'Weapon Lock')
@@ -98,10 +109,14 @@ state.SleepMode = M{['description']='Sleep Mode', 'Normal', 'MaxDuration'}
 state.AutoMedicineMode = M(false, 'Auto Medicine Mode')
 state.AutoReraiseeMode = M(false, 'Auto Reraise Mode')
 --state.ShieldMode:options('Normal','Genmei','Ammurapi')
-attack2 = 3500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this val
+
+--auto equip to PDL ws set is higher than this value .. this value for all job and u can add any value in any job lua . (Aragan@Asura)
+attack2 = 4500 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
 
 --state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen','Genmei','Ammurapi'} -- , 'Priwen' }
 state.ShieldMode = M{['description'] = 'Shield Mode', 'Normal','Aegis','Ochain','Duban','Genmei','Ammurapi'}
+state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
+
 NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
 
 gear.TVRring = "Cornelia's Ring"
@@ -141,8 +156,15 @@ AutoRuneMode
 AutoAcceptRaiseMode
 
 gs c set AutoWSRestore true
+gs c set SkipProcWeapons false
+
 //gs c useitem head Reraise Hairpin +1
 //gs c useitem ring2 warp ring
+
+(Aragan) HPboost set gear Equiped ready 
+send_command('input /p Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
+
+
 ]]
 
 -- Function to bind GearSwap binds when loading a GS script.
@@ -221,7 +243,6 @@ function global_on_load()
 
 	send_command('bind ^- gs c toggle selectnpctargets')
 	send_command('bind !- gs c cycle pctargetmode')
-	send_command('input //gs org')-- org addon every change job
     send_command('lua r runewidget;rw show')--Turns addon off if job non /run.
 
 	send_command('bind ^] input //put storage slip* case all')
@@ -229,12 +250,16 @@ function global_on_load()
 	send_command('bind !, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
 	send_command('bind !. input //put * Wardrobe4 all') -- gs validate  --to check  --lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
 
-	send_command('bind ^. input //get storage slip* all;wait 1;input //packer repack') -- PorterPacker addon
+	send_command('bind ^. input //get storage slip* all;wait 1;input //po r') -- PorterPacker addon
+	send_command('bind ^, input //get storage slip* all;wait 1;input //po r a') -- PorterPacker addon
 
 	send_command('bind !m gs c toggle AutoMedicineMode')
 	send_command('bind !n gs c toggle AutoReraiseeMode')
 
 	--send_command('bind @m gs c mount Raptor')
+
+	--send_command('input //gs org')-- org addon every change job
+	send_command('wait 1;input //gs c naked;gs disable all;wait .5;put * wardrobe4 all;wait .3;put storage slip* case all;wait .5;input //gs org')-- org addon every change job
 
 end
 -- Function to revert binds when unloading.
@@ -244,6 +269,7 @@ function global_unload()
 	send_command('unbind f3')
 	send_command('unbind !s')
 	send_command('unbind !r')
+	send_command('unbind !5')
 
 	send_command('unbind tab')
 	send_command('unbind `')
@@ -264,6 +290,7 @@ function global_unload()
 	send_command('unbind =')
 	send_command('unbind !P')
 	send_command('unbind ^P')
+	send_command('unbind ^m')
 
 	send_command('lua u Singer')--Turns addon off if job non brd.
 	send_command('lua u PLD-HUD')--Turns addon off if job non pld.
@@ -339,7 +366,6 @@ bayld_items = {'Tlalpoloani','Macoquetza','Camatlatia','Icoyoca','Tlamini','Suij
 ]]
 
 
-
 -------------------------------------------------------------------------------------------------------------------
 -- Global event-handling functions.
 -------------------------------------------------------------------------------------------------------------------
@@ -401,35 +427,38 @@ function job_precast(spell, action, spellMap, eventArgs)
             add_to_chat(123, spell.name..' Canceled: Warcry its up [active]')
         end
     end
+	--[[ 
 	attack = player.attack
 	if attack > attack2 then
-		windower.send_command('input //gs c set WeaponskillMode PDL')
-    else
-		windower.send_command('input //gs c set WeaponskillMode Match')
-    end
+		windower.send_command('gs c set WeaponskillMode PDL')
 
+		--WeaponskillMode:set('PDL') 
+    else
+		windower.send_command('gs c set WeaponskillMode Match')
+    end
+]]
 end
 function job_post_precast(spell)
 	if spell.name == "Holy Water" then
 		 equip(sets.precast.Item['Holy Water'])
     end
-    attack = player.attack
+	attack = player.attack -- auto equip to PDL ws set - code add by kastra,modi.(Aragan@Asura)
 	if spell.type == 'WeaponSkill' then
 		if attack > attack2 then
 			equip(sets.precast.WS[spell.name].PDL)
+		elseif state.WeaponskillMode.value == 'Proc' then
+			equip(sets.precast.WS.Proc)
 		else
 			equip(sets.precast.WS[spell.name])
 		end
 	end
-
-end
--- Global intercept on midcast.
-function user_midcast(spell, action, spellMap, eventArgs)
-	-- Default base equipment layer of fast recast.
-	if spell.action_type == 'Magic' and sets.midcast and sets.midcast.FastRecast then
-		equip(sets.midcast.FastRecast)
+	if spell.type == 'WeaponSkill' and player.main_job == 'WAR' then
+		if buffactive['Mighty Strikes'] then
+			equip(sets.WSMighty)
+		end
 	end
 end
+
 function job_aftercast(spell, spellMap, eventArgs)
 	if pet.isvalid then
 		if (spell.action_type == 'Magic' and player.hpp < Breath_HPP) or spell.english == 'Steady Wing' or spell.english == 'Restoring Breath' then
@@ -493,6 +522,30 @@ function job_state_change(stateField, newValue, oldValue)
 end
 	
 
+
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
 
 
 
@@ -768,30 +821,31 @@ end
         end
     end]]
 
-	function default_zone_change(new_id,old_id)
-		--tickdelay = os.clock() + 10
-
-		if data.areas.cities:contains(world.area)  then
-			send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock') --Turns addon on.
-		else
-			send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock') --Turns addon off. stats=craftstats addon
-		end
-		
-		if data.areas.laggy:contains(world.area)  then
-			send_command('input //gs c set AutoDefenseMode true;') --Turns mode on.
-		end
-
-		if world.area:contains('Nyzul Isle') then
-			send_command('input //NyzulHelper show;input //NyzulBuddy start;input //iSpy') --Turns addon on.
-		else
-			send_command('input //NyzulHelper hide;input //NyzulBuddy stop;') --Turns addon off. -- input //iSpy
-		end
-		if world.area:contains('Abyssea') then
-			send_command('input //ept show;') --Turns addon on.
-		else
-			send_command('input //ept hide;') --Turns addon off.
-		end
+function default_zone_change(new_id,old_id)
+	--tickdelay = os.clock() + 10	
+	if data.areas.cities:contains(world.area)  then
+		send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock;input //tr autodrop off') --Turns addon on.
+	else
+		send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock;input //tr autodrop on;wait 5;put storage slip* case all') --Turns addon off. stats=craftstats addon
 	end
+	
+	if data.areas.laggy:contains(world.area)  then
+		send_command('input //gs c set AutoDefenseMode true;input //gs c set AutoWSRestore true') --Turns mode on.
+	else
+		send_command('input //gs c set AutoWSRestore false;') --Turns  off. -- 
+	end
+
+	if world.area:contains('Nyzul Isle') then
+		send_command('input //NyzulHelper show;input //NyzulBuddy start;input //iSpy') --Turns addon on.
+	else
+		send_command('input //NyzulHelper hide;input //NyzulBuddy stop;') --Turns addon off. -- input //iSpy
+	end
+	if world.area:contains('Abyssea') then
+		send_command('input //ept show;') --Turns addon on.
+	else
+		send_command('input //ept hide;') --Turns addon off.
+	end
+end
 
 -- If HP drops under 45% then equip Re-raise head/body
 windower.register_event('hpp change', -- code add from Aragan Asura
