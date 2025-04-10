@@ -375,6 +375,10 @@ function check_buff()
 			windower.chat.input('/ja "Aggressor" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
+		elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+			windower.chat.input('/ja "Warcry" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
 		else
 			return false
 		end

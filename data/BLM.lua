@@ -109,6 +109,7 @@ function job_setup()
     state.WeaponLock = M(false, 'Weapon Lock')
     state.RP = M(false, "Reinforcement Points Mode")
     state.HippoMode = M(false, "hippoMode")
+	state.Stance = M{['description']='Stance','None','Ebullience'}
 
 	autows = 'Myrkr'
 	autofood = 'Pear Crepe'
@@ -157,7 +158,6 @@ function job_filter_precast(spell, spellMap, eventArgs)
 
 end
 function job_precast(spell, spellMap, eventArgs)
-
 	if spell.action_type == 'Magic' then
 		if spellMap == 'Cure' or spellMap == 'Curaga' then
 			gear.default.obi_back = gear.obi_cure_back
@@ -178,6 +178,8 @@ function job_precast(spell, spellMap, eventArgs)
             classes.CustomClass = 'Proc'
         elseif state.CastingMode.value == 'OccultAcumen' then
             classes.CustomClass = 'OccultAcumen'
+			state.CastingMode:reset()
+
         end
 
 	end
@@ -288,6 +290,8 @@ function job_post_midcast(spell, spellMap, eventArgs)
 		equip(sets.ConserveMP)
 	elseif spell.skill == 'Elemental Magic' and state.CastingMode.value == 'OccultAcumen' then
 		equip(sets.OccultAcumen)
+		state.CastingMode:reset()
+
 	end
     if spell.skill == 'Enhancing Magic' and classes.NoSkillSpells:contains(spell.english) then
 		if state.CastingMode.value == 'SIRD' then
@@ -541,6 +545,7 @@ function job_self_command(commandArgs, eventArgs)
 end
 
 function job_tick()
+	if check_stance() then return true end
 	if check_arts() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
@@ -721,6 +726,23 @@ function handle_elemental(cmdParams)
     end
 end
 
+function check_stance()
+	if state.Stance.value ~= 'None' and player.in_combat then
+		
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+
+		if state.Stance.value == 'Ebullience' and not buffactive['Ebullience'] and  being_attacked and buffactive["Dark Arts"] and get_current_stratagem_count() > 0 then
+			windower.chat.input('/ja "Ebullience" <me>')
+			tickdelay = os.clock() + 1.1
+			add_to_chat(204, '~~~Current Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+			return true
+		else
+			return false
+		end
+	end
+end
+
 function check_buff()
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
@@ -730,6 +752,12 @@ function check_buff()
 				tickdelay = os.clock() + 2
 				return true
 			end
+		end
+		if not buffactive['Ebullience'] and (player.in_combat or being_attacked) and buffactive["Dark Arts"] and get_current_stratagem_count() > 0 then 
+				windower.chat.input('/ja "Ebullience" <me>')
+				--tickdelay = os.clock() + 2
+                --send_command('@input /p <recast=Stratagems>')
+                add_to_chat(204, '~~~Current Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
 		end
 	else
 		return false
@@ -831,7 +859,10 @@ buff_spell_lists = {
 		{Name='Stoneskin',		Buff='Stoneskin',		SpellID=54,		When='Always'},
 		{Name='Klimaform',		Buff='Klimaform',		SpellID=287,	When='Combat'},
 	},
-	
+	MB = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+
+	{Name='Klimaform',		Buff='Klimaform',		SpellID=287,	When='Combat'},
+},
 	Default = {
 		{Name='Reraise',		Buff='Reraise',			SpellID=113,	Reapply=false},
 		{Name='Haste',			Buff='Haste',			SpellID=57,		Reapply=false},

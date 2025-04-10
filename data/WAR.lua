@@ -110,6 +110,7 @@ function job_setup()
     state.Buff.Hasso = buffactive.Hasso or false
     state.Buff.Seigan = buffactive.Seigan or false
 	state.Buff['Sneak Attack'] = buffactive['Sneak Attack'] or false
+	state.Buff.Phalanx = buffactive['Phalanx'] or false
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.RP = M(false, "Reinforcement Points Mode")
     --state.Medicine = M(false,'Medicine')
@@ -220,6 +221,7 @@ end
 
 -- Run after the general precast() is done.
 function job_post_precast(spell, spellMap, eventArgs)
+
 	if spell.type == 'WeaponSkill' then
 
 		local WSset = standardize_set(get_precast_set(spell, spellMap))
@@ -278,6 +280,8 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 	end
+
+
 	--[[ 
 	if spell.type == 'WeaponSkill' then
         if state.WeaponskillMode.value == 'Proc' then
@@ -493,16 +497,17 @@ function check_hasso()
 end
 
 function check_buff()
-	if state.AutoBuffMode.value ~= 'Off' and player.in_combat then
+
 		
+	if state.AutoBuffMode.value == 'Auto' and player.in_combat then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
-		--[[if not buffactive.Retaliation and abil_recasts[8] < latency then
-			windower.chat.input('/ja "Retaliation" <me>')
-			tickdelay = os.clock() + 1.1
-			return true	]]	
 		if not buffactive.Restraint and abil_recasts[9] < latency then
 			windower.chat.input('/ja "Restraint" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif buffactive.Defender then
+			send_command('@wait .5;cancel Defender')
 			tickdelay = os.clock() + 1.1
 			return true
 		elseif not buffactive['Blood Rage'] and abil_recasts[11] < latency then
@@ -517,10 +522,74 @@ function check_buff()
 			windower.chat.input('/ja "Aggressor" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
+		elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+			windower.chat.input('/ja "Warcry" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
 		else
 			return false
 		end
 	end
+	if state.AutoBuffMode.value == 'Full' and player.in_combat then
+
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+		if not buffactive.Restraint and abil_recasts[9] < latency then
+			windower.chat.input('/ja "Restraint" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif buffactive.Defender then
+			send_command('@wait .5;cancel Defender')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive['Blood Rage'] and abil_recasts[11] < latency then
+			windower.chat.input('/ja "Blood Rage" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Berserk and abil_recasts[1] < latency then
+			windower.chat.input('/ja "Berserk" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Aggressor and abil_recasts[4] < latency then
+			windower.chat.input('/ja "Aggressor" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Warcry and abil_recasts[2] < latency then
+			windower.chat.input('/ja "Warcry" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive['Mighty Strikes'] and abil_recasts[254] < latency then
+			windower.chat.input('/ja "Mighty Strikes" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		end
+	end
+	if state.AutoBuffMode.value == 'Defend' and player.in_combat then
+
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+		if buffactive.Berserk then
+			send_command('@wait .5;cancel Berserk')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Restraint and abil_recasts[3] < latency then
+			windower.chat.input('/ja "Defender" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Warcry and abil_recasts[2] < latency then
+			windower.chat.input('/ja "Warcry" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		else
+			return false
+		end
+	end
+	
+
+		--[[if not buffactive.Retaliation and abil_recasts[8] < latency then
+			windower.chat.input('/ja "Retaliation" <me>')
+			tickdelay = os.clock() + 1.1
+			return true	]]	
 		
 	return false
 end
@@ -562,3 +631,12 @@ function(new_hpp,old_hpp)
 end
 )
 
+
+buff_spell_lists = {
+	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+	},
+	
+	Defend = {
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	Reapply=false},
+	},}

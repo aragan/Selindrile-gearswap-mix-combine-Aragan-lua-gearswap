@@ -195,7 +195,7 @@ function job_precast(spell, spellMap, eventArgs)
         equip(active_ws[spell.name])
     end]]
 end
-
+--[[  
 function check_param()
 	print("-------------------------")
 	if AccFlag == 1 then
@@ -235,6 +235,7 @@ function check_param()
 	end
 	print("-------------------------")
 end
+]]
 function job_post_precast(spell, spellMap, eventArgs)
 	if spell.type == 'WeaponSkill' then
 
@@ -278,7 +279,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 	end	
 	if spell.type == 'WeaponSkill' then
         if state.WeaponskillMode.value == 'Proc' then
-            equip()
+            equip(sets.precast.WS.Proc)
 
 		end
 	end
@@ -449,7 +450,7 @@ end
 
 -- Called by the default 'update' self-command.
 function job_update(cmdParams, eventArgs)
-	determine_haste_group()
+	--determine_haste_group()
 	--handle_equipping_gear(player.status)  
 	update_melee_groups()
 	if player.sub_job == 'SAM' and state.Stance.value == "None" then
@@ -510,6 +511,17 @@ end]]--Removed for now.
 
 function determine_haste_group()
     classes.CustomMeleeGroups:clear()
+	--[[
+	classes.CustomMeleeGroups:clear()
+	-- Choose gearset based on DW needed
+        if Haste >= 908 then
+		classes.CustomMeleeGroups:append('H: 908+')
+	elseif Haste > 855 and Haste < 908 then
+		classes.CustomMeleeGroups:append('H: 856')
+	elseif Haste > 819 and Haste < 856 then
+		classes.CustomMeleeGroups:append('H: 819')
+	end
+	]]
     if DW == true then
         if DW_needed <= 1 then
             classes.CustomMeleeGroups:append('MaxHaste')
@@ -520,7 +532,7 @@ function determine_haste_group()
         elseif DW_needed > 16 and DW_needed <= 34 then
             classes.CustomMeleeGroups:append('LowHaste')
         elseif DW_needed > 34 then
-            classes.CustomMeleeGroups:append('')
+            classes.CustomMeleeGroups:append('LowHaste')
         end
     end
 end
@@ -660,14 +672,6 @@ function gearinfo(commandArgs, eventArgs)
                 Haste = tonumber(commandArgs[3])
             end
         end
-		--[[if type(tonumber(commandArgs[3])) == 'number' then
-			local attack = tonumber(commandArgs[3])
-			if attack > 1100 then
-				
-				send_command('input //gs c set WeaponskillMode PDL')
-
-			end
-		end]]
         if not midaction() then
             job_update()
         end
@@ -816,6 +820,10 @@ function check_buff()
 				return true
 			elseif player.sub_job == 'WAR' and not buffactive.Aggressor and not is_defensive() and abil_recasts[4] < latency then
 				windower.chat.input('/ja "Aggressor" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
 			else

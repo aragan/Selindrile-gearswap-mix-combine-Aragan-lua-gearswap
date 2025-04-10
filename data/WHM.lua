@@ -230,18 +230,42 @@ function job_filtered_action(spell, eventArgs)
             equip()
         end
     end
+
 end
 
+function job_filter_pretarget(spell, spellMap, eventArgs)
+
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+
+	if party.count ~= 1 and spell.skill == 'Enhancing Magic' and (spell.english:contains('storm')) and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Accession" <me>')
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+		send_command('@input /p <recast=Stratagems>')
+
+
+	end
+	
+	if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Accession" <me>')
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+		send_command('@input /p <recast=Stratagems>')
+
+	end
+end
 function job_pretarget(spell, spellMap, eventArgs)
 
 end
-
 function job_filter_precast(spell, spellMap, eventArgs)
 	if spellMap == 'Cure' or spellMap == 'Curaga' then
         if state.CastingMode.value == 'DT' then
             equip()
         end
     end
+
 end
 
 function job_precast(spell, spellMap, eventArgs)
@@ -546,7 +570,7 @@ function job_tick()
 end
 
 function check_arts()
-	if buffup ~= '' or (not data.areas.cities:contains(world.area) and ((state.AutoArts.value and player.in_combat) or state.AutoBuffMode.value ~= 'Off')) then
+	if buffup ~= '' or (not data.areas.cities:contains(world.area) and (state.AutoArts.value  or state.AutoBuffMode.value ~= 'Off')) and not moving or buffactive['Sneak'] or buffactive['Invisible'] then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
 		if abil_recasts[29] < latency and not state.Buff['Afflatus Solace'] and not state.Buff['Afflatus Misery'] then
@@ -556,6 +580,8 @@ function check_arts()
 
 		elseif player.sub_job == 'SCH' and not (state.Buff['SJ Restriction'] or arts_active()) and abil_recasts[228] < latency then
 			send_command('@input /ja "Light Arts" <me>')
+			windower.chat.input:schedule(2.5,'/ja "Addendum: White" <me>')
+
 			tickdelay = os.clock() + 1
 			return true
 		end
@@ -667,6 +693,17 @@ function check_buff()
 				return true
 			end
 		end
+		
+		if player.sub_job == 'SCH' then
+
+			if not buffactive[data.elements.storm_of[state.ElementalMode.value]] and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value])) < player.mp then
+				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
+				tickdelay = os.clock() + 1.1
+				return true
+			else
+				return false
+			end
+		end
 	else
 		return false
 	end
@@ -746,7 +783,6 @@ buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},
 		{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
-		{Name='Aurorastorm',	Buff='Aurorastorm',	SpellID=119,	When='Always'},
 		{Name='Refresh',		Buff='Refresh',		SpellID=109,	When='Always'},
 		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Always'},
 	},
@@ -757,7 +793,6 @@ buff_spell_lists = {
 		{Name='Auspice',		Buff='Auspice',		SpellID=96,		When='Always'},
 		{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
 		{Name='Aquaveil',		Buff='Aquaveil',	SpellID=55,		When='Always'},
-		{Name='Aurorastorm',	Buff='Aurorastorm',	SpellID=119,	When='Always'},
 		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Always'},
 		{Name='Blink',			Buff='Blink',		SpellID=53,		When='Always'},
 		{Name='Phalanx',		Buff='Phalanx',		SpellID=106,	When='Always'},
@@ -777,7 +812,6 @@ buff_spell_lists = {
 		{Name='Auspice',		Buff='Auspice',		SpellID=96,		Reapply=false},
 		{Name='Haste',			Buff='Haste',		SpellID=57,		Reapply=false},
 		{Name='Aquaveil',		Buff='Aquaveil',	SpellID=55,		Reapply=false},
-		{Name='Aurorastorm',	Buff='Aurorastorm',	SpellID=119,	Reapply=false},
 		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		Reapply=false},
 		{Name='Blink',			Buff='Blink',		SpellID=53,		Reapply=false},
 		{Name='Phalanx',		Buff='Phalanx',		SpellID=106,	Reapply=false},

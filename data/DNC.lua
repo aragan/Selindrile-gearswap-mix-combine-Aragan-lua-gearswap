@@ -170,6 +170,7 @@ function job_filtered_pretarget(spell, action, spellMap, eventArgs)
         if player.main_job_level >= 77 and prestoCooldown < 1 and under3FMs then
             cast_delay(1.1)
             send_command('@input /ja "Presto" <me>')
+
         end
         if not midaction() then
             job_update()
@@ -188,6 +189,8 @@ function job_pretarget(spell, action, spellMap, eventArgs)
         if player.main_job_level >= 77 and prestoCooldown < 1 and under3FMs then
             cast_delay(1.1)
             send_command('@input /ja "Presto" <me>')
+			send_command('input /p "'..spell.english..'" '..spell.target.raw..'')
+
         end
         if not midaction() then
             job_update()
@@ -236,6 +239,8 @@ function job_precast(spell, spellMap, eventArgs)
             eventArgs.cancel = true
 			windower.chat.input('/ja "Presto" <me>')
 			windower.chat.input:schedule(1.1,'/ja "'..spell.english..'" '..spell.target.raw..'')
+			send_command('input /p "'..spell.english..'" '..spell.target.raw..'')
+
         end
     end
 end
@@ -246,6 +251,7 @@ function job_filter_precast(spell, spellMap, eventArgs)
 			eventArgs.cancel = true
 			windower.send_command('gs c step')
 			windower.chat.input:schedule(2.3,'/ws "'..spell.english..'" '..spell.target.raw..'')
+
 			tickdelay = os.clock() + 4.3
 			return
 		elseif not under3FMs() and not state.Buff['Building Flourish'] and abil_recasts[226] < latency then
@@ -279,7 +285,8 @@ function job_filter_precast(spell, spellMap, eventArgs)
         if abil_recasts[236] < latency and abil_recasts[220] < latency then
             eventArgs.cancel = true
 			windower.chat.input('/ja "Presto" <me>')
-			windower.chat.input:schedule(1.1,'/ja "'..spell.english..'" '..spell.target.raw..'')
+			windower.chat.input:schedule(1.1,'/ja "'..spell.english..'" '..spell.target.raw..' ')
+
         end
     end
 end
@@ -432,8 +439,14 @@ end
 
 -- Called for custom player commands.
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
+
     if commandArgs[1] == 'step' then
         local doStep = ''
+
+
+
+
         if state.UseAltStep.value == true then
             doStep = state[state.CurrentStep.current..'Step'].current
         else
@@ -441,6 +454,8 @@ function job_self_command(commandArgs, eventArgs)
         end        
         
         send_command('@input /ja "'..doStep..'" <t>')
+        send_command('@input /p '..tostring(doStep)..' on >> <t> << Effect Duration 2.20 min')
+		
     end
 end
 
@@ -449,6 +464,63 @@ function job_tick()
 	if check_buff() then return true end
 	return false
 end
+
+-----------
+-- Called by the 'update' self-command, for common needs.
+-- Set eventArgs.handled to true if we don't want automatic equipping of gear.
+function job_handle_equipping_gear(playerStatus, eventArgs)
+    update_combat_form()
+    determine_haste_group()
+end
+function update_combat_form()  
+	if DW == true then  
+		state.CombatForm:set('DW')  
+	elseif DW == false then  
+		state.CombatForm:reset()  
+	end  
+end
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 1 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 1 and DW_needed <= 9 then
+            classes.CustomMeleeGroups:append('HighHaste')
+        elseif DW_needed > 9 and DW_needed <= 21 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 21 and DW_needed <= 39 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 39 then
+            classes.CustomMeleeGroups:append('')
+        end
+    end
+end
+
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
+
+
 
 -------------------------------------------------------------------------------------------------------------------
 -- Utility functions specific to this job.
@@ -476,7 +548,7 @@ end
 
 function check_buff()
 
-	if state.AutoBuffMode.value ~= 'Off' then
+	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 	
 		if not buffactive['Finishing Move 1'] and not buffactive['Finishing Move 2'] and not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5'] and not buffactive['Finishing Move (6+)'] and abil_recasts[223] < latency then
@@ -484,16 +556,67 @@ function check_buff()
 			tickdelay = os.clock() + 1.1
 			return true
 		end
-		
-		if player.in_combat and not state.Buff['SJ Restriction'] then
-			if player.sub_job == 'WAR' and not buffactive.Berserk and abil_recasts[1] < latency then
+		if player.in_combat and player.sub_job == 'WAR' then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+
+			if not buffactive.Berserk and abil_recasts[1] < latency then
 				windower.chat.input('/ja "Berserk" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
-			elseif player.sub_job == 'WAR' and not buffactive.Aggressor and abil_recasts[4] < latency then
+			elseif not buffactive.Aggressor and abil_recasts[4] < latency then
 				windower.chat.input('/ja "Aggressor" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
+			elseif not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			end
+		end
+		if player.in_combat and player.sub_job == 'WAR' and state.AutoBuffMode.value == 'Attack' then
+
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+			
+			if not buffactive.Berserk and abil_recasts[1] < latency then
+				windower.chat.input('/ja "Berserk" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif buffactive.Defender then
+				send_command('@wait .5;cancel Defender')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive.Aggressor and abil_recasts[4] < latency then
+				windower.chat.input('/ja "Aggressor" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive['Saber Dance'] and abil_recasts[219] < latency then
+				windower.chat.input('/ja "Saber Dance" <me>')
+				tickdelay = os.clock() + 1.1
+			end
+		end
+		if player.in_combat and player.sub_job == 'WAR' and state.AutoBuffMode.value == 'Defend' then
+
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+	
+			if buffactive.Berserk then
+				send_command('@wait .5;cancel Berserk')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive.Defender and abil_recasts[3] < latency then
+				windower.chat.input('/ja "Defender" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive['Fan Dance'] and abil_recasts[224] < latency then
+				windower.chat.input('/ja "Fan Dance" <me>')
+				tickdelay = os.clock() + 1.1
 			else
 				return false
 			end

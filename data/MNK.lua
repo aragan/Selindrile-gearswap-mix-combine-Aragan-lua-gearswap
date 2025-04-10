@@ -76,6 +76,9 @@ function get_sets()
 		"Black Curry Bun",
 		"Rolan. Daifuku",
 		"Reraise Earring",}
+
+		--attack2 = 4500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this val
+
 end
 
 
@@ -343,6 +346,10 @@ function check_buff()
 				return true
 			elseif not (buffactive.Aggressor or buffactive.Focus) and abil_recasts[4] < latency then
 				windower.chat.input('/ja "Aggressor" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
 			else

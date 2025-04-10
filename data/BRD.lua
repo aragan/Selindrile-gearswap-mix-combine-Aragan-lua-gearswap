@@ -116,7 +116,7 @@ end
 function job_setup()
 	send_command('lua l Singer')
 
-    state.ExtraSongsMode = M{['description']='Extra Songs','FullLength','None','Dummy','FullLength','Marsyas'}
+    state.ExtraSongsMode = M{['description']='Extra Songs','FullLength','None','Dummy','Marsyas'}
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Always','300','1000','Never'}
 
@@ -151,7 +151,7 @@ function job_setup()
         'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
         'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
 
-	state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
+	state.Songset = M{['description']='Songset','seg','seg4','shinryu','shinryu4','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
 		'haste','haste4', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
 
 
@@ -807,7 +807,9 @@ buff_spell_lists = {
 		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Idle'},
 	},
 	Regen = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-		{Name='Army\'s Paeon VI',	Buff='Paeon',		SpellID=383,	When='Idle'},
+		{Name='Army\'s Paeon VI',	Buff='Paeon',		SpellID=383,	When='Always'},
+		{Name='Army\'s Paeon V',	Buff='Paeon',		SpellID=382,	When='Always'},
+
     },
 	Default = {
 		--{Name='Army\'s Paeon VI',	Buff='Paeon',			SpellID=383,	Reapply=false},
@@ -822,6 +824,8 @@ buff_spell_lists = {
 	},
 	Regen = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 	{Name='Army\'s Paeon VI',	Buff='Paeon',			SpellID=383,	Reapply=false},
+	{Name='Army\'s Paeon V',	Buff='Paeon',		SpellID=382,	Reapply=false},
+
     },
 }
 

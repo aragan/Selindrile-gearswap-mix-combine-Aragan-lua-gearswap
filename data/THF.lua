@@ -103,6 +103,13 @@ function job_setup()
 	rangedautows = "Last Stand"
 	autofood = 'Soy Ramen'
 	
+    Haste = 0
+    DW_needed = 0
+    DW = false
+    moving = false
+    update_combat_form()
+    determine_haste_group()
+
 	update_melee_groups()
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
 end
@@ -264,6 +271,9 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
     -- that gear specifically, and block equipping default gear.
     have_buff('Sneak Attack', eventArgs)
     have_buff('Trick Attack', eventArgs)
+
+    determine_haste_group()
+	update_combat_form()
 end
 
 
@@ -272,6 +282,7 @@ function job_customize_idle_set(idleSet)
     if (player.in_combat or being_attacked) and (state.IdleMode.current:contains('Normal') or state.IdleMode.current:contains('Refresh')) then
         idleSet = set_combine(idleSet, sets.idle.PDT)
     end
+
     return idleSet
 end
 
@@ -292,9 +303,55 @@ end
 
 
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
 
 end
-
+function update_combat_form()
+    if DW == true then
+        state.CombatForm:set('DW')
+    elseif DW == false then
+        state.CombatForm:reset()
+    end
+end
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 7 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 10 and DW_needed <= 15 then
+            classes.CustomMeleeGroups:append('HighHaste')
+        elseif DW_needed > 15 and DW_needed <= 19 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 19 and DW_needed <= 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        end
+    end
+end
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
 function job_tick()
 	if check_buff() then return true end
 	return false
@@ -362,6 +419,10 @@ function check_buff()
 				return true
 			elseif not buffactive.Aggressor and abil_recasts[4] < latency then
 				windower.chat.input('/ja "Aggressor" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+            elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
 			end

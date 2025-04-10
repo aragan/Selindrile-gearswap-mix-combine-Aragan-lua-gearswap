@@ -311,6 +311,7 @@ function job_post_midcast(spell, spellMap, eventArgs)
     end
 	if spell.skill == 'Elemental Magic' and state.CastingMode.value == 'OccultAcumen' then
 		equip(sets.OccultAcumen)
+		state.CastingMode:reset()
 	end
 	if spellMap == 'Healing' and spell.target.type == 'SELF' then
 		equip(sets.self_healing)

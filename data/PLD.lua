@@ -114,7 +114,7 @@ function job_setup()
 	state.CurrentStep = M{['description']='Current Step', 'Box Step', 'Quickstep'}
 	
 	state.AutoEmblem = M(true, 'Auto Emblem')
-	state.AutoCover = M(false, 'Auto Cover')
+	state.AutoCover = M(true, 'Auto Cover')
 	state.AutoMajesty = M(true, 'Auto Majesty')
 
 	
@@ -152,8 +152,39 @@ function job_filtered_action(spell, eventArgs)
             end
         end
     end
+	
 end
 
+function job_filter_pretarget(spell, spellMap, eventArgs)
+	
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+
+	if party.count ~= 1 and spell.skill == 'Enhancing Magic' and (spell.english:contains('storm')) and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Accession" <me>')
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+		send_command('@input /p <recast=Stratagems>')
+	
+	
+	end
+	
+	if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Accession" <me>')
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+		send_command('@input /p <recast=Stratagems>')
+		if not midaction() then
+			job_update()
+		end
+	end
+	if (party.count ~= 1 and spellMap == 'Cure') or spellMap == 'Protect' and abil_recasts[150] < latency then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Majesty" <me>')
+
+	end
+end
 function job_pretarget(spell, spellMap, eventArgs)
 
 end
@@ -173,9 +204,7 @@ function job_precast(spell, spellMap, eventArgs)
 end
 
 function job_post_precast(spell, spellMap, eventArgs)
-	if spellMap == 'Cure' and not buffactive['Majesty'] then
-		send_command('@wait 1;input /ja "Majesty" <me>')
-    end
+
 	if spell.type == 'WeaponSkill' then
 
 		local WSset = standardize_set(get_precast_set(spell, spellMap))
@@ -675,6 +704,7 @@ function update_defense_mode()
 end
 
 function job_tick()
+	if check_arts() then return true end
 	if check_majesty() then return true end
 	if check_hasso() then return true end
 	if check_buff() then return true end
@@ -690,6 +720,25 @@ function job_tick()
 	return false
 end
 
+function check_arts()
+	if (player.sub_job == 'SCH' and not (state.Buff['SJ Restriction'] or arts_active())) and (buffup ~= '' or (not data.areas.cities:contains(world.area) and (state.AutoArts.value or state.AutoBuffMode.value ~= 'Off'))) and not moving or buffactive['Sneak'] or buffactive['Invisible']  then
+	
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+		if abil_recasts[228] < latency then
+			send_command('@input /ja "Light Arts" <me>')
+			windower.chat.input:schedule(2.5,'/ja "Addendum: White" <me>')
+			tickdelay = os.clock() + 1
+			return true
+		elseif not (buffactive['Addendum: White'] and abil_recasts[228] < latency) then
+			windower.chat.input:schedule(1.5,'/ja "Addendum: White" <me>')
+			tickdelay = os.clock() + 1
+			return true
+		end
+	end
+	
+	return false
+end
 function check_flash()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 
@@ -824,8 +873,18 @@ end
 
 buff_spell_lists = {
 	Auto = {	
+		{Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
 		--{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
+		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
+	},
+	Reprisal = {	
+		{Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
+		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
+		{Name='Haste',Buff='Haste',SpellID=57,When='Always'},
+
+		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
+		{Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
 	},
 	Odyss = {	

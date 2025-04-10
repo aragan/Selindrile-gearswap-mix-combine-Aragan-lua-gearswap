@@ -71,7 +71,13 @@ function job_setup()
     gambit_duration = 96
 	--autows = 'Resolution'
 	autofood = 'Miso Ramen'
-	
+
+	Haste = 0
+	DW_needed = 0
+	DW = false
+	determine_haste_group()
+	update_combat_form()  
+
 	update_melee_groups()
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaBelt","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","CastingMode","ResistDefenseMode","TreasureMode",})
 end
@@ -83,6 +89,11 @@ buff_spell_lists = {
 		{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
 		--{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
 	},
+	Melee = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+	{Name='Temper',		Buff='Multi Strikes',	SpellID=493,	When='Engaged'},
+	{Name='Phalanx',	Buff='Phalanx',			SpellID=106,	When='Always'},
+	--{Name='Refresh',	Buff='Refresh',			SpellID=109,	When='Idle'},
+    },
 	Tank = {
 		{Name='Crusade',	Buff='Enmity Boost',	SpellID=476,	When='Always'},
 		{Name='Cocoon',		Buff='Defense Boost',	SpellID=547,	When='Always'},
@@ -162,6 +173,35 @@ buff_spell_lists = {
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 
+function job_filter_pretarget(spell, spellMap, eventArgs)
+	
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+
+	if party.count ~= 1 and spell.skill == 'Enhancing Magic' and (spell.english:contains('storm')) and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Accession" <me>')
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+		send_command('@input /p <recast=Stratagems>')
+	
+	
+	end
+	
+	if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Accession" <me>')
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+		send_command('@input /p <recast=Stratagems>')
+		if not midaction() then
+			job_update()
+		end
+	end
+
+end
+function job_pretarget(spell, spellMap, eventArgs)
+
+end
 function job_filter_precast(spell, spellMap, eventArgs)
 
 	if spell.english == 'Valiance' then
@@ -372,8 +412,60 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements self-commands.
 -------------------------------------------------------------------------------------------------------------------
+function update_combat_form()
+    if DW == true then
+        state.CombatForm:set('DW')
+    elseif DW == false then
+        state.CombatForm:reset()
+    end
+end
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 11 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 11 and DW_needed <= 21 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 21 and DW_needed <= 27 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 27 and DW_needed <= 37 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 37 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        end
+    end
+end
 
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
+function job_handle_equipping_gear(playerStatus, eventArgs)
+    determine_haste_group()
+	update_combat_form()
+end
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
+
 	if commandArgs[1]:lower() == 'subjobenmity' then
 
 		if player.target.type ~= "MONSTER" then
@@ -498,6 +590,7 @@ function rune_count(rune)
 end
 
 function job_tick()
+	if check_arts() then return true end
 	if check_hasso() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
@@ -507,6 +600,26 @@ function job_tick()
 		tickdelay = os.clock() + 1.5
 		return true
 	end
+	return false
+end
+
+function check_arts()
+	if (player.sub_job == 'SCH' and not (state.Buff['SJ Restriction'] or arts_active())) and (buffup ~= '' or (not data.areas.cities:contains(world.area) and (state.AutoArts.value or state.AutoBuffMode.value ~= 'Off'))) and not moving or buffactive['Sneak'] or buffactive['Invisible']  then
+	
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+		if abil_recasts[228] < latency then
+			send_command('@input /ja "Light Arts" <me>')
+			windower.chat.input:schedule(2.5,'/ja "Addendum: White" <me>')
+			tickdelay = os.clock() + 1
+			return true
+		elseif not (buffactive['Addendum: White'] and abil_recasts[228] < latency) then
+			windower.chat.input:schedule(1.5,'/ja "Addendum: White" <me>')
+			tickdelay = os.clock() + 1
+			return true
+		end
+	end
+	
 	return false
 end
 
@@ -542,7 +655,7 @@ function update_melee_groups()
 end
 
 function check_hasso()
-if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or state.Buff['SJ Restriction'] or main_weapon_is_one_handed() or silent_check_amnesia()) then
+    if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or state.Buff['SJ Restriction'] or main_weapon_is_one_handed() or silent_check_amnesia()) then
 		
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		
@@ -571,8 +684,7 @@ function check_buff()
 				return true
 			end
 		end
-		
-		if player.in_combat then
+		if state.AutoBuffMode.value == 'Melee' and player.in_combat then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
 			
 			if not buffactive['Swordplay'] and abil_recasts[24] < latency then
@@ -593,12 +705,38 @@ function check_buff()
 				windower.chat.input('/ja "Aggressor" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
 			else
 				return false
 			end
-		end
-	end
 		
+		
+	    elseif state.AutoBuffMode.value ~= 'Melee' and player.in_combat then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+		
+			if not buffactive['Swordplay'] and abil_recasts[24] < latency then
+				windower.chat.input('/ja "Swordplay" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif state.Buff['SJ Restriction'] then
+				return false
+			elseif player.sub_job == 'WAR' and not buffactive.Berserk and abil_recasts[3] < latency then
+				windower.chat.input('/ja "Defender" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			else
+				return false
+			
+			end
+		end
+	end		
 	return false
 end
 

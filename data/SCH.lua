@@ -190,6 +190,8 @@ function job_precast(spell, spellMap, eventArgs)
             classes.CustomClass = 'Proc'
         elseif state.CastingMode.value == 'OccultAcumen' then
             classes.CustomClass = 'OccultAcumen'
+			state.CastingMode:reset()
+
         end
 
     end
@@ -230,6 +232,7 @@ function job_post_midcast(spell, spellMap, eventArgs)
         end
 		if state.CastingMode.value == 'OccultAcumen' then
 			equip(sets.OccultAcumen)
+			state.CastingMode:reset()
 		end
 	end
 	
@@ -1559,6 +1562,7 @@ function check_arts()
 
 		if abil_recasts[232] < latency then
 			windower.chat.input('/ja "Dark Arts" <me>')
+			windower.chat.input:schedule(1.1,'/ja "Addendum: Dark" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
 		end
@@ -1577,6 +1581,13 @@ function check_buff()
 				tickdelay = os.clock() + 2
 				return true
 			end
+		end
+		if not buffactive[data.elements.storm_of[state.ElementalMode.value]] then
+			windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
+			tickdelay = os.clock() + 1.1
+			return true
+		else
+			return false
 		end
 	else
 		return false

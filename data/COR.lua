@@ -156,8 +156,13 @@ function job_setup()
 	autofood = 'Sublime Sushi'
 	ammostock = 98
 
+    Haste = 0
+    DW_needed = 0
+    DW = false
+    determine_haste_group()
+    update_combat_form()  
+
     define_roll_values()
-	
 	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","Rollset","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
 end
 
@@ -297,7 +302,16 @@ end
 local command_count = 0
 local rate_limit = 5 -- commands per 10 seconds
 
+function update_combat_form()
+    if DW == true then
+        state.CombatForm:set('DW')
+    elseif DW == false then
+        state.CombatForm:reset()
+    end
+end
 function job_self_command(commandArgs, eventArgs)
+    gearinfo(commandArgs, eventArgs)
+
 	if commandArgs[1]:lower() == 'elemental' and commandArgs[2]:lower() == 'quickdraw' then
 		windower.chat.input('/ja "'..data.elements.quickdraw_of[state.ElementalMode.Value]..' Shot" <t>')
 		eventArgs.handled = true			
@@ -315,6 +329,49 @@ function job_self_command(commandArgs, eventArgs)
          send_command('@input //cor roll 2 "'..state.Roller2.value..'"')
      end]]
 
+end
+
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 11 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 11 and DW_needed <= 27 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 27 and DW_needed <= 38 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 38 and DW_needed <= 40 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 40 and DW_needed <= 42 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 42 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        end
+    end
+end
+
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -410,12 +467,14 @@ function job_customize_melee_set(meleeSet)
 end
 function job_handle_equipping_gear(playerStatus, eventArgs)
 	check_weaponset()
-
+    determine_haste_group()
+	update_combat_form()
 end
 -- Called by the 'update' self-command, for common needs.
 -- Set eventArgs.handled to true if we don't want automatic equipping of gear.
 function job_update(cmdParams, eventArgs)
 	check_weaponset()
+    handle_equipping_gear(player.status)
 
 end
 
@@ -537,6 +596,9 @@ end
 -- Utility functions specific to this job.
 -------------------------------------------------------------------------------------------------------------------
 
+
+
+
 function define_roll_values()
     rolls = {
         ["Corsair's Roll"]   = {lucky=5, unlucky=9, bonus="Experience Points"},
@@ -580,6 +642,9 @@ function display_roll_info(spell)
     if rollinfo then
         add_to_chat(217, spell.english..' provides a bonus to '..rollinfo.bonus..'.  Roll size: '..rollsize)
         add_to_chat(217, 'Lucky roll is '..tostring(rollinfo.lucky)..', Unlucky roll is '..tostring(rollinfo.unlucky)..'.')
+        windower.chat.input('/p "Lucky roll is '..tostring(rollinfo.lucky)..', Unlucky roll is '..tostring(rollinfo.unlucky)..'."')
+
+    
     end
 end
 
