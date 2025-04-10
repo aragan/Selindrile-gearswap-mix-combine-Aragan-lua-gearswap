@@ -1125,7 +1125,7 @@ function check_recast(spell, spellMap, eventArgs)
 					return true
 				else
 					add_to_chat(123,'Abort: ['..spell.english..'] waiting on recast. ('..seconds_to_clock(abil_recasts[spell.recast_id])..')')
-					eventArgs.cancel = true
+					--eventArgs.cancel = true
 					return true
 				end
 			else
@@ -1217,10 +1217,23 @@ end
 function check_abilities(spell, spellMap, eventArgs)
 
 	if spell.action_type == 'Ability' then
-		if spell.english == "Seigan" and buffactive['Seigan'] then
-			if windower.ffxi.get_ability_recasts()[133] < latency then
+		if spell.english == 'Seigan' then
+			if buffactive['Seigan'] and windower.ffxi.get_ability_recasts()[133] < latency then
 				eventArgs.cancel = true
 				windower.chat.input('/ja "Third Eye" <me>')
+				return true
+			end
+		elseif spell.type == 'Step' then
+			if player.status == 'Idle' and windower.ffxi.get_ability_recasts()[220] and spell.target and spell.target.valid_target and spell.target.spawn_type == 16 and spell.target.distance < (3.2 + player.target.model_size) and player.tp > 99 then
+				packets.inject(packets.new('outgoing', 0x1a, {
+					['Target'] = spell.target.id,
+					['Target Index'] = spell.target.index,
+					['Category']     = 0x02,
+				}))
+
+				if state.IdleStep.value then
+					send_command:schedule(1,'input /attack off')
+				end
 				return true
 			end
 		elseif data.abilities.white_stratagems:contains(spell.english) then
@@ -1228,24 +1241,27 @@ function check_abilities(spell, spellMap, eventArgs)
 				windower.chat.input('/ja "'..data.abilities.white_to_black_stratagems[spell.english]..'" <me>')
 				eventArgs.cancel = true
 				return true
-			elseif spell.english == "Light Arts" and state.Buff['Light Arts'] then
-				eventArgs.cancel = true
-				windower.chat.input('/ja "Addendum: White" <me>')
-				return true
+			elseif spell.english == 'Light Arts' then
+				if state.Buff['Light Arts'] then
+					eventArgs.cancel = true
+					windower.chat.input('/ja "Addendum: White" <me>')
+					return true
+				end
 			end
 		elseif data.abilities.black_stratagems:contains(spell.english) then
 			if state.Buff['Light Arts'] or state.Buff['Addendum: White'] then
 				windower.chat.input('/ja "'..data.abilities.black_to_white_stratagems[spell.english]..'" <me>')
 				eventArgs.cancel = true
 				return true
-			elseif spell.english == "Dark Arts" and state.Buff['Dark Arts'] then
-				eventArgs.cancel = true
-				windower.chat.input('/ja "Addendum: Black" <me>')
-				return true
+			elseif spell.english == 'Dark Arts' then
+				if state.Buff['Dark Arts'] then
+					eventArgs.cancel = true
+					windower.chat.input('/ja "Addendum: Black" <me>')
+					return true
+				end
 			end
 		end
 	end
-
 	return false
 end
 
@@ -2192,7 +2208,7 @@ end
 
 function check_rune()
 
-	if state.AutoRuneMode.value and (player.main_job == 'RUN' or player.sub_job == 'RUN') then
+	if state.AutoRuneMode.value and (player.main_job == 'RUN' or player.sub_job == 'RUN') and not data.areas.cities:contains(world.area) then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
 		if player.main_job == 'RUN' and (not buffactive[state.RuneElement.value] or buffactive[state.RuneElement.value] < 3) then

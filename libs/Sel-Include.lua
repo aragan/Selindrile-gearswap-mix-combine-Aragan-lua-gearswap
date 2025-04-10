@@ -119,11 +119,12 @@ function init_include()
 	state.SelectNPCTargets    = M(false, 'Select NPC Targets')
 	state.Capacity 			  = M(false, 'Capacity Mode')
 	state.ReEquip 			  = M(false, 'ReEquip Mode')
-	state.AutoArts	 		  = M(false, 'AutoArts Mode')
+	state.AutoArts	 		  = M(true, 'AutoArts Mode')
 	state.AutoLockstyle	 	  = M(true, 'AutoLockstyle Mode')
 	state.AutoTrustMode 	  = M(false, 'Auto Trust Mode')
 	state.RngHelper		 	  = M(false, 'RngHelper')
 	state.HoverShot		 	  = M(true, 'HoverShot')
+	state.IdleStep			  = M(true, 'Idle Step Mode')
 	state.RngHelperQuickDraw  = M(false, 'RngHelperQuickDraw')
 	state.AutoTankMode 		  = M(false, 'Auto Tank Mode')
 	state.AutoAcceptRaiseMode = M(false, 'Auto Accept Raise Mode')
@@ -136,7 +137,7 @@ function init_include()
 	state.AutoWSMode		  = M(false, 'Auto Weaponskill Mode')
 	state.AutoWSRestore		  = M(false, 'Auto Weaponskill Restore Mode')
 	state.AutoFoodMode		  = M(false, 'Auto Food Mode')
-	state.AutoSubMode 		  = M(false, 'Auto Sublimation Mode')
+	state.AutoSubMode 		  = M(true, 'Auto Sublimation Mode')
 	state.AutoCleanupMode  	  = M(false, 'Auto Cleanup Mode')
 	state.AutoSuperJumpMode   = M(false, 'Auto SuperJump Mode')
 	state.DisplayMode  	  	  = M(true, 'Display Mode')
@@ -153,8 +154,11 @@ function init_include()
 	state.SelfWarp2Block 	  = M(false, 'Block Warp2 on Self')
 	state.MiniQueue		 	  = M(true, 'MiniQueue')
 	state.PWUnlock		 	  = M(false, 'PWUnlock')
+	
 	state.AutoEquipBurst      = M(true)
-	state.AutoMedicineMode    = M(false, 'Auto Medicine Mode')
+	state.AutoMedicineMode    = M(true, 'Auto Medicine Mode')
+	state.AutoReraiseeMode    = M(true, 'Auto autoReraise Mode')
+    state.HippoMode           = M(false, "HippoMode")
 
 
 	state.AutoBuffMode 		  = M{['description'] = 'Auto Buff Mode','Off','Auto'}
@@ -170,7 +174,16 @@ function init_include()
 	state.CombatForm          = M{['description']='Combat Form', ['string']=''}
 	
 	
-
+	state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
+	'haste', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
+	state.Rollset = M{['description']='Rollset','None', 'melee', 'magic','dynamis','aminon','exp','tp','speed','acc','ws',
+	'pet','petnuke',}
+	state.Etude = M{['description']='Etude',  'Herculean Etude', 'Sage Etude', 'Sinewy Etude', 'Learned Etude',
+	'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
+	'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
+	
+	state.Avatars = M{['description']='Avatars', "Ifrit", "Ramuh", "Titan", "Siren", "Garuda", "Diabolos", "Carbuncle", "Fenrir", "Leviathan", "Shiva", "Odin", "Alexander", "Cait Sith"}
+	
 	NotifyBuffs = S{}
 	
 	if data.jobs.mage_jobs:contains(player.main_job) then
@@ -1149,10 +1162,15 @@ end
 function default_post_midcast(spell, spellMap, eventArgs)
 
 	if not eventArgs.handled then
-		if not job_post_midcast and is_nuke(spell, spellMap) and state.MagicBurstMode.value ~= 'Off' and sets.MagicBurst then
-			equip(sets.MagicBurst)
-		end
 
+		if spell.action_type == 'Magic' then
+			if is_nuke(spell, spellMap) and state.CastingMode.value ~= 'Proc' then
+				if not job_post_midcast and state.MagicBurstMode.value ~= 'Off' and sets.MagicBurst then
+					equip(sets.MagicBurst)
+				end
+				set_elemental_obi_cape_ring(spell, spellMap)
+			end
+		end
 		if spell.target.type == 'SELF' and spellMap then
 			if spellMap:contains('Cure') then
 				if curecheat then

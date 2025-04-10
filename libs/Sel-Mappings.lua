@@ -46,6 +46,8 @@
 -------------------------------------------------------------------------------------------------------------------
 -- Elemental mappings for element relationships and certain types of spells and gear.
 -------------------------------------------------------------------------------------------------------------------
+--attack2 = 3500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this val
+
 data = {} -- Precursor to all mapping lists.
 -- Basic elements
 data.elements = {}
@@ -87,8 +89,10 @@ data.elements.spikes_of = {['Fire']='Blaze',['Lightning']='Shock',['Ice']='Ice',
 data.elements.helix_of = {['Fire']='Pyro', ['Ice']='Cryo', ['Wind']='Anemo', ['Earth']='Geo',
         ['Lightning']='Iono', ['Water']='Hydro', ['Light']='Lumino', ['Dark']='Nocto',}
 		
-data.elements.threnody_of = {['Fire']='Ice', ['Ice']='Wind', ['Wind']='Earth', ['Earth']='Ltng.',
-        ['Lightning']='Water', ['Water']='Fire', ['Light']='Dark', ['Dark']='Light',}
+data.elements.threnody_of = {['Fire']='Fire', ['Ice']='Ice', ['Wind']='Wind', ['Earth']='Earth.',
+        ['Lightning']='Lightning', ['Water']='Water', ['Light']='Light', ['Dark']='Dark',}
+data.elements.carol_of = {['Fire']='Fire', ['Ice']='Ice', ['Wind']='Wind', ['Earth']='Earth.',
+        ['Lightning']='Lightning', ['Water']='Water', ['Light']='Light', ['Dark']='Dark',}
 		
 data.elements.ancient_nuke_of = {['Fire']='Flare', ['Ice']='Freeze', ['Wind']='Tornado', ['Earth']='Quake',
         ['Lightning']='Burst', ['Water']='Flood', ['Light']='Holy', ['Dark']='Comet',}
@@ -105,6 +109,9 @@ data.elements.strong_to = {['Light']='Dark', ['Dark']='Light', ['Fire']='Water',
 data.elements.storm_of = {['Light']="Aurorastorm", ['Dark']="Voidstorm", ['Fire']="Firestorm", ['Earth']="Sandstorm",
       ['Water']="Rainstorm", ['Wind']="Windstorm", ['Ice']="Hailstorm", ['Lightning']="Thunderstorm",}
 
+data.elements.BarElement_of = {['Fire']='Barfire',['Earth']='Barstone',['Water']='Barwater',['Wind']='Baraero',['Ice']='Barblizzard',['Lightning']='Barthunder',
+	  ['Fire']='Barfira',['Earth']='Barstonra',['Water']='Barwatera',['Wind']='Baraera',['Ice']='Barblizzara',['Lightning']='Barthundra',}
+
 storms = S{"Aurorastorm", "Voidstorm", "Firestorm", "Sandstorm", "Rainstorm", "Windstorm", "Hailstorm", "Thunderstorm",
 		"Aurorastorm II", "Voidstorm II", "Firestorm II", "Sandstorm II", "Rainstorm II", "Windstorm II", "Hailstorm II", "Thunderstorm II"}
 
@@ -113,6 +120,14 @@ runes = S{'Lux', 'Tenebrae', 'Ignis', 'Gelus', 'Flabra', 'Tellus', 'Sulpor', 'Un
 data.elements.rune_of = {['Light']='Lux', ['Dark']='Tenebrae', ['Fire']='Ignis', ['Ice']='Gelus', ['Wind']='Flabra',
      ['Earth']='Tellus', ['Lightning']='Sulpor', ['Water']='Unda'}
  
+data.elements.blue_of = {['Light']='Blinding Fulgor', ['Dark']='Tenebral Crush', ['Fire']='Searing Tempest', ['Ice']='Spectral Floe', ['Wind']='Silent Storm',
+     ['Earth']='Entomb', ['Lightning']='Anvil Lightning', ['Water']='Scouring Spate'}
+data.elements.unbridled_spells = {['Light']='Uproot', ['Dark']='Cruel Joke', ['Fire']='Gates of Hades', ['Ice']='Polar Roar', ['Wind']='Tearing Gust',
+     ['Earth']='', ['Lightning']='Thunderbolt', ['Water']='Cesspool'}
+ 
+data.elements.blue2_of = {['Light']='1000 Needles', ['Dark']='Palling Salvo', ['Fire']='Thermal Pulse', ['Ice']='Ice Break', ['Wind']='Tem. Upheaval',
+['Earth']='Embalming Earth', ['Lightning']='Charged Whisker', ['Water']='Nectarous Deluge'}
+
 data.weather_bonus_potency = {[0]=0,[1]=10,[2]=25}
 
 --Exceptions for specific actions, placed here to be easily modifiable.
@@ -784,3 +799,19 @@ item_stepdown = {
 	['Reraise Earring'] = {'Reraise Hairpin','head'},
 	['Reraise Hairpin'] = {'Wh. Rarab Cap +1','head'},
 }
+
+disable_priority = T{
+    "User",
+    "Showset",
+    "Crafting",
+    "Doom",
+    "Sleep",
+    "UseItem",
+    "OneHour",
+    "Shield",
+    "Weapons",
+    "ShowTP",
+    "Ability",
+    "TreasureHunter",
+}:reverse()
+

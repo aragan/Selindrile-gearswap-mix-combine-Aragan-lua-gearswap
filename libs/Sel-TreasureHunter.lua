@@ -99,7 +99,7 @@ info.last_player_target_index = 0
 state.th_gear_is_locked = false
 
 -- Required gear set.  Expand this in the job file when defining sets.
-sets.TreasureHunter = { 
+sets.TreasureHunter = { head="Volte Cap",
 ammo="Per. Lucky Egg", 
 waist="Chaac Belt"}
 
