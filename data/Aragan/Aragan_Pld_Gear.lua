@@ -26,15 +26,15 @@ function user_job_setup()
     state.HybridMode:options('Tank','DDTank','Normal')
     state.WeaponskillMode:options('Match', 'PDL', 'Acc','Enmity')
     state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
-	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation')
+	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation','Resist')
     state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
     state.MagicalDefenseMode:options('MDT','MDT_HP','MDT_Reraise')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
-	state.IdleMode:options('Tank','Kiting','DT','PDT','PDH','Block','Evasion','MDT','MEVA','Normal')
+	state.IdleMode:options('Tank','Kiting','DT','PDT','PDH','Block','Evasion','MDT','MEVA','Regen','Normal')
 	state.Weapons:options('None','Burtgang','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole',
 	'Shining','DualNaegling','DualReikiko','DualReikikoThibron','DualNaeglingThibron')
 	state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen'} -- , 'Priwen' }
-	state.AutoBuffMode:options('Off','Auto','Odyss','Defense','Aminon') --,'Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','Odyss','Defense','Reprisal','Aminon') --,'Off','Off','Off','Off','Off',
 
     state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','ReverenceGauntlets', 'Refresh', 'Resist', 'EnemyTPaccumulation','MP','Twilight'}
 	
@@ -80,7 +80,7 @@ function user_job_setup()
 	send_command('bind @f3 gs c toggle AutoTrustMode')
 	send_command('bind @f4 gs c toggle AutoFoodMode')
 	send_command('bind ^f1 gs c toggle AutoStunMode')
-	send_command('bind ^f2 gs c toggle SubJobEnmity')
+	--send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
 	send_command('bind @3 gs c curecheat')
 
@@ -182,7 +182,7 @@ function init_gear_sets()
     sets.precast.JA['Holy Circle'] = set_combine(sets.Enmity,{feet="Rev. Leggings +3"})
     sets.precast.JA['Sentinel'] = set_combine(sets.Enmity,{feet="Cab. Leggings +3"})
     sets.precast.JA['Rampart'] = set_combine(sets.Enmity,{head="Cab. Coronet +3"}) --(Also Vit?)
-    sets.precast.JA['Fealty'] = set_combine(sets.Enmity,{})--body="Cab. Surcoat +3"
+    sets.precast.JA['Fealty'] = set_combine(sets.Enmity,{body="Cab. Surcoat +1"})
     sets.precast.JA['Divine Emblem'] = set_combine(sets.Enmity,{feet="Chev. Sabatons +3"})
     sets.precast.JA['Cover'] = set_combine(sets.Enmity, {}) --head="Rev. Coronet +1",
 	
@@ -190,9 +190,9 @@ function init_gear_sets()
     sets.precast.JA['Holy Circle'].DT = set_combine(sets.Enmity.DT,{feet="Rev. Leggings +3"})
     sets.precast.JA['Sentinel'].DT = set_combine(sets.Enmity.DT,{feet="Cab. Leggings +3"})
     sets.precast.JA['Rampart'].DT = set_combine(sets.Enmity.DT,{head="Cab. Coronet +3"}) 
-    sets.precast.JA['Fealty'].DT = set_combine(sets.Enmity.DT,{body="Cab. Surcoat"})
+    sets.precast.JA['Fealty'].DT = set_combine(sets.Enmity.DT,{body="Cab. Surcoat +1"})
     sets.precast.JA['Divine Emblem'].DT = set_combine(sets.Enmity.DT,{feet="Chev. Sabatons +3"})
-    sets.precast.JA['Cover'].DT = set_combine(sets.Enmity.DT,{body="Cab. Surcoat"})
+    sets.precast.JA['Cover'].DT = set_combine(sets.Enmity.DT,{body="Cab. Surcoat +1"})
 	
     -- add mnd for Chivalry
     sets.precast.JA['Chivalry'] = {ammo="Paeapua",
@@ -1003,6 +1003,20 @@ sets.idle.Evasion={
 	left_ring="Regal Ring",
 	right_ring="Vengeful Ring",
 	back="Rudianos's Mantle",}
+	sets.idle.Regen = { 
+		ammo="Staunch Tathlum +1",
+        head="Null Masque",
+		body="Sacro Breastplate",
+        hands="Regal Gauntlets",
+		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+		feet="Volte Sollerets",
+		neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
+		left_ear="Infused Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+		back="Rudianos's Mantle",}
 
 	sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.Adoulin = {body="Councilor's Garb",}
@@ -1016,7 +1030,7 @@ sets.idle.Evasion={
 	--------------------------------------
     -- Defense sets
     --------------------------------------
-    
+    --Passive set
     -- Extra defense sets.  Apply these on top of melee or defense sets.
 	sets.Knockback = {}
     sets.MP = {head="Chev. Armet +3",neck="Coatl Gorget +1",ear2="Ethereal Earring",waist="Flume Belt +1",feet="Rev. Leggings +3"}
@@ -1032,7 +1046,22 @@ sets.idle.Evasion={
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
 	}
 	sets.passive.Twilight = {head="Crepuscular Helm", body="Crepuscular Mail",}
-
+	sets.passive.Refresh ={
+		ammo="Homiliary",
+		head="Null Masque",
+		body="Jumalik Mail",
+		hands="Regal Gauntlets",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+ }
+ sets.passive.Resist ={
+	ammo="Staunch Tathlum +1",
+	head={ name="Founder's Corona", augments={'DEX+10','Accuracy+15','Mag. Acc.+15','Magic dmg. taken -5%',}},
+	body={ name="Sakpata's Plate", augments={'Path: A',}},
+	hands="Macabre Gaunt. +1",
+	neck={ name="Warder's Charm +1", augments={'Path: A',}},
+	waist="Carrier's Sash",
+}
 	sets.MP_Knockback = {}
     sets.Twilight = {head="Crepuscular Helm", body="Crepuscular Mail",}
 	sets.EnemyCritRate = {
@@ -1063,11 +1092,8 @@ sets.idle.Evasion={
 	sets.EnemyTPaccumulation ={
 	 head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
  }
-	sets.TreasureHunter =  {
-		ammo="Per. Lucky Egg",
-		head="White rarab cap +1", 
-		waist="Chaac Belt",
-	}
+ sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+
     
     sets.defense.Block = {ammo="Eluder's Sachet",
 		head="Chev. Armet +3",neck="Diemer Gorget",ear1="Creed Earring",ear2="Thureous Earring",
@@ -1527,7 +1553,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

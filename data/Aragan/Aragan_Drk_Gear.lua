@@ -556,10 +556,16 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
     })
 
 	
-	sets.Self_Healing = {waist="Gishdubar Sash"}
-	sets.Cure_Received = {waist="Gishdubar Sash"}
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
-    sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
+    sets.Phalanx_Received = {
+        head={ name="Odyssean Helm", augments={'INT+5','"Cure" potency +8%','Phalanx +4','Accuracy+15 Attack+15','Mag. Acc.+7 "Mag.Atk.Bns."+7',}},
+        body="Shab. Cuirass +1",
+        hands={ name="Souv. Handsch. +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+        legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+        feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+    }
 
 	
     sets.precast.RA = { ammo=empty,
@@ -1557,12 +1563,12 @@ sets.defense.SEboost = {
 		hands="Flam. Manopolas +2",
 		legs={ name="Zoar Subligar +1", augments={'Path: A',}},
 		feet="Thereoid Greaves",
-		neck="Nefarious Collar +1",
+		neck="Abyssal Beads +2",
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-		left_ear="Schere Earring",
-		right_ear="Brutal Earring",
-		left_ring="Hetairoi Ring",
-		right_ring="Niqmaddu Ring",
+        ear1="Schere Earring",
+        ear2="Brutal Earring",
+        ring1="Begrudging Ring",
+        ring2="Niqmaddu Ring",
 		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	})
 
@@ -1888,7 +1894,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

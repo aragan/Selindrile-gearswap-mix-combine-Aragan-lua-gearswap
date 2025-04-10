@@ -799,7 +799,9 @@ function init_gear_sets()
 	sets.TPEat = {}
 	sets.DayIdle = {}
 	sets.NightIdle = {}
-	sets.TreasureHunter = set_combine(sets.TreasureHunter, {feet=gear.merlinic_treasure_feet})
+	-- Treasure Hunter
+	
+	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 	
 	sets.HPDown = {head="Pixie Hairpin +1",ear1="Mendicant's Earring",
 		body="Jhakri Robe +2",hands="Jhakri Cuffs +2",ring1="Mephitas's Ring +1",ring2="Mephitas's Ring",
@@ -924,7 +926,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

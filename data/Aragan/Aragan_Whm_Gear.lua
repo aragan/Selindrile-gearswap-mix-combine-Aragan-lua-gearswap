@@ -32,7 +32,7 @@ function user_job_setup()
 	state.WeaponskillMode:options('Match', 'PDL')
 	state.AutoBuffMode:options('Off','Auto','Melee','Fullbuff') --,'Off','Off','Off','Off','Off',
     state.ShieldMode:options('Normal','Genmei','Ammurapi')
-	state.Weapons:options('None','Maxentius','Queller','Daybreak','Xoanon','DualDaybreak','DualMaxentius')
+	state.Weapons:options('None','Maxentius','Queller','Daybreak','Staff','Xoanon','DualDaybreak','DualMaxentius')
 
 	gear.obi_cure_waist = "Austerity Belt +1"
 	gear.obi_cure_back = "Alaunus's Cape"
@@ -57,8 +57,8 @@ function user_job_setup()
     send_command('bind f1 gs c cycle HippoMode')
     send_command('bind f2 gs c cycle BoostSpell')
     send_command('bind !f2 gs c BoostSpell')
-    send_command('bind f5 gs c cycle BarStatus')
-    send_command('bind !f5 gs c BarStatus')
+    send_command('bind f3 gs c cycle BarStatus')
+    send_command('bind ^f3 gs c BarStatus')
     send_command('bind f7 gs c cycle ShieldMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind @f5 gs c cycle WeaponskillMode')
     send_command('bind ^f2 gs c smartcure')
@@ -81,6 +81,7 @@ function init_gear_sets()
 	sets.weapons.Queller = {main="Queller Rod",sub="Genmei Shield"}
 	sets.weapons.Daybreak = {main="Daybreak",sub="Ammurapi Shield"}
 	sets.weapons.Xoanon = {main="Xoanon",sub="Alber Strap"}
+	sets.weapons.Staff = {main="Ababinili +1",sub="Giuoco Grip"}
 
 	sets.weapons.DualDaybreak = {main="Daybreak", sub="Bunzi's Rod"}
 	sets.weapons.DualMaxentius = {main="Maxentius", sub="Daybreak"}
@@ -833,7 +834,7 @@ function init_gear_sets()
 		head="Ebers Cap +2",
 		body="Ebers Bliaut +2",
 		hands="Telchine Gloves",
-        legs={ name="Piety Pantaln. +1", augments={'Enhances "Afflatus Misery" effect',}},
+        legs={ name="Piety Pantaln. +3", augments={'Enhances "Afflatus Misery" effect',}},
 		feet="Ebers Duckbills +2",
 		neck="Incanter's Torque",
 		waist="Embla Sash",
@@ -1568,7 +1569,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

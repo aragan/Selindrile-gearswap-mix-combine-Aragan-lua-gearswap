@@ -131,6 +131,9 @@ function init_gear_sets()
     sets.DefaultShield = {sub="Genmei Shield"}
 
 
+	-- Treasure Hunter
+	
+	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 
     sets.buff.Sublimation = {waist="Embla Sash"}
     sets.buff.DTSublimation = {waist="Embla Sash"}
@@ -495,8 +498,12 @@ sets.precast.WS['Shattersoul'] = {
 	sets.midcast.March = {hands="Fili Manchettes +2"}
 	sets.midcast['Honor March'] = set_combine(sets.midcast.March,{range="Marsyas"})
 	sets.midcast.Minuet = {body="Fili Hongreline +2"}
-	sets.midcast.Minne = {}
-	sets.midcast.Carol = {}
+	sets.midcast.Minne = {legs="Mou. Seraweels +1",}
+	sets.midcast.Carol = {head="Mousai Turban +1",}
+    sets.midcast.Mambo = {feet="Mou. Crackows +1",}
+    sets.midcast.Etude = {head="Mousai Turban +1",}
+    sets.midcast.Threnody = {body="Mou. Manteel +1"}
+
 	sets.midcast["Sentinel's Scherzo"] = {feet="Fili Cothurnes +2"}
 	sets.midcast['Magic Finale'] = {range="Daurdabla",
     neck="Null Loop",
@@ -590,10 +597,10 @@ sets.precast.WS['Shattersoul'] = {
 	right_ring="Stikini Ring +1",
 	back={ name="Fi Follet Cape +1", augments={'Path: A',}},}
 
-	sets.Self_Healing = {waist="Gishdubar Sash"}
-	sets.Cure_Received = {waist="Gishdubar Sash"}
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
-    sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'], {})
+    --sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'], {})
 	
 
     sets.midcast.Regen = set_combine(sets.midcast['Enhancing Magic'], {head="Inyanga Tiara +2"})
@@ -866,11 +873,17 @@ sets.engaged.Shield = {range="Linos",
 
 sets.engaged.CRIT = set_combine(sets.engaged, {
 	range="Linos",
-	head={ name="Blistering Sallet +1", augments={'Path: A',}},
-	legs={ name="Zoar Subligar +1", augments={'Path: A',}},
-	feet="Aya. Gambieras +2",
-	neck="Nefarious Collar +1",
-	right_ring="Hetairoi Ring",
+    head="Blistering Sallet +1",
+    body="Bihu Jstcorps. +3",
+    hands="Bunzi's Gloves",
+    legs="Zoar Subligar +1",
+    feet="Lustra. Leggings +1",
+    neck="Bard's Charm +2",
+    waist="Sailfi Belt +1",
+    ear1="Brutal Earring",
+    ear2="Balder Earring +1",
+    ring1="Hetairoi Ring",
+    ring2="Begrudging Ring",
 	back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},  
     })
     sets.engaged.Acc = set_combine(sets.engaged, {        range="Linos",

@@ -59,7 +59,7 @@ function init_gear_sets()
     -- neck JSE Necks Reinforcement Points Mode add u neck here 
 	sets.RP = {}
 	
-    sets.TreasureHunter = set_combine(sets.TreasureHunter, {feet=gear.merlinic_treasure_feet})
+    sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 	
     -- Precast sets to enhance JAs
     sets.precast.JA['Astral Flow'] = {head="Glyphic Horn +3"}

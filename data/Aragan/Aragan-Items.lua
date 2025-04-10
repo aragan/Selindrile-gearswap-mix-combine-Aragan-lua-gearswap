@@ -8,7 +8,7 @@ waist="Gishdubar Sash",
 left_ring="Purity Ring",
 right_ring="Blenmot's Ring +1",}
 
-sets.TreasureHunter = {ammo="Per. Lucky Egg",head="Wh. Rarab Cap +1",waist="Chaac Belt"}
+sets.TreasureHunter = {ammo="Per. Lucky Egg",head="Volte Cap",waist="Chaac Belt"}
 
 sets.precast.Item['Hallowed Water'] = {neck="Nicander's Necklace",
 left_ring="Purity Ring",
@@ -16,6 +16,9 @@ right_ring="Blenmot's Ring +1",}
 sets.precast.Item['Holy Water'] = {neck="Nicander's Necklace",
 left_ring="Purity Ring",
 right_ring="Blenmot's Ring +1",}
+
+gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
+gear.taeon_dw_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
 
 --Augmented items that you'll use among multiple jobs.
 --[[
@@ -27,6 +30,8 @@ gear.grioavolr_pet_staff = {name="Grioavolr",augments={'Blood Pact Dmg.+8','Pet:
 
 gear.taeon_pet_body = {name="Taeon Tabard",augments={'Pet: Accuracy+15 Pet: Rng. Acc.+15','Pet: "Dbl. Atk."+4','Pet: Damage taken -4%',}}
 gear.taeon_phalanx_body = {name="Taeon Tabard",augments={'Mag. Evasion+15','Spell interruption rate down -10%','Phalanx +3'}}
+gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
+gear.taeon_dw_feet= feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
 
 gear.chironic_enfeeble_hands = {name="Chironic Gloves",augments={'Mag. Acc.+20 "Mag.Atk.Bns."+20','MND+10','Mag. Acc.+15',}}
 gear.chironic_refresh_hands = {name="Chironic Gloves",augments={'"Counter"+4','DEX+4','"Refresh"+2','Accuracy+19 Attack+19','Mag. Acc.+13 "Mag.Atk.Bns."+13',}}

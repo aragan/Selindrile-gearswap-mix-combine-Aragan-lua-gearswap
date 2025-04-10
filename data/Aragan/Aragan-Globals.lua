@@ -157,6 +157,7 @@ AutoAcceptRaiseMode
 
 gs c set AutoWSRestore true
 gs c set SkipProcWeapons false
+handle_killstatue
 
 //gs c useitem head Reraise Hairpin +1
 //gs c useitem ring2 warp ring
@@ -227,11 +228,13 @@ function global_on_load()
 	send_command('bind !4 gs c cycle passive')
 	send_command('bind !5 gs c toggle stance')
 	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
+	send_command('bind ^f2 gs c set AutoBuffMode off ') --
+
 	send_command('bind ^2 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind ^3 gs c cycle RuneElement') -- cycle RuneElement
 
 	send_command('bind ^f1 gs c toggle AutoStunMode')
-	send_command('bind ^f2 gs c toggle SubJobEnmity')
+	send_command('bind !6 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
 	send_command('bind @1 gs c toggle AutoCleanupMode') --Uses certain items and tries to clean up inventory.
 	send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
@@ -245,13 +248,16 @@ function global_on_load()
 	send_command('bind !- gs c cycle pctargetmode')
     send_command('lua r runewidget;rw show')--Turns addon off if job non /run.
 
-	send_command('bind ^] input //put storage slip* case all')
-	send_command('bind ^[ input //get storage slip* all') --PorterPacker Porter find
+	--send_command('bind ^] input //put storage slip* case all')
+	--send_command('bind ^[ input //get storage slip* all') --PorterPacker Porter find
+	send_command('bind ^[ input //put storage slip* case all') --PorterPacker Porter find
+
 	send_command('bind !, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
 	send_command('bind !. input //put * Wardrobe4 all') -- gs validate  --to check  --lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
 
 	send_command('bind ^. input //get storage slip* all;wait 1;input //po r') -- PorterPacker addon
-	send_command('bind ^, input //get storage slip* all;wait 1;input //po r a') -- PorterPacker addon
+	send_command('bind ^, lua r PorterPacker;wait 1;input //get storage slip* all;wait 1;input //po r a') -- PorterPacker addon
+	send_command('bind ^] input //get storage slip* all;wait 1;input //po pack')
 
 	send_command('bind !m gs c toggle AutoMedicineMode')
 	send_command('bind !n gs c toggle AutoReraiseeMode')

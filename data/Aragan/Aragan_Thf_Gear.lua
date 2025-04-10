@@ -9,7 +9,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP','Regain')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('Twashtar','None','Centovente', 'Tauret', 'Aeneas', 'Naegling')
+	state.Weapons:options('None','Twashtar','Centovente', 'Tauret', 'Aeneas', 'Naegling')
 
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Suppa','DWMax','Parry','SubtleBlow'}
 	state.AmbushMode = M(false, 'Ambush Mode')
@@ -31,6 +31,13 @@ function user_job_setup()
 	send_command('bind ^\\\\ input /ja "Despoil" <t>')
 	send_command('bind !\\\\ input /ja "Mug" <t>')
 
+    Haste = 0
+    DW_needed = 0
+    DW = false
+    moving = false
+    update_combat_form()
+    determine_haste_group()
+
     select_default_macro_book()
 end
 
@@ -44,7 +51,7 @@ function init_gear_sets()
     sets.Kiting =  {feet="Jute Boots +1"}
 
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
-	sets.buff.Sleep = {}
+	sets.buff.Sleep = {head="Frenzy Sallet"}
 	
     sets.buff['Sneak Attack'] = {back="Toutatis's Cape"}
     sets.buff['Trick Attack'] = {}--"Pill. Armlets +3"
@@ -55,7 +62,7 @@ function init_gear_sets()
 	sets.DWEarrings = {ear1="Suppanomimi", ear2="Eabani Earring"}
 	sets.DWMax = {ear1="Suppanomimi", ear2="Eabani Earring",body="Adhemar Jacket +1",hands="Floral Gauntlets",waist="Reiki Yotai"}
 	sets.Parry = {hands="Turms Mittens +1",ring2="Defending Ring"}
-	sets.Ambush = {} --body="Plunderer's Vest +1"
+	sets.Ambush = {body="Plunderer's Vest +3"}
     sets.SubtleBlow = {head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
     feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
     left_ear="Sherida Earring",
@@ -526,10 +533,17 @@ sets.precast.WS["Empyreal Arrow"] = {
 	sets.midcast.Bio = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 	sets.midcast['Bio II'] = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 
+    
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Self_Refresh = {waist="Gishdubar Sash"}
+
     sets.Phalanx_Received = {
-		body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-		hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
-		feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
 	}
     -- Ranged gear
 
@@ -691,6 +705,9 @@ sets.precast.WS["Empyreal Arrow"] = {
     }
     sets.idle.PDT = sets.defense.PDT
     sets.idle.DT = sets.defense.PDT
+   --[[    sets.idle.Town = {
+        main="Caduceus",head="Shaded Specs.",hand="Smithy's Mitts",neck="Goldsm. Torque",sub="Toreutic Escutcheon",body="Goldsmith's Smock"
+            } ]]
 
     sets.idle.HP = {
     ammo="Staunch Tathlum +1",
@@ -790,15 +807,15 @@ sets.precast.WS["Empyreal Arrow"] = {
         ammo="Yetshila +1",
         head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         body="Meg. Cuirie +2",
-        hands="Gleti's Gauntlets",
+        hands="Adhemar Wrist. +1",
         legs="Gleti's Breeches",
-        feet="Gleti's Boots",
+        legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
         neck="Nefarious Collar +1",
         waist="Reiki Yotai",
-        left_ear="Sherida Earring",
-        right_ear="Skulk. Earring +1",
-        left_ring="Gere Ring",
-        right_ring="Hetairoi Ring",
+        ear1="Odr Earring",
+        ear2="Skulk. Earring +1",
+        ring1="Hetairoi Ring",
+        ring2="Gere Ring",
         back="Null Shawl",
     }
 
@@ -820,7 +837,169 @@ sets.precast.WS["Empyreal Arrow"] = {
         left_ring="Dingir Ring",
         right_ring="Cacoethic Ring +1",
         back="Toutatis's Cape",
+}
+
+
+------------------------------------------------------------------------------------------------
+    ---------------------------------------- DW ------------------------------------------
+------------------------------------------------------------------------------------------------
+
+    -- * DNC Subjob DW Trait: +15%
+    -- * NIN Subjob DW Trait: +25%
+
+    --DW cap all set haste capped
+
+    sets.engaged.DW = {range=empty,
+    ammo="Aurgelmir Orb +1",
+    head="Skulker's Bonnet +2",
+    body="Pillager's Vest +3",
+    hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
+    legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+    feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
+    neck="Iskur Gorget",
+    waist="Reiki Yotai",
+    left_ear="Dedition Earring",
+    right_ear="Skulk. Earring +1",
+    left_ring="Gere Ring",
+    right_ring="Epona's Ring",
+    back="Toutatis's Cape",
     }
+
+    sets.engaged.DW.Acc = {range=empty,
+    ammo="Yamarang",
+    head="Malignance Chapeau",
+    body="Pillager's Vest +3",
+    hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
+    legs="Malignance Tights",
+    feet="Malignance Boots",
+    neck="Null Loop",
+    waist="Reiki Yotai",
+    left_ear="Telos Earring",
+    right_ear="Skulk. Earring +1",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+    back="Null Shawl",
+    }
+        
+    sets.engaged.DW.STP = {
+        ammo="Yetshila +1",
+        head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+        body="Meg. Cuirie +2",
+        hands="Adhemar Wrist. +1",
+        legs="Gleti's Breeches",
+        legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+        neck="Nefarious Collar +1",
+        waist="Reiki Yotai",
+        ear1="Odr Earring",
+        ear2="Skulk. Earring +1",
+        ring1="Hetairoi Ring",
+        ring2="Gere Ring",
+        back="Null Shawl",
+    }
+
+        sets.engaged.DW.CRIT = {range=empty,
+        ammo="Yetshila +1",
+        head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+        body="Meg. Cuirie +2",
+        hands="Adhemar Wrist. +1",
+        legs="Gleti's Breeches",
+        legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+        neck="Nefarious Collar +1",
+        waist="Reiki Yotai",
+        ear1="Odr Earring",
+        ear2="Skulk. Earring +1",
+        ring1="Hetairoi Ring",
+        ring2="Gere Ring",
+        back="Null Shawl",
+    }
+
+------------------------------------------------------------------------------------------------
+    ---------------------------------------- DW-HASTE ------------------------------------------
+------------------------------------------------------------------------------------------------
+
+  -- 15% Magic Haste (67% DW to cap)
+  sets.engaged.DW.LowHaste = set_combine(sets.engaged.DW, {
+    range=empty,
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 6
+    hands="Floral Gauntlets", --5
+    feet=gear.taeon_dw_feet, --9
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+    }) -- 36%
+    sets.engaged.DW.Acc.LowHaste = set_combine(sets.engaged.DW.Acc, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 6
+        hands="Floral Gauntlets", --5
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 36%
+    sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 6
+        hands="Floral Gauntlets", --5
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 36%
+    sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, -- 6
+        hands="Floral Gauntlets", --5
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 36%
+
+--MID-HASTE
+
+sets.engaged.DW.MidHaste = set_combine(sets.engaged.DW, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.Acc.MidHaste = set_combine(sets.engaged.DW.Acc, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.STP.MidHaste = set_combine(sets.engaged.DW.STP, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.CRIT.MidHaste = set_combine(sets.engaged.DW.CRIT, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+
+--HIGH-HASTE
+
+sets.engaged.DW.HighHaste = set_combine(sets.engaged.DW, {
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.Acc.HighHaste = set_combine(sets.engaged.DW.Acc, {
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.STP.HighHaste = set_combine(sets.engaged.DW.STP, {
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.CRIT.HighHaste = set_combine(sets.engaged.DW.CRIT, {
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+
+--MAX-HASTE
+
+sets.engaged.DW.MaxHaste = set_combine(sets.engaged.DW)
+sets.engaged.DW.Acc.MaxHaste = set_combine(sets.engaged.DW.Acc)
+sets.engaged.DW.STP.MaxHaste = set_combine(sets.engaged.DW.STP)
+sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)
 
 ------------------------------------------------------------------------------------------------
 ---------------------------------------- Hybrid Sets -------------------------------------------
@@ -842,6 +1021,37 @@ sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
 sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
 sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
 sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
+
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
+------------------------------------------------------------------------------------------------
+
+
+sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.HighHaste = set_combine(sets.engaged.DW.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.HighHaste = set_combine(sets.engaged.DW.Acc.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.HighHaste = set_combine(sets.engaged.DW.STP.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.HighHaste = set_combine(sets.engaged.DW.CRIT.HighHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
 
 
 end

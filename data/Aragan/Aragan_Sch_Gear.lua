@@ -306,9 +306,8 @@ right_ear="Telos Earring",
     sets.precast.FC.Dispelga = set_combine(sets.precast.FC, {main="Daybreak", sub="Ammurapi Shield"})
     sets.precast.Storm = set_combine(sets.precast.FC, {ring1="Stikini Ring +1"})
 
-    --[[sets.TreasureHunter = {ammo="Per. Lucky Egg",
-    head="White rarab cap +1", 
-    waist="Chaac Belt"} ]]
+	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+
 	
 	-- Gear that converts elemental damage done to recover MP.	
 	sets.RecoverMP = {body="Seidr Cotehardie",} --body="Seidr Cotehardie"}
@@ -317,6 +316,7 @@ right_ear="Telos Earring",
         ammo="Seraphic Ampulla",
         head="Mall. Chapeau +2",
         legs="Perdition Slops",
+        waist="Oneiros Rope",
     }
     ------------------------------------------------------------------------------------------------
     ------------------------------------- Weapon Skill Sets ----------------------------------------

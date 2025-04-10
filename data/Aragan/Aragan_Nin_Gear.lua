@@ -362,16 +362,7 @@ function init_gear_sets()
     }
     
     sets.precast.WS['Blade: Shun'] = set_combine(sets.precast.WS, sets.Shun)
-    sets.precast.WS.PDL['Blade: Shun'] = set_combine(sets.Shun, {
-        ammo="Crepuscular Pebble",
-        head="Malignance Chapeau",
-        hands="Malignance Gloves",
-        legs={ name="Mpaca's Hose", augments={'Path: A',}},   
-        feet="Malignance Boots",    
-        neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
-        left_ear={ name="Lugra Earring +1", augments={'Path: A',}},
-
-    })
+    sets.precast.WS.PDL['Blade: Shun'] = set_combine(sets.Shun, {})
     sets.precast.WS['Blade: Shun'].PDL = set_combine(sets.Shun, {
         ammo="Crepuscular Pebble",
         head="Malignance Chapeau",
@@ -919,12 +910,24 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
         waist="Siegel Sash"})
         
     sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'], {
-        body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-        hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
         feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
     })
-    sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
-
+    sets.Phalanx_Received = {
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+    }
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	
+    sets.Self_Refresh = {waist="Gishdubar Sash"}
+    
     sets.midcast.Cure = {
         ammo="Pemphredo Tathlum",
         head={ name="Nyame Helm", augments={'Path: B',}},
@@ -1272,17 +1275,17 @@ sets.idle.Evasion = {
     })
     sets.engaged.CRIT = {
         ammo="Yetshila +1",
-        head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        body="Mummu Jacket +2",
-        hands="Mummu Wrists +2",
-        legs="Mummu Kecks +2",
-        feet="Mummu Gamash. +2",
-        neck="Nefarious Collar +1",
-        waist="Gerdr Belt",
-        left_ear="Brutal Earring",
-        right_ear="Odr Earring",
-        left_ring="Mummu Ring",
-        right_ring="Hetairoi Ring",
+        head="Adhemar Bonnet +1",
+        body="Mpaca's Doublet",
+        hands="Mpaca's Gloves",
+        legs="Mpaca's Hose",
+        feet="Mpaca's Boots",
+        neck="Ninja Nodowa +2",
+        waist="Sailfi Belt +1",
+        ear1="Odr Earring",
+        ear2="Lugra Earring +1",
+        ring1="Gere Ring",
+        ring2="Epona's Ring",
         back="Andartia's Mantle",
     }
 
@@ -1481,6 +1484,11 @@ sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
 
 
 
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
+------------------------------------------------------------------------------------------------
+
 sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
 sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
 sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
@@ -1557,10 +1565,10 @@ back="Andartia's Mantle",
     right_ear="Eabani Earring", --4
     waist="Reiki Yotai", --7
     }
-	sets.TreasureHunter = set_combine(sets.TreasureHunter, {
-    ammo="Per. Lucky Egg", head="Wh. Rarab Cap +1",
-    waist="Chaac Belt"
-    })
+	-- Treasure Hunter
+	
+	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+
 	sets.Skillchain = {legs="Ryuo Hakama +1",}
 
 
@@ -1608,7 +1616,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

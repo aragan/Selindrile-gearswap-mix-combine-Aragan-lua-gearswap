@@ -45,9 +45,10 @@ function user_job_setup()
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options( 'DT','Normal', 'Tank', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
-	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular'}
+	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular', 'EnemyCritRate','EnemyTPaccumulation','Resist', 'Regen'}
 	state.Weapons:options('None','Naegling','Loxotic','Shining','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
     state.Shield = M{['description']='Weapon Set', 'Normal', 'BlurredShield', 'AdapaShield', 'SacroBulwark'}
+	state.AutoBuffMode:options('Off','Auto','Full','Defend') --,'Vagary','Off','Off','Off','Off',
 
 	gear.da_jse_back = {name="Cichol's Mantle",augments={'DEX+20','Accuracy+20 Attack+20','"Dbl.Atk."+10'}}
 	gear.crit_jse_back = {name="Cichol's Mantle",augments={'STR+20','Accuracy+20 Attack+20','Crit.hit rate+10'}}
@@ -132,10 +133,6 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         back="Reiki Cloak",
 	}
 	sets.Knockback = {}
-	sets.passive.Crepuscular = {
-		head="Crepuscular Helm",
-        body="Crepuscular Mail",
-	}
 	
 	-- Precast sets to enhance JAs
 	sets.precast.JA['Berserk'] = { body="Pummeler's Lorica +3",feet="Agoge Calligae +3",
@@ -924,12 +921,12 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.DayWSEars = {ear1="Brutal Earring",ear2={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},}
 	
 	--Specialty WS set overwrites.
-	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
+	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",waist="Fatality Belt",}
 	sets.AccWSCharge = {}
-	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
-	sets.WSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
+	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",waist="Fatality Belt",}
+	sets.WSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",waist="Fatality Belt",}
 	sets.WSCharge = {}
-	sets.WSMighty = {ammo="Yetshila +1",feet="Boii Calligae +2",}
+	sets.WSMighty = {ammo="Yetshila +1",feet="Boii Calligae +2",waist="Fatality Belt",}
 
      -- Sets to return to when not performing an action.
            
@@ -944,8 +941,40 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
 	 }
+
+	 -- passive set
+
+     sets.passive.Crepuscular = {
+		head="Crepuscular Helm",
+        body="Crepuscular Mail",
+	}
+    sets.passive.EnemyCritRate = {
+        ammo="Eluder's Sachet",
+        left_ring="Warden's Ring",
+        right_ring="Fortified Ring",
+        back="Reiki Cloak",
+    }
+    sets.passive.Resist = {
+       ammo="Staunch Tathlum +1",
+       body={ name="Sakpata's Plate", augments={'Path: A',}},
+       neck={ name="Warder's Charm +1", augments={'Path: A',}},
+       waist="Carrier's Sash",
+    }
+    sets.passive.Regen = {
+        body="Sacro Breastplate",
+        feet="Volte Sollerets",
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
+        left_ear="Infused Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
+	sets.EnemyTPaccumulation ={
+        head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+    }
      -- Defense sets
-	 sets.defense.PDT = {
+	 
+     sets.defense.PDT = {
         ammo="Staunch Tathlum +1",
         head={ name="Sakpata's Helm", augments={'Path: A',}},
         body="Adamantite Armor",
@@ -1303,7 +1332,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off,', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

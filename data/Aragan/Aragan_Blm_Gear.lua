@@ -30,6 +30,8 @@ function user_job_setup()
 	state.Enfeebling = M('None', 'Effect')
 	state.IdleMode:options('DT','Normal','DT','Empy', 'PDT', 'MDT', 'HB', 'MB', 'Evasion', 'EnemyCritRate', 'Sphere')
 	state.Weapons:options('None','Mpaca', 'Marin','BunziClub', 'MaxentiusClub', 'Drepanum', 'Maliya','TernionDagger')
+	state.AutoBuffMode:options('Off','MB','Auto') --,'Off','Off','Off','Off','Off',
+	state.Passive = M{['description'] = 'Passive Mode','None','MP','Twilight'}
 
 	gear.nuke_jse_back = {}
 	gear.stp_jse_back = {}
@@ -108,11 +110,8 @@ function init_gear_sets()
 	
 	-- Treasure Hunter
 	
-	sets.TreasureHunter = set_combine(sets.TreasureHunter, {
-	ammo="Per. Lucky Egg",
-    head="White rarab cap +1", 
-    waist="Chaac Belt"
-	})
+	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+
     
     ---- Precast Sets ----
     
@@ -120,8 +119,9 @@ function init_gear_sets()
 
     sets.precast.JA['Mana Wall'] = {back="Taranus's cape",feet="Wicce Sabots +2"}
  
-    sets.precast.JA.Manafont = {body={ name="Arch. Coat", augments={'Enhances "Manafont" effect',}},}
+    sets.precast.JA.Manafont = {body={ name="Arch. Coat +3", augments={'Enhances "Manafont" effect',}},}
     
+
     -- equip to maximize HP (for Tarus) and minimize MP loss before using convert
     sets.precast.JA.Convert = {}
 
@@ -384,6 +384,7 @@ function init_gear_sets()
         ammo="Seraphic Ampulla",
         head="Mall. Chapeau +2",
         legs="Perdition Slops",
+        waist="Oneiros Rope",
 
     }
 
@@ -753,14 +754,14 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 		-- Minimal damage gear, maximum recast gear for procs.
 		
 		sets.midcast['Elemental Magic'].OccultAcumen = set_combine(sets.midcast['Elemental Magic'].HighTierNuke, {
-			ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
-			head="Agwu's Cap",
+            ammo="Seraphic Ampulla",
+            head="Mall. Chapeau +2",
 			body="Wicce Coat +3",
 			hands="Amalric Gages +1",
-			legs="Wicce Chausses +3",
+            legs="Perdition Slops",
 			feet="Ea Pigaches +1",
 			neck={ name="Src. Stole +2", augments={'Path: A',}},
-			waist={ name="Acuity Belt +1", augments={'Path: A',}},
+            waist="Oneiros Rope",
 			left_ear="Regal Earring",
 			right_ear="Malignance Earring",
 			left_ring="Freke Ring",
@@ -1077,6 +1078,10 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 		body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Shadow Ring",
 		back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 
+    -- Extra defense sets.  Apply these on top of melee or defense sets.
+    sets.passive.MP = { body={ name="Ros. Jaseran +1", augments={'Path: A',}},}
+    sets.passive.Twilight = {head=empty,body="Twilight Cloak"}
+
 	sets.Kiting = {feet="Herald's Gaiters"}
     sets.latent_refresh = {waist="Fucho-no-obi"}
 	sets.latent_refresh_grip = {}
@@ -1205,7 +1210,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

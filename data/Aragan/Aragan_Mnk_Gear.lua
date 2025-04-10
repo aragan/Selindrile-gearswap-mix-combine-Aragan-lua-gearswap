@@ -12,7 +12,7 @@ keyboard binds and chat
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal', 'Acc','STP', 'Fodder', 'SubtleBlow')
+    state.OffenseMode:options('Normal', 'Acc','STP', 'CRIT','Fodder', 'SubtleBlow')
     state.WeaponskillMode:options('Match','Normal', 'PDL', 'Fodder')
     state.HybridMode:options('PDT', 'Normal','Counter')
     state.PhysicalDefenseMode:options('PDT', 'HP')
@@ -42,7 +42,7 @@ function init_gear_sets()
 	--------------------------------------
 	-- Start defining the sets
 	--------------------------------------
-	
+
 
 	-- Weapons sets
 	sets.weapons.Godhands = {main="Godhands"}
@@ -137,12 +137,22 @@ function init_gear_sets()
     sets.midcast.RA = { ammo=empty,
         range="Trollbane",  
     }
-       
-
+    sets.midcast.Phalanx = {
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+	}
+	sets.Self_Healing = {neck="Phalaina Locket",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Self_Refresh = {waist="Gishdubar Sash"}
     sets.Phalanx_Received = {
-	body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
-	feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
 	}
 
 	-- Weaponskill sets
@@ -681,6 +691,21 @@ sets.defense.Evasion = {
         back="Segomo's Mantle",
     }
 
+    sets.engaged.CRIT = {
+        ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+        head="Adhemar Bonnet +1",
+        body="Mpaca's Doublet",
+        hands="Adhemar Wrist. +1",
+        legs={ name="Mpaca's Hose", augments={'Path: A',}},
+        feet="Anch. Gaiters +3",
+        neck="Mnk. Nodowa +2",
+        waist="Moonbow Belt +1",
+        ear1="Odr Earring",
+        ear2="Schere Earring",
+        ring1="Niqmaddu Ring",
+        ring2="Gere Ring",
+        back="Null Shawl",
+    }    
     sets.engaged.STP = {    
         ammo="Aurgelmir Orb +1",
         head="Malignance Chapeau",
@@ -781,7 +806,7 @@ sets.engaged.SubtleBlow.Counter = set_combine(sets.engaged, {
 	sets.engaged.Acc.HF = set_combine(sets.engaged.Acc, {})
     
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
-	sets.buff.Sleep = {}
+	sets.buff.Sleep = {head="Frenzy Sallet"}
 	sets.buff.Impetus = {body="Bhikku Cyclas +2"}
     sets.buff.ImpetusWS = {body="Bhikku Cyclas +2"}
 	sets.buff.Footwork = {feet="Anch. Gaiters +3"}

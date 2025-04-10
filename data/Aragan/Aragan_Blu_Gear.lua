@@ -37,17 +37,18 @@ bind add any like
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal', 'Acc', 'STP', 'SubtleBlow', 'CRIT', 'Refresh')--, 'Learning'
+    state.OffenseMode:options('Normal', 'Acc', 'STP', 'SubtleBlow', 'CRIT')--, 'Learning'
 	state.HybridMode:options('DT','Normal')
-    state.WeaponskillMode:options('Match', 'PDL', 'SC')
-    state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT')
+    state.WeaponskillMode:options('Match', 'PDL', 'SC','Proc')
+    state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT','Proc')
     state.IdleMode:options('DT','Normal','Empy','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
+	state.Passive:options('None','EnemyCritRate','Regen','Resist','Refresh')
 	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('Naegling', 'Naegling2','None', 'Maxentius', 'Nuking', 'MaccWeapons','Staff')
+	state.Weapons:options('Naegling', 'Naegling2','None', 'Maxentius', 'Nuking', 'MaccWeapons','Staff','proc')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','MP','SuppaBrutal','DWEarrings','DWMax'}
-	state.AutoBuffMode:options('Off','Auto','Cleave') --,'Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','Cleave','Vagary','VagaryParty','melee','Defend') --,'Vagary','Off','Off','Off','Off',
 
 	gear.wsd_jse_back = {}
 
@@ -59,9 +60,9 @@ function user_job_setup()
     send_command('bind f7 input //Sublimator')
     send_command('bind f3 gs c cycle Storms')
     send_command('bind f2 input //gs c Storms')	
-	send_command('bind ^` input /ja "Chain Affinity" <me>')
-	send_command('bind @` input /ja "Efflux" <me>')
-	send_command('bind !` input /ja "Burst Affinity" <me>')
+	--send_command('bind ^` input /ja "Chain Affinity" <me>')
+	--send_command('bind @` input /ja "Efflux" <me>')
+	--send_command('bind !` input /ja "Burst Affinity" <me>')
 	send_command('bind ^@!` gs c cycle SkillchainMode')
 	--send_command('bind ^backspace input /ja "Unbridled Learning" <me>;wait 1;input /ja "Diffusion" <me>;wait 2;input /ma "Mighty Guard" <me>')
 	--send_command('bind !backspace input /ja "Unbridled Learning" <me>;wait 1;input /ja "Diffusion" <me>;wait 2;input /ma "Carcharian Verve" <me>')
@@ -79,9 +80,18 @@ function user_job_setup()
     send_command('bind f1 gs c cycle HippoMode')
     send_command('alias destroy setkey down down;')
 	--send_command('bind ^f2 gs c toggle AutoBuffMode')
+    send_command('bind ` gs c cycle Spellset;')
+    send_command('bind @` gs c cycleback Spellset;')
+    send_command('bind ^` gs c Spellset')
 
+	send_command('bind !` input //lua l bluguide') --Turns addon on .addon 
+
+	
     send_command('alias lamp input /targetnpc;wait .1; input //tradenpc 1 "Smoldering Lamp";wait 1.4;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey right down;wait .4;setkey right up;wait .1;setkey numpadenter down;wait .1;setkey numpadenter up;')  --//lamp
     send_command('alias glowing input /targetnpc;wait .1; input //tradenpc 1 "Glowing Lamp";wait 1.8;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;') -- //glowing 
+	
+
+
 	select_default_macro_book()
 end
 
@@ -91,6 +101,9 @@ function init_gear_sets()
 	-- Start defining the sets
 	--------------------------------------
 
+	gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
+	gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
+
 	-- Weapons sets
     sets.weapons.Naegling = {main="Naegling", sub="Thibron"}
     sets.weapons.Naegling2 = {main="Naegling", sub="Zantetsuken"}
@@ -98,6 +111,7 @@ function init_gear_sets()
     sets.weapons.Nuking = {main="Maxentius", sub="Bunzi's Rod"}
     sets.weapons.MaccWeapons = {main="Iris", sub="Iris",}
 	sets.weapons.Staff = {main="Gozuki Mezuki",sub="Niobid Strap"}
+	sets.weapons.proc = {main="Fermion Sword",sub="Trainee Sword",}
 
 
 
@@ -250,7 +264,8 @@ sets.precast.WS.PDL = set_combine(sets.precast.WS, {
     left_ring="Sroda Ring", 
     neck={ name="Mirage Stole +2", augments={'Path: A',}},
 })
-    
+sets.precast.WS.Proc =  {}
+
 -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
 sets.precast.WS['Requiescat'] = set_combine(sets.precast.WS, {
     ammo="Coiste Bodhar",
@@ -464,6 +479,19 @@ sets.precast.WS["Rock Crusher"] = set_combine(sets.precast.WS["Burning Blade"],{
 sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
+
+sets.precast.WS["Fast Blade"] =  set_combine(sets.precast.WS,{})
+sets.precast.WS["Flat Blade"] =  set_combine(sets.precast.WS,{})
+
+--[[
+
+]]
+
+sets.precast.WS["Savage Blade"].Proc =  set_combine(sets.precast.WS.Proc,{})
+sets.precast.WS["Red Lotus Blade"].Proc =  set_combine(sets.precast.WS.Proc,{})
+sets.precast.WS["Burning Blade"].Proc =  set_combine(sets.precast.WS.Proc,{})
+sets.precast.WS["Fast Blade"].Proc =  set_combine(sets.precast.WS.Proc,{})
+sets.precast.WS["Flat Blade"].Proc =  set_combine(sets.precast.WS.Proc,{})
 
 sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	ammo="Pemphredo Tathlum",
@@ -735,27 +763,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ring="Stikini Ring +1",
 		back={ name="Fi Follet Cape +1", augments={'Path: A',}},
 	})
-	
-	sets.midcast['Phalanx'] = set_combine(sets.midcast['Enhancing Magic'],{
-		main="Sakpata's Sword",
-		ammo="Staunch Tathlum +1",
-		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
-		body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-		hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
-		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
-		feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
-		neck="Incanter's Torque",
-		waist="Olympus Sash",
-		left_ear="Mendi. Earring",
-		right_ear="Andoaa Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Fi Follet Cape +1", augments={'Path: A',}},
-	})
-	sets.midcast.Phalanx.Duration = set_combine(sets.midcast.Duration, {})
 
-	sets.midcast.Phalanx.SIRD = set_combine(sets.SIRD, sets.midcast.Phalanx) 
-		
 
 	sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'], {waist="Gishdubar Sash"})
 	sets.midcast.Stoneskin = set_combine(sets.midcast['Enhancing Magic'], {
@@ -877,7 +885,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     back="Cornflower Cape",}
 	sets.midcast['Blue Magic'].SkillBasedBuff.SIRD = set_combine(sets.SIRD, sets.midcast['Blue Magic'].SkillBasedBuff) 
 
-	sets.midcast['Blue Magic'].Buff =     {ammo="Mavi Tathlum",
+	sets.midcast['Blue Magic'].Buff = {ammo="Mavi Tathlum",
     head="Luh. Keffiyeh +3",
     body="Assim. Jubbah +3",
     hands={ name="Rawhide Gloves", augments={'Mag. Acc.+15','INT+7','MND+7',}},
@@ -898,14 +906,39 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 	sets.midcast['Blue Magic']['Carcharian Verve'] = set_combine(sets.midcast['Blue Magic'].Buff, {hands="Regal Cuffs"})
 
+	sets.midcast['Phalanx'] = set_combine(sets.midcast['Enhancing Magic'],{
+		--main="Sakpata's Sword",
+		ammo="Staunch Tathlum +1",
+		head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+		neck="Incanter's Torque",
+		waist="Olympus Sash",
+		left_ear="Mendi. Earring",
+		right_ear="Andoaa Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Fi Follet Cape +1", augments={'Path: A',}},
+	})
+	sets.midcast.Phalanx.Duration = set_combine(sets.midcast.Duration, {})
 
-	sets.Self_Healing = set_combine(sets.midcast['Blue Magic'].Healing, {
-		waist="Gishdubar Sash", -- (10)
-	})
-	sets.Cure_Received = set_combine(sets.midcast['Blue Magic'].Healing, {
-		waist="Gishdubar Sash", -- (10)
-	})
+	sets.midcast.Phalanx.SIRD = set_combine(sets.SIRD, sets.midcast.Phalanx) 
+		
+	sets.Phalanx_Received = {
+		main="Sakpata's Sword",
+		head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+	}
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
+
+
 	sets.MagicBurst = set_combine(sets.midcast['Blue Magic'].Magical, {
 		head="Nyame Helm",
 		body="Nyame Mail",
@@ -919,22 +952,6 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		--back="Seshaw Cape", --5
 	})
 	
-	sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'],{
-		main="Sakpata's Sword",
-		ammo="Staunch Tathlum +1",
-		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
-		body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-		hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
-		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
-		feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
-		neck="Incanter's Torque",
-		waist="Olympus Sash",
-		left_ear="Mendi. Earring",
-		right_ear="Andoaa Earring",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-		back={ name="Fi Follet Cape +1", augments={'Path: A',}},
-	})
 
 	-- Sets to return to when not performing an action.
 
@@ -943,6 +960,39 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.DayIdle = {}
 	sets.NightIdle = {}
 
+    -- Passive set
+
+	sets.Passive.EnemyCritRate = { 
+		ammo="Eluder's Sachet",
+		left_ring="Warden's Ring",
+		right_ring="Fortified Ring",
+		back="Reiki Cloak",
+	}
+	sets.Passive.Regen = {
+		neck={ name="Bathy Choker +1", augments={'Path: A',}},
+		waist="Null Belt",
+		right_ear="Infused Earring",
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+	}
+	sets.passive.Resist ={
+		ammo="Staunch Tathlum +1",
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+		waist="Carrier's Sash",
+	}
+	sets.passive.Empy = { 
+		head="Hashishin Kavuk +2",
+		body="Hashishin Mintan +2",
+		hands="Hashishin Bazubands +2",
+		legs="Hashishin Tayt +3",
+		feet="Hashi. Basmak +2",
+	}
+		
+	sets.passive.Refresh = { 
+		body="Shamash Robe",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+}
 	-- Gear for learning spells: +skill and AF hands.
 	sets.Learning = {    hands="Malignance Gloves",}
 
@@ -1226,17 +1276,17 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 	
 	sets.engaged.CRIT = {
 		ammo="Coiste Bodhar",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		head="Adhemar Bonnet +1",
 		body="Gleti's Cuirass",
-		hands="Gleti's Gauntlets",
-		legs="Gleti's Breeches",
+		hands="Adhemar Wrist. +1",
+		legs="Zoar Subligar +1",
 		feet="Thereoid Greaves",
 		neck={ name="Mirage Stole +2", augments={'Path: A',}},
-		waist="Gerdr Belt",
-		right_ear="Odr Earring",
-		left_ear="Telos Earring",
-		left_ring="Epona's Ring",
-		right_ring="Hetairoi Ring",
+		waist="Sailfi Belt +1",
+		ear1="Mache Earring +1",
+		ear2="Odr Earring",
+		ring1="Hetairoi Ring",
+		ring2="Epona's Ring",
 		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},}
 		
 	sets.engaged.SubtleBlow = set_combine(sets.engaged ,{
@@ -1304,6 +1354,7 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 		legs="Malignance Tights",
 		feet="Malignance Boots",
 		neck="Null Loop",
+		waist="Null Belt",
 		left_ear="Suppanomimi",
 		right_ear="Telos Earring",
 		left_ring="Chirich Ring +1",
@@ -1360,6 +1411,108 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 
 	
 ------------------------------------------------------------------------------------------------
+    ---------------------------------------- DW-HASTE ------------------------------------------
+------------------------------------------------------------------------------------------------
+
+    -- 15% Magic Haste (67% DW to cap)
+
+sets.engaged.DW.LowHaste = set_combine(sets.engaged.DW, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    legs="Carmine Cuisses +1", --6
+	feet=gear.taeon_dw_feet, --9
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 37%
+
+sets.engaged.DW.Acc.LowHaste = set_combine(sets.engaged.DW.Acc, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    legs="Carmine Cuisses +1", --6
+	feet=gear.taeon_dw_feet, --9
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 37%
+
+sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    legs="Carmine Cuisses +1", --6
+	feet=gear.taeon_dw_feet, --9
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 37%
+sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    legs="Carmine Cuisses +1", --6
+	feet=gear.taeon_dw_feet, --9
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 37%
+sets.engaged.DW.Refresh.LowHaste = set_combine(sets.engaged.DW.Refresh, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    legs="Carmine Cuisses +1", --6
+	feet=gear.taeon_dw_feet, --9
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 37%
+
+
+--MID-HASTE
+sets.engaged.DW.MidHaste = set_combine(sets.engaged.DW, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 22%
+
+sets.engaged.DW.Acc.MidHaste = set_combine(sets.engaged.DW.Acc, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 22%
+
+sets.engaged.DW.STP.MidHaste = set_combine(sets.engaged.DW.STP, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 22%
+sets.engaged.DW.CRIT.MidHaste = set_combine(sets.engaged.DW.CRIT, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 22%
+sets.engaged.DW.Refresh.MidHaste = set_combine(sets.engaged.DW.Refresh, {
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+}) -- 22%
+sets.engaged.DW.SubtleBlow.MidHaste = set_combine(sets.engaged.DW.SubtleBlow,{
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    ear2="Eabani Earring", --5
+    ear1="Suppanomimi", --4
+    waist="Reiki Yotai", --7
+})
+
+--MAX-HASTE
+
+sets.engaged.DW.MaxHaste = set_combine(sets.engaged.DW, {})
+sets.engaged.DW.Acc.MaxHaste = set_combine(sets.engaged.DW.Acc)
+sets.engaged.DW.STP.MaxHaste = set_combine(sets.engaged.DW.STP)
+sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)
+sets.engaged.DW.Refresh.MaxHaste = set_combine(sets.engaged.DW.Refresh)
+sets.engaged.DW.Learning.MaxHaste = set_combine(sets.engaged.DW.Learning)
+sets.engaged.DW.SubtleBlow.MaxHaste = set_combine(sets.engaged.DW.SubtleBlow, {})
+
+
+	
+------------------------------------------------------------------------------------------------
 ---------------------------------------- Hybrid Sets -------------------------------------------
 ------------------------------------------------------------------------------------------------
 
@@ -1370,7 +1523,7 @@ sets.engaged.Hybrid = {
     legs="Malignance Tights", --7/7
     feet="Malignance Boots", --4/4
     left_ring="Defending Ring", --10/10
-    waist="Reiki Yotai",
+    --waist="Reiki Yotai",
 }
 
 sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
@@ -1398,6 +1551,10 @@ sets.engaged.Learning.DT = set_combine(sets.engaged.Learning, sets.engaged.Hybri
     back={ name="Rosmerta's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 })
 
+------------------------------------------------------------------------------------------------
+---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
+------------------------------------------------------------------------------------------------
+
 sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
 sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
 sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
@@ -1408,6 +1565,38 @@ sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow ,sets.eng
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
+
+sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Refresh.DT.LowHaste = set_combine(sets.engaged.DW.Refresh.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Learning.DT.LowHaste = set_combine(sets.engaged.DW.Learning.LowHaste, sets.engaged.Learning.DT, {})
+sets.engaged.DW.SubtleBlow.DT.LowHaste = set_combine(sets.engaged.DW.SubtleBlow.LowHaste ,sets.engaged.Hybrid,{
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+})
+sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Refresh.DT.MidHaste = set_combine(sets.engaged.DW.Refresh.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Learning.DT.MidHaste = set_combine(sets.engaged.DW.Learning.MidHaste, sets.engaged.Learning.DT, {})
+sets.engaged.DW.SubtleBlow.DT.MidHaste = set_combine(sets.engaged.DW.SubtleBlow.MidHaste ,sets.engaged.Hybrid,{
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+})
+sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Refresh.DT.MaxHaste = set_combine(sets.engaged.DW.Refresh.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Learning.DT.MaxHaste = set_combine(sets.engaged.DW.Learning.MaxHaste, sets.engaged.Hybrid, {})
+sets.engaged.DW.SubtleBlow.DT.MaxHaste = set_combine(sets.engaged.DW.SubtleBlow.MaxHaste ,sets.engaged.Hybrid,{
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",})
+
+-------------------
 
 end
 function user_job_lockstyle()
@@ -1451,7 +1640,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

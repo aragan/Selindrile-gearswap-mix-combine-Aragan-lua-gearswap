@@ -138,7 +138,13 @@ function init_gear_sets()
 	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
-	
+    sets.Phalanx_Received = {
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},
+        hands={ name="Taeon Gloves", augments={'Phalanx +3',}},
+        legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Taeon Boots", augments={'Phalanx +2',}},
+	}
 	sets.precast.RA = {ammo=empty,
 	range="Trollbane",  
     head={ name="Nyame Helm", augments={'Path: B',}},
@@ -760,10 +766,10 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         feet="Thereoid Greaves",
         neck={ name="Dgn. Collar +2", augments={'Path: A',}},
         waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-        left_ear="Sherida Earring",
-        right_ear="Brutal Earring",
-        left_ring="Niqmaddu Ring",
-        right_ring="Hetairoi Ring",
+        ear1="Sroda Earring",
+        ear2="Sherida Earring",
+        ring1="Niqmaddu Ring",
+        ring2="Begrudging Ring",
         back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},    })
 
     sets.engaged.SubtleBlow = set_combine(sets.engaged, {        

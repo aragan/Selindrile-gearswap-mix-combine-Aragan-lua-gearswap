@@ -498,11 +498,6 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 	sets.midcast.RA['Hangaku-no-Yumi'] = set_combine(sets.midcast.RA, {})
 	
-	sets.Phalanx_Received = {
-		body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-		hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
-		feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
-	}
 
 	--These sets will overlay based on accuracy level, regardless of other options.
 	sets.buff.Camouflage = {}
@@ -517,6 +512,28 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		hands="Oshosi Gloves +1",
 		legs="Osh. Trousers +1",
 		feet="Osh. Leggings +1",
+	}
+			
+    sets.midcast['Enhancing Magic'] = {    
+		neck="Incanter's Torque",
+		waist="Olympus Sash",
+		left_ear="Andoaa Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+}
+	sets.midcast['Phalanx'] = set_combine(sets.midcast['Enhancing Magic'],{
+		head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+		})
+	sets.Phalanx_Received = {
+		head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
 	}
 	sets.Self_Healing = {waist="Gishdubar Sash"}
 	sets.Cure_Received = {waist="Gishdubar Sash"}
@@ -882,7 +899,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

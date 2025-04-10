@@ -206,8 +206,22 @@ sets.precast.FC.Cure = set_combine(sets.precast.FC, {
 
 	sets.midcast.Curaga = sets.midcast.Cure
 
-	sets.Self_Healing = {waist="Gishdubar Sash"}
-	sets.Cure_Received = {waist="Gishdubar Sash"}
+	sets.midcast['Phalanx'] = set_combine(sets.midcast['Enhancing Magic'],{
+	head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+    body={ name="Taeon Tabard", augments={'Phalanx +3',}},
+    hands={ name="Taeon Gloves", augments={'Phalanx +3',}},
+    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+    feet={ name="Taeon Boots", augments={'Phalanx +2',}},
+	})
+	sets.Phalanx_Received = {
+	head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+    body={ name="Taeon Tabard", augments={'Phalanx +3',}},
+    hands={ name="Taeon Gloves", augments={'Phalanx +3',}},
+    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+    feet={ name="Taeon Boots", augments={'Phalanx +2',}},
+	}
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
 
 	sets.midcast['Enhancing Magic'] = {
@@ -1018,7 +1032,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 
 	sets.buff['Killer Instinct'] = {body="Nukumi Gausape +2"}
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
-	sets.buff.Sleep = {}
+	sets.buff.Sleep = {head="Frenzy Sallet"}
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 	sets.Knockback = {}
 	sets.SuppaBrutal = {ear1="Suppanomimi", ear2="Sherida Earring"}

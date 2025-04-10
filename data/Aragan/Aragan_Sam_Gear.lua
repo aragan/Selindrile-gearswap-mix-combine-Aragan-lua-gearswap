@@ -934,18 +934,18 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
     }
 
     sets.engaged.CRIT = set_combine(sets.engaged, {range=empty,
-    ammo="Aurgelmir Orb +1",
-    head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    ammo="Coiste Bodhar",
+    head="Blistering Sallet +1",
     body="Mpaca's Doublet",
-    hands="Flam. Manopolas +2",
+    hands="Mpaca's Gloves",
     legs={ name="Mpaca's Hose", augments={'Path: A',}},
     feet="Thereoid Greaves",
-    neck="Nefarious Collar +1",
-    waist="Gerdr Belt",
-    left_ear="Schere Earring",
-    right_ear="Brutal Earring",
-    left_ring="Niqmaddu Ring",
-    right_ring="Hetairoi Ring",
+    neck="Rep. Plat. Medal",
+    waist="Sailfi Belt +1",
+    ear1="Brutal Earring",
+    ear2="Schere Earring",
+    ring1="Begrudging Ring",
+    ring2="Niqmaddu Ring",
     back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
     })
 
@@ -1086,7 +1086,9 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
 
 
 	-- Buff sets
-	sets.Cure_Received = {waist="Gishdubar Sash",legs="Flamma Dirs +2"}
+
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.buff.Doom = set_combine(sets.buff.Doom, {
         neck="Nicander's Necklace",
         waist="Gishdubar Sash",
@@ -1143,7 +1145,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

@@ -424,7 +424,9 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 	-- Midcast Sets
 
-	sets.TreasureHunter = set_combine(sets.TreasureHunter, {feet=gear.chironic_treasure_feet})
+	-- Treasure Hunter
+	
+	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 	
 	-- Gear that converts elemental damage done to recover MP.	
 	sets.RecoverMP = {body="Seidr Cotehardie"}
@@ -512,8 +514,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 	sets.midcast.StatusRemoval = set_combine(sets.midcast.Cursna, {})
 		
-	sets.Self_Healing = {waist="Gishdubar Sash"}
-	sets.Cure_Received = {waist="Gishdubar Sash"}
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
 
 	sets.midcast['Enhancing Magic'] = {
@@ -588,11 +590,11 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ring="Stikini Ring +1",
 		back={ name="Sucellos's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
-	sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",})
+sets.midcast.Protect = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",})
 sets.midcast.Protectra = sets.midcast.Protect
 sets.midcast.Shell = sets.midcast.Protect
 sets.midcast.Shellra = sets.midcast.Shell
-sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Skill, {})
+--sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Skill, {})
 sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
     sets.midcast['Enhancing Magic'].GainSpell = set_combine(sets.midcast['Enhancing Magic'].SelfDuration, {})
 	
@@ -1069,18 +1071,18 @@ sets.engaged.Acc = {
 		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	}
 sets.engaged.CRIT = {
-	ammo="Coiste Bodhar",
+	ammo="Yetshila +1",
 	head={ name="Blistering Sallet +1", augments={'Path: A',}},
-	body="Ayanmo Corazza +2",
+	body="Nyame Mail",
 	hands="Bunzi's Gloves",
-	legs={ name="Zoar Subligar +1", augments={'Path: A',}},
+	legs="Zoar Subligar +1",
 	feet="Thereoid Greaves",
-	neck="Nefarious Collar +1",
-	waist="Gerdr Belt",
-	left_ear="Sherida Earring",
-	right_ear="Brutal Earring",
-	left_ring="Hetairoi Ring",
-	right_ring="Petrov Ring",
+	neck="Rep. Plat. Medal",
+	waist="Sailfi Belt +1",
+	ear1="Brutal Earring",
+	ear2="Sherida Earring",
+	ring1="Begrudging Ring",
+	ring2="Hetairoi Ring",
 	back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},	} 
 
 	sets.engaged.Enspell = {
@@ -1088,7 +1090,7 @@ sets.engaged.CRIT = {
 		head="Umuthi Hat",
 		body="Malignance Tabard",
 		ands="Aya. Manopolas +2",
-		legs="Malignance Tights",
+		legs="Viti. Tights +3",
 		feet="Malignance Boots",
 		neck="Sanctity Necklace",
 		waist="Orpheus's Sash",
@@ -1103,7 +1105,7 @@ sets.engaged.CRIT = {
 		head="Umuthi Hat",
 		body="Ayanmo Corazza +2",
 		hands="Aya. Manopolas +2",
-		legs="Malignance Tights",
+		legs="Viti. Tights +3",
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
 		neck="Asperity Necklace",
 		waist="Orpheus's Sash",
@@ -1470,7 +1472,7 @@ function buff_change(buff, gain)
 		--["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		--["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
         -- Add more buffs as needed with appropriate flags
     }

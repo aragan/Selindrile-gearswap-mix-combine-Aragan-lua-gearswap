@@ -164,7 +164,7 @@ function init_gear_sets()
     Artifact_Foire.Body_WSD_PTank = ""
     Artifact_Foire.Hands_Mane_Overload = "Foire Dastanas +3"
     Artifact_Foire.Legs_PCure = ""
-    Artifact_Foire.Feet_Repair_PMagic = "Foire Babouches +2",
+    Artifact_Foire.Feet_Repair_PMagic = "Foire Babouches +2"
 
     Relic_Pitre = {}
     Relic_Pitre.Head_PRegen = "Pitre Taj +3" --Enhances Optimization
@@ -225,10 +225,15 @@ function init_gear_sets()
     sets.precast.JA["Overdrive"] = {body = Relic_Pitre.Body_PTP}
 
     sets.precast.JA["Repair"] = {
+        ammo = "Automat. Oil +3",
+        head={ name="Rao Kabuto +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
+        hands={ name="Rao Kote +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
+        body={ name="Rao Togi +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
+        legs={ name="Rao Haidate +1", augments={'Pet: HP+125','Pet: Accuracy+20','Pet: Damage taken -4%',}},
+        feet = Artifact_Foire.Feet_Repair_PMagic,
         right_ear="Pratik Earring",
         left_ear="Guignol Earring",
-        ammo = "Automat. Oil +3",
-        feet = Artifact_Foire.Feet_Repair_PMagic
+        left_ring="Overbearing Ring",
     }
 
     sets.precast.JA["Maintenance"] = set_combine(sets.precast.JA["Repair"], {hands="Foire Dastanas +3",})
@@ -510,12 +515,23 @@ range="Trollbane",  }
     }
 
     sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'],{
-	body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
-	feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
 	})
-    sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
 
+    sets.Phalanx_Received = {
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+	}
     sets.midcast.Stoneskin = set_combine(sets.midcast['Enhancing Magic'], {
         neck="Stone Gorget",
 	    legs="Haven Hose",
@@ -580,11 +596,8 @@ range="Trollbane",  }
         right_ring="Stikini Ring +1",
         back={ name="Aurist's Cape +1", augments={'Path: A',}},
     }
-    sets.TreasureHunter = { 
-        --ammo="Per. Lucky Egg",
-        head="White rarab cap +1", 
-        waist="Chaac Belt",
-     }
+	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+
 
 
 

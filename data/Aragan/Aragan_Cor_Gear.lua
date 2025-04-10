@@ -103,7 +103,12 @@ function user_job_setup()
     -- Define the roll commands in a table
     --send_command('bind !f7 gs c toggle rangedautows')
 
-    
+    Haste = 0
+    DW_needed = 0
+    DW = false
+    determine_haste_group()
+    update_combat_form()  
+
     select_default_macro_book()
 end
 
@@ -113,6 +118,8 @@ function init_gear_sets()
     -- Start defining the sets
     --------------------------------------
 
+	gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
+	gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
 
 
 	-- Weapons sets
@@ -250,7 +257,7 @@ function init_gear_sets()
     feet="Meghanada Jambeaux +2",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Yemaya Belt",
-    back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    back={ name="Camulus's Mantle", augments={'INT+20','Eva.+20 /Mag. Eva.+20','"Snapshot"+10',}},
 }
 		
 	sets.precast.RA.Flurry = set_combine(sets.precast.RA, {    body="Laksa. Frac +3", --0/20
@@ -261,7 +268,7 @@ function init_gear_sets()
     legs={ name="Adhemar Kecks +1", augments={'AGI+12','"Rapid Shot"+13','Enmity-6',}},
     feet="Meghanada Jambeaux +2",
     waist="Yemaya Belt",
-    back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    back={ name="Camulus's Mantle", augments={'INT+20','Eva.+20 /Mag. Eva.+20','"Snapshot"+10',}},
 })
 
        
@@ -596,18 +603,24 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
             right_ring="Stikini Ring +1",
             back="Moonlight Cape",
     }
-
-	sets.Self_Healing = {waist="Gishdubar Sash"}
-	sets.Cure_Received = {waist="Gishdubar Sash"}
-	sets.Self_Refresh = {waist="Gishdubar Sash"}
-
     sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'], {
-        body={ name="Herculean Vest", augments={'Phys. dmg. taken -1%','Accuracy+11 Attack+11','Phalanx +2','Mag. Acc.+18 "Mag.Atk.Bns."+18',}},
-        hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
         feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
     })    
-    sets.Phalanx_Received = set_combine(sets.midcast.Phalanx, {})
+	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
+	sets.Self_Refresh = {waist="Gishdubar Sash"}
 
+    sets.Phalanx_Received = {
+        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
+    	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
+	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
+        feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
+	}
     sets.midcast.Utsusemi = sets.midcast.SpellInterrupt
 
 	sets.midcast['Dark Magic'] = {
@@ -1003,18 +1016,18 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         back="Null Shawl",
     }
     sets.engaged.CRIT = {
-        head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        body="Mummu Jacket +2",
-        hands="Mummu Wrists +2",
+        head="Adhemar Bonnet +1",
+        body="Adhemar Jacket +1",
+        hands="Adhemar Wrist. +1",
         legs={ name="Zoar Subligar +1", augments={'Path: A',}},
         feet="Mummu Gamash. +2",
-        neck="Nefarious Collar +1",
-        waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-        left_ear="Cessance Earring",
-        right_ear="Brutal Earring",
-        left_ring="Epona's Ring",
-        right_ring="Hetairoi Ring",
-            back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+        neck="Caro Necklace",
+        waist="Sailfi Belt +1",
+        ear1="Odr Earring",
+        ear2="Chas. Earring +1",
+        ring1="Regal Ring",
+        ring2="Hetairoi Ring",
+        back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.engaged.Ranged = {    
         head="Malignance Chapeau",
@@ -1087,6 +1100,100 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
     })
 
 
+    -- No Magic Haste (74% DW to cap)
+
+    ------------------------------------------------------------------------------------------------
+      ---------------------------------------- DW-HASTE ------------------------------------------
+    ------------------------------------------------------------------------------------------------
+    sets.engaged.DW.LowHaste = set_combine(sets.engaged.DW, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        hands="Floral Gauntlets", --5
+        legs="Carmine Cuisses +1", --6
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+       
+    }) -- 33%
+    sets.engaged.DW.Acc.LowHaste = set_combine(sets.engaged.DW.Acc, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        hands="Floral Gauntlets", --5
+        legs="Carmine Cuisses +1", --6
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 33%
+
+    sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        hands="Floral Gauntlets", --5
+        legs="Carmine Cuisses +1", --6
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 33%
+    sets.engaged.DW.Ranged.LowHaste = set_combine(sets.engaged.DW.Ranged, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        hands="Floral Gauntlets", --5
+        legs="Carmine Cuisses +1", --6
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 33%
+
+    sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        hands="Floral Gauntlets", --5
+        legs="Carmine Cuisses +1", --6
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 33%
+
+
+    -- 30% Magic Haste (56% DW to cap)
+    sets.engaged.DW.MidHaste = set_combine(sets.engaged.DW, {
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 22%
+    sets.engaged.DW.Acc.MidHaste = set_combine(sets.engaged.DW.Acc,{ 
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 22%
+    sets.engaged.DW.CRIT.MidHaste = set_combine(sets.engaged.DW.CRIT,{ 
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 22%
+
+    sets.engaged.DW.Ranged.MidHaste = set_combine(sets.engaged.DW.Ranged,{ 
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 22%
+   sets.engaged.DW.STP.MidHaste = set_combine(sets.engaged.DW.STP,{ 
+        body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+    }) -- 22%
+
+    sets.engaged.DW.MaxHaste = set_combine(sets.engaged.DW)
+    sets.engaged.DW.Acc.MaxHaste = set_combine(sets.engaged.DW.Acc)
+    sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)
+    sets.engaged.DW.Ranged.MaxHaste = set_combine(sets.engaged.DW.Ranged)
+    sets.engaged.DW.STP.MaxHaste = set_combine(sets.engaged.DW.STP)
+
+
 ------------------------------------------------------------------------------------------------
 ---------------------------------------- Hybrid Sets -------------------------------------------
 ------------------------------------------------------------------------------------------------
@@ -1096,7 +1203,7 @@ sets.engaged.Hybrid = {
     hands="Malignance Gloves",
     legs="Chasseur's Culottes +3",
     feet="Malignance Boots",
-    waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 }
    
 sets.engaged.PDT = set_combine(sets.engaged,{
@@ -1183,6 +1290,36 @@ sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP,{
     waist="Reiki Yotai",
 })
 
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
+------------------------------------------------------------------------------------------------
+
+sets.engaged.DW.PDT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.PDT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.PDT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Ranged.PDT.LowHaste = set_combine(sets.engaged.DW.Ranged.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.PDT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.PDT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.PDT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.PDT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Ranged.PDT.MidHaste = set_combine(sets.engaged.DW.Ranged.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.PDT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.PDT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.PDT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.PDT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Ranged.PDT.MaxHaste = set_combine(sets.engaged.DW.Ranged.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.PDT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+
+
+
+
+
+
+
+
 end
 
 -- Select default macro book on initial load or subjob change.
@@ -1237,6 +1374,7 @@ autows_list = {['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='
 function buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
+        --[[ 
         ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
 		["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
 		["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
@@ -1245,8 +1383,9 @@ function buff_change(buff, gain)
 		["Warlock's Roll"]   = {gain = 'Warlock\'s Roll is on.', lose = 'Warlock\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		["Wizard's Roll"]    = {gain = 'Wizard\'s Roll is on.', lose = 'Wizard\'s Roll wore off.', announce_gain = false, announce_lose = true},
 		
-		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off, Daddy!', announce_gain = false, announce_lose = true},
+		["Scherzo"]    = {gain = 'Scherzo is on.', lose = 'Scherzo wore off', announce_gain = false, announce_lose = true},
         --["Blink"] = {gain = 'Blink is on.', lose = 'Blink wore off.', announce_gain = false, announce_lose = true},
+         ]]
         -- Add more buffs as needed with appropriate flags
     }
 
