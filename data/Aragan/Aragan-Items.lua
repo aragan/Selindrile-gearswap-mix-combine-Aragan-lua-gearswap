@@ -17,8 +17,8 @@ sets.precast.Item['Holy Water'] = {neck="Nicander's Necklace",
 left_ring="Purity Ring",
 right_ring="Blenmot's Ring +1",}
 
-gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
-gear.taeon_dw_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
+gear.taeon_phalanx_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
+gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
 
 --Augmented items that you'll use among multiple jobs.
 --[[

@@ -98,6 +98,9 @@ state.Etude = M{['description']='Etude',  'Herculean Etude', 'Sage Etude', 'Sine
 state.Spellset = M{['description']='Spellset','vagary', 'aoe', 'aoe2'}
 
 state.Avatars = M{['description']='Avatars', "Ifrit", "Ramuh", "Titan", "Siren", "Garuda", "Diabolos", "Carbuncle", "Fenrir", "Leviathan", "Shiva", "Odin", "Alexander", "Cait Sith"}
+state.Passive = M{['description'] = 'Passive Mode','None'}
+
+state.Passive:options('None','EnemyCritRate','Regen','Resist','Refresh','Empy', 'SubtleBlow', 'SubtleBlow40', 'SubtleBlow50')
 
 state.WeaponLock = M(false, 'Weapon Lock')
 state.RP = M(false, "Reinforcement Points Mode")
@@ -253,7 +256,7 @@ function global_on_load()
 	send_command('bind ^[ input //put storage slip* case all') --PorterPacker Porter find
 
 	send_command('bind !, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
-	send_command('bind !. input //put * Wardrobe4 all') -- gs validate  --to check  --lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
+	send_command('bind !. input //put * Wardrobe4 all') -- gs validate  --to check  -- lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
 
 	send_command('bind ^. input //get storage slip* all;wait 1;input //po r') -- PorterPacker addon
 	send_command('bind ^, lua r PorterPacker;wait 1;input //get storage slip* all;wait 1;input //po r a') -- PorterPacker addon
@@ -832,7 +835,7 @@ function default_zone_change(new_id,old_id)
 	if data.areas.cities:contains(world.area)  then
 		send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock;input //tr autodrop off') --Turns addon on.
 	else
-		send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock;input //tr autodrop on;wait 5;put storage slip* case all') --Turns addon off. stats=craftstats addon
+		send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock;input //tr autodrop on;') --Turns addon off. stats=craftstats addon
 	end
 	
 	if data.areas.laggy:contains(world.area)  then

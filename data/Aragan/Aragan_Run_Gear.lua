@@ -22,7 +22,7 @@ u can use addon automb
 
 function user_job_setup()
 
-	state.OffenseMode:options('Normal','Acc', 'STP','CRIT')
+	state.OffenseMode:options('Normal','Acc', 'STP','DA100','CRIT')
 	state.HybridMode:options('Tank','Normal', 'DT','DTLite')
 	state.WeaponskillMode:options('Match','Acc','PDL')
 	state.CastingMode:options('SIRD','Normal')
@@ -1016,7 +1016,7 @@ sets.idle.MEVA = {ammo="Yamarang",
 			back="Null Shawl",waist="Ioskeha Belt +1",legs="Meg. Chausses +2",feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},}
 	
 	
-	sets.engaged.CRIT = set_combine(sets.engaged.DD, {       ammo="Yetshila +1",
+	sets.engaged.CRIT = set_combine(sets.engaged, {       ammo="Yetshila +1",
 			head={ name="Blistering Sallet +1", augments={'Path: A',}},
 			body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 			hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
@@ -1030,7 +1030,21 @@ sets.idle.MEVA = {ammo="Yamarang",
 			right_ring="Hetairoi Ring",
 			back="Null Shawl",
 	})
-	
+	sets.engaged.DA100 = set_combine(sets.engaged, { 
+    ammo="Coiste Bodhar",
+    head="Nyame Helm",
+    neck="Anu Torque",
+    ear1="Sherida Earring",
+    ear2="Brutal Earring",
+    body="Nyame Mail",
+    hands="Nyame Gauntlets",
+    ring1="Niqmaddu Ring",
+    ring2="Epona's Ring",
+	back="Null Shawl",
+    waist="Ioskeha Belt +1",
+    legs="Nyame Flanchard",
+    feet="Nyame Sollerets"
+})
 
 
 ------------------------------------------------------------------------------------------------

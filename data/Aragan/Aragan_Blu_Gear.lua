@@ -37,12 +37,12 @@ bind add any like
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal', 'Acc', 'STP', 'SubtleBlow', 'CRIT')--, 'Learning'
+    state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT')--, 'Learning'
 	state.HybridMode:options('DT','Normal')
     state.WeaponskillMode:options('Match', 'PDL', 'SC','Proc')
     state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT','Proc')
     state.IdleMode:options('DT','Normal','Empy','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
-	state.Passive:options('None','EnemyCritRate','Regen','Resist','Refresh')
+	state.Passive:options('None','Resist','Refresh','Empy', 'SubtleBlow', 'SubtleBlow40', 'SubtleBlow50')--, 'EnemyCritRate', 'Regen'
 	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
@@ -101,9 +101,10 @@ function init_gear_sets()
 	-- Start defining the sets
 	--------------------------------------
 
-	gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
-	gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
 
+	gear.taeon_phalanx_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
+	gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
+	
 	-- Weapons sets
     sets.weapons.Naegling = {main="Naegling", sub="Thibron"}
     sets.weapons.Naegling2 = {main="Naegling", sub="Zantetsuken"}
@@ -960,39 +961,6 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.DayIdle = {}
 	sets.NightIdle = {}
 
-    -- Passive set
-
-	sets.Passive.EnemyCritRate = { 
-		ammo="Eluder's Sachet",
-		left_ring="Warden's Ring",
-		right_ring="Fortified Ring",
-		back="Reiki Cloak",
-	}
-	sets.Passive.Regen = {
-		neck={ name="Bathy Choker +1", augments={'Path: A',}},
-		waist="Null Belt",
-		right_ear="Infused Earring",
-		left_ring="Chirich Ring +1",
-		right_ring="Chirich Ring +1",
-	}
-	sets.passive.Resist ={
-		ammo="Staunch Tathlum +1",
-		neck={ name="Warder's Charm +1", augments={'Path: A',}},
-		waist="Carrier's Sash",
-	}
-	sets.passive.Empy = { 
-		head="Hashishin Kavuk +2",
-		body="Hashishin Mintan +2",
-		hands="Hashishin Bazubands +2",
-		legs="Hashishin Tayt +3",
-		feet="Hashi. Basmak +2",
-	}
-		
-	sets.passive.Refresh = { 
-		body="Shamash Robe",
-		left_ring="Stikini Ring +1",
-		right_ring="Stikini Ring +1",
-}
 	-- Gear for learning spells: +skill and AF hands.
 	sets.Learning = {    hands="Malignance Gloves",}
 
@@ -1217,6 +1185,61 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 	
 
+-- Passive set
+
+sets.passive.Resist ={
+	ammo="Staunch Tathlum +1",
+	neck={ name="Warder's Charm +1", augments={'Path: A',}},
+	waist="Carrier's Sash",
+}
+sets.passive.Empy = { 
+	head="Hashishin Kavuk +2",
+	body="Hashishin Mintan +2",
+	hands="Hashishin Bazubands +2",
+	legs="Hashishin Tayt +3",
+	feet="Hashi. Basmak +2",
+}
+	
+sets.passive.Refresh = { 
+	body="Shamash Robe",
+	left_ring="Stikini Ring +1",
+	right_ring="Stikini Ring +1",
+}
+
+
+sets.passive.SubtleBlow = {
+right_ear="Cessance Earring",
+left_ring="Chirich Ring +1",
+right_ring="Chirich Ring +1",
+}
+sets.passive.SubtleBlow40 = {
+body="Volte Harness",
+neck={ name="Bathy Choker +1", augments={'Path: A',}},
+left_ring="Chirich Ring +1",
+right_ring="Chirich Ring +1",
+}
+sets.passive.SubtleBlow50 = {
+body="Volte Harness",
+neck={ name="Bathy Choker +1", augments={'Path: A',}},
+left_ear="Digni. Earring",
+left_ring="Chirich Ring +1",
+right_ring="Chirich Ring +1",
+}
+--[[
+sets.Passive.EnemyCritRate = { 
+ammo="Eluder's Sachet",
+left_ring="Warden's Ring",
+right_ring="Fortified Ring",
+back="Reiki Cloak",
+}
+sets.Passive.Regen = {
+neck={ name="Bathy Choker +1", augments={'Path: A',}},
+waist="Null Belt",
+right_ear="Infused Earring",
+left_ring="Chirich Ring +1",
+right_ring="Chirich Ring +1",
+}
+]]
 	
 --====================================================--
 --     _____   ____      ____           _             --
@@ -1526,11 +1549,15 @@ sets.engaged.Hybrid = {
     --waist="Reiki Yotai",
 }
 
-sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
-sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
-sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
-sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
-sets.engaged.Refresh.DT = set_combine(sets.engaged.Refresh, sets.engaged.Hybrid)
+sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid, {})
+sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid, {})
+sets.engaged.Refresh.DT = set_combine(sets.engaged.Refresh, sets.engaged.Hybrid, {})
 sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow ,sets.engaged.Hybrid,{
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
@@ -1555,42 +1582,58 @@ sets.engaged.Learning.DT = set_combine(sets.engaged.Learning, sets.engaged.Hybri
 ---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
 ------------------------------------------------------------------------------------------------
 
-sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
-sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
-sets.engaged.DW.Refresh.DT = set_combine(sets.engaged.DW.Refresh, sets.engaged.Hybrid)
+sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid, {})
+sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid, {})
+sets.engaged.DW.Refresh.DT = set_combine(sets.engaged.DW.Refresh, sets.engaged.Hybrid, {})
 sets.engaged.DW.Learning.DT = set_combine(sets.engaged.DW.Learning, sets.engaged.Learning.DT, {})
 sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow ,sets.engaged.Hybrid,{
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
 
-sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Refresh.DT.LowHaste = set_combine(sets.engaged.DW.Refresh.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid, {})
+sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid, {})
+sets.engaged.DW.Refresh.DT.LowHaste = set_combine(sets.engaged.DW.Refresh.LowHaste, sets.engaged.Hybrid, {})
 sets.engaged.DW.Learning.DT.LowHaste = set_combine(sets.engaged.DW.Learning.LowHaste, sets.engaged.Learning.DT, {})
 sets.engaged.DW.SubtleBlow.DT.LowHaste = set_combine(sets.engaged.DW.SubtleBlow.LowHaste ,sets.engaged.Hybrid,{
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
-sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Refresh.DT.MidHaste = set_combine(sets.engaged.DW.Refresh.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid, {})
+sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid, {})
+sets.engaged.DW.Refresh.DT.MidHaste = set_combine(sets.engaged.DW.Refresh.MidHaste, sets.engaged.Hybrid, {})
 sets.engaged.DW.Learning.DT.MidHaste = set_combine(sets.engaged.DW.Learning.MidHaste, sets.engaged.Learning.DT, {})
 sets.engaged.DW.SubtleBlow.DT.MidHaste = set_combine(sets.engaged.DW.SubtleBlow.MidHaste ,sets.engaged.Hybrid,{
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
-sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Refresh.DT.MaxHaste = set_combine(sets.engaged.DW.Refresh.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid, {})
+sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid, {
+	back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid, {})
+sets.engaged.DW.Refresh.DT.MaxHaste = set_combine(sets.engaged.DW.Refresh.MaxHaste, sets.engaged.Hybrid, {})
 sets.engaged.DW.Learning.DT.MaxHaste = set_combine(sets.engaged.DW.Learning.MaxHaste, sets.engaged.Hybrid, {})
 sets.engaged.DW.SubtleBlow.DT.MaxHaste = set_combine(sets.engaged.DW.SubtleBlow.MaxHaste ,sets.engaged.Hybrid,{
     left_ring="Chirich Ring +1",

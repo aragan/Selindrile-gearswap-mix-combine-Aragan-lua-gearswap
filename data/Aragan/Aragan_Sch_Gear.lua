@@ -145,6 +145,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT','BoostHP', 'Evasion', 'Resist')
     state.MagicalDefenseMode:options('MDT')
 	state.Weapons:options('Mpaca','Marin','None','Musa','Xoanon', 'Club','TernionDagger','DualDaybreak','DualMaxentius')
+	state.AutoBuffMode:options('Off','seg','Auto','Fullbuff') --,'Vagary','Off','Off','Off','Off',
 
 	gear.nuke_jse_back = {"Lugh's Cape"}
 
@@ -1227,27 +1228,35 @@ sets.engaged.DT = {
     sets.engaged.DW = set_combine(sets.engaged, {
         left_ear="Suppanomimi",  --5
         right_ear="Eabani Earring", --4
+        waist="Patentia Sash",  -- 5% Dual Wield
+
      })
 
     sets.engaged.DW.Acc = set_combine(sets.engaged.Acc, {
         left_ear="Suppanomimi",  --5
         right_ear="Eabani Earring", --4
+        waist="Patentia Sash",  -- 5% Dual Wield
+
      })
     sets.engaged.DW.STP = set_combine(sets.engaged.STP, {
         left_ear="Suppanomimi",  --5
         right_ear="Eabani Earring", --4
+        waist="Patentia Sash",  -- 5% Dual Wield
      })
      sets.engaged.DW.CRIT = set_combine(sets.engaged.CRIT, {
         left_ear="Suppanomimi",  --5
         right_ear="Eabani Earring", --4
+        waist="Patentia Sash",  -- 5% Dual Wield
      })
      sets.engaged.DW.Enspell = set_combine(sets.engaged.Enspell, {
         left_ear="Suppanomimi",  --5
         right_ear="Eabani Earring", --4
+        waist="Patentia Sash",  -- 5% Dual Wield
      })
      sets.engaged.DW.SubtleBlow = set_combine(sets.engaged.SubtleBlow, {
         left_ear="Suppanomimi",  --5
         right_ear="Eabani Earring", --4
+        waist="Patentia Sash",  -- 5% Dual Wield
      })
 
 

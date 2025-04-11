@@ -921,12 +921,12 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.DayWSEars = {ear1="Brutal Earring",ear2={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},}
 	
 	--Specialty WS set overwrites.
-	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",waist="Fatality Belt",}
+	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
 	sets.AccWSCharge = {}
-	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",waist="Fatality Belt",}
-	sets.WSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",waist="Fatality Belt",}
+	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
+	sets.WSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
 	sets.WSCharge = {}
-	sets.WSMighty = {ammo="Yetshila +1",feet="Boii Calligae +2",waist="Fatality Belt",}
+	sets.WSMighty = {ammo="Yetshila +1",feet="Boii Calligae +2",}
 
      -- Sets to return to when not performing an action.
            
