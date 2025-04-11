@@ -156,7 +156,48 @@ end
 function job_filtered_action(spell, eventArgs)
 
 end
+function job_filter_pretarget(spell, spellMap, eventArgs)
 
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+
+	if party.count ~= 1 and (spell.english == 'Regen V' or spell.english == 'Phalanx'or spell.english == 'Stoneskin') and  get_current_stratagem_count() > 1 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+		cast_delay(2.1)
+		windower.chat.input('/ja "Accession" <me>')
+		windower.chat.input:schedule(1.1,'/ja "Perpetuance" <me>')
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+
+	elseif party.count ~= 1 and (spell.english == 'Regen V' or spell.english == 'Phalanx'or spell.english == 'Stoneskin') and  get_current_stratagem_count() < 2 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+		eventArgs.cancel = true
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+
+	else
+		return false
+	end
+
+	--[[
+	if party.count ~= 1 and (player.target.type == 'SELF' and  player.target.in_party) and spell.english == 'Haste' and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Perpetuance" <me>')
+	
+	else 
+		eventArgs.cancel = true
+		windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+		add_tick_delay(1.1)
+	end]]
+	--[[ 
+		if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Accession" <me>')
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+		send_command('@input /p <recast=Stratagems>')
+
+	end
+	]]
+
+end
 function job_pretarget(spell, spellMap, eventArgs)
     if spell.type:endswith('Magic') and buffactive.silence then
         eventArgs.cancel = true
@@ -1573,7 +1614,7 @@ function check_arts()
 end
 
 function check_buff()
-	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
+	if state.AutoBuffMode.value ~= 'Off' then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
 			if not buffactive[buff_spell_lists[state.AutoBuffMode.Value][i].Buff] and (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Always' or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Combat' and (player.in_combat or being_attacked)) or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Engaged' and player.status == 'Engaged') or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Idle' and player.status == 'Idle') or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'OutOfCombat' and not (player.in_combat or being_attacked))) and spell_recasts[buff_spell_lists[state.AutoBuffMode.Value][i].SpellID] < spell_latency and silent_can_use(buff_spell_lists[state.AutoBuffMode.Value][i].SpellID) then
@@ -1770,6 +1811,11 @@ buff_spell_lists = {
 		{Name='Blink',		Buff='Blink',		SpellID=53,		When='Always'},
 		{Name='Regen V',	Buff='Regen',		SpellID=108,	When='Always'},
 		{Name='Phalanx',	Buff='Phalanx',		SpellID=106,	When='Always'},
+	},
+	seg = {
+		{Name='Stoneskin',	Buff='Stoneskin',	SpellID=54,		When='Always'},
+		{Name='Phalanx',	Buff='Phalanx',		SpellID=106,	When='Always'},
+		{Name='Regen V',	Buff='Regen',		SpellID=108,	When='Always'},
 	},
 	Default = {
 		{Name='Reraise III',Buff='Reraise',		SpellID=113,	Reapply=false},

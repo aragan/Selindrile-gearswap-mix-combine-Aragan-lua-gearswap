@@ -2,26 +2,29 @@
 function GetGlobalItems()
     --Gearsets your character will use among multiple jobs.
     sets.Sheltered = {ring2="Sheltered Ring"}
-    sets.Capacity = {back="Mecisto. Mantle"}
+    sets.Capacity = {}--back="Mecisto. Mantle"
  
     sets.buff.Doom = {
+        neck="Nicander's Necklace",
         waist="Gishdubar Sash",
-        ring1="Saida Ring",
-        --ring2="Eshmun's Ring"
+        left_ring="Purity Ring",
+        right_ring="Blenmot's Ring +1",
     }
     sets.midcast.Pet.Cure = {}
     sets.midcast.Pet = {}
     sets.midcast.Pet[] = {}
     sets.midcast.Pet[] = {}
-    sets.TreasureHunter = {head="Volte Cap",waist="Chaac Belt"}
+    sets.TreasureHunter = {ammo="Per. Lucky Egg",head="Volte Cap",waist="Chaac Belt"}
  
     sets.precast.Item['Hallowed Water'] = {
- 
-    }
+        neck="Nicander's Necklace",
+        left_ring="Purity Ring",
+        right_ring="Blenmot's Ring +1",}
  
     sets.precast.Item['Holy Water'] = {
- 
-    }
+        neck="Nicander's Necklace",
+        left_ring="Purity Ring",
+        right_ring="Blenmot's Ring +1",}
  
     --Augmented items that you'll use among multiple jobs.
  
@@ -30,7 +33,9 @@ function GetGlobalItems()
         name="Taeon Chapeau", 
         augments={'Mag. Evasion+16','"Snapshot"+5','"Snapshot"+5',}
     }
- 
+    gear.taeon_phalanx_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
+    gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
+    
     -- Herculean Gear
     gear.HercHelmTreasureHunter = {
         name="Herculean Helm", 

@@ -108,7 +108,7 @@ function job_setup()
     state.MagicBurst = M(false, 'Magic Burst')
     state.HippoMode = M(false, "hippoMode")
 	
-	state.LearningMode = M(true, 'Learning Mode')
+	state.LearningMode = M(false, 'Learning Mode')
 	state.AutoUnbridled = M(true, 'Auto Unbridled Mode')
 	autows = 'Chant Du Cygne'
 	autofood = 'Soy Ramen'
@@ -358,12 +358,9 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 	end
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 
-	if player.target.type == 'SELF' and spell.skill == 'Blue Magic' and unbridled_spells:contains(spell.english) and not buffactive.Diffusion and abil_recasts[184] < latency then
+	if spell.skill == 'Blue Magic' and (unbridled_spells:contains(spell.english) and blue_magic_maps.Buff:contains(spell.english)) and not buffactive.Diffusion and abil_recasts[184] < latency then
 		cast_delay(1.1)
 		windower.chat.input('/ja "Diffusion" <me>')
-		if not midaction() then
-			job_update()
-		end
 	end
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 
