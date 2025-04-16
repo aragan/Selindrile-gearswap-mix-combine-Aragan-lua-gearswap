@@ -875,7 +875,7 @@ windower.register_event('incoming text',function(org,spell)
 	--abyssea stagger --red pros
 	if string.find(org, "The fiend is frozen in its tracks.") then
 		windower.send_command('/p Stagger! <call14>!')  -- code add by (Aragan@Asura)
-		send_command('gs c Weapons Tauret;gs c set WeaponskillMode Match;gc c OffenseMode CRIT;gs enable all')
+		send_command('gs c Weapons Tauret;gs c set WeaponskillMode Match;gc c OffenseMode CRIT;gs c set TreasureMode Fulltime;gs enable all')
 	end
 
 	if state.WeaponskillMode.value == 'Proc' and world.area:contains('Abyssea') then    

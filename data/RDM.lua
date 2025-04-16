@@ -564,6 +564,8 @@ end
 
     -- Allow jobs to override this code
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
+
 	if commandArgs[1]:lower() == 'elemental' then
 		handle_elemental(commandArgs)
 		eventArgs.handled = true			
@@ -579,6 +581,58 @@ function job_self_command(commandArgs, eventArgs)
 	end
 end
 
+function update_combat_form()
+    if DW == true then
+        state.CombatForm:set('DW')
+    elseif DW == false then
+        state.CombatForm:reset()
+    end
+end
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 7 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 10 and DW_needed <= 15 then
+            classes.CustomMeleeGroups:append('HighHaste')
+        elseif DW_needed > 15 and DW_needed <= 19 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 19 and DW_needed <= 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        end
+    end
+end
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
+-- Called any time we attempt to handle automatic gear equips (ie: engaged or idle gear).
+function job_handle_equipping_gear(playerStatus, eventArgs)
+
+    determine_haste_group()
+	update_combat_form()
+end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
 -------------------------------------------------------------------------------------------------------------------

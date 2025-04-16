@@ -110,12 +110,13 @@ function job_setup()
     state.RP = M(false, "Reinforcement Points Mode")
     state.HippoMode = M(false, "hippoMode")
 	state.Stance = M{['description']='Stance','None','Ebullience'}
+    state.ManaWallMode = M(true, "Mana Wall Mode")
 
 	autows = 'Myrkr'
 	autofood = 'Pear Crepe'
 	autonuke = 'Absorb-TP'
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoManawell","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoManawell","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","Stance","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -131,14 +132,83 @@ function job_filtered_action(spell, eventArgs)
         elseif spell.english == 'Sleep II' or spell.english == 'Sleepga II' then
             send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
 		elseif spell.english == "Sleep II" then
-            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 90 down spells/00259.png')
 		elseif spell.english == "Death" and state.DeathMode.value == 'Single' then
 			state.DeathMode:reset()
 			if state.DisplayMode.value then update_job_states()	end
         end
     end
+	if state.ManaWallMode.value == true and (player.in_combat or being_attacked) and player.hpp < 75 then 
+		windower.chat.input('/ja "Mana Wall" <me>')
+
+	end
 end
 
+function job_filter_pretarget(spell, spellMap, eventArgs)
+
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+
+	if spell.skill == 'Elemental Magic' and  get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Ebullience" <me>')
+		--windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+	end
+
+
+		--[[
+		if state.TabulaRasaMode.value and spell.skill == 'Elemental Magic' and buffactive['Tabula Rasa'] and not buffactive['Immanence'] and buffactive['Ebullience'] then
+    cast_delay(1.1)
+    windower.chat.input('/ja "Ebullience" <me>')
+    tickdelay = os.clock() + 1.1
+    end
+		    if spell.skill == 'Elemental Magic' and not buffactive['Immanence'] then
+		eventArgs.cancel = true
+		windower.chat.input('/ja "Ebullience" <me>')
+		windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+	end
+	elseif party.count ~= 1 and spell.english == 'Haste' and  get_current_stratagem_count() < 2 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+		eventArgs.cancel = true
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+
+			elseif party.count ~= 1 and spell.english == 'Haste' and  get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+		cast_delay(1.1)
+		windower.chat.input('/ja "Perpetuance" <me>')
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+
+	else
+		]]
+
+
+	--[[
+	if party.count ~= 1 and (player.target.type == 'SELF' and  player.target.in_party) and spell.english == 'Haste' and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Perpetuance" <me>')
+	
+	else 
+		eventArgs.cancel = true
+		windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+		add_tick_delay(1.1)
+	end]]
+	--[[ 
+		if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
+		cast_delay(1.1)
+		windower.chat.input('/ja "Accession" <me>')
+		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /echo <recast=Stratagems>')
+		send_command('@input /p <recast=Stratagems>')
+
+	end
+	]]
+
+end
 function job_pretarget(spell, spellMap, eventArgs)
 	if spell.action_type == 'Magic' then
 		if state.AutoManawell.value and (AutoManawellSpells:contains(spell.english) or (state.CastingMode.value == 'OccultAcumen' and AutoManawellOccultSpells:contains(spell.english) and actual_cost(spell) > player.mp)) then
@@ -319,28 +389,28 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
     end
     if not spell.interrupted then
         if spell.english == "Sleep" then
-            send_command('timers create "Sleep ' ..tostring(spell.target.name).. ' " 60 down spells/00235.png')
+            send_command('timers create "Sleep ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 60 down spells/00235.png')
         elseif spell.english == "Sleepga" then
-            send_command('timers create "Sleepga ' ..tostring(spell.target.name).. ' " 60 down spells/00273.png')
+            send_command('timers create "Sleepga ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 60 down spells/00273.png')
         elseif spell.english == "Sleep II" then
-            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 90 down spells/00259.png')
         elseif spell.english == "Sleepga II" then
-            send_command('timers create "Sleepga II ' ..tostring(spell.target.name).. ' " 90 down spells/00274.png')
+            send_command('timers create "Sleepga II ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 90 down spells/00274.png')
         elseif spell.english == 'Impact' then
-                send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+                send_command('timers create "Impact ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 180 down spells/00502.png')
         elseif Elemental_Debuffs:contains(spell.english) then
             if spell.english == 'Burn' then
-                send_command('timers create "Burn ' ..tostring(spell.target.name).. ' " 180 down spells/00235.png')
+                send_command('timers create "Burn ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 180 down spells/00235.png')
             elseif spell.english == 'Choke' then
-                send_command('timers create "Choke ' ..tostring(spell.target.name).. ' " 180 down spells/00237.png')
+                send_command('timers create "Choke ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 180 down spells/00237.png')
             elseif spell.english == 'Shock' then
-                send_command('timers create "Shock ' ..tostring(spell.target.name).. ' " 180 down spells/00239.png')
+                send_command('timers create "Shock ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 180 down spells/00239.png')
             elseif spell.english == 'Frost' then
-                send_command('timers create "Frost ' ..tostring(spell.target.name).. ' " 180 down spells/00236.png')
+                send_command('timers create "Frost ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 180 down spells/00236.png')
             elseif spell.english == 'Drown' then
-                send_command('timers create "Drown ' ..tostring(spell.target.name).. ' " 180 down spells/00240.png')
+                send_command('timers create "Drown ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 180 down spells/00240.png')
             elseif spell.english == 'Rasp' then
-                send_command('timers create "Rasp ' ..tostring(spell.target.name).. ' " 180 down spells/00238.png')
+                send_command('timers create "Rasp ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 180 down spells/00238.png')
             end
         elseif spell.english == "Bind" then
             send_command('timers create "Bind" 60 down spells/00258.png')
@@ -361,7 +431,7 @@ function job_aftercast(spell, spellMap, eventArgs)
         elseif spell.english == 'Sleep II' or spell.english == 'Sleepga II' then
             send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
 		elseif spell.english == "Sleep II" then
-            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. '" 90 down spells/00259.png')
 		elseif spell.english == "Death" and state.DeathMode.value == 'Single' then
 			state.DeathMode:reset()
 			if state.DisplayMode.value then update_job_states()	end
@@ -391,6 +461,10 @@ function job_state_change(stateField, newValue, oldValue)
     else
         enable('main','sub')
     end
+	if state.ManaWallMode.value == true and (player.in_combat or being_attacked) and player.hpp < 75 then 
+		windower.chat.input('/ja "Mana Wall" <me>')
+
+	end
 end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
@@ -436,7 +510,10 @@ function job_customize_idle_set(idleSet)
             idleSet = set_combine(idleSet, sets.buff.DTSublimation)
         end
     end
+	if state.ManaWallMode.value == true and (player.in_combat or being_attacked) and player.hpp < 75 then 
+		windower.chat.input('/ja "Mana Wall" <me>')
 
+	end
     if state.IdleMode.value == 'Normal' or state.IdleMode.value:contains('Sphere') then
 		if player.mpp < 51 then
 			if sets.latent_refresh then
@@ -480,11 +557,12 @@ function job_customize_idle_set(idleSet)
 end
 
 function job_customize_kiting_set(baseSet)
-
-	if state.Buff['Mana Wall'] and ((state.IdleMode.value:contains('DT') or state.IdleMode.value:contains('Tank')) and in_combat)then
-		if sets.buff['Mana Wall'] then
-			baseSet = set_combine(baseSet, sets.buff['Mana Wall'])
-		end
+    if state.HippoMode.value == true then 
+        baseSet = set_combine(baseSet, {feet="Hippo. Socks +1"})
+    
+	elseif state.Buff['Mana Wall'] and not state.HippoMode.value  then
+		baseSet = set_combine(baseSet, sets.buff['Mana Wall'])
+		
 	end
 
 	return baseSet
@@ -541,6 +619,13 @@ function job_self_command(commandArgs, eventArgs)
 		if commandArgs[1]:lower() == 'elemental' then
 			handle_elemental(commandArgs)
 			eventArgs.handled = true			
+		end
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+		if state.ManaWallMode.value == true and being_attacked and player.hpp < 75 and abil_recasts[39] < latency then 
+			windower.chat.input('/ja "Mana Wall" <me>')
+		    tickdelay = os.clock() + 1.1
+			return false
 		end
 end
 
@@ -732,7 +817,7 @@ function check_stance()
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
 
-		if state.Stance.value == 'Ebullience' and not buffactive['Ebullience'] and  being_attacked and buffactive["Dark Arts"] and get_current_stratagem_count() > 0 then
+		if state.Stance.value == 'Ebullience' and not buffactive['Ebullience'] and being_attacked and buffactive["Dark Arts"] and get_current_stratagem_count() > 0 then
 			windower.chat.input('/ja "Ebullience" <me>')
 			tickdelay = os.clock() + 1.1
 			add_to_chat(204, '~~~Current Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
@@ -755,7 +840,7 @@ function check_buff()
 		end
 		if not buffactive['Ebullience'] and (player.in_combat or being_attacked) and buffactive["Dark Arts"] and get_current_stratagem_count() > 0 then 
 				windower.chat.input('/ja "Ebullience" <me>')
-				--tickdelay = os.clock() + 2
+				tickdelay = os.clock() + 2
                 --send_command('@input /p <recast=Stratagems>')
                 add_to_chat(204, '~~~Current Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
 		end

@@ -131,6 +131,13 @@ function job_setup()
 	 swordList = S{"Naegling", "Sangarius +1", "Reikiko", "Perun +1", "Tanmogayi", "Loxotic Mace +1", "Ternion Dagger +1", "Zantetsuken"}
 	 sets.weaponList = {"Caladbolg", "Liberator", "Apocalypse", "Nandaka", "Blurred Shield +1", "Naegling", "Sangarius +1", "Usonmunku", "Perun +1", "Tanmogayi", "Loxotic Mace +1"}
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Water','Lightning','Earth','Wind','Ice','Light','Dark',}
+	
+	Haste = 0
+	DW_needed = 0
+	DW = false
+	determine_haste_group()
+	update_combat_form()  
+	
 	update_melee_groups()
 
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode","AutoReraiseeMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","Absorbs","Stance","DrainSwapWeaponMode","TreasureMode",})
@@ -402,8 +409,59 @@ function job_tick()
 	if check_buffup() then return true end
 	return false
 end
-
+function update_combat_form()
+    if DW == true then
+        state.CombatForm:set('DW')
+    elseif DW == false then
+        state.CombatForm:reset()
+    end
+end
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 11 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 12 and DW_needed <= 15 then
+            classes.CustomMeleeGroups:append('HighHaste')
+        elseif DW_needed > 15 and DW_needed <= 21 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 22 and DW_needed <= 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        end
+	end
+end
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
+function job_handle_equipping_gear(playerStatus, eventArgs)
+    determine_haste_group()
+	update_combat_form()
+end
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
+
 	if commandArgs[1]:lower() == 'elemental' then
 		handle_elemental(commandArgs)
 		eventArgs.handled = true			

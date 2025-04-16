@@ -116,6 +116,7 @@ function job_setup()
 
     state.Buff['Sublimation: Activated'] = buffactive['Sublimation: Activated'] or false
 	state.Buff['Enlightenment'] = buffactive['Enlightenment'] or false
+	state.Buff['Tabula Rasa'] = buffactive['Tabula Rasa'] or false
 	state.AutoEquipBurst = M(true)
     state.HelixMode = M{['description']='Helix Mode', 'Duration', 'Potency'}
     state.RegenMode = M{['description']='Regen Mode', 'Duration', 'Potency'}
@@ -125,6 +126,7 @@ function job_setup()
     state.StormSurge = M(false, 'Stormsurge')
     state.Moving  = M(false, "moving")
     state.HippoMode = M(false, "hippoMode")
+    state.TabulaRasaMode = M(true, "Tabula Rasa Mode")
 
 	-- Mote has capitalization errors in the default Absorb mappings, so we use our own
     absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
@@ -167,12 +169,38 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
 		tickdelay = os.clock() + 1.1
 
-	elseif party.count ~= 1 and (spell.english == 'Regen V' or spell.english == 'Phalanx'or spell.english == 'Stoneskin') and  get_current_stratagem_count() < 2 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+	elseif party.count ~= 1 and spell.english == 'Haste' and not buffactive['Perpetuance'] and get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+		cast_delay(1.1)
+		windower.chat.input('/ja "Perpetuance" <me>')
+		tickdelay = os.clock() + 1.1
+
+	else
+		--[[
+		if state.TabulaRasaMode.value and spell.skill == 'Elemental Magic' and buffactive['Tabula Rasa'] and not buffactive['Immanence'] and buffactive['Ebullience'] then
+    cast_delay(1.1)
+    windower.chat.input('/ja "Ebullience" <me>')
+    tickdelay = os.clock() + 1.1
+    end
+		    if spell.skill == 'Elemental Magic' and not buffactive['Immanence'] then
+		eventArgs.cancel = true
+		windower.chat.input('/ja "Ebullience" <me>')
+		windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+	end
+	elseif party.count ~= 1 and spell.english == 'Haste' and  get_current_stratagem_count() < 2 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
 		eventArgs.cancel = true
 		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
 		tickdelay = os.clock() + 1.1
 
+			elseif party.count ~= 1 and spell.english == 'Haste' and  get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+		cast_delay(1.1)
+		windower.chat.input('/ja "Perpetuance" <me>')
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+
 	else
+		]]
 		return false
 	end
 
@@ -780,6 +808,8 @@ function job_self_command(commandArgs, eventArgs)
         send_command('@input /ma "'..state.Storms.value..'" <stpc>')
 	elseif commandArgs[1]:lower() == 'showcharge' then
 		add_to_chat(204, '~~~Current Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+		send_command('@input /p  <recast=Stratagems>')
+
 	end
 end
 
@@ -838,16 +868,16 @@ function apply_grimoire_bonuses(spell, action, spellMap)
         end
 		if state.Buff.Immanence then
 		    equip(sets.buff['Immanence'])
-		    send_command('@input /p <t> <recast=Stratagems>')
+		    send_command('@input /p <recast=Stratagems>')
 	    elseif state.Buff.Immanence and state.CastingMode.value == "Proc" then
 		    equip(sets.buff['Immanence'].Proc)
-            send_command('@input /p <t> <recast=Stratagems>')
+            send_command('@input /p <recast=Stratagems>')
         elseif state.Buff.Immanence and state.CastingMode.value == "SubtleBlow" then
             equip(sets.buff['Immanence'].SubtleBlow)
-            send_command('@input /p <t> <recast=Stratagems>')
+            send_command('@input /p <recast=Stratagems>')
         elseif state.Buff.Immanence and state.CastingMode.value == "Enmity" then
             equip(sets.buff['Immanence'].Enmity)
-            send_command('@input /p <t> <recast=Stratagems>')
+            send_command('@input /p <recast=Stratagems>')
 
         end
         if state.Buff.Klimaform and spell.element == world.weather_element then

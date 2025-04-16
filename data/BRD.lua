@@ -114,7 +114,7 @@ end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
-	send_command('lua l Singer')
+	send_command('lua l Singer;sing active off')
 
     state.ExtraSongsMode = M{['description']='Extra Songs','FullLength','None','Dummy','Marsyas'}
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
@@ -155,6 +155,13 @@ function job_setup()
 		'haste','haste4', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
 
 
+	Haste = 0
+	DW_needed = 0
+	DW = false
+	moving = false
+	update_combat_form()
+	determine_haste_group()
+
 	update_melee_groups()
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Songset","Passive","RuneElement","ExtraSongsMode","ElementalMode","CastingMode","CarnMode","Etude","TreasureMode",})
 end
@@ -179,6 +186,7 @@ function job_filtered_action(spell, eventArgs)
             end
         end
 	end
+
 end
 
 function job_pretarget(spell, spellMap, eventArgs)
@@ -191,6 +199,7 @@ function job_pretarget(spell, spellMap, eventArgs)
 			return
 		end
     end
+
 end
 
 function job_precast(spell, spellMap, eventArgs)
@@ -205,6 +214,7 @@ function job_precast(spell, spellMap, eventArgs)
 			classes.CustomClass = 'SongDebuff'
 		end
 	end
+
 end
 
 function job_filter_precast(spell, spellMap, eventArgs)
@@ -219,6 +229,7 @@ function job_filter_precast(spell, spellMap, eventArgs)
             end
         end
     end
+
 end
 
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
@@ -246,8 +257,16 @@ function job_midcast(spell, spellMap, eventArgs)
 			end
         end
     end
+	if spellMap == 'Lullaby' then 
+		send_command('input /p >> Sleep ,  aoe   "'..spell.name..'" on >> '..spell.target.name..' <<')		
+    end
+	if string.find(spell.english,'Lullaby') then
+        send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+    elseif string.find(spell.english,'Lullaby II') then
+        send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 120 down spells/00220.png') --with maceto ja 4.40min
+    end
 end
-
+--send_command('@input /ja "Pianissimo" <me>; wait 1.1; input /ma "'..spell.name..'" '..spell.target.name)
 function job_post_precast(spell, spellMap, eventArgs)
 	if spell.type == 'BardSong' then
 
@@ -309,6 +328,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 	end
+
 end
 
 function job_post_midcast(spell, spellMap, eventArgs)
@@ -369,7 +389,8 @@ function job_post_midcast(spell, spellMap, eventArgs)
 		end
     end
 end
-
+function job_filter_aftercast(spell, spellMap, eventArgs)
+end
 -- Set eventArgs.handled to true if we don't want automatic gear equipping to be done.
 function job_aftercast(spell, spellMap, eventArgs)
 	
@@ -392,6 +413,7 @@ function job_aftercast(spell, spellMap, eventArgs)
 		state.MagicBurstMode:reset()
 		if state.DisplayMode.value then update_job_states()	end
     end
+
 
 end
 
@@ -544,6 +566,8 @@ end
 
     -- Allow jobs to override this code
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
+
 	if commandArgs[1]:lower() == 'elemental' then
 		handle_elemental(commandArgs)
 		eventArgs.handled = true			
@@ -566,6 +590,59 @@ function job_self_command(commandArgs, eventArgs)
 	elseif commandArgs[1]:lower() == 'songset' then
 		send_command('@input //abb "'..state.Songset.value..'" ccsv') 
 	end
+end
+
+function update_combat_form()
+    if DW == true then
+        state.CombatForm:set('DW')
+    elseif DW == false then
+        state.CombatForm:reset()
+    end
+end
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 7 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 10 and DW_needed <= 15 then
+            classes.CustomMeleeGroups:append('HighHaste')
+        elseif DW_needed > 15 and DW_needed <= 19 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 19 and DW_needed <= 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        end
+    end
+end
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
+-- Called any time we attempt to handle automatic gear equips (ie: engaged or idle gear).
+function job_handle_equipping_gear(playerStatus, eventArgs)
+
+    determine_haste_group()
+	update_combat_form()
 end
 
 -- Handling Elemental spells within Gearswap.
@@ -728,7 +805,7 @@ function check_song()
 			tickdelay = os.clock() + 2
 			return true
 		elseif not buffactive.minuet then
-			windower.chat.input('//gs c set ExtraSongsMode Dummy;/ma "Valor Minuet V" <me>;wait 5;input /ma "Valor Minuet IV" <me>')
+			windower.chat.input('//gs c set ExtraSongsMode Dummy;wait 5;input /ma "Valor Minuet V" <me>;wait 5;input /ma "Valor Minuet IV" <me>')
 			tickdelay = os.clock() + 2
 			return true
 		--[[elseif not buffactive.madrigal then
@@ -806,6 +883,18 @@ buff_spell_lists = {
 		--{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Idle'},
 		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Idle'},
 	},
+	melee4 = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+
+	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
+   {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
+   {Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
+   {Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
+
+   --{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Idle'},
+   --{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Idle'},
+   --{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Idle'},
+   --{Name='Blink',				Buff='Blink',			SpellID=53,		When='Idle'},
+    },
 	Regen = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 		{Name='Army\'s Paeon VI',	Buff='Paeon',		SpellID=383,	When='Always'},
 		{Name='Army\'s Paeon V',	Buff='Paeon',		SpellID=382,	When='Always'},

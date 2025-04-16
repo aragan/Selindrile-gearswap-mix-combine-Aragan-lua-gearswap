@@ -99,6 +99,12 @@ function job_setup()
 
 	Breath_HPP = 60
 	
+	Haste = 0
+	DW_needed = 0
+	DW = false
+	determine_haste_group()
+	update_combat_form()  
+
 	update_melee_groups()
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoJumpMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","TreasureMode",})
 end
@@ -291,9 +297,59 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements self-commands.
 -------------------------------------------------------------------------------------------------------------------
-
+function update_combat_form()
+    if DW == true then
+        state.CombatForm:set('DW')
+    elseif DW == false then
+        state.CombatForm:reset()
+    end
+end
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 11 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 12 and DW_needed <= 15 then
+            classes.CustomMeleeGroups:append('HighHaste')
+        elseif DW_needed > 15 and DW_needed <= 21 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 22 and DW_needed <= 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 29 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        end
+	end
+end
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
+function job_handle_equipping_gear(playerStatus, eventArgs)
+    determine_haste_group()
+	update_combat_form()
+end
 -- Called for custom player commands.
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
 
 end
 
@@ -419,11 +475,7 @@ function(new_hpp,old_hpp)
 end
 )
 
-Breath_HPP = 35
-end
-end
-end
-end
+
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat

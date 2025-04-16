@@ -122,6 +122,12 @@ function job_setup()
 	autows = 'Savage Blade'
 	autofood = 'Miso Ramen'
 	
+	Haste = 0
+	DW_needed = 0
+	DW = false
+	determine_haste_group()
+	update_combat_form()  
+
 	update_melee_groups()
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode","AutoReraiseeMode"},{"AutoBuffMode","AutoSambaMode","Weapons","ShieldMode","OffenseMode","ElementalMode","CastingMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","ResistDefenseMode","TreasureMode",})
 end
@@ -296,6 +302,8 @@ function job_aftercast(spell, spellMap, eventArgs)
     end    
 end
 function job_handle_equipping_gear(playerStatus, eventArgs)   
+	determine_haste_group()
+	update_combat_form()
     if state.ShieldMode.value == "Duban" then
 		equip({sub="Duban"})
 	elseif state.ShieldMode.value == "Ochain" then
@@ -433,8 +441,60 @@ end
 -- User code that supplements standard library decisions.
 -------------------------------------------------------------------------------------------------------------------
 
+function update_combat_form()
+    if DW == true then
+        state.CombatForm:set('DW')
+    elseif DW == false then
+        state.CombatForm:reset()
+    end
+end
+
+function determine_haste_group()
+    classes.CustomMeleeGroups:clear()
+    if DW == true then
+        if DW_needed <= 11 then
+            classes.CustomMeleeGroups:append('MaxHaste')
+        elseif DW_needed > 12 and DW_needed <= 21 then
+            classes.CustomMeleeGroups:append('MidHaste')
+        elseif DW_needed > 21 and DW_needed <= 27 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 27 and DW_needed <= 31 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 31 and DW_needed <= 42 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        elseif DW_needed > 42 then
+            classes.CustomMeleeGroups:append('LowHaste')
+        end
+    end
+end
+
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
     -- Allow jobs to override this code
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
+
 	if commandArgs[1]:lower() == 'smartcure' then
 		handle_smartcure(commandArgs)
 		eventArgs.handled = true
@@ -825,7 +885,11 @@ function check_buff()
 				return false
 			end
 		end
-		
+	    if player.sub_job == 'RUN' then
+				windower.chat.input('gs c set AutoRuneMode true')
+				tickdelay = os.clock() + 1.1
+				
+		end
 	else
 		return false
 	end

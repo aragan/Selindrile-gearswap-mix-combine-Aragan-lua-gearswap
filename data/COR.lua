@@ -258,13 +258,18 @@ function job_midcast(spell, action, spellMap, eventArgs)
 			return
 		end
 	end
+	if spell.type == 'CorsairRoll' and not spell.interrupted then
+        add_to_chat(217, spell.english..' provides a bonus to '..(rolls[spell.english].bonus)..'.')
+        add_to_chat(217, 'Lucky roll is '..tostring(rolls[spell.english].lucky)..', Unlucky roll is '..tostring(rolls[spell.english].unlucky)..'.')
 
+        windower.chat.input('/p "'..tostring(spell.english)..' provides a bonus to '..rolls[spell.english].bonus..'.')
+        windower.chat.input:schedule(1.1,'/p "Lucky roll is '..tostring(rolls[spell.english].lucky)..', Unlucky roll is '..tostring(rolls[spell.english].unlucky)..'."')
+    end
 end
 function job_filter_aftercast(spell, spellMap, eventArgs)
 	if spell.english == "Light Shot" then
         send_command('@timers c "Light Shot ['..spell.target.name..']" 120 down abilities/00195.png')
     end
-
 
 end
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
