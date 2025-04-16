@@ -48,6 +48,8 @@ function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
 	organizer_items = {
+        "Zanmato +1",
+		"Mutsunokami",
         "Airmid's Gorget",
         "Toolbag (Shihe)",
         "Chonofuda",
@@ -277,12 +279,12 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 	end	
-	if spell.type == 'WeaponSkill' then
+	--[[if spell.type == 'WeaponSkill' then
         if state.WeaponskillMode.value == 'Proc' then
             equip(sets.precast.WS.Proc)
 
 		end
-	end
+	end]]
 
 end
 
@@ -868,14 +870,73 @@ function check_buffup()
 end
 
 
-windower.register_event('incoming text',function(org)     
+windower.register_event('incoming text',function(org,spell)     
 
-	--abyssea stagger
-	if string.find(org, "staggers") then
-		windower.send_command('input /p Stagger! <call14>!')  -- code add by (Aragan@Asura)
-		send_command('input //gs c Weapons Tauret;gs c set WeaponskillMode Match;gc c OffenseMode CRIT')
+	--abyssea stagger --red pros
+	if string.find(org, "The fiend is frozen in its tracks.") then
+		windower.send_command('/p Stagger! <call14>!')  -- code add by (Aragan@Asura)
+		send_command('gs c Weapons Tauret;gs c set WeaponskillMode Match;gc c OffenseMode CRIT;gs enable all')
 	end
 
+	if state.WeaponskillMode.value == 'Proc' and world.area:contains('Abyssea') then    
+		if string.find(org, "The fiend appears vulnerable to wind elemental weapon skills!")  then
+			send_command('gs c Weapons ProcGreatKatana;') 
+			send_command('/p RED Proc: Wind - Cyclone(DGR), Tachi: Jinpu(GKT);') 
+		
+		elseif string.find(org, "The fiend appears vulnerable to lightning elemental weapon skills!")  then
+			send_command('gs c Weapons ProcPolearm;')
+			send_command('/p RED Proc: Lightning - Raiden Thrust(PLM);')
+			send_command('/echo RED Proc: Lightning - Raiden Thrust(PLM);')
+		
+	    elseif string.find(org, "The fiend appears vulnerable to fire elemental weapon skills!")  then
+			send_command('gs c Weapons ProcSword;')
+			send_command('/p RED Proc: Fire - Red Lotus Blade(SWD);')
+			send_command('/echo RED Proc: Fire - Red Lotus Blade(SWD);')
+		
+	    elseif string.find(org, "The fiend appears vulnerable to earth elemental weapon skills!")  then
+			send_command('gs c Weapons ProcStaff;')
+			send_command('/p RED Proc: Earth - Earth Crusher(STF);')
+			send_command('/echo RED Proc: Earth - Earth Crusher(STF);')
+		
+	    elseif string.find(org, "The fiend appears vulnerable to ice elemental weapon skills!")  then
+			send_command('gs c Weapons ProcGreatSword;')
+			send_command('/p RED Proc: Ice - Freezebite(GSD);')
+			send_command('/echo RED Proc: Ice - Freezebite(GSD);')
+		
+	    elseif string.find(org, "The fiend appears vulnerable to dark elemental weapon skills!")  then
+			send_command('gs c Weapons ProcScythe;')
+			send_command('/p RED Proc: Dark - Energy Drain(DGR), Shadow of Death(SCY), Blade: Ei(KTN);')
+			send_command('/echo RED Proc: Dark - Energy Drain(DGR), Shadow of Death(SCY), Blade: Ei(KTN);')
+	    elseif string.find(org, "The fiend appears vulnerable to light elemental weapon skills!")  then
+			send_command('gs c Weapons ProcSword2;')
+			send_command('/p RED Proc: Light - Seraph Blade(SWD), Tachi: Koki(GKT), Seraph Strike(CLB), Sunburst(STF);')
+			send_command('/echo RED Proc: Light - Seraph Blade(SWD), Tachi: Koki(GKT), Seraph Strike(CLB), Sunburst(STF);')
+	    elseif string.find(org, "Tachi: Jinpu")  then
+			send_command('gs c Weapons ProcDagger2;')
+	    elseif string.find(org, "Cyclone")  then
+			send_command('gs c Weapons ProcGreatKatana;')
+	    elseif string.find(org, "Shadow of Death")  then
+				send_command('gs c Weapons ProcDagger;gs c update;')
+	    elseif string.find(org, "Energy Drain")  then
+				send_command('gs c Weapons ProcKatana;')
+	    elseif string.find(org, "Blade: Ei")  then
+			send_command('gs c Weapons ProcScythe;')
+	    elseif string.find(org, "Seraph Blade")  then
+				send_command('gs c Weapons ProcClub;gs c update;')
+	    elseif string.find(org, "Seraph Strike")  then
+				send_command('gs c Weapons ProcStaff2;')
+	    elseif string.find(org, "Sunburst")  then
+				send_command('gs c Weapons ProcGreatKatana2;')
+	    elseif string.find(org, "Tachi: Koki")  then
+				send_command('gs c Weapons ProcSword2;')
+		end
+	end
+
+
+
+
+
+	handle_equipping_gear(player.status)  
 	--Sortie 	--Vagary
 	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
 		windower.send_command('input //gs c set ElementalMode water')
