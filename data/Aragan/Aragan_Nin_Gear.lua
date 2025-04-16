@@ -117,7 +117,7 @@ function init_gear_sets()
 	sets.weapons.ProcScythe = {main="Maven's Scythe",sub=empty}
 	sets.weapons.ProcPolearm = {main="Sha Wujing's La. +1",sub=empty}
 	sets.weapons.ProcGreatKatana = {main="Zanmato +1",sub="Sword Strap",}
-    sets.weapons.ProcGreatKatana2 = {main="Zanmato +1",sub=empty}
+    sets.weapons.ProcGreatKatana2 = {main="Mutsunokami",sub=empty}
 	sets.weapons.ProcKatana = {main="Debahocho +1",sub=empty}
 	sets.weapons.ProcClub = {main="Caduceus",sub=empty}
 	sets.weapons.ProcStaff = {main="Profane Staff",sub=empty}
@@ -756,15 +756,29 @@ sets.precast.WS["Cyclone"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS["Starburst"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS["Sunburst"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS["Earth Crusher"].Proc =  set_combine(sets.precast.WS.Proc,{})
-sets.precast.WS["Freezebite"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS["Red Lotus Blade"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS["Seraph Blade"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS["Energy Drain"].Proc =  set_combine(sets.precast.WS.Proc,{})
+sets.precast.WS["Blade: Ei"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS["Shining Blade"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS["Raiden Thrust"].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS['Tachi: Jinpu'].Proc =  set_combine(sets.precast.WS.Proc,{})
 sets.precast.WS['Tachi: Koki'].Proc =  set_combine(sets.precast.WS.Proc,{})
-
+sets.precast.WS["Freezebite"].Proc =  {
+    ammo="Pemphredo Tathlum",
+    head="Malignance Chapeau", 
+    body="Malignance Tabard", 
+    hands="Malignance Gloves", 
+    legs="Malignance Tights", 
+    feet="Malignance Boots", 
+    left_ear="Crep. Earring",
+    right_ear="Digni. Earring",
+    neck="Null Loop",
+    waist="Null Belt",
+    right_ring={ name="Beithir Ring", augments={'Path: A',}},
+    left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+    back="Null Shawl",
+}
 sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     ammo="Pemphredo Tathlum",
     head={ name="Mpaca's Cap", augments={'Path: A',}},
@@ -1599,6 +1613,8 @@ function select_default_macro_book()
         set_macro_page(1, 5)
     elseif player.sub_job == 'RUN' then
         set_macro_page(8, 5)
+    elseif world.area:contains("Abyssea") then
+        set_macro_page(6, 5)
     else
         set_macro_page(8, 5)
     end

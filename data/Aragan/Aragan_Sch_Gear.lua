@@ -132,6 +132,7 @@ for more info go README.txt for addons
 Distortion
 /console input //ssc b2 a
 
+for buf before seg ody or enter sortie just used turn autobuff to seg
 ]]
 
 
@@ -1438,3 +1439,4 @@ end
 
 autows_list = {['Marin']='Myrkr',['Mpaca']='Myrkr',
 ['Xoanon']="Cataclysm",['TernionDagger']='Aeolian Edge',['Club']='Black Halo',}
+

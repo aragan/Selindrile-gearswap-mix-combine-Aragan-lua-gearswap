@@ -27,17 +27,19 @@ its do all ja first then do u  songset
 
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal', 'Acc', 'Shield', 'CRIT')
+    state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT')
 	state.HybridMode:options('DT','Normal')
-    state.CastingMode:options('Normal','Resistant','AoE')
+    state.CastingMode:options('Normal','AoE')
 	state.PhysicalDefenseMode:options('PDT', 'Evasion','Aminon')
     state.MagicalDefenseMode:options('MDT')
     state.WeaponskillMode:options('Match', 'PDL')
     state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
-	state.Weapons:options('None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan')
-	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
+	state.Weapons:options('default','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan','None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon')
+    state.Passive = M{['description'] = 'Passive Mode','None','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20'}
+
+    -- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Never','Always','300','1000',}
-	state.AutoBuffMode:options('Off','Auto','Regen') --,'Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','melee4','Regen') --,'Off','Off','Off','Off','Off',
 
 	gear.melee_jse_back = {name="Intarabus's Cape",augments={'Accuracy+20 Attack+20'}}
 	gear.magic_jse_back = {name="Intarabus's Cape",augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}}
@@ -110,6 +112,8 @@ function init_gear_sets()
     sets.weapons.Carnwenhan = {main="Carnwenhan", sub="Genmei Shield"}
     sets.weapons.Aeneas = {main="Aeneas", sub="Genmei Shield"}
     sets.weapons.Xoanon = {main="Xoanon", sub="Alber Strap"}
+    
+    sets.weapons.default = {main="Twashtar", sub="Centovente"}
 
 	sets.weapons.DualTwashtar = {main="Twashtar", sub="Centovente"}
     sets.weapons.DualTwashtarCrepuscular = {main="Twashtar", sub="Crepuscular Knife"}
@@ -494,7 +498,7 @@ sets.precast.WS['Shattersoul'] = {
 	sets.midcast['Horde Lullaby II'].Resistant = {range="Daurdabla"}
 	sets.midcast['Horde Lullaby II'].AoE = {range="Daurdabla"}
 	sets.midcast.Madrigal = {head="Fili Calot +2"}
-	sets.midcast.Paeon = {head="Brioso Roundlet +2"}
+	sets.midcast.Paeon = {head="Brioso Roundlet +3"}
 	sets.midcast.March = {hands="Fili Manchettes +2"}
 	sets.midcast['Honor March'] = set_combine(sets.midcast.March,{range="Marsyas"})
 	sets.midcast.Minuet = {body="Fili Hongreline +2"}
@@ -822,6 +826,7 @@ sets.idle.Sphere = set_combine(sets.idle, {
     right_ring="Defending Ring",
     back="Intarabus's Cape",    }
 
+
     sets.buff.Doom = {    neck="Nicander's Necklace",
     waist="Gishdubar Sash",
     left_ring="Purity Ring",
@@ -831,6 +836,31 @@ sets.idle.Sphere = set_combine(sets.idle, {
 	sets.latent_refresh = {waist="Fucho-no-obi"}
 	sets.latent_refresh_grip = {}
 	sets.TPEat = {}
+
+
+    sets.passive.SubtleBlow ={        
+        hands="Volte Mittens",
+        feet="Volte Spats",
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Sarissapho. Belt",
+        left_ear="Sherida Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
+    sets.passive.SubtleBlow20 ={        
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
+    sets.passive.MDT = {
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+    }
+	sets.passive.Enspell = {
+        head="Umuthi Hat",
+		ands="Aya. Manopolas +2",
+        waist="Orpheus's Sash",}
+
+
 
 	-- Engaged sets
 
@@ -854,25 +884,26 @@ sets.idle.Sphere = set_combine(sets.idle, {
 	}
 
 -- Sets with weapons defined.
-sets.engaged.Shield = {range="Linos",
-	main="Naegling",
-	sub="Genmei Shield",
-	head={ name="Blistering Sallet +1", augments={'Path: A',}},
-	body="Ashera Harness",
-	hands="Bunzi's Gloves",
+sets.engaged.STP = {
+    ranged="Linos",
+    ammo=Empty,
+    head="Bunzi's Hat",
+    body="Ashera Harness",
+    hands="Bunzi's Gloves",
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
-	feet={ name="Nyame Sollerets", augments={'Path: B',}},
-	neck={ name="Bard's Charm +2", augments={'Path: A',}},
-	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-	left_ear="Telos Earring",
-	right_ear="Fili Earring +1",
-	left_ring="Moonlight Ring",
-	right_ring="Chirich Ring +1",
+	feet="Battlecast Gaiters",
+    neck="Bard's Charm +2",
+    waist="Windbuffet Belt +1",
+    ear1="Dedition Earring",
+    ear2="Balder Earring +1",
+    ring1="Chirich Ring +1",
+    ring2="Moonlight Ring",
 	back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-	}
+}
 
 sets.engaged.CRIT = set_combine(sets.engaged, {
-	range="Linos",
+    ranged="Linos",
+    ammo=Empty,
     head="Blistering Sallet +1",
     body="Bihu Jstcorps. +3",
     hands="Bunzi's Gloves",
@@ -901,6 +932,19 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
     back="Null Shawl",
   })
 
+  --[[ 
+    sets.engaged.Aftermath = {
+    head="Volte Tiara",
+    body="Ashera Harness",
+    hands=gear.Telchine_STP_hands,
+    legs="Aya. Cosciales +2",
+    feet="Volte Spats",
+    neck="Bard's Charm +2",
+    ring1={name="Chirich Ring +1", bag="wardrobe3"},
+    ring2={name="Chirich Ring +1", bag="wardrobe4"},
+    back=gear.BRD_STP_Cape,
+    }
+  ]]
 
     ---------------------------------------- DW-HASTE ------------------------------------------
     -- * DNC Subjob DW Trait: +15%
@@ -937,6 +981,13 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
         right_ring="Chirich Ring +1",
         back="Null Shawl",
     })
+
+    sets.engaged.DW.STP = set_combine(sets.engaged.STP, {
+        waist="Reiki Yotai",
+        left_ear="Suppanomimi",
+    })
+
+
     sets.engaged.DW.CRIT = set_combine(sets.engaged.CRIT, {
     range="Linos",
     head={ name="Blistering Sallet +1", augments={'Path: A',}},
@@ -949,7 +1000,86 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
     back={ name="Intarabus's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},   
     })
 
+------------------------------------------------------------------------------------------------
+    ---------------------------------------- DW-HASTE ------------------------------------------
+------------------------------------------------------------------------------------------------
 
+  -- 15% Magic Haste (67% DW to cap)
+  sets.engaged.DW.LowHaste = set_combine(sets.engaged.DW, {
+    range=empty,
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.Acc.LowHaste = set_combine(sets.engaged.DW.Acc, {
+        range=empty,
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+    }) -- 16%
+    sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
+        range=empty,
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+    }) -- 16%
+    sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
+        range=empty,
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+    }) -- 16%
+
+--MID-HASTE
+
+sets.engaged.DW.MidHaste = set_combine(sets.engaged.DW, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.Acc.MidHaste = set_combine(sets.engaged.DW.Acc, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.STP.MidHaste = set_combine(sets.engaged.DW.STP, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.CRIT.MidHaste = set_combine(sets.engaged.DW.CRIT, {
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+
+--HIGH-HASTE
+
+sets.engaged.DW.HighHaste = set_combine(sets.engaged.DW, {
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.Acc.HighHaste = set_combine(sets.engaged.DW.Acc, {
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.STP.HighHaste = set_combine(sets.engaged.DW.STP, {
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.CRIT.HighHaste = set_combine(sets.engaged.DW.CRIT, {
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+
+--MAX-HASTE
+
+sets.engaged.DW.MaxHaste = set_combine(sets.engaged.DW)
+sets.engaged.DW.Acc.MaxHaste = set_combine(sets.engaged.DW.Acc)
+sets.engaged.DW.STP.MaxHaste = set_combine(sets.engaged.DW.STP)
+sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)
+
+    
 ------------------------------------------------------------------------------------------------
 ---------------------------------------- Hybrid Sets -------------------------------------------
 ------------------------------------------------------------------------------------------------
@@ -970,6 +1100,36 @@ sets.engaged.Hybrid = {
     sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
     sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
 
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
+------------------------------------------------------------------------------------------------
+
+
+sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.HighHaste = set_combine(sets.engaged.DW.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.HighHaste = set_combine(sets.engaged.DW.Acc.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.HighHaste = set_combine(sets.engaged.DW.STP.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.HighHaste = set_combine(sets.engaged.DW.CRIT.HighHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
 
 
 

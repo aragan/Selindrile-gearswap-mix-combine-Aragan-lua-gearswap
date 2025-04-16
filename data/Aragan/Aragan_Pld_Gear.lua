@@ -23,7 +23,7 @@ function user_job_setup()
 
     -- Options: Override default values	
 	state.OffenseMode:options('Normal', 'TP', 'Acc', 'STP', 'CRIT')
-    state.HybridMode:options('Tank','DDTank','Normal')
+    state.HybridMode:options('Tank','Normal','PDT')
     state.WeaponskillMode:options('Match', 'PDL', 'Acc','Enmity')
     state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
 	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation','Resist')
@@ -31,9 +31,9 @@ function user_job_setup()
     state.MagicalDefenseMode:options('MDT','MDT_HP','MDT_Reraise')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
 	state.IdleMode:options('Tank','Kiting','DT','PDT','PDH','Block','Evasion','MDT','MEVA','Regen','Normal')
-	state.Weapons:options('None','Burtgang','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole',
+	state.Weapons:options('Burtgang','None','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole',
 	'Shining','DualNaegling','DualReikiko','DualReikikoThibron','DualNaeglingThibron')
-	state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen'} -- , 'Priwen' }
+	state.ShieldMode = M{['description']='Shield Mode', 'Aegis','Srivatsa','Normal','Ochain','Duban', 'Priwen'} -- , 'Priwen' }
 	state.AutoBuffMode:options('Off','Auto','Odyss','Defense','Reprisal','Aminon') --,'Off','Off','Off','Off','Off',
 
     state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','ReverenceGauntlets', 'Refresh', 'Resist', 'EnemyTPaccumulation','MP','Twilight'}
@@ -1267,16 +1267,15 @@ sets.defense.Turtle ={
 	back="Rudianos's Mantle",
  }
   sets.defense.ResistCharm = {
-	main="Burtgang",
 	ammo="Staunch Tathlum +1",
 	head="Founder's Corona",
 	body={ name="Sakpata's Plate", augments={'Path: A',}},
-	hands="Chev. Gauntlets +3",
+	hands="Macabre Gaunt. +1",
 	legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
 	feet={ name="Sakpata's Leggings", augments={'Path: A',}},
 	neck={ name="Unmoving Collar +1", augments={'Path: A',}},
 	waist="Carrier's Sash",
-	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    left_ear={ name="Arete del Luna +1", augments={'Path: A',}},
 	right_ear="Volunt. Earring",
 	left_ring="Unyielding Ring",
 	right_ring="Wuji Ring",
@@ -1338,8 +1337,8 @@ sets.defense.Turtle ={
    }
  --1179 / 1315 avec enlight up
 	sets.engaged.STP = {  
-	main="Naegling",
-	sub="Blurred Shield +1",
+	--main="Naegling",
+	--sub="Blurred Shield +1",
 	ammo="Aurgelmir Orb +1",
 	head={ name="Sakpata's Helm", augments={'Path: A',}},
 	body={ name="Sakpata's Plate", augments={'Path: A',}},
@@ -1357,41 +1356,237 @@ sets.defense.Turtle ={
   --1179 / 1315 avec enlight up
  sets.engaged.CRIT = {
 	ammo="Coiste Bodhar",
-	head={ name="Blistering Sallet +1", augments={'Path: A',}},
+	head="Blistering Sallet +1",
 	body="Hjarrandi Breast.",
 	hands="Flam. Manopolas +2",
-	legs={ name="Zoar Subligar +1", augments={'Path: A',}},
+	legs="Zoar Subligar +1",
 	feet="Thereoid Greaves",
-	neck="Nefarious Collar +1",
-	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-	left_ear="Cessance Earring",
-	right_ear="Brutal Earring",
-	left_ring="Defending Ring",
-	right_ring="Hetairoi Ring",
-	back="Null Shawl"}
+	neck="Rep. Plat. Medal",
+	waist="Sailfi Belt +1",
+	ear1="Lugra Earring +1",
+	ear2="Brutal Earring",
+	ring1="Begrudging Ring",
+	ring2="Hetairoi Ring",
+	back="Null Shawl",
+
+}
  
+	
+
+------------------------------------------------------------------------------------------------
+    ---------------------------------------- DW ------------------------------------------
+------------------------------------------------------------------------------------------------
+    -- Base Dual-Wield Values:
+    -- * DW6: +37%
+    -- * DW5: +35%
+    -- * DW4: +30%
+    -- * DW3: +25% (NIN Subjob)
+    -- * DW2: +15% (DNC Subjob)
+    -- * DW1: +10%
+    -- No Magic Haste (74% DW to cap)
+
+    -- * DNC Subjob DW Trait: +15%
+    -- * NIN Subjob DW Trait: +25%
+
 
     sets.engaged.DW = set_combine(sets.engaged, {    
-	left_ear="Suppanomimi",  --5
-    right_ear="Eabani Earring", --4
-	})
+		waist="Reiki Yotai", --7
+		right_ear="Eabani Earring", --4
+		})
 
     sets.engaged.DW.Acc = set_combine(sets.engaged.Acc, {   
-	left_ear="Suppanomimi",  --5
-    right_ear="Eabani Earring", --4
-	})
+		waist="Reiki Yotai", --7
+		right_ear="Eabani Earring", --4
+		})
 	sets.engaged.DW.TP = set_combine(sets.engaged.TP, {   
-		left_ear="Suppanomimi",  --5
+		waist="Reiki Yotai", --7
 		right_ear="Eabani Earring", --4
 		})
     sets.engaged.DW.STP = set_combine(sets.engaged.STP, {   
-		left_ear="Suppanomimi",  --5
+		waist="Reiki Yotai", --7
 		right_ear="Eabani Earring", --4
 		})
 	sets.engaged.DW.CRIT = set_combine(sets.engaged.CRIT, {   
-		left_ear="Suppanomimi",  --5
+		waist="Reiki Yotai", --7
 		right_ear="Eabani Earring", --4
 		})
+
+
+
+------------------------------------------------------------------------------------------------
+  ---------------------------------------- DW-HASTE ------------------------------------------
+------------------------------------------------------------------------------------------------
+
+sets.engaged.DW.LowHaste = set_combine(sets.engaged.DW, {})
+sets.engaged.DW.Acc.LowHaste = set_combine(sets.engaged.DW.Acc, {
+    legs="Carmine Cuisses +1", --6
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    waist="Reiki Yotai", --7
+}) -- 22%
+sets.engaged.DW.TP.LowHaste = set_combine(sets.engaged.DW.TP, {
+    legs="Carmine Cuisses +1", --6
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    waist="Reiki Yotai", --7
+}) -- 22%
+sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
+    legs="Carmine Cuisses +1", --6
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    waist="Reiki Yotai", --7
+}) -- 22%
+sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
+    legs="Carmine Cuisses +1", --6
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    waist="Reiki Yotai", --7
+}) -- 22%
+
+
+-- 30% Magic Haste (56% DW to cap)
+
+sets.engaged.DW.MidHaste = set_combine(sets.engaged.DW,{})
+sets.engaged.DW.Acc.MidHaste = set_combine(sets.engaged.DW.Acc,{ 
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    --waist="Reiki Yotai", --7
+}) -- 15%
+sets.engaged.DW.TP.MidHaste = set_combine(sets.engaged.DW.TP,{ 
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    --waist="Reiki Yotai", --7
+}) -- 15%
+sets.engaged.DW.STP.MidHaste = set_combine(sets.engaged.DW.STP,{ 
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    --waist="Reiki Yotai", --7
+}) -- 15%
+sets.engaged.DW.CRIT.MidHaste = set_combine(sets.engaged.DW.CRIT,{ 
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+    --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    --waist="Reiki Yotai", --7
+}) -- 15%
+
+
+sets.engaged.DW.MaxHaste = set_combine(sets.engaged.DW)
+sets.engaged.DW.Acc.MaxHaste = set_combine(sets.engaged.DW.Acc)-- 12%
+sets.engaged.DW.TP.MaxHaste = set_combine(sets.engaged.DW.TP)-- 12%
+sets.engaged.DW.STP.MaxHaste = set_combine(sets.engaged.DW.STP)-- 12%
+sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)-- 12%
+
+
+
+    ------------------------------------------------------------------------------------------------
+    ---------------------------------------- Hybrid Sets -------------------------------------------
+    ------------------------------------------------------------------------------------------------
+
+	sets.engaged.PDT = --1179 / 1315 avec enlight up
+	{	head={ name="Sakpata's Helm", augments={'Path: A',}},
+		body={ name="Sakpata's Plate", augments={'Path: A',}},
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+		feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+		left_ring="Moonlight Ring",
+		right_ring="Moonlight Ring",
+	   }
+	sets.engaged.MDT = {
+		neck={ name="Warder's Charm +1", augments={'Path: A',}},
+		left_ring="Shadow Ring",
+	}
+	sets.engaged.Turtle = {
+	 ammo="Staunch Tathlum +1",
+	 head={ name="Loess Barbuta +1", augments={'Path: A',}},
+	 body={ name="Sakpata's Plate", augments={'Path: A',}},
+	 hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+	 legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+	 feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+	 neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+	 waist="Carrier's Sash",
+	 left_ear="Trux Earring",
+	 right_ear="Cryptic Earring",
+	 left_ring="Moonlight Ring",
+	 right_ring="Moonlight Ring",
+	 back="Rudianos's Mantle",
+ }
+	sets.engaged.ReverenceGauntlets = {    
+	 hands="Rev. Gauntlets +3",
+  }
+ 
+ 
+ 
+ 
+	 ------------------------------------------------------------------------------------------------
+	 ----------------------------------------DW - Hybrid Sets -------------------------------------------
+	 ------------------------------------------------------------------------------------------------
+ 
+ 
+  sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.DW.Acc,{
+	 ammo="Staunch Tathlum +1",
+	 left_ring="Defending Ring",
+	 right_ring="Moonlight Ring",
+	 back="Moonlight Cape",
+	 left_ear="Suppanomimi",
+	 waist="Reiki Yotai",
+ })
+ sets.engaged.DW.TP.PDT = set_combine(sets.engaged.DW.TP,{
+	 ammo="Staunch Tathlum +1",
+	 left_ring="Defending Ring",
+	 right_ring="Moonlight Ring",
+	 back="Moonlight Cape",
+	 left_ear="Suppanomimi",
+	 waist="Reiki Yotai",
+ })
+ sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP,{
+	 ammo="Staunch Tathlum +1",
+	 left_ring="Defending Ring",
+	 right_ring="Moonlight Ring",
+	 back="Moonlight Cape",
+	 left_ear="Suppanomimi",
+	 waist="Reiki Yotai",
+ })
+ sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.DW.CRIT,{
+	 ammo="Staunch Tathlum +1",
+	 left_ring="Defending Ring",
+	 right_ring="Moonlight Ring",
+	 back="Moonlight Cape",
+	 left_ear="Suppanomimi",
+	 waist="Reiki Yotai",
+ })
+ 
+	 --sets.engaged.DW.PDT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.PDT)
+	 --sets.engaged.DW.PDT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.PDT)
+	 --sets.engaged.DW.PDT.MaxHaste = set_combine(sets.engaged.DW.PDT.MaxHaste, sets.engaged.PDT)
+	 sets.engaged.DW.Acc.PDT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.PDT)
+	 sets.engaged.DW.Acc.PDT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.PDT)
+	 sets.engaged.DW.Acc.PDT.MaxHaste = set_combine(sets.engaged.DW.Acc.PDT.MaxHaste, sets.engaged.PDT)
+	 sets.engaged.DW.TP.PDT.LowHaste = set_combine(sets.engaged.DW.TP.LowHaste, sets.engaged.PDT)
+	 sets.engaged.DW.TP.PDT.MidHaste = set_combine(sets.engaged.DW.TP.MidHaste, sets.engaged.PDT)
+	 sets.engaged.DW.TP.PDT.MaxHaste = set_combine(sets.engaged.DW.TP.PDT.MaxHaste, sets.engaged.PDT)
+	 sets.engaged.DW.STP.PDT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.PDT)
+	 sets.engaged.DW.STP.PDT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.PDT)
+	 sets.engaged.DW.STP.PDT.MaxHaste = set_combine(sets.engaged.DW.STP.PDT.MaxHaste, sets.engaged.PDT)
+	 sets.engaged.DW.CRIT.PDT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.PDT)
+	 sets.engaged.DW.CRIT.PDT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.PDT)
+	 sets.engaged.DW.CRIT.PDT.MaxHaste = set_combine(sets.engaged.DW.CRIT.PDT.MaxHaste, sets.engaged.PDT)
+
+
+
+
+----------Tank
+
 
 	sets.engaged.Tank = {   ammo="Aurgelmir Orb +1",
 	head={ name="Sakpata's Helm", augments={'Path: A',}},

@@ -1254,7 +1254,7 @@ right_ring="Chirich Ring +1",
 
 	sets.engaged = {
 		ammo="Coiste Bodhar",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		head="Dampening Tam",
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
 		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
@@ -1355,7 +1355,7 @@ right_ring="Chirich Ring +1",
 
 	sets.engaged.DW = {
 		ammo="Aurgelmir Orb +1",
-		head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
+		head="Dampening Tam",
 		body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
 		hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
 		legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
@@ -1389,6 +1389,7 @@ right_ring="Chirich Ring +1",
 		waist="Gerdr Belt",
 	})
 	sets.engaged.DW.DPL = set_combine(sets.engaged.DPL, {
+		head="Dampening Tam",
 		left_ear="Suppanomimi",
 	})
 	

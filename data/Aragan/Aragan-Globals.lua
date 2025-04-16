@@ -160,6 +160,9 @@ AutoAcceptRaiseMode
 
 gs c set AutoWSRestore true
 gs c set SkipProcWeapons false
+gs showswaps
+lua r gearswap
+AutoCleanupMode add more items
 handle_killstatue
 
 //gs c useitem head Reraise Hairpin +1
@@ -207,7 +210,7 @@ function global_on_load()
 	send_command('bind !backspace input //automb off') --Turns addon off.addon automb
 	
 	--input //lua r AutoWS;input //aws on;
-	send_command('bind !o input //gs org') 
+	send_command('bind !o put storage slip* case all;wait .3;input //gs org;wait 3;input //gs validate') 
 	send_command('bind ^w input /wave')
 
 	
@@ -258,9 +261,10 @@ function global_on_load()
 	send_command('bind !, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
 	send_command('bind !. input //put * Wardrobe4 all') -- gs validate  --to check  -- lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
 
-	send_command('bind ^. input //get storage slip* all;wait 1;input //po r') -- PorterPacker addon
+	send_command('bind ^. input //get storage slip* all;wait 1;input //po r') -- lua r PorterPacker addon
 	send_command('bind ^, lua r PorterPacker;wait 1;input //get storage slip* all;wait 1;input //po r a') -- PorterPacker addon
 	send_command('bind ^] input //get storage slip* all;wait 1;input //po pack')
+	send_command('bind ^[ input //get storage slip* all;wait 1;input //lua r PorterPacker;wait 1;input //po p a ') --PorterPacker Porter find
 
 	send_command('bind !m gs c toggle AutoMedicineMode')
 	send_command('bind !n gs c toggle AutoReraiseeMode')
@@ -268,7 +272,7 @@ function global_on_load()
 	--send_command('bind @m gs c mount Raptor')
 
 	--send_command('input //gs org')-- org addon every change job
-	send_command('wait 1;input //gs c naked;gs disable all;wait .5;put * wardrobe4 all;wait .3;put storage slip* case all;wait .5;input //gs org')-- org addon every change job
+	send_command('wait 1;input //put * wardrobe4 all;wait .3;put storage slip* case all;wait .5;input //gs org')-- org addon every change job
 
 end
 -- Function to revert binds when unloading.
@@ -456,7 +460,7 @@ function job_post_precast(spell)
 		if attack > attack2 then
 			equip(sets.precast.WS[spell.name].PDL)
 		elseif state.WeaponskillMode.value == 'Proc' then
-			equip(sets.precast.WS.Proc)
+			equip(sets.precast.WS[spell.name].Proc)
 		else
 			equip(sets.precast.WS[spell.name])
 		end
@@ -841,7 +845,7 @@ function default_zone_change(new_id,old_id)
 	if data.areas.laggy:contains(world.area)  then
 		send_command('input //gs c set AutoDefenseMode true;input //gs c set AutoWSRestore true') --Turns mode on.
 	else
-		send_command('input //gs c set AutoWSRestore false;') --Turns  off. -- 
+		--send_command('input //gs c set AutoWSRestore false;') --Turns  off. -- 
 	end
 
 	if world.area:contains('Nyzul Isle') then

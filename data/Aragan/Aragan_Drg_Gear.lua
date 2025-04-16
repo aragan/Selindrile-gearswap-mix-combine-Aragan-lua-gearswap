@@ -23,7 +23,7 @@ function user_job_setup()
 	state.IdleMode:options( 'DT','Normal','Regen', 'HP', 'MDT', 'Evasion', 'EnemyCritRate')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Weapons:options('Naegling', 'None', 'Trishula', 'Shining', 'TernionDagger', 'Staff', 'Club', 'DualNaegling', 'DualTernionDagger', 'DualClub')
-	state.Passive = M{['description'] = 'Passive Mode','None','MP','Twilight'}
+	state.Passive = M{['description'] = 'Passive Mode','None','Twilight','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20', 'SubtleBlow30','SubtleBlow62'}
 
     select_default_macro_book()
 	
@@ -137,7 +137,8 @@ function init_gear_sets()
 	
 	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
-	sets.Self_Refresh = {waist="Gishdubar Sash"}
+	
+    sets.Self_Refresh = {waist="Gishdubar Sash"}
     sets.Phalanx_Received = {
         head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},
@@ -692,6 +693,37 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     sets.passive.MP = {ear2="Ethereal Earring",waist="Flume Belt +1"}
     sets.passive.Twilight = {head="Crepuscular Helm",
 	body="Crepuscular Mail",}
+    sets.passive.SubtleBlow ={        
+        body="Dagon Breast.",
+        left_ring="Chirich Ring +1",
+        right_ring="Niqmaddu Ring",
+    }
+    sets.passive.SubtleBlow30 ={        
+        body="Dagon Breast.",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
+    sets.passive.SubtleBlow20 ={        
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
+    sets.passive.SubtleBlow62 ={        
+        body="Dagon Breast.",
+        hands="Volte Mittens",
+        feet="Volte Spats",
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Sarissapho. Belt",
+        left_ear="Sherida Earring",
+        right_ear="Pel. Earring +1",
+        left_ring="Chirich Ring +1",
+        right_ring="Niqmaddu Ring",
+    }
+    sets.passive.MDT = {
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+    }
+	sets.passive.Enspell = {waist="Orpheus's Sash",}
+
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
@@ -718,7 +750,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         legs={ name="Ptero. Brais +3", augments={'Enhances "Strafe" effect',}},
         feet="Flam. Gambieras +2",
         neck="Anu Torque",
-        waist="Ioskeha Belt +1",
+        waist="Sailfi Belt +1",
         left_ear="Sherida Earring",
         right_ear="Brutal Earring",
         left_ring="Niqmaddu Ring",
@@ -758,14 +790,15 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     })
 
     sets.engaged.CRIT = set_combine(sets.engaged, {
+        ranged=Empty,
         ammo="Coiste Bodhar",
-        head={ name="Blistering Sallet +1", augments={'Path: A',}},
+        head="Blistering Sallet +1",
         body="Hjarrandi Breast.",
         hands="Flam. Manopolas +2",
         legs={ name="Zoar Subligar +1", augments={'Path: A',}},
         feet="Thereoid Greaves",
-        neck={ name="Dgn. Collar +2", augments={'Path: A',}},
-        waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+        neck="Dgn. Collar +2",
+        waist="Sailfi Belt +1",
         ear1="Sroda Earring",
         ear2="Sherida Earring",
         ring1="Niqmaddu Ring",
@@ -774,24 +807,138 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
     sets.engaged.SubtleBlow = set_combine(sets.engaged, {        
             body="Dagon Breast.",
-            hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-            left_ear={ name="Schere Earring", augments={'Path: A',}},
             left_ring="Chirich Ring +1",
             right_ring="Niqmaddu Ring",
+
     })
 
 ---------------------------------------- DW-HASTE ------------------------------------------
-sets.DW =  {
-    left_ear="Suppanomimi",  --5
-    right_ear="Eabani Earring",
-}
-sets.engaged.DW = set_combine(sets.engaged, sets.DW)
-sets.engaged.DW.Acc = set_combine(sets.engaged.Acc, sets.DW)
-sets.engaged.DW.STP = set_combine(sets.engaged.STP, sets.DW)
-sets.engaged.DW.DA = set_combine(sets.engaged.DA, sets.DW)
-sets.engaged.DW.CRIT = set_combine(sets.engaged.CRIT, sets.DW)
-sets.engaged.DW.SubtleBlow = set_combine(sets.engaged.SubtleBlow, sets.DW)
 
+sets.engaged.DW = set_combine(sets.engaged, {
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring",--4
+}) -- 9%
+sets.engaged.DW.Acc = set_combine(sets.engaged.Acc,  {
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring",--4
+}) -- 9%
+sets.engaged.DW.STP = set_combine(sets.engaged.STP,  {
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring",--4
+}) -- 9%
+sets.engaged.DW.DA = set_combine(sets.engaged.DA,  {
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring",--4
+}) -- 9%
+sets.engaged.DW.CRIT = set_combine(sets.engaged.CRIT,  {
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring",--4
+}) -- 9%
+sets.engaged.DW.SubtleBlow = set_combine(sets.engaged.SubtleBlow,  {
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring",--4
+}) -- 9%
+	
+
+------------------------------------------------------------------------------------------------
+    ---------------------------------------- DW-HASTE ------------------------------------------
+------------------------------------------------------------------------------------------------
+
+-- 15% Magic Haste (67% DW to cap)
+  sets.engaged.DW.LowHaste = set_combine(sets.engaged.DW, {
+    head="Null Masque",
+    legs="Carmine Cuisses +1", --6
+    feet=gear.taeon_dw_feet, --9
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+    }) -- 27%
+    sets.engaged.DW.Acc.LowHaste = set_combine(sets.engaged.DW.Acc, {
+        head="Null Masque",
+        legs="Carmine Cuisses +1", --6
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 27%
+    sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
+        head="Null Masque",
+        legs="Carmine Cuisses +1", --6
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 27%
+    sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
+        head="Null Masque",
+        legs="Carmine Cuisses +1", --6
+        feet=gear.taeon_dw_feet, --9
+        left_ear="Suppanomimi", --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+        }) -- 27%
+
+--MID-HASTE
+
+sets.engaged.DW.MidHaste = set_combine(sets.engaged.DW, {
+    head="Null Masque",
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.Acc.MidHaste = set_combine(sets.engaged.DW.Acc, {
+    head="Null Masque",
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.STP.MidHaste = set_combine(sets.engaged.DW.STP, {
+    head="Null Masque",
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+sets.engaged.DW.CRIT.MidHaste = set_combine(sets.engaged.DW.CRIT, {
+    head="Null Masque",
+    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 16%
+
+--HIGH-HASTE
+
+sets.engaged.DW.HighHaste = set_combine(sets.engaged.DW, {
+    head="Null Masque",
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.Acc.HighHaste = set_combine(sets.engaged.DW.Acc, {
+    head="Null Masque",
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.STP.HighHaste = set_combine(sets.engaged.DW.STP, {
+    head="Null Masque",
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+sets.engaged.DW.CRIT.HighHaste = set_combine(sets.engaged.DW.CRIT, {
+    head="Null Masque",
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+}) -- 11%
+
+--MAX-HASTE
+
+sets.engaged.DW.MaxHaste = set_combine(sets.engaged.DW)
+sets.engaged.DW.Acc.MaxHaste = set_combine(sets.engaged.DW.Acc)
+sets.engaged.DW.STP.MaxHaste = set_combine(sets.engaged.DW.STP)
+sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)
+
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- Hybrid Sets -------------------------------------------
+------------------------------------------------------------------------------------------------
 
 sets.engaged.Hybrid = {
     head="Hjarrandi Helm",
@@ -815,7 +962,7 @@ sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.H
     legs={ name="Gleti's Breeches", augments={'Path: A',}},
     feet={ name="Gleti's Boots", augments={'Path: A',}},
     neck="Anu Torque",
-    waist="Ioskeha Belt +1",
+    waist={ name="Sailfi Belt +1", augments={'Path: A',}},
     left_ear="Sherida Earring",
     right_ear="Cessance Earring",
     left_ring="Chirich Ring +1",
@@ -835,12 +982,44 @@ sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.eng
     legs={ name="Gleti's Breeches", augments={'Path: A',}},
     feet={ name="Gleti's Boots", augments={'Path: A',}},
     neck="Anu Torque",
-    waist="Ioskeha Belt +1",
+    waist={ name="Sailfi Belt +1", augments={'Path: A',}},
     left_ear="Sherida Earring",
     right_ear="Cessance Earring",
     left_ring="Chirich Ring +1",
     right_ring="Niqmaddu Ring",
 })
+
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
+------------------------------------------------------------------------------------------------
+
+
+sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.HighHaste = set_combine(sets.engaged.DW.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.HighHaste = set_combine(sets.engaged.DW.Acc.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.HighHaste = set_combine(sets.engaged.DW.STP.HighHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.HighHaste = set_combine(sets.engaged.DW.CRIT.HighHaste, sets.engaged.Hybrid)
+
+sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
+
 
 -----------------------
 
