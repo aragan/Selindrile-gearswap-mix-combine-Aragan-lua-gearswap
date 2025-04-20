@@ -202,7 +202,7 @@ function init_gear_sets()
 	sets.precast.CorsairShot.Damage =sets.precast.CorsairShot
 	
     sets.precast.CorsairShot.Proc = {ammo=gear.RAbullet,
-        head="Wh. Rarab Cap +1",neck="Loricate Torque +1",ear1="Genmei Earring",ear2="Sanare Earring",
+        neck="Loricate Torque +1",ear1="Genmei Earring",ear2="Sanare Earring",
         body="Emet Harness +1",hands="Malignance Gloves",ring1="Defending Ring",
         back="Moonlight Cape",waist="Flume Belt +1",legs="Carmine Cuisses +1",feet="Chasseur's Bottes +2"}
 
@@ -1021,7 +1021,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         hands="Adhemar Wrist. +1",
         legs={ name="Zoar Subligar +1", augments={'Path: A',}},
         feet="Mummu Gamash. +2",
-        neck="Caro Necklace",
+        neck="Iskur Gorget",
         waist="Sailfi Belt +1",
         ear1="Odr Earring",
         ear2="Chas. Earring +1",

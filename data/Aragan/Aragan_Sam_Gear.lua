@@ -74,11 +74,11 @@ function init_gear_sets()
     -- Precast Sets
     -- Precast sets to enhance JAs
     sets.precast.JA.Meditate = { 
-    head="Wakido Kabuto +1",
+    head="Wakido Kabuto +2",
     hands="Sakonji Kote +3",
     back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 }
-    sets.precast.JA['Warding Circle'] = {head="Wakido Kabuto +1"}
+    sets.precast.JA['Warding Circle'] = {head="Wakido Kabuto +2"}
     sets.precast.JA['Blade Bash'] = {hands="Sakonji Kote +3"}
 	sets.precast.JA['Sekkanoki'] = {}
 	sets.precast.JA['Sengikori'] = {feet="Kas. Sune-Ate +3"}

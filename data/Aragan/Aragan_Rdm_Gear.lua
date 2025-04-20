@@ -1250,13 +1250,7 @@ sets.engaged.CRIT = {
         right_ear="Eabani Earring", --4
         waist="Reiki Yotai", --7
     }) -- 31%
-    sets.engaged.DW.Ranged.LowHaste = set_combine(sets.engaged.DW.Ranged, {
-        legs="Carmine Cuisses +1", --6
-        feet=gear.taeon_dw_feet, --9
-        left_ear="Suppanomimi",  --5
-        right_ear="Eabani Earring", --4
-        waist="Reiki Yotai", --7
-    }) -- 31%
+
     sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
         legs="Carmine Cuisses +1", --6
         feet=gear.taeon_dw_feet, --9
@@ -1281,11 +1275,7 @@ sets.engaged.CRIT = {
         waist="Reiki Yotai", --7
     }) -- 16%
 
-    sets.engaged.DW.Ranged.MidHaste = set_combine(sets.engaged.DW.Ranged,{ 
-        left_ear="Suppanomimi",  --5
-        right_ear="Eabani Earring", --4
-        waist="Reiki Yotai", --7
-    }) -- 16%
+
    sets.engaged.DW.STP.MidHaste = set_combine(sets.engaged.DW.STP,{ 
 	left_ear="Suppanomimi",  --5
 	right_ear="Eabani Earring", --4
@@ -1295,7 +1285,6 @@ sets.engaged.CRIT = {
     sets.engaged.DW.MaxHaste = set_combine(sets.engaged.DW)
     sets.engaged.DW.Acc.MaxHaste = set_combine(sets.engaged.DW.Acc)
     sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)
-    sets.engaged.DW.Ranged.MaxHaste = set_combine(sets.engaged.DW.Ranged)
     sets.engaged.DW.STP.MaxHaste = set_combine(sets.engaged.DW.STP)
 
 
@@ -1467,19 +1456,16 @@ sets.engaged.CRIT = {
 sets.engaged.DW.PDT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
 sets.engaged.DW.Acc.PDT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
 sets.engaged.DW.CRIT.PDT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Ranged.PDT.LowHaste = set_combine(sets.engaged.DW.Ranged.LowHaste, sets.engaged.Hybrid)
 sets.engaged.DW.STP.PDT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
 
 sets.engaged.DW.PDT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
 sets.engaged.DW.Acc.PDT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
 sets.engaged.DW.CRIT.PDT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Ranged.PDT.MidHaste = set_combine(sets.engaged.DW.Ranged.MidHaste, sets.engaged.Hybrid)
 sets.engaged.DW.STP.PDT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
 
 sets.engaged.DW.PDT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
 sets.engaged.DW.Acc.PDT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
 sets.engaged.DW.CRIT.PDT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Ranged.PDT.MaxHaste = set_combine(sets.engaged.DW.Ranged.MaxHaste, sets.engaged.Hybrid)
 sets.engaged.DW.STP.PDT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
 
 
