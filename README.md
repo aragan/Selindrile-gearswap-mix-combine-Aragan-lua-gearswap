@@ -34,7 +34,7 @@ Aragan0
 if u want Aragan file or u name file change name file common or u file name to any name or add number or Letters 
 Aragan file will work .. 
 
-that to can switch between 2 any lua easy 
+that to can switch between 2 any type gearswap file lua easy 
 
 -----------
 
