@@ -141,7 +141,7 @@ function check_reaction(act)
 		if targetsMe then
 			if state.AutoEngageMode.value and actor.race == 0 and math.sqrt(actor.distance) < (3.2 + actor.model_size) and player.status == 'Idle' and not (moving or engaging > os.clock() or actor.name:contains("'s ")) then
 				engaging = os.clock() + 2
-
+				
 				packets.inject(packets.new('outgoing', 0x1a, {
 					['Target'] = actor.id,
 					['Target Index'] = actor.index,

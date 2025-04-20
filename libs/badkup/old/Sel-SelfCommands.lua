@@ -376,31 +376,39 @@ function handle_weapons(cmdParams)
 		weaponSet = cmdParams[1]
 	end
 	if weaponSet == nil then
+		if sets.weapons[state.Weapons.value] then
+			equip_weaponset(state.Weapons.value)
+		elseif state.Weapons.value == 'None' then
+			enable('main','sub','range','ammo')
+		end
 	elseif weaponSet:lower() == 'default' then
-		if not data.jobs.dual_wield_jobs:contains(player.main_job) and (player.sub_job == 'DNC' or player.sub_job == 'NIN') and state.Weapons:contains(default_dual_weapons) and sets.weapons[default_dual_weapons] then
-			state.Weapons:set(default_dual_weapons)
-		elseif default_weapons and state.Weapons:contains(default_weapons) and sets.weapons[default_weapons] then
-			state.Weapons:set(default_weapons)
+		if (player.sub_job == 'DNC' or player.sub_job == 'NIN') and state.Weapons:contains('DualWeapons') and sets.weapons.DualWeapons then
+			if state.Weapons.value ~= 'DualWeapons' then
+				state.Weapons:set('DualWeapons')
+			end
+			equip_weaponset('DualWeapons')
 		else
 			state.Weapons:reset()
-		end
-	elseif weaponSet:lower() == 'initialize' then
-		if not data.jobs.dual_wield_jobs:contains(player.main_job) and (player.sub_job == 'DNC' or player.sub_job == 'NIN') and state.Weapons:contains(default_dual_weapons) and sets.weapons[default_dual_weapons] then
-			state.Weapons:set(default_dual_weapons)
-		elseif data.jobs.mage_jobs:contains(player.main_job) and not data.jobs.mage_jobs:contains(player.sub_job) and default_weapons and state.Weapons:contains(default_weapons) and sets.weapons[default_weapons] then
-			state.Weapons:set(default_weapons)
-		else
-			state.Weapons:reset()
-		end
-	elseif weaponSet:lower() == 'none' then
-		if state.Weapons:contains('None') then
-			state.Weapons:set('None')
+			if sets.weapons[state.Weapons.value] then
+				equip_weaponset(state.Weapons.value)
+			elseif state.Weapons.value == 'None' then
+				enable('main','sub','range','ammo')
+			end
 		end
 	elseif sets.weapons[weaponSet] then
 		if state.Weapons:contains(weaponSet) and state.Weapons.value ~= weaponSet then
 			state.Weapons:set(weaponSet)
 		end
+		equip_weaponset(weaponSet)
+	elseif weaponSet:lower() == 'none' then
+		if state.Weapons:contains('None') then
+			enable('main','sub','range','ammo')
+			state.Weapons:set('None')
+		end
 	else
+		if sets.weapons[state.Weapons.value] then
+			equip_weaponset(state.Weapons.value)
+		end
 		add_to_chat(123,"Error: A weapons set for ["..weaponSet.."] does not exist.")
 	end
 

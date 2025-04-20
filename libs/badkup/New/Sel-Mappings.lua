@@ -46,8 +46,6 @@
 -------------------------------------------------------------------------------------------------------------------
 -- Elemental mappings for element relationships and certain types of spells and gear.
 -------------------------------------------------------------------------------------------------------------------
---attack2 = 3500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this val
-
 data = {} -- Precursor to all mapping lists.
 -- Basic elements
 data.elements = {}
@@ -109,9 +107,6 @@ data.elements.strong_to = {['Light']='Dark', ['Dark']='Light', ['Fire']='Water',
 data.elements.storm_of = {['Light']="Aurorastorm", ['Dark']="Voidstorm", ['Fire']="Firestorm", ['Earth']="Sandstorm",
       ['Water']="Rainstorm", ['Wind']="Windstorm", ['Ice']="Hailstorm", ['Lightning']="Thunderstorm",}
 
-data.elements.BarElement_of = {['Fire']='Barfire',['Earth']='Barstone',['Water']='Barwater',['Wind']='Baraero',['Ice']='Barblizzard',['Lightning']='Barthunder',
-	  ['Fire']='Barfira',['Earth']='Barstonra',['Water']='Barwatera',['Wind']='Baraera',['Ice']='Barblizzara',['Lightning']='Barthundra',}
-
 storms = S{"Aurorastorm", "Voidstorm", "Firestorm", "Sandstorm", "Rainstorm", "Windstorm", "Hailstorm", "Thunderstorm",
 		"Aurorastorm II", "Voidstorm II", "Firestorm II", "Sandstorm II", "Rainstorm II", "Windstorm II", "Hailstorm II", "Thunderstorm II"}
 
@@ -120,14 +115,6 @@ runes = S{'Lux', 'Tenebrae', 'Ignis', 'Gelus', 'Flabra', 'Tellus', 'Sulpor', 'Un
 data.elements.rune_of = {['Light']='Lux', ['Dark']='Tenebrae', ['Fire']='Ignis', ['Ice']='Gelus', ['Wind']='Flabra',
      ['Earth']='Tellus', ['Lightning']='Sulpor', ['Water']='Unda'}
  
-data.elements.blue_of = {['Light']='Blinding Fulgor', ['Dark']='Tenebral Crush', ['Fire']='Searing Tempest', ['Ice']='Spectral Floe', ['Wind']='Silent Storm',
-     ['Earth']='Entomb', ['Lightning']='Anvil Lightning', ['Water']='Scouring Spate'}
-data.elements.unbridled_spells = {['Light']='Uproot', ['Dark']='Cruel Joke', ['Fire']='Gates of Hades', ['Ice']='Polar Roar', ['Wind']='Tearing Gust',
-     ['Earth']='', ['Lightning']='Thunderbolt', ['Water']='Cesspool'}
- 
-data.elements.blue2_of = {['Light']='1000 Needles', ['Dark']='Palling Salvo', ['Fire']='Thermal Pulse', ['Ice']='Ice Break', ['Wind']='Tem. Upheaval',
-['Earth']='Embalming Earth', ['Lightning']='Charged Whisker', ['Water']='Nectarous Deluge'}
-
 data.weather_bonus_potency = {[0]=0,[1]=10,[2]=25}
 
 --Exceptions for specific actions, placed here to be easily modifiable.
@@ -781,29 +768,6 @@ spell_stepdown = {
 	['Gravity II'] = 'Gravity',
 	['Horde Lullaby II'] = 'Horde Lullaby',
 	['Foe Lullaby II'] = 'Foe Lullaby',
-	['Carnage Elegy'] = 'Battlefield Elegy',
-	['Barfira'] = 'Barfire',
-	['Barblizzara'] = 'Barblizzard',
-	['Baraera'] = 'Baraero',
-	['Barstonra'] = 'Barstone',
-	['Barthundra'] = 'Barthunder',
-	['Barwatera'] = 'Barwater',
-	['Baramnesra'] = 'Baramnesia',
-	['Barsleepra'] = 'Barsleep',
-	['Barpoisonra'] = 'Barpoison',
-	['Barparalyzra'] = 'Barparalyze',
-	['Barblindra'] = 'Barblind',
-	['Barsilencera'] = 'Barsilence',
-	['Barpetra'] = 'Barpetrify',
-	['Barvira'] = 'Barvirus',
-	['Fire Threnody II'] = 'Fire Threnody',
-	['Ice Threnody II'] = 'Ice Threndoy',
-	['Wind Threnody II'] = 'Wind Threnody',
-	['Earth Threnody II'] = 'Earth Threnody',
-	['Ltng. Threnody II'] = 'Ltng. Threnody',
-	['Water Threnody II'] = 'Water Threnody',
-	['Light Threnody II'] = 'Light Threnody',
-	['Dark Threnody II'] = 'Dark Threnody',
 }
 
 item_stepdown = {
@@ -822,73 +786,3 @@ item_stepdown = {
 	['Reraise Earring'] = {'Reraise Hairpin','head'},
 	['Reraise Hairpin'] = {'Wh. Rarab Cap +1','head'},
 }
-
-
--- Buff Handling
-buff_group_IDs = { --Buffs that overwrite each other or are blocked by each other and do not share a buffID.
-	['BarElement'] = S{100,101,102,103,104,105},
-	['BarStatus'] = S{106,107,108,109,110,111,112},
-	['Enspell'] = S{94,95,96,97,98,99,274,275,277,278,279,280,281,282,288},
-	['Boost-Stat'] = S{86,119,120,121,122,123,124,125},
-	['Spikes'] = S{34,35,38,173},
-	['Invis'] = S{69,77}, --Includes camoflauge
-	['Haste'] = S{13,33,581}, --Includes slow
-	['Defense'] = S{93,149}, --Includes defense down
-	['SpecialReactorCool'] = S{34,35,38,93,149,173}, --Is decidedly uncool for breaking my system.
-}
-
-spell_to_buff = {['Reactor Cool']='SpecialReactorCool',}
-for _, rline in pairs(gearswap.res.spells) do
-	if rline.status then
-		for key in pairs(buff_group_IDs) do
-			if not key:startswith('Special') and buff_group_IDs[key]:contains(rline.status) and not rline.targets:contains('Enemy') then
-				if not spell_to_buff[rline.english] then
-					spell_to_buff[rline.english] = key
-				end
-				break
-			end
-		end
-	end
-end
-
-data.status_map = T{
-	{buff='doom',spell='Cursna'},
-	{buff='petrification',spell='Stona'},
-	{buff='sleep',spell='Cure'},
-	{buff='curse',spell='Cursna'},
-	{buff='paralysis',spell='Paralyna'},
-	{buff='bind',spell='Erase'},
-	{buff='slow',spell='Erase'},
-	{buff='elegy',spell='Erase'},
-	{buff='weight',spell='Erase'},
-	{buff='silence',spell='Silena'},
-	{buff='poison',spell='Poisona'},
-	{buff='blindness',spell='Blindna'},
-	{buff='bio',spell='Erase'},
-	{buff='dia',spell='Erase'},
-	{buff='requiem',spell='Erase'},
-	{buff='plague',spell='Viruna'},
-	{buff='burn',spell='Erase'},
-	{buff='frost',spell='Erase'},
-	{buff='choke',spell='Erase'},
-	{buff='rasp',spell='Erase'},
-	{buff='shock',spell='Erase'},
-	{buff='drown',spell='Erase'},
-	{buff='diseased',spell='Viruna'},
-}
-
-disable_priority = T{
-    "User",
-    "Showset",
-    "Crafting",
-    "Doom",
-    "Sleep",
-    "UseItem",
-    "OneHour",
-    "Shield",
-    "Weapons",
-    "ShowTP",
-    "Ability",
-    "TreasureHunter",
-}:reverse()
-

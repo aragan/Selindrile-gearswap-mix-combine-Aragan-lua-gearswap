@@ -821,7 +821,7 @@ function can_use(spell)
             or data.spells.unbridled:contains(spell.english)) and
             not (player.sub_job_id == 16 and table.contains(windower.ffxi.get_sjob_data().spells,spell.id)) then
             -- This code isn't hurting anything, but it doesn't need to be here either.
-            --add_to_chat(123,"Abort: You haven't set ["..(res.spells[spell.id][language] or spell.id).."].")
+            add_to_chat(123,"Abort: You haven't set ["..(res.spells[spell.id][language] or spell.id).."].")
             return false
         end
     elseif category == 7 or category == 9 then
@@ -1125,7 +1125,7 @@ function check_recast(spell, spellMap, eventArgs)
 					return true
 				else
 					add_to_chat(123,'Abort: ['..spell.english..'] waiting on recast. ('..seconds_to_clock(abil_recasts[spell.recast_id])..')')
-					--eventArgs.cancel = true
+					eventArgs.cancel = true
 					return true
 				end
 			else
@@ -1217,23 +1217,10 @@ end
 function check_abilities(spell, spellMap, eventArgs)
 
 	if spell.action_type == 'Ability' then
-		if spell.english == 'Seigan' then
-			if buffactive['Seigan'] and windower.ffxi.get_ability_recasts()[133] < latency then
+		if spell.english == "Seigan" and buffactive['Seigan'] then
+			if windower.ffxi.get_ability_recasts()[133] < latency then
 				eventArgs.cancel = true
 				windower.chat.input('/ja "Third Eye" <me>')
-				return true
-			end
-		elseif spell.type == 'Step' then
-			if player.status == 'Idle' and windower.ffxi.get_ability_recasts()[220] and spell.target and spell.target.valid_target and spell.target.spawn_type == 16 and spell.target.distance < (3.2 + player.target.model_size) and player.tp > 99 then
-				packets.inject(packets.new('outgoing', 0x1a, {
-					['Target'] = spell.target.id,
-					['Target Index'] = spell.target.index,
-					['Category']     = 0x02,
-				}))
-
-				if state.IdleStep.value then
-					send_command:schedule(1,'input /attack off')
-				end
 				return true
 			end
 		elseif data.abilities.white_stratagems:contains(spell.english) then
@@ -1241,27 +1228,24 @@ function check_abilities(spell, spellMap, eventArgs)
 				windower.chat.input('/ja "'..data.abilities.white_to_black_stratagems[spell.english]..'" <me>')
 				eventArgs.cancel = true
 				return true
-			elseif spell.english == 'Light Arts' then
-				if state.Buff['Light Arts'] then
-					eventArgs.cancel = true
-					windower.chat.input('/ja "Addendum: White" <me>')
-					return true
-				end
+			elseif spell.english == "Light Arts" and state.Buff['Light Arts'] then
+				eventArgs.cancel = true
+				windower.chat.input('/ja "Addendum: White" <me>')
+				return true
 			end
 		elseif data.abilities.black_stratagems:contains(spell.english) then
 			if state.Buff['Light Arts'] or state.Buff['Addendum: White'] then
 				windower.chat.input('/ja "'..data.abilities.black_to_white_stratagems[spell.english]..'" <me>')
 				eventArgs.cancel = true
 				return true
-			elseif spell.english == 'Dark Arts' then
-				if state.Buff['Dark Arts'] then
-					eventArgs.cancel = true
-					windower.chat.input('/ja "Addendum: Black" <me>')
-					return true
-				end
+			elseif spell.english == "Dark Arts" and state.Buff['Dark Arts'] then
+				eventArgs.cancel = true
+				windower.chat.input('/ja "Addendum: Black" <me>')
+				return true
 			end
 		end
 	end
+
 	return false
 end
 
@@ -1391,25 +1375,7 @@ function check_cleanup()
 			if player.inventory['Riftborn Boulder'] then send_command('put "Riftborn Boulder" sack all') moveditem = true end
 			if player.inventory['Boulder Case'] then send_command('put "Boulder Case" sack all') moveditem = true end
 			if player.inventory['Boulder Box'] then send_command('put "Boulder Box" sack all') moveditem = true end
-			if player.inventory['Kindred\'s Crest'] then send_command('put "Kindred\'s Crest" sack all') moveditem = true end
-			if player.inventory['Kindred\'s Seal'] then send_command('put "Kindred\'s Seal" sack all') moveditem = true end
-			if player.inventory['Beastmen\'s Seal'] then send_command('put "Beastmen\'s Seal" sack all') moveditem = true end
-			if player.inventory['H. Kindred Crest'] then send_command('put "H. Kindred Crest" sack all') moveditem = true end
-			if player.inventory['S. Kindred Crest'] then send_command('put "S. Kindred Crest" sack all') moveditem = true end
-			if player.inventory['Heroism Crystal'] then send_command('put "Heroism Crystal" sack all') moveditem = true end
-			if player.inventory['Heroism Aggregate'] then send_command('put "Heroism Aggregate" sack all') moveditem = true end
-			if player.inventory['S. Astral Detritus'] then send_command('put "S. Astral Detritus" sack all') moveditem = true end
-			if player.inventory['M. Astral Detritus'] then send_command('put "M. Astral Detritus" sack all') moveditem = true end
-			if player.inventory['Copper Voucher'] then send_command('put "Copper Voucher" sack all') moveditem = true end
-			if player.inventory['Rusted I. Card'] then send_command('put "Rusted I. Card" sack all') moveditem = true end
-			if player.inventory['Black. I. Card'] then send_command('put "Black. I. Card" sack all') moveditem = true end
-			if player.inventory['Old I. Card'] then send_command('put "Old I. Card" sack all') moveditem = true end
-			if player.inventory['Beastmen\'s Medal'] then send_command('put "Beastmen\'s Medal" sack all') moveditem = true end
-			if player.inventory['Kindred\'s Medal'] then send_command('put "Kindred\'s Medal" sack all') moveditem = true end
-			if player.inventory['Demon\'s Medal'] then send_command('put "Demon\'s Medal" sack all') moveditem = true end
-			if player.inventory['Etched Memory'] then send_command('put "Etched Memory" sack all') moveditem = true end
-
-		end 
+		end
 		
 		if not state.Capacity.value then
 			if player.inventory['Mecisto. Mantle'] then send_command('put "Mecisto. Mantle" satchel') moveditem = true end
@@ -2226,7 +2192,7 @@ end
 
 function check_rune()
 
-	if state.AutoRuneMode.value and (player.main_job == 'RUN' or player.sub_job == 'RUN') and not data.areas.cities:contains(world.area) then
+	if state.AutoRuneMode.value and (player.main_job == 'RUN' or player.sub_job == 'RUN') then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
 		if player.main_job == 'RUN' and (not buffactive[state.RuneElement.value] or buffactive[state.RuneElement.value] < 3) then
@@ -2429,7 +2395,6 @@ windower.raw_register_event('outgoing chunk',function(id,data,modified,is_inject
 			if state.RngHelper.value and not buffactive['Hover Shot'] then
 				send_command('gs rh clear')
 			end
-
 			if buffup~= '' then
 				buffup = ''
 				add_to_chat(123,'Buffup cancelled due to movement.')

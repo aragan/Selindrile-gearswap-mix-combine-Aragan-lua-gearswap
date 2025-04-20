@@ -119,12 +119,11 @@ function init_include()
 	state.SelectNPCTargets    = M(false, 'Select NPC Targets')
 	state.Capacity 			  = M(false, 'Capacity Mode')
 	state.ReEquip 			  = M(false, 'ReEquip Mode')
-	state.AutoArts	 		  = M(true, 'AutoArts Mode')
+	state.AutoArts	 		  = M(false, 'AutoArts Mode')
 	state.AutoLockstyle	 	  = M(true, 'AutoLockstyle Mode')
 	state.AutoTrustMode 	  = M(false, 'Auto Trust Mode')
 	state.RngHelper		 	  = M(false, 'RngHelper')
 	state.HoverShot		 	  = M(true, 'HoverShot')
-	state.IdleStep			  = M(true, 'Idle Step Mode')
 	state.RngHelperQuickDraw  = M(false, 'RngHelperQuickDraw')
 	state.AutoTankMode 		  = M(false, 'Auto Tank Mode')
 	state.AutoAcceptRaiseMode = M(false, 'Auto Accept Raise Mode')
@@ -137,11 +136,11 @@ function init_include()
 	state.AutoWSMode		  = M(false, 'Auto Weaponskill Mode')
 	state.AutoWSRestore		  = M(false, 'Auto Weaponskill Restore Mode')
 	state.AutoFoodMode		  = M(false, 'Auto Food Mode')
-	state.AutoSubMode 		  = M(true, 'Auto Sublimation Mode')
-	state.AutoCleanupMode  	  = M(true, 'Auto Cleanup Mode')
+	state.AutoSubMode 		  = M(false, 'Auto Sublimation Mode')
+	state.AutoCleanupMode  	  = M(false, 'Auto Cleanup Mode')
 	state.AutoSuperJumpMode   = M(false, 'Auto SuperJump Mode')
 	state.DisplayMode  	  	  = M(true, 'Display Mode')
-	state.UseCustomTimers 	  = M(true, 'Use Custom Timers')
+	state.UseCustomTimers 	  = M(false, 'Use Custom Timers')
 	state.CancelStoneskin	  = M(true, 'Auto Cancel Stoneskin')
 	state.BlockMidaction	  = M(false, 'Block Midaction')
 	state.MaintainAftermath	  = M(true, 'Maintain Aftermath')
@@ -154,13 +153,8 @@ function init_include()
 	state.SelfWarp2Block 	  = M(false, 'Block Warp2 on Self')
 	state.MiniQueue		 	  = M(true, 'MiniQueue')
 	state.PWUnlock		 	  = M(false, 'PWUnlock')
-	state.WeaponSets	  	  = M{['description'] = 'Weapon Sets','None'}
-
 	state.AutoEquipBurst      = M(true)
-	state.AutoMedicineMode    = M(true, 'Auto Medicine Mode')
-	state.AutoReraiseeMode    = M(true, 'Auto autoReraise Mode')
-    state.HippoMode           = M(false, "HippoMode")
-	state.AutoCureMode        = M(true, 'Auto Cure Mode')
+	state.AutoMedicineMode    = M(false, 'Auto Medicine Mode')
 
 
 	state.AutoBuffMode 		  = M{['description'] = 'Auto Buff Mode','Off','Auto'}
@@ -176,16 +170,7 @@ function init_include()
 	state.CombatForm          = M{['description']='Combat Form', ['string']=''}
 	
 	
-	state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
-	'haste', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
-	state.Rollset = M{['description']='Rollset','None', 'melee', 'magic','dynamis','aminon','exp','tp','speed','acc','ws',
-	'pet','petnuke',}
-	state.Etude = M{['description']='Etude',  'Herculean Etude', 'Sage Etude', 'Sinewy Etude', 'Learned Etude',
-	'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
-	'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
-	
-	state.Avatars = M{['description']='Avatars', "Ifrit", "Ramuh", "Titan", "Siren", "Garuda", "Diabolos", "Carbuncle", "Fenrir", "Leviathan", "Shiva", "Odin", "Alexander", "Cait Sith"}
-	
+
 	NotifyBuffs = S{}
 	
 	if data.jobs.mage_jobs:contains(player.main_job) then
@@ -204,11 +189,10 @@ function init_include()
 	state.Buff['Dark Arts'] = buffactive['Dark Arts'] or false
 	state.Buff['Addendum: Black'] = buffactive['Addendum: Black'] or false
 	state.Buff['Accession'] = buffactive['Accession'] or false
-	state.Buff['Perpetuance'] = buffactive['Perpetuance'] or false
 	state.Buff['Manifestation'] = buffactive['Manifestation'] or false
 	state.Buff['Warcry'] = buffactive['Warcry'] or false
 	state.Buff['SJ Restriction'] = buffactive['SJ Restriction'] or false
-
+	
     -- Classes describe a 'type' of action.  They are similar to state, but
     -- may have any free-form value, or describe an entire table of mapped values.
     classes = {}
@@ -270,10 +254,6 @@ function init_include()
 	delayed_cast = ''
 	delayed_target = ''
 	equipped = 0
-	default_dual_weapons = 'DualWeapons'
-	default_weapons = ''
-	last_weapons = nil
-	weapon_sets = {}
 	
 	time_test = false
 	selindrile_warned = false
@@ -616,15 +596,8 @@ end
 -- Non item-based global settings to check on load.
 function global_on_load()
 	if world.area then
-		if windower.packets.last_outgoing(0x100) and windower.packets.last_incoming(0x0AC) then
-			if windower.packets.last_outgoing(0x100) > windower.packets.last_incoming(0x0AC) then
-				set_dual_wield:schedule(5)
-			else
-				set_dual_wield()
-			end
-		else
-			set_dual_wield:schedule(5)
-		end		
+		set_dual_wield:schedule(3)
+		
 		if world.area:contains('Abyssea') or data.areas.proc:contains(world.area) then
 			state.SkipProcWeapons:set('False')
 		else
@@ -1176,15 +1149,10 @@ end
 function default_post_midcast(spell, spellMap, eventArgs)
 
 	if not eventArgs.handled then
-
-		if spell.action_type == 'Magic' then
-			if is_nuke(spell, spellMap) and state.CastingMode.value ~= 'Proc' then
-				if not job_post_midcast and state.MagicBurstMode.value ~= 'Off' and sets.MagicBurst then
-					equip(sets.MagicBurst)
-				end
-				set_elemental_obi_cape_ring(spell, spellMap)
-			end
+		if not job_post_midcast and is_nuke(spell, spellMap) and state.MagicBurstMode.value ~= 'Off' and sets.MagicBurst then
+			equip(sets.MagicBurst)
 		end
+
 		if spell.target.type == 'SELF' and spellMap then
 			if spellMap:contains('Cure') then
 				if curecheat then
@@ -2156,13 +2124,9 @@ end
 -- @param baseSet : The gear set that the kiting gear will be applied on top of.
 function apply_kiting(baseSet)
 	if sets.Kiting and (state.Kiting.value or (player.status == 'Idle' and moving and state.DefenseMode.value == 'None')) then
-
 		baseSet = set_combine(baseSet, sets.Kiting)
-	    
 	end
-	if state.HippoMode.value then 
-		baseSet = set_combine(baseSet, {feet="Hippo. Socks +1"})
-	end
+	
 	if user_customize_kiting_set then
 		baseSet = user_customize_kiting_set(baseSet)
     end

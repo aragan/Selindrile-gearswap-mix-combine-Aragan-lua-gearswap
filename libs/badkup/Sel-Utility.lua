@@ -821,7 +821,7 @@ function can_use(spell)
             or data.spells.unbridled:contains(spell.english)) and
             not (player.sub_job_id == 16 and table.contains(windower.ffxi.get_sjob_data().spells,spell.id)) then
             -- This code isn't hurting anything, but it doesn't need to be here either.
-            --add_to_chat(123,"Abort: You haven't set ["..(res.spells[spell.id][language] or spell.id).."].")
+            add_to_chat(123,"Abort: You haven't set ["..(res.spells[spell.id][language] or spell.id).."].")
             return false
         end
     elseif category == 7 or category == 9 then
@@ -1391,25 +1391,7 @@ function check_cleanup()
 			if player.inventory['Riftborn Boulder'] then send_command('put "Riftborn Boulder" sack all') moveditem = true end
 			if player.inventory['Boulder Case'] then send_command('put "Boulder Case" sack all') moveditem = true end
 			if player.inventory['Boulder Box'] then send_command('put "Boulder Box" sack all') moveditem = true end
-			if player.inventory['Kindred\'s Crest'] then send_command('put "Kindred\'s Crest" sack all') moveditem = true end
-			if player.inventory['Kindred\'s Seal'] then send_command('put "Kindred\'s Seal" sack all') moveditem = true end
-			if player.inventory['Beastmen\'s Seal'] then send_command('put "Beastmen\'s Seal" sack all') moveditem = true end
-			if player.inventory['H. Kindred Crest'] then send_command('put "H. Kindred Crest" sack all') moveditem = true end
-			if player.inventory['S. Kindred Crest'] then send_command('put "S. Kindred Crest" sack all') moveditem = true end
-			if player.inventory['Heroism Crystal'] then send_command('put "Heroism Crystal" sack all') moveditem = true end
-			if player.inventory['Heroism Aggregate'] then send_command('put "Heroism Aggregate" sack all') moveditem = true end
-			if player.inventory['S. Astral Detritus'] then send_command('put "S. Astral Detritus" sack all') moveditem = true end
-			if player.inventory['M. Astral Detritus'] then send_command('put "M. Astral Detritus" sack all') moveditem = true end
-			if player.inventory['Copper Voucher'] then send_command('put "Copper Voucher" sack all') moveditem = true end
-			if player.inventory['Rusted I. Card'] then send_command('put "Rusted I. Card" sack all') moveditem = true end
-			if player.inventory['Black. I. Card'] then send_command('put "Black. I. Card" sack all') moveditem = true end
-			if player.inventory['Old I. Card'] then send_command('put "Old I. Card" sack all') moveditem = true end
-			if player.inventory['Beastmen\'s Medal'] then send_command('put "Beastmen\'s Medal" sack all') moveditem = true end
-			if player.inventory['Kindred\'s Medal'] then send_command('put "Kindred\'s Medal" sack all') moveditem = true end
-			if player.inventory['Demon\'s Medal'] then send_command('put "Demon\'s Medal" sack all') moveditem = true end
-			if player.inventory['Etched Memory'] then send_command('put "Etched Memory" sack all') moveditem = true end
-
-		end 
+		end
 		
 		if not state.Capacity.value then
 			if player.inventory['Mecisto. Mantle'] then send_command('put "Mecisto. Mantle" satchel') moveditem = true end
@@ -2429,7 +2411,6 @@ windower.raw_register_event('outgoing chunk',function(id,data,modified,is_inject
 			if state.RngHelper.value and not buffactive['Hover Shot'] then
 				send_command('gs rh clear')
 			end
-
 			if buffup~= '' then
 				buffup = ''
 				add_to_chat(123,'Buffup cancelled due to movement.')

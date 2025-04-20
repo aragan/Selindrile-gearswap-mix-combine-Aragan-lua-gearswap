@@ -180,7 +180,7 @@ function update_job_states()
 		AutoSongMode = "Auto Song",
 		AutoJumpMode = "Auto Jump",
 		AutoSuperJumpMode = "Auto SuperJump",
-		--AutoWSMode = "Auto WS: "..autows..": "..autowstp.."",
+		AutoWSMode = "Auto WS: "..autows..": "..autowstp.."",
 		AutoShadowMode = "Auto Shadows",
 		AutoFoodMode = "Auto Food: "..autofood.."",
 		RngHelper = "RngHelper",
@@ -192,9 +192,9 @@ function update_job_states()
 		DrainSwapWeaponMode = "Drain Swap",
 		AutoRuneMode = "Auto Rune: "..state.RuneElement.value.."",
 		AutoSambaMode = "Auto Samba: "..state.AutoSambaMode.value.."",
-		PhysicalDefenseMode = "Physical Def.",
-		MagicalDefenseMode = "Magical Def.",
-		ResistDefenseMode = "Resist Def.",
+		PhysicalDefenseMode = "Physical Defense",
+		MagicalDefenseMode = "Magical Defense",
+		ResistDefenseMode = "Resist Defense",
 		RuneElement = "Rune Element",
 		AutoReadyMode = "Auto Ready",
 		AutoPuppetMode = "Auto Puppet",
@@ -204,14 +204,12 @@ function update_job_states()
 		DanceStance = "DanceStance",
 		Stance = "Stance",
 		PWUnlock = "PWUnlock",
-		--AutoWSMode = "Auto WS: "..autows..": "..autowstp.."",
-		Crafting = "Crafting",
 
+		Crafting = "Crafting",
 		HippoMode = "HippoMode",
 		SrodaBelt = "SrodaBelt",
 		SrodaNecklace = "SrodaNecklace",
 		StormSurge = "StormSurge",
-		Etude = "Etude: "..state.Etude.value.."",
 		Songset = "Songset: "..state.Songset.value.."",
 		Rollset = "Rollset: "..state.Rollset.value.."",
 		Avatars = "Avatars: "..state.Avatars.value.."",
@@ -219,11 +217,6 @@ function update_job_states()
 		SleepMode = "SleepMode",
 		ShieldMode = "ShieldMode",
 		AutoMedicineMode = "AutoMedicine",
-		AutoReraiseeMode  = "AutoReraisee",
-
-		ConquerorMode = "Conqueror Mode",
-		BuffWeaponsMode = "Buff Weapons",
-
     }
 
     stateBox:clear()
@@ -236,29 +229,9 @@ function update_job_states()
         if state[n].index then
 			if n == 'AutoWSMode' and state.AutoWSMode.value then
 				if state.RngHelper.value then
-					if state.MaintainAftermath.value then
-						if data.equipment.mythic_weapons:contains(player.equipment.range) then
-							stateBox:append(string.format("%sAuto WS: "..rangedautows..": AM3+"..rangedautowstp.."%s", clr.h, clr.n))
-						elseif data.equipment.relic_weapons:contains(player.equipment.range) then
-							stateBox:append(string.format("%sAuto WS: "..rangedautows..": AM+"..rangedautowstp.."%s", clr.h, clr.n))
-						else
-							stateBox:append(string.format("%sAuto WS: "..rangedautows..": "..rangedautowstp.."%s", clr.h, clr.n))
-						end
-					else
-						stateBox:append(string.format("%sAuto WS: "..rangedautows..": "..rangedautowstp.."%s", clr.h, clr.n))
-					end
+					stateBox:append(string.format("%sAuto WS: "..rangedautows..": "..rangedautowstp.."%s", clr.h, clr.n))
 				else
-					if state.MaintainAftermath.value then
-						if data.equipment.mythic_weapons:contains(player.equipment.main) then
-							stateBox:append(string.format("%sAuto WS: "..autows..": AM3+"..autowstp.."%s", clr.h, clr.n))
-						elseif data.equipment.relic_weapons:contains(player.equipment.main) then
-							stateBox:append(string.format("%sAuto WS: "..autows..": AM+"..autowstp.."%s", clr.h, clr.n))
-						else
-							stateBox:append(string.format("%sAuto WS: "..autows..": "..autowstp.."%s", clr.h, clr.n))
-						end
-					else
-						stateBox:append(string.format("%sAuto WS: "..autows..": "..autowstp.."%s", clr.h, clr.n))
-					end
+					stateBox:append(string.format("%sAuto WS: "..autows..": "..autowstp.."%s", clr.h, clr.n))
 				end
 				stateBox:append(spc)
 			elseif n == 'AutoDefenseMode' then
@@ -408,18 +381,6 @@ function update_job_states()
 		elseif n == 'ExtraSongsMode' then
 			if state.ExtraSongsMode.value ~= "None" then
 				stateBox:append(string.format("%sSongs: %s%s    ", clr.w, clr.h, state.ExtraSongsMode.value))
-			end
-		elseif n == 'Rollset' then
-			if state.Rollset.value then
-				stateBox:append(string.format("%sRollset: %s%s    ", clr.w, clr.h, state.Rollset.value))
-			end
-		elseif n == 'Songset' then
-			if state.Songset.value then
-				stateBox:append(string.format("%sSongset: %s%s    ", clr.w, clr.h, state.Songset.value))
-			end
-		elseif n == 'Etude' then
-			if state.Etude.value then
-				stateBox:append(string.format("%sEtude: %s%s    ", clr.w, clr.h, state.Etude.value))
 			end
 		elseif n == 'DanceStance' then
 			if state.DanceStance.value ~= "None" then
