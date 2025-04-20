@@ -95,7 +95,10 @@ buff_spell_lists = {
 		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
 		--{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
 	},
-	
+	Sortie = {	--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+	{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
+	{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
+},
 	Default = {
 		--{Name='Myoshu: Ichi',Buff='Subtle Blow Plus',SpellID=507,Reapply=false},
 		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,Reapply=false},
@@ -141,6 +144,17 @@ end
 function job_filtered_action(spell, eventArgs)
 
 
+end
+function job_filter_pretarget(spell, spellMap, eventArgs)
+
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+
+	if spellMap == 'ElementalNinjutsu' and not buffactive.Futae and abil_recasts[148] < latency then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+		cast_delay(1.1)
+		windower.chat.input('/ja "Futae" <me>')
+		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		tickdelay = os.clock() + 1.1
+	end
 end
 
 function job_pretarget(spell, spellMap, eventArgs)
@@ -870,7 +884,7 @@ function check_buffup()
 end
 
 
-windower.register_event('incoming text',function(org,spell)     
+windower.register_event('incoming text',function(org)     
 
 	--abyssea stagger --red pros
 	if string.find(org, "The fiend is frozen in its tracks.") then
@@ -955,5 +969,26 @@ windower.register_event('incoming text',function(org,spell)
 	end
 	if string.find(org, "Blast of Reticence") then
 		windower.send_command('input //gs c set ElementalMode Ice')
+	end
+
+	
+	if string.find(org, "Aita readies Vivisection") then
+		state.MagicalDefenseMode:set('MDT')
+		windower.send_command('input /p Aita uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Degei readies Vivisection") then
+		state.MagicalDefenseMode:set('MDT')
+
+		windower.send_command('input /p Degei uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Triboulex readies Setting the Stage") then
+		state.MagicalDefenseMode:set('MDT')
+
+		windower.send_command('input /p Triboulex uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Skomora readies Setting the Stage") then
+		state.MagicalDefenseMode:set('MDT')
+
+		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
 	end
 end)

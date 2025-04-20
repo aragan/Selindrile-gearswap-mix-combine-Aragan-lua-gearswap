@@ -894,7 +894,29 @@ attack staggers the fiend!
 		windower.send_command('input /p Stagger! <call14>!')  -- code add by (Aragan@Asura)
 		send_command('input //gs c set CastingMode Normal;')
 	end
+	if string.find(org, "Aita readies Vivisection") then
+		windower.chat.input('/ja "Mana Wall" <me>')
+		state.MagicalDefenseMode:set('MDT')
+		windower.send_command('input /p Aita uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Degei readies Vivisection") then
+		windower.chat.input('/ja "Mana Wall" <me>')
+		state.MagicalDefenseMode:set('MDT')
 
+		windower.send_command('input /p Degei uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Triboulex readies Setting the Stage") then
+		windower.chat.input('/ja "Mana Wall" <me>')
+		state.MagicalDefenseMode:set('MDT')
+
+		windower.send_command('input /p Triboulex uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Skomora readies Setting the Stage") then
+		windower.chat.input('/ja "Mana Wall" <me>')
+		state.MagicalDefenseMode:set('MDT')
+
+		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+	end
 	if string.find(org, "The fiend appears vulnerable to ice elemental magic!") then
 		windower.send_command('input //gs c set ElementalMode Ice')
 	end

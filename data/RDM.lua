@@ -427,7 +427,16 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
         send_command('@timers c "Bind ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00258.png')
     end
     --add_to_chat(1, 'Base: ' ..base.. ' Merits: ' ..self.merits.enfeebling_magic_duration.. ' Job Points: ' ..self.job_points.rdm.stymie_effect.. ' Set Bonus: ' ..empy_mult)
-
+	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or blue_magic_maps.Healing:contains(spell.english) or spell.skill == 'Enhancing Magic') and spell.interrupted then
+		state.CastingMode:set('SIRD')
+		--send_command('gs c set state.CastingMode.value SIRD')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+		state.CastingMode:set('Duration')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+    end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)

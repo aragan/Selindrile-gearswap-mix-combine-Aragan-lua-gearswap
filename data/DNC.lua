@@ -125,6 +125,8 @@ function job_setup()
 
 	state.AutoPrestoMode = M(true, 'Auto Presto Mode')
 	state.DanceStance = M{['description']='Dance Stance','None','Saber Dance','Fan Dance'}
+	state.RefineWaltz		  = M(false, 'RefineWaltz')
+	state.AutoCureMode = M(true, 'Auto Cure Mode')
 
 
 	autows = "Rudra's Storm"
@@ -160,22 +162,7 @@ function job_filtered_action(spell, eventArgs)
 
 end
 function job_filtered_pretarget(spell, action, spellMap, eventArgs)
-    if spell.type == 'Step' then
-        local allRecasts = windower.ffxi.get_ability_recasts()
-        local prestoCooldown = allRecasts[236]
-        local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
 
-        --local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
-        
-        if player.main_job_level >= 77 and prestoCooldown < 1 and under3FMs then
-            cast_delay(1.1)
-            send_command('@input /ja "Presto" <me>')
-
-        end
-        if not midaction() then
-            job_update()
-        end
-    end
 end
 -- Automatically use Presto for steps when it's available and we have less than 3 finishing moves
 function job_pretarget(spell, action, spellMap, eventArgs)
@@ -232,16 +219,6 @@ function job_precast(spell, spellMap, eventArgs)
 			tickdelay = os.clock() + 1.25
 			return
 		end
-    elseif spell.type == 'Step' and player.main_job_level >= 77 and state.AutoPrestoMode.value and player.tp > 99 and player.status == 'Engaged' and under3FMs() then
-        local abil_recasts = windower.ffxi.get_ability_recasts()
-
-        if abil_recasts[236] < latency and abil_recasts[220] < latency then
-            eventArgs.cancel = true
-			windower.chat.input('/ja "Presto" <me>')
-			windower.chat.input:schedule(1.1,'/ja "'..spell.english..'" '..spell.target.raw..'')
-			send_command('input /p "'..spell.english..'" '..spell.target.raw..'')
-
-        end
     end
 end
 function job_filter_precast(spell, spellMap, eventArgs)
@@ -363,8 +340,68 @@ end
 -- gain == true if the buff was gained, false if it was lost.
 function job_buff_change(buff,gain)
 	update_melee_groups()
-end
 
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
+    if player.tp > 200 and abil_recasts[215] < latency and (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
+	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
+	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
+	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
+	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
+	        windower.send_command('input /ja Healing Waltz <me>')
+	        tickdelay = os.clock() + 1.1
+
+		
+		return
+	end
+end
+function user_status_change(newStatus, oldStatus, eventArgs)
+	
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
+	if state.AutoCureMode.value then
+		--[[if player.tp > 350 and player.max_hp - player.hp > 600 and abil_recasts[186] < latency then
+			windower.send_command('input /ja Curing Waltz II <me>')
+			]]
+	    if player.tp > 500 and player.max_hp - player.hp > 1000 and abil_recasts[187] < latency then
+			windower.send_command('input /ja Curing Waltz III <me>')
+			tickdelay = os.clock() + 1.1
+	
+		end
+	end
+    if player.sub_job == 'WAR' and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
+		windower.chat.input('/ja "Defender" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+
+
+		--[[if being_attacked and player.hpp < 85 and abil_recasts[242] < latency then 
+			windower.chat.input('/ma "White Wind" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif being_attacked and player.hpp < 85 and spell_recasts[593] < spell_latency then 
+			windower.chat.input('/ma "Magic Fruit" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif being_attacked and player.hpp < 85 and spell_recasts[578] < spell_latency then 
+			windower.chat.input('/ma "Wild Carrot" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif being_attacked and player.hpp < 85 and spell_recasts[711] < spell_latency then 
+			windower.chat.input('/ma "Restoral" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif being_attacked and player.hpp < 85 and spell_recasts[645] < spell_latency then 
+			windower.chat.input('/ma "Exuviation" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif being_attacked and player.hpp < 85 and spell_recasts[658] < spell_latency then 
+			windower.chat.input('/ma "Plenilune Embrace" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif player.sub_job == 'SCH' and player.hpp < 85  and being_attacked and spell_recasts[4] < spell_latency then 
+			windower.chat.input('/ma "Cure IV" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end]]
+	end
+end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
 -------------------------------------------------------------------------------------------------------------------
@@ -460,6 +497,8 @@ function job_self_command(commandArgs, eventArgs)
 end
 
 function job_tick()
+	if job_buff_change() then return true end
+	if user_status_change() then return true end
 	if check_dance() then return true end
 	if check_buff() then return true end
 	return false

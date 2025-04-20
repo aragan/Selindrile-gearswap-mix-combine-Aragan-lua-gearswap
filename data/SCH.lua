@@ -162,14 +162,14 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 
-	if party.count ~= 1 and (spell.english == 'Regen V' or spell.english == 'Phalanx'or spell.english == 'Stoneskin') and  get_current_stratagem_count() > 1 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+	if not buffactive["Dark Arts"] and party.count ~= 1 and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and (spell.english == 'Regen V' or spell.english == 'Phalanx'or spell.english == 'Stoneskin') and  get_current_stratagem_count() > 1 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
 		cast_delay(2.1)
 		windower.chat.input('/ja "Accession" <me>')
 		windower.chat.input:schedule(1.1,'/ja "Perpetuance" <me>')
 		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
 		tickdelay = os.clock() + 1.1
 
-	elseif party.count ~= 1 and spell.english == 'Haste' and not buffactive['Perpetuance'] and get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+	elseif not buffactive["Dark Arts"] and party.count ~= 1 and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and spell.english == 'Haste' and not buffactive['Perpetuance'] and get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
 		cast_delay(1.1)
 		windower.chat.input('/ja "Perpetuance" <me>')
 		tickdelay = os.clock() + 1.1
@@ -466,6 +466,16 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
         send_command('wait 210;input /p <t> [Tabula Rasa just wore off!];')
         send_command('@wait 1;@input /p  >>> Tabula Rasa  minute left: 3.30')
 	end
+	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or blue_magic_maps.Healing:contains(spell.english) or spell.skill == 'Enhancing Magic') and spell.interrupted then
+		state.CastingMode:set('SIRD')
+		--send_command('gs c set state.CastingMode.value SIRD')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+		state.CastingMode:set('Duration')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+    end
 end
 function job_aftercast(spell, spellMap, eventArgs)
     if not spell.interrupted then
@@ -1620,7 +1630,7 @@ end
 -- Gets the current number of available stratagems based on the recast remaining
 -- and the level of the sch.
 function job_tick()
-	if check_arts() then return true end
+	--if check_arts() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
 	return false

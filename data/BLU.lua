@@ -107,7 +107,8 @@ function job_setup()
 	state.AutoEquipBurst = M(true)
     state.MagicBurst = M(false, 'Magic Burst')
     state.HippoMode = M(false, "hippoMode")
-	
+	state.AutoCureMode = M(true, 'Auto Cure Mode')
+
 	state.LearningMode = M(false, 'Learning Mode')
 	state.AutoUnbridled = M(true, 'Auto Unbridled Mode')
 	autows = 'Chant Du Cygne'
@@ -539,6 +540,18 @@ function job_post_midcast(spell, spellMap, eventArgs)
     end
 end
 
+function job_filter_aftercast(spell, spellMap, eventArgs)
+	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or blue_magic_maps.Healing:contains(spell.english) or spell.skill == 'Enhancing Magic') and spell.interrupted then
+		state.CastingMode:set('SIRD')
+		--send_command('gs c set state.CastingMode.value SIRD')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+		state.CastingMode:set('Duration')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+    end
+end
 function job_aftercast(spell, spellMap, eventArgs)
 
         if state.MagicBurstMode.value == 'Single' then
@@ -606,7 +619,10 @@ function job_customize_idle_set(idleSet)
 	end
 	if state.HippoMode.value == true then 
 		idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
-	end
+	end	
+	
+
+
 	handle_equipping_gear(player.status)
 
 	return idleSet
@@ -620,6 +636,60 @@ function job_update(cmdParams, eventArgs)
 
 end
 
+function user_status_change(newStatus, oldStatus, eventArgs)
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
+    if (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
+	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
+	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
+	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
+	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
+	        windower.send_command('input /ma "Winds of Promy." <me>')
+	        tickdelay = os.clock() + 3.1
+
+		
+		return
+	end
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+	--local player = windower.ffxi.get_player()
+
+	if state.AutoCureMode.value then
+		if player.hpp < 75 and being_attacked and spell_recasts[690] < spell_latency then 
+			windower.chat.input('/ma "White Wind" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif player.hpp < 75 and being_attacked and spell_recasts[593] < spell_latency then 
+			windower.chat.input('/ma "Magic Fruit" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif player.hpp < 75 and being_attacked and spell_recasts[578] < spell_latency then 
+			windower.chat.input('/ma "Wild Carrot" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif player.hpp < 75 and being_attacked and spell_recasts[711] < spell_latency then 
+			windower.chat.input('/ma "Restoral" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif player.hpp < 75 and being_attacked and spell_recasts[645] < spell_latency then 
+			windower.chat.input('/ma "Exuviation" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif player.hpp < 75 and being_attacked and spell_recasts[658] < spell_latency then 
+			windower.chat.input('/ma "Plenilune Embrace" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif player.hpp < 75 and being_attacked and player.sub_job == 'SCH' and spell_recasts[4] < spell_latency then 
+			windower.chat.input('/ma "Cure IV" <me>')
+			tickdelay = os.clock() + 1.1
+		elseif player.sub_job == 'WAR' and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
+			windower.chat.input('/ja "Defender" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+	
+		end
+	end
+
+end
+-- Handle notifications of general user state change.
+function job_state_change(stateField, newValue, oldValue)
+	handle_equipping_gear(player.status)
+end
 function update_combat_form()
     if DW == true then
         state.CombatForm:set('DW')
@@ -627,12 +697,6 @@ function update_combat_form()
         state.CombatForm:reset()
     end
 end
--- Handle notifications of general user state change.
-function job_state_change(stateField, newValue, oldValue)
-	handle_equipping_gear(player.status)
-
-end
-	
 function determine_haste_group()
     classes.CustomMeleeGroups:clear()
     if DW == true then
@@ -649,28 +713,6 @@ function determine_haste_group()
         end
     end
 end
-function job_self_command(commandArgs, eventArgs)
-	gearinfo(commandArgs, eventArgs)
-
-    if commandArgs[1]:lower() == 'curecheat' then
-		if sets.HPDown then
-			equip(sets.HPDown)
-			send_command('@wait 1;input /ma "Magic Fruit" <me>')
-		else
-			add_to_chat(123,"You don't have a sets.HPDown to cheat with.")
-		end
-		eventArgs.handled = true
-	end
-	if commandArgs[1]:lower() == 'elemental' then
-		handle_elemental(commandArgs)
-		eventArgs.handled = true			
-	end
-	if commandArgs[1]:lower() == 'spellset' then
-        send_command('@input //aset set "'..state.Spellset.value..'"')
-	end
-end
-
-
 function gearinfo(commandArgs, eventArgs)
     if commandArgs[1] == 'gearinfo' then
         if type(tonumber(commandArgs[2])) == 'number' then
@@ -699,6 +741,30 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
 	update_combat_form()
 end
 
+function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
+
+    if commandArgs[1]:lower() == 'curecheat' then
+		if sets.HPDown then
+			equip(sets.HPDown)
+			send_command('@wait 1;input /ma "Magic Fruit" <me>')
+		else
+			add_to_chat(123,"You don't have a sets.HPDown to cheat with.")
+		end
+		eventArgs.handled = true
+	end
+	if commandArgs[1]:lower() == 'elemental' then
+		handle_elemental(commandArgs)
+		eventArgs.handled = true			
+	end
+	if commandArgs[1]:lower() == 'spellset' then
+        send_command('@input //aset set "'..state.Spellset.value..'"')
+	end
+end
+
+
+
+
 function unbridled_ready()
 	if state.Buff['Unbridled Learning'] or state.Buff['Unbridled Wisdom'] or windower.ffxi.get_ability_recasts()[81] < latency then
 		return true
@@ -708,6 +774,7 @@ function unbridled_ready()
 end
 
 function job_tick()
+	if user_status_change() then return true end
 	if check_arts() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
@@ -828,7 +895,7 @@ function handle_elemental(cmdParams)
 		local tierlist = {['tier1']='',['tier2']=' II',['tier3']=' III'}
 		
 		windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..tierlist[command]..'" '..target..'')
-		
+
 	elseif command:contains('aga') or command == 'aja' then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		local tierkey = {'aga2','aga1'}
@@ -1024,7 +1091,7 @@ buff_spell_lists = {
 	},
 	
 	Default = {
-		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
+		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		Reapply=false},
 		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	Reapply=false},
 		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	Reapply=false},
 		{Name='Refresh',			Buff='Refresh',			SpellID=109,	Reapply=false},
@@ -1039,7 +1106,8 @@ buff_spell_lists = {
 	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 	{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
 	{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
-	{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		Reapply=false},
+	{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+	{Name='Cocoon',             Buff='Cocoon',          SpellID=547,    When='Always'},
 
     },
 	melee = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat

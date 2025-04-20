@@ -101,6 +101,11 @@ function job_setup()
 
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Sentinel = buffactive.Sentinel or false
+    state.Buff.Rampart = buffactive.Rampart or false
+    state.Buff.Palisade = buffactive.Palisade or false
+	state.Buff['Invincible'] = buffactive.Invincible or false
+
+	
     state.Buff.Cover = buffactive.Cover or false
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.HippoMode = M(false, "hippoMode")
@@ -108,6 +113,7 @@ function job_setup()
     state.SrodaBelt = M(false, 'SrodaBelt')
     state.MagicBurst = M(false, 'Magic Burst')
     state.AutoEquipBurst = M(true)
+    state.AutoCureMode = M(true, 'Auto Cure Mode')
 
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 
@@ -138,6 +144,8 @@ end
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 
+
+
 function job_filtered_action(spell, eventArgs)
 	if spell.type == 'WeaponSkill' then
 		local available_ws = S(windower.ffxi.get_abilities().weapon_skills)
@@ -158,7 +166,7 @@ function job_filtered_action(spell, eventArgs)
             end
         end
     end
-	
+
 end
 
 function job_filter_pretarget(spell, spellMap, eventArgs)
@@ -171,8 +179,7 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
 		send_command('@input /echo <recast=Stratagems>')
 		send_command('@input /p <recast=Stratagems>')
-	
-	
+		tickdelay = os.clock() + 1.1
 	end
 	
 	if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
@@ -181,15 +188,23 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
 		send_command('@input /echo <recast=Stratagems>')
 		send_command('@input /p <recast=Stratagems>')
+		tickdelay = os.clock() + 1.1
 		if not midaction() then
 			job_update()
 		end
 	end
-	if (party.count ~= 1 and spellMap == 'Cure') or spellMap == 'Protect' and abil_recasts[150] < latency then
+
+	if not buffactive.Majesty and (party.count ~= 1 and spellMap == 'Cure') or spellMap == 'Protect' and  abil_recasts[150] < latency then
+
 		cast_delay(1.1)
 		windower.chat.input('/ja "Majesty" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+	else
+		return false 
 
 	end
+
 end
 function job_pretarget(spell, spellMap, eventArgs)
 
@@ -274,6 +289,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 	if state.WeaponSkillMode.value == 'Enmity' then
 		equip(sets.precast.WS.Enmity)
 	end
+
 end
 
 function job_post_midcast(spell, spellMap, eventArgs)
@@ -288,9 +304,23 @@ function job_post_midcast(spell, spellMap, eventArgs)
 	if state.CastingMode.value == 'Enmity' then
 		equip(sets.Enmity.SIRD)
 	end
-end
 
+
+end
+function job_filter_aftercast(spell, spellMap, eventArgs)
+	if (player.in_combat or being_attacked) and spellMap == 'Cure' and spell.interrupted then
+		state.CastingMode:set('SIRD')
+		--send_command('gs c set state.CastingMode.value SIRD')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+	elseif not (player.in_combat or being_attacked) then
+		state.CastingMode:set('Duration')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+    end
+end
 function job_aftercast(spell, spellMap, eventArgs)
+
     -- Lock feet after using Mana Wall.
     if not spell.interrupted then
 		if spell.english:lower():contains('step') then
@@ -320,6 +350,7 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
 	if state.HippoMode.value == true then 
         equip({feet="Hippo. Socks +1"})
     end
+
     check_weaponset()
 end
 function job_buff_change(buff, gain)
@@ -433,10 +464,51 @@ function job_state_change(stateField, newValue, oldValue)
     else
         enable('main','sub')
     end
+
     check_weaponset()
 
 end
+function user_status_change(newStatus, oldStatus, eventArgs)
+   local abil_recasts = windower.ffxi.get_ability_recasts()
 
+    if (player.in_combat or being_attacked) and not buffactive.Sentinel and player.hpp < 25 and abil_recasts[75] < latency then
+		windower.chat.input('/ja "Sentinel" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+
+	elseif not buffactive.Invincible and (player.in_combat or being_attacked) and  player.hpp < 25 and abil_recasts[0] < latency then
+		windower.chat.input('/ja "Invincible" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+
+	elseif player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
+		windower.chat.input('/ja "Defender" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+
+	elseif (player.in_combat or being_attacked) and not buffactive.Rampart and player.hpp < 42 and abil_recasts[77] < latency then
+		windower.chat.input('/ja "Rampart" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+
+	elseif (player.in_combat or being_attacked) and not buffactive.Palisade and player.hpp < 42 and abil_recasts[42] < latency then
+		windower.chat.input('/ja "Palisade" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+
+	end
+	if state.AutoCureMode.value then
+	    local spell_recasts = windower.ffxi.get_spell_recasts()
+		if being_attacked and player.hpp < 85 and spell_recasts[4] < spell_latency then 
+			windower.chat.input('/ma "Cure IV" <me>')
+			tickdelay = os.clock() + 1.1
+		end
+	end
+	if not midaction() then
+		job_update()
+	end
+
+end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
 -------------------------------------------------------------------------------------------------------------------
@@ -613,10 +685,10 @@ end
 -- Called by the 'update' self-command, for common needs.
 -- Set eventArgs.handled to true if we don't want automatic equipping of gear.
 function job_update(cmdParams, eventArgs)
+	--job_aftercast()
     update_defense_mode()
 	update_melee_groups()
 	check_weaponset()
-
     if state.RuneElement.value == 'Ignis' then
 		RuneResist = "Ice"
 		RuneDamage = 'Fire'
@@ -646,6 +718,7 @@ function job_update(cmdParams, eventArgs)
 	if player.sub_job ~= 'SAM' and state.Stance.value ~= "None" then
 		state.Stance:set("None")
 	end	
+
 end
 
 -- Modify the default idle set after it was constructed.
@@ -668,6 +741,7 @@ function job_customize_idle_set(idleSet)
     else
         enable('neck')
     end
+
     check_weaponset()
 
     return idleSet
@@ -764,6 +838,7 @@ function update_defense_mode()
 end
 
 function job_tick()
+	if user_status_change() then return true end
 	if check_arts() then return true end
 	if check_majesty() then return true end
 	if check_hasso() then return true end
@@ -941,12 +1016,12 @@ buff_spell_lists = {
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
 		--{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
+		{Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
 	},
 	Reprisal = {	
 		{Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
 		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
 		{Name='Haste',Buff='Haste',SpellID=57,When='Always'},
-
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
 		{Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
@@ -967,6 +1042,7 @@ buff_spell_lists = {
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
 		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
+		{Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
 	},
 	Default = {
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,Reapply=false},

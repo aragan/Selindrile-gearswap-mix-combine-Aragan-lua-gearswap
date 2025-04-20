@@ -562,6 +562,10 @@ function check_buff()
 			windower.chat.input('/ja "Mighty Strikes" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
+		elseif not buffactive['Brazen Rush'] and abil_recasts[254] < latency then
+			windower.chat.input('/ja "Brazen Rush" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
 		end
 	end
 	if state.AutoBuffMode.value == 'Defend' and player.in_combat then
@@ -572,7 +576,7 @@ function check_buff()
 			send_command('@wait .5;cancel Berserk')
 			tickdelay = os.clock() + 1.1
 			return true
-		elseif not buffactive.Restraint and abil_recasts[3] < latency then
+		elseif not buffactive.Defender and abil_recasts[3] < latency then
 			windower.chat.input('/ja "Defender" <me>')
 			tickdelay = os.clock() + 1.1
 			return true

@@ -322,9 +322,34 @@ function job_tick()
 	if check_buff() then return true end
 	return false
 end
-
+-- Handle notifications of general user state change.
+function job_state_change(stateField, newValue, oldValue)
+    if state.WeaponLock.value == true then
+        disable('main','sub')
+    else
+        enable('main','sub')
+    end
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	if (player.in_combat or being_attacked) and player.hpp < 41 and abil_recasts[254] < latency then
+		windower.chat.input('/ja "Inner Strength" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+	elseif (player.in_combat or being_attacked) and player.hpp < 40 and abil_recasts[15] < latency then
+		windower.chat.input('/ja "Chakra" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+	elseif player.sub_job == 'WAR' and (player.in_combat or being_attacked) and player.hpp < 25 and moving and not buffactive.Defender and abil_recasts[3] < latency then
+		windower.chat.input('/ja "Defender" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+	elseif (player.in_combat or being_attacked) and player.hpp < 42 and moving and abil_recasts[19] < latency then
+		windower.chat.input('/ja "Mantra" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+	end
+end
 function check_buff()
-	if state.AutoBuffMode.value ~= 'Off' and player.in_combat then
+	if state.AutoBuffMode.value == 'Auto' and player.in_combat then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 
 		if player.hpp < 51 and abil_recasts[15] < latency then
@@ -337,6 +362,14 @@ function check_buff()
 			return true
 		elseif not (buffactive.Aggressor or buffactive.Focus) and abil_recasts[13] < latency then
 			windower.chat.input('/ja "Focus" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Footwork and abil_recasts[21] < latency then
+			windower.chat.input('/ja "Footwork" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Dodge and abil_recasts[14] < latency then
+			windower.chat.input('/ja "Dodge" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
 		elseif player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] then
@@ -358,6 +391,80 @@ function check_buff()
 		end
 	end
 
+	if state.AutoBuffMode.value == 'Full' and player.in_combat then
+
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+		if player.hpp < 51 and abil_recasts[15] < latency then
+			windower.chat.input('/ja "Chakra" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif player.hpp < 52 and abil_recasts[19] < latency then
+			windower.chat.input('/ja "Mantra" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Impetus and abil_recasts[31] < latency then
+			windower.chat.input('/ja "Impetus" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not (buffactive.Aggressor or buffactive.Focus) and abil_recasts[13] < latency then
+			windower.chat.input('/ja "Focus" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Footwork and abil_recasts[21] < latency then
+			windower.chat.input('/ja "Footwork" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Dodge and abil_recasts[14] < latency then
+			windower.chat.input('/ja "Dodge" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif player.sub_job == 'WAR' and buffactive.Defender then
+			send_command('@wait .5;cancel Defender')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif player.sub_job == 'WAR' and not buffactive.Berserk and abil_recasts[1] < latency then
+			windower.chat.input('/ja "Berserk" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif player.sub_job == 'WAR' and not buffactive.Aggressor and abil_recasts[4] < latency then
+			windower.chat.input('/ja "Aggressor" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+			windower.chat.input('/ja "Warcry" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive['Hundred Fists'] and abil_recasts[254] < latency then
+			windower.chat.input('/ja "Hundred Fists" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		end
+	end
+	if state.AutoBuffMode.value == 'Defend' and player.in_combat then
+
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+		if player.sub_job == 'WAR' and buffactive.Berserk then
+			send_command('@wait .5;cancel Berserk')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Defender and abil_recasts[3] < latency then
+			windower.chat.input('/ja "Defender" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Dodge and abil_recasts[14] < latency then
+			windower.chat.input('/ja "Dodge" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif not buffactive.Warcry and abil_recasts[2] < latency then
+			windower.chat.input('/ja "Warcry" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		else
+			return false
+		end
+	end
 	return false
 end
 
@@ -376,3 +483,12 @@ function update_melee_groups()
         classes.CustomMeleeGroups:append('HF')
     end
 end
+
+buff_spell_lists = {
+	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+	},
+	
+	Defend = {
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	Reapply=false},
+	},}

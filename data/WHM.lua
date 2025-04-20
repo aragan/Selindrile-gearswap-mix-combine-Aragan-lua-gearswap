@@ -384,6 +384,16 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
 			if state.DisplayMode.value then update_job_states()	end
         end
     end
+	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or blue_magic_maps.Healing:contains(spell.english) or spell.skill == 'Enhancing Magic') and spell.interrupted then
+		state.CastingMode:set('SIRD')
+		--send_command('gs c set state.CastingMode.value SIRD')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+		state.CastingMode:set('Duration')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+    end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
@@ -696,7 +706,7 @@ function check_buff()
 		
 		if player.sub_job == 'SCH' then
 
-			if not buffactive[data.elements.storm_of[state.ElementalMode.value]] and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value])) < player.mp then
+			if not buffactive[data.elements.storm_of[state.ElementalMode.value]] and actual_cost(get_spell_table_by_name(data.elements.storm_of[state.ElementalMode.value])) < player.mp then
 				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
 				tickdelay = os.clock() + 1.1
 				return true
@@ -782,8 +792,9 @@ end
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},
+		{Name='Shellra V',		Buff='Shell',		SpellID=134,	When='Always'},
+		{Name='Protectra V',	Buff='Protect',		SpellID=129,	When='Always'},
 		{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
-		{Name='Refresh',		Buff='Refresh',		SpellID=109,	When='Always'},
 		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Always'},
 	},
 	Fullbuff = {
