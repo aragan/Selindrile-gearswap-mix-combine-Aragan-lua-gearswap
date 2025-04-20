@@ -1147,7 +1147,8 @@ function user_job_lockstyle()
         end
 	elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         if res.items[item_name_to_id(player.equipment.sub)].skill == 3 then --Sword/Sword.
-            windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 151')
+        end
     else
         windower.chat.input('/lockstyleset 151')
     end
