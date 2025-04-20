@@ -1123,7 +1123,19 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	sets.precast.JA['Bestial Loyalty'].SultryPatrice = set_combine(sets.precast.JA['Bestial Loyalty'], {ammo="Putrescent Broth"})
 end
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 147')
+    if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 151')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+        windower.chat.input('/lockstyleset 164')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
+        windower.chat.input('/lockstyleset 172')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
+        windower.chat.input('/lockstyleset 149')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
+        windower.chat.input('/lockstyleset 165')
+    else
+        windower.chat.input('/lockstyleset 151') --Catchall
+    end
 end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()

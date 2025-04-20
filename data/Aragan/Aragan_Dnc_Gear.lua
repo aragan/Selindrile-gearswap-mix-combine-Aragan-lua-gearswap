@@ -8,6 +8,16 @@
 --[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
 to can play smooth and easy and i play with main gameped controller logitech and 
 keyboard binds and chat 
+
+ Costs:
+            Curing Waltz:     200 TP
+            Curing Waltz II:  350 TP
+            Curing Waltz III: 500 TP
+            Curing Waltz IV:  650 TP
+            Curing Waltz V:   800 TP
+            Divine Waltz:     400 TP
+            Divine Waltz II:  800 TP
+
 ]]
 
 
@@ -103,14 +113,14 @@ function init_gear_sets()
     
     -- Precast sets to enhance JAs
 
-    sets.precast.JA['No Foot Rise'] = {body="Horos Casaque +1"} 
+    sets.precast.JA['No Foot Rise'] = {body="Horos Casaque +3"} 
 
-    sets.precast.JA['Trance'] = {head="Horos Tiara +2"}
+    sets.precast.JA['Trance'] = {head="Horos Tiara +3"}
     
 
     -- Waltz set (chr and vit)
     sets.precast.Waltz = {  ammo="Yamarang",
-    head={ name="Horos Tiara +2", augments={'Enhances "Trance" effect',}},
+    head={ name="Horos Tiara +3", augments={'Enhances "Trance" effect',}},
     body="Maxixi Casaque +3",
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     legs="Dashing Subligar",
@@ -124,7 +134,7 @@ function init_gear_sets()
     back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 }
 		
-	sets.Self_Waltz = {head={ name="Horos Tiara +2", augments={'Enhances "Trance" effect',}},
+	sets.Self_Waltz = {head={ name="Horos Tiara +3", augments={'Enhances "Trance" effect',}},
     body="Passion Jacket"}
         
     -- Don't need any special gear for Healing Waltz.
@@ -133,7 +143,7 @@ function init_gear_sets()
     sets.precast.Samba = {head="Maxixi Tiara +3",back="Senuna's Mantle"}
 
     sets.precast.Jig = {
-    legs="Horos Tights",
+    legs="Horos Tights +3",
     feet="Maxixi Toe Shoes +3",}
 
     sets.precast.Step = {  ammo="C. Palug Stone",
@@ -1314,7 +1324,19 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 164')
+    if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 151')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+        windower.chat.input('/lockstyleset 164')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
+        windower.chat.input('/lockstyleset 172')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
+        windower.chat.input('/lockstyleset 149')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
+        windower.chat.input('/lockstyleset 165')
+    else
+        windower.chat.input('/lockstyleset 151') --Catchall
+    end
 end
 
 

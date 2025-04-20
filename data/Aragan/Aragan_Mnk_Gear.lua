@@ -20,6 +20,7 @@ function user_job_setup()
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options('DT','Normal', 'PDT', 'HP', 'Evasion', 'MDT', 'Regen', 'EnemyCritRate')
 	state.Weapons:options('None','Godhands','Karambit','Club','Staff','ProcStaff','ProcClub','ProcSword','ProcGreatSword','ProcScythe','ProcPolearm','ProcGreatKatana')
+	state.AutoBuffMode:options('Off','Auto','Full','Defend') --,'Vagary','Off','Off','Off','Off',
 
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None'}
 
@@ -555,7 +556,7 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
         waist="Plat. Mog. Belt",
         right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
         left_ear="Tuisto Earring",
-        right_ring="Defending Ring",
+        right_ring="Ilabrat Ring",
         left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
@@ -802,8 +803,8 @@ sets.engaged.SubtleBlow.Counter = set_combine(sets.engaged, {
 })
 	-- Hundred Fists/Impetus melee set mods
 	
-	sets.engaged.HF = set_combine(sets.engaged, {})
-	sets.engaged.Acc.HF = set_combine(sets.engaged.Acc, {})
+	sets.engaged.HF = set_combine(sets.engaged, {body="Bhikku Cyclas +2"})
+	sets.engaged.Acc.HF = set_combine(sets.engaged.Acc, {body="Bhikku Cyclas +2"})
     
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
 	sets.buff.Sleep = {head="Frenzy Sallet"}
@@ -822,7 +823,19 @@ sets.engaged.SubtleBlow.Counter = set_combine(sets.engaged, {
 
 end
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 159')
+    if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 151')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+        windower.chat.input('/lockstyleset 164')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
+        windower.chat.input('/lockstyleset 172')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
+        windower.chat.input('/lockstyleset 149')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
+        windower.chat.input('/lockstyleset 165')
+    else
+        windower.chat.input('/lockstyleset 159') --Catchall
+    end
 end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()

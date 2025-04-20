@@ -57,6 +57,7 @@ function user_job_setup()
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('Heishi','None','Tauret','Naegling','Hachimonji','Zanmato','CLUB','Staff','H2H','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None','Resist','SuppaBrutal','DWEarrings','DWMax'}
+	state.AutoBuffMode:options('Off','Auto','Sortie') --,'Off','Off','Off','Off','Off',
 
 	gear.wsd_jse_back = {}
 	gear.da_jse_back = {}    
@@ -1591,11 +1592,15 @@ function user_job_lockstyle()
     if world.area:contains("Abyssea") then
         windower.chat.input('/lockstyleset 1')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 152')
+        windower.chat.input('/lockstyleset 151')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
-        windower.chat.input('/lockstyleset 144')
+        windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
         windower.chat.input('/lockstyleset 172')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
+        windower.chat.input('/lockstyleset 149')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
+        windower.chat.input('/lockstyleset 165')
     else
         windower.chat.input('/lockstyleset 144') --Catchall
     end

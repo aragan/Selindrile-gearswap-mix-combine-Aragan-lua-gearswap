@@ -78,7 +78,7 @@ state.DisplayMode = M(true, 'Display Mode') --Set this to false if you don't wan
 
 --Options for automation.
 state.ReEquip 		  		= M(true, 'ReEquip Mode')		 --Set this to false if you don't want to equip your current Weapon set when you aren't wearing any weapons.
-state.AutoArts 		  		= M(true, 'AutoArts') 		 --Set this to false if you don't want to automatically try to keep up Solace/Arts.
+state.AutoArts 		  		= M(false, 'AutoArts') 		 --Set this to false if you don't want to automatically try to keep up Solace/Arts.
 state.AutoLockstyle	 	    = M(true, 'AutoLockstyle Mode') --Set this to false if you don't want gearswap to automatically lockstyle on load and weapon change.
 state.CancelStoneskin 		= M(true, 'Cancel Stone Skin') --Set this to false if you don't want to automatically cancel stoneskin when you're slept.
 state.SkipProcWeapons 		= M(true, 'Skip Proc Weapons') --Set this to false if you want to display weapon sets fulltime rather than just Aby/Voidwatch.
@@ -111,6 +111,9 @@ state.NM = M(false, 'NM')
 state.SleepMode = M{['description']='Sleep Mode', 'Normal', 'MaxDuration'}
 state.AutoMedicineMode = M(false, 'Auto Medicine Mode')
 state.AutoReraiseeMode = M(false, 'Auto Reraise Mode')
+state.AutoCureMode = M(true, 'Auto Cure Mode')
+state.NeverDieMode = M(true, 'Never Die Mode')
+
 --state.ShieldMode:options('Normal','Genmei','Ammurapi')
 
 --auto equip to PDL ws set is higher than this value .. this value for all job and u can add any value in any job lua . (Aragan@Asura)
@@ -167,7 +170,7 @@ handle_killstatue
 
 //gs c useitem head Reraise Hairpin +1
 //gs c useitem ring2 warp ring
-
+(Aragan) Treasure Hunter set Equip
 (Aragan) HPboost set gear Equiped ready 
 send_command('input /p Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
 
@@ -180,7 +183,7 @@ function global_on_load()
 	send_command('bind ^f9 gs c cycle HybridMode')
 	send_command('bind !f9 gs c cycle RangedMode')
 	send_command('bind f4 gs c cycle ElementalMode')
-	send_command('bind f5 gs c cycle WeaponskillMode')
+	send_command('bind !f5 gs c cycle WeaponskillMode')
 	--send_command('bind f10 gs c set DefenseMode Physical')
 	--send_command('bind ^f10 gs c cycle PhysicalDefenseMode')
 	send_command('bind !f10 gs c toggle Kiting')
@@ -217,7 +220,7 @@ function global_on_load()
 	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f3 gs c toggle AutoTankMode')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
-	send_command('bind !f5 gs c toggle AutoWSMode')
+	send_command('bind f5 gs c toggle AutoWSMode')
 	send_command('bind @f1 gs c toggle AutoEngageMode')
 	send_command('bind @f2 gs c toggle AutoBuffMode')
 	send_command('bind @f3 gs c toggle AutoTrustMode')
@@ -240,7 +243,7 @@ function global_on_load()
 	send_command('bind ^3 gs c cycle RuneElement') -- cycle RuneElement
 
 	send_command('bind ^f1 gs c toggle AutoStunMode')
-	send_command('bind !6 gs c toggle SubJobEnmity')
+	--send_command('bind !6 gs c toggle SubJobEnmity')
 	send_command('bind ^f3 gs c cycle SkillchainMode')
 	send_command('bind @1 gs c toggle AutoCleanupMode') --Uses certain items and tries to clean up inventory.
 	send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
@@ -272,7 +275,7 @@ function global_on_load()
 	--send_command('bind @m gs c mount Raptor')
 
 	--send_command('input //gs org')-- org addon every change job
-	send_command('wait 1;input //put * wardrobe4 all;wait .3;put storage slip* case all;wait .5;input //gs org')-- org addon every change job
+	send_command('wait 1;input //put * wardrobe4 all;wait .3;put storage slip* case all;wait .5;input //lua r AutoWS;input //gs org')-- org addon every change job
 
 end
 -- Function to revert binds when unloading.
@@ -382,39 +385,8 @@ bayld_items = {'Tlalpoloani','Macoquetza','Camatlatia','Icoyoca','Tlamini','Suij
 -------------------------------------------------------------------------------------------------------------------
 -- Global event-handling functions.
 -------------------------------------------------------------------------------------------------------------------
-function job_pretarget(spell, action, spellMap, eventArgs)
-	if spell.type == 'step' then
-        local allRecasts = windower.ffxi.get_ability_recasts()
-        local prestoCooldown = allRecasts[236]
-        local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
 
-        --local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
-        
-        if player.main_job_level >= 77 and prestoCooldown < 1 and under3FMs then
-            cast_delay(1.1)
-            send_command('@input /ja "Presto" <me>')
-        end
-        if not midaction() then
-            job_update()
-        end
-    end
-	    if spell.type == 'Step' then
-        local allRecasts = windower.ffxi.get_ability_recasts()
-        local prestoCooldown = allRecasts[236]
-        local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
-
-        --local under3FMs = not buffactive['Finishing Move 3'] and not buffactive['Finishing Move 4'] and not buffactive['Finishing Move 5']
-        
-        if player.main_job_level >= 77 and prestoCooldown < 1 and under3FMs then
-            cast_delay(1.1)
-            send_command('@input /ja "Presto" <me>')
-        end
-        if not midaction() then
-            job_update()
-        end
-    end
-end
-
+--[[ 
 function user_job_state_change(field, newVal, oldVal)
 	if field == 'ShieldMode' then
 		if newVal == 'Normal' then
@@ -424,6 +396,8 @@ function user_job_state_change(field, newVal, oldVal)
 		end
 	end
 end
+]]
+
 
 -- Global intercept on precast.
 function user_precast(spell, action, spellMap, eventArgs)
@@ -485,7 +459,7 @@ function job_aftercast(spell, spellMap, eventArgs)
 		end
 	end
 	-- < this mean low  
-	if spell.type == 'WeaponSkill' and not spell.interrupted then
+	if spell.type == 'WeaponSkill' then
 		if (spell.english == "Shell Crusher" or spell.english == "Armor Break") then
 			if player.tp == 3000 then  
 				send_command('timers c "Defense Down '..spell.name..' ['..spell.target.name..'] " 540 down')
@@ -532,6 +506,26 @@ function job_state_change(stateField, newValue, oldValue)
     elseif state.CraftQuality.value ~= 'Normal' then
 		equip(sets.crafting[state.CraftQuality.value])
 	end
+    if player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
+		windower.chat.input('/ja "Defender" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+	end
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+		--[[if player.tp > 350 and player.max_hp - player.hp > 600 and abil_recasts[186] < latency then
+			windower.send_command('input /ja Curing Waltz II <me>')
+			]]
+	    if player.sub_job == 'DNC' and not state.Buff['SJ Restriction'] and player.tp > 500 and player.max_hp - player.hp > 1000 and abil_recasts[187] < latency then
+			windower.send_command('input /ja Curing Waltz III <me>')
+			tickdelay = os.clock() + 1.1
+		elseif (player.sub_job == 'SCH' or player.sub_job == 'RDM' or player.sub_job == 'pld' or player.sub_job == 'WHM')
+		and not state.Buff['SJ Restriction'] and player.hpp < 25 and being_attacked and spell_recasts[4] < spell_latency then 
+			windower.chat.input('/ma "Cure IV" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		end
+	end
+
 end
 	
 
@@ -596,6 +590,9 @@ function job_customize_melee_set(meleeSet)
 		or player.main_job == 'PLD' or player.main_job == 'SAM' or player.main_job == 'WAR') then
         if player.hpp < 5 then --code add from Aragan Asura
         meleeSet = set_combine(meleeSet, sets.Reraise)
+		disable('head','body')
+        else
+        enable('head','body')
 	    end
 	end
     return meleeSet
@@ -603,6 +600,21 @@ end
 
 -- Global intercept on buff change.
 function user_buff_change(buff, gain, eventArgs)
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+		if player.sub_job == 'DNC' and not state.Buff['SJ Restriction'] and player.tp > 200 and abil_recasts[215] < latency and (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
+	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
+	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
+	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
+	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
+	        windower.send_command('input /ja Healing Waltz <me>')
+	        tickdelay = os.clock() + 1.1
+			return
+		end
+	end
+
 	if state.AutoReraiseeMode.value == true then
 		if buff == "weakness" then
 			if gain then
@@ -655,10 +667,6 @@ function user_buff_change(buff, gain, eventArgs)
 			if gain then  			
 				send_command('@input /item "panacea" <me>')
 			end
-		elseif buff == "Magic Def. Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
 		elseif buff == "Max HP Down" then
 			if gain then  			
 				send_command('@input /item "panacea" <me>')
@@ -667,7 +675,7 @@ function user_buff_change(buff, gain, eventArgs)
 			if gain then  			
 				send_command('@input /item "panacea" <me>')
 			end
-		elseif buff == "Magic Evasion Downn" then
+		elseif buff == "Magic Evasion Down" then
 			if gain then  			
 				send_command('@input /item "panacea" <me>')
 			end
@@ -870,7 +878,17 @@ function(new_hpp,old_hpp)
         end
     end
 end)
+windower.raw_register_event('incoming text',function(org)
+	if string.find(org, "You find a Volte Tights") or string.find(org, "You find a Volte Tiara") 
+	or string.find(org, "You find a Volte Boots") or string.find(org, "You find a Volte Hose") or string.find(org, "You find a Volte Bracers")
+	or string.find(org, "You find a Volte Moufles") or string.find(org, "You find a Volte Brayettes")
+	or string.find(org, "You find a Crepuscular Cloak")  then
+		local item_name = org:match("You find a (.+)")
 
+		windower.send_command('input /echo '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14>!')  -- code add by (Aragan@Asura)
+        windower.send_command('input /t '..player.name..' '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14> ' )
+	end
+end)
 function is_sc_element_today(spell)
     if spell.type ~= 'WeaponSkill' then
         return

@@ -1297,7 +1297,6 @@ sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.H
 })
 sets.engaged.Enspell.DT = set_combine(sets.engaged.Enspell, sets.engaged.Hybrid,{  
 	head="Umuthi Hat",
-    hands="Aya. Manopolas +2",
     waist="Orpheus's Sash",
 })
 

@@ -25,9 +25,9 @@ function user_job_setup()
 	state.OffenseMode:options('Normal','Acc', 'STP','DA100','CRIT')
 	state.HybridMode:options('Tank','Normal', 'DT','DTLite')
 	state.WeaponskillMode:options('Match','Acc','PDL')
-	state.CastingMode:options('SIRD','Normal')
+	state.CastingMode:options('Normal','SIRD')
 	state.PhysicalDefenseMode:options('PDT_HP','PDT','PDH', 'HP', 'Evasion', 'Enmity')
-	state.MagicalDefenseMode:options('MDT_HP','MDT','Resist','MEVA')
+	state.MagicalDefenseMode:options('MDT','MDT_HP','Resist','MEVA')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
 	state.Passive:options('None','AbsorbMP','EnemyCritRate','Regen','Refresh','Resist')
 	state.IdleMode:options('Tank','Normal','KiteTank', 'HP','PDH', 'PDT','Evasion', 'Resist','MEVA', 'Regen', 'Enmity') --,'Normal','Sphere'
@@ -48,13 +48,16 @@ function user_job_setup()
 
     --use //listbinds    .. to show command keys
     -- Additional local binds
-	send_command('bind !1 gs c SubJobEnmity')
-	send_command('bind f4 gs c cycle RuneElement')
+	--send_command('bind !1 gs c SubJobEnmity')
+	send_command('bind f4 gs c cycle ElementalMode;gs c cycle RuneElement')
+
+	--send_command('bind f4 gs c cycle RuneElement')
 	send_command('bind f3 gs c RuneElement')
-	send_command('bind f2 gs c toggle AutoRuneMode')
-	send_command('bind ^delete input /ja "Provoke" <stnpc>')
-	send_command('bind !delete input /ma "Cure IV" <stal>')
-	send_command('bind @delete input /ma "Flash" <stnpc>')
+	send_command('bind f2 gs c toggle AutoBuffMode')
+	send_command('bind f3 gs c toggle AutoRuneMode')
+	--send_command('bind ^delete input /ja "Provoke" <stnpc>')
+	--send_command('bind !delete input /ma "Cure IV" <stal>')
+	--send_command('bind @delete input /ma "Flash" <stnpc>')
 	send_command('bind ^\\\\ input /ma "Protect IV" <t>')
 	send_command('bind @\\\\ input /ma "Shell V" <t>')
 	send_command('bind !\\\\ input /ma "Crusade" <me>')
@@ -1368,10 +1371,18 @@ function check_trust()
 end
 
 function user_job_lockstyle()
-	if state.Weapons.value == 'Lionheart' then
-		windower.chat.input('/lockstyleset 165')
-	else
-		windower.chat.input('/lockstyleset 177')
-	end
+    if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 151')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+        windower.chat.input('/lockstyleset 164')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
+        windower.chat.input('/lockstyleset 172')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
+        windower.chat.input('/lockstyleset 149')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
+        windower.chat.input('/lockstyleset 165')
+    else
+        windower.chat.input('/lockstyleset 151') --Catchall
+    end
 end
 

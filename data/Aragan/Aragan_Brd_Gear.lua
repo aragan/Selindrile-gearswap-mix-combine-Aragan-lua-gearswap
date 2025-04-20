@@ -489,7 +489,7 @@ sets.precast.WS['Shattersoul'] = {
 
 	-- Gear to enhance certain classes of songs
 	sets.midcast.Ballad = {legs="Fili Rhingrave +2"}
-	sets.midcast.Lullaby = {range="Marsyas"}
+	sets.midcast.Lullaby = {range="Marsyas",hands="Brioso Cuffs +2"}
 	sets.midcast.Lullaby.Resistant = {range="Daurdabla"}
 	sets.midcast['Horde Lullaby'] = {range="Marsyas"}
 	sets.midcast['Horde Lullaby'].Resistant = {range="Daurdabla"}
@@ -1144,13 +1144,12 @@ function user_job_lockstyle()
     if player.equipment.sub:contains('Shield') then
         if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword/
         windower.chat.input('/lockstyleset 165')
-        else
-        windower.chat.input('/lockstyleset 165')
         end
-    elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 164')
+	elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        if res.items[item_name_to_id(player.equipment.sub)].skill == 3 then --Sword/Sword.
+            windower.chat.input('/lockstyleset 151')
     else
-        windower.chat.input('/lockstyleset 168')
+        windower.chat.input('/lockstyleset 151')
     end
 end
 

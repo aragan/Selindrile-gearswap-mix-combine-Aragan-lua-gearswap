@@ -49,7 +49,7 @@ function user_job_setup()
 
     send_command('bind f2 gs c cycle GainSpell')
     send_command('bind f3 gs c cycle BarElement')
-    send_command('bind !f4 gs c cycle BarStatus')
+    send_command('bind ^f4 gs c cycle BarStatus')
     send_command('bind @a gs c toggle NM')
     send_command('bind !s gs c cycle SleepMode')
 	send_command('bind @s gs c toggle SrodaNecklace')
@@ -1545,6 +1545,22 @@ function user_job_buff_change(buff, gain)
 end
 
 function user_job_lockstyle()
+	if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 151')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+        windower.chat.input('/lockstyleset 164')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
+        windower.chat.input('/lockstyleset 172')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
+        windower.chat.input('/lockstyleset 149')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
+        windower.chat.input('/lockstyleset 165')
+    else
+        windower.chat.input('/lockstyleset 151') --Catchall
+    end
+	
+	
+	--[[ 
 	if player.sub_job == 'NIN' or player.sub_job == 'DNC' then
 		if player.equipment.main == nil or player.equipment.main == 'empty' then
 			windower.chat.input('/lockstyleset 152')
@@ -1585,7 +1601,7 @@ function user_job_lockstyle()
 		windower.chat.input('/lockstyleset 152')
 	else
 		windower.chat.input('/lockstyleset 152')
-	end
+	end]]
 end
 
 autows_list = {['SWORDS']='Savage Blade',['Crocea']='Seraph Blade',['Club']='Black Halo',

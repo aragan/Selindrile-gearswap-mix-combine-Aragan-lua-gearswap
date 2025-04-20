@@ -1338,7 +1338,21 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
-	if player.equipment.main == nil or player.equipment.main == 'empty' then
+    if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
+        windower.chat.input('/lockstyleset 151')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+        windower.chat.input('/lockstyleset 164')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
+        windower.chat.input('/lockstyleset 172')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
+        windower.chat.input('/lockstyleset 149')
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
+        windower.chat.input('/lockstyleset 165')
+    else
+        windower.chat.input('/lockstyleset 151') --Catchall
+    end
+
+	--[[if player.equipment.main == nil or player.equipment.main == 'empty' then
 		windower.chat.input('/lockstyleset 151')
 	elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
 		if player.equipment.sub == nil or player.equipment.sub == 'empty' then --Sword/Nothing.
@@ -1362,7 +1376,7 @@ function user_job_lockstyle()
 		else
 			windower.chat.input('/lockstyleset 151') --Catchall just in case something's weird.
 		end
-	end
+	end]]
 end
 
 autows_list = {['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='Aeolian Edge',
