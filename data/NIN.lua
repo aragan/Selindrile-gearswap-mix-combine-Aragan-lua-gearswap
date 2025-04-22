@@ -88,7 +88,6 @@ function get_sets()
 
 end
 
-attack2 = 3500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
 
 buff_spell_lists = {
 	Auto = {	--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
@@ -106,6 +105,7 @@ buff_spell_lists = {
 }
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+    attack2 = 4000 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
 
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Migawari = buffactive.Migawari or false

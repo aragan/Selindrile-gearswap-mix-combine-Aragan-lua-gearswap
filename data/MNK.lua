@@ -182,6 +182,7 @@ end
 -- gain == true if the buff was gained, false if it was lost.
 function job_buff_change(buff, gain)
 	update_melee_groups()
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -319,6 +320,7 @@ function job_self_command(commandArgs, eventArgs)
 end
 
 function job_tick()
+	if user_status_change() then return true end
 	if check_buff() then return true end
 	return false
 end
@@ -329,25 +331,41 @@ function job_state_change(stateField, newValue, oldValue)
     else
         enable('main','sub')
     end
+
+end
+
+function user_status_change(newStatus, oldStatus, eventArgs)
+
 	local abil_recasts = windower.ffxi.get_ability_recasts()
-	if (player.in_combat or being_attacked) and player.hpp < 41 and abil_recasts[254] < latency then
-		windower.chat.input('/ja "Inner Strength" <me>')
-		tickdelay = os.clock() + 1.1
-		return true
-	elseif (player.in_combat or being_attacked) and player.hpp < 40 and abil_recasts[15] < latency then
-		windower.chat.input('/ja "Chakra" <me>')
-		tickdelay = os.clock() + 1.1
-		return true
-	elseif player.sub_job == 'WAR' and (player.in_combat or being_attacked) and player.hpp < 25 and moving and not buffactive.Defender and abil_recasts[3] < latency then
-		windower.chat.input('/ja "Defender" <me>')
-		tickdelay = os.clock() + 1.1
-		return true
-	elseif (player.in_combat or being_attacked) and player.hpp < 42 and moving and abil_recasts[19] < latency then
-		windower.chat.input('/ja "Mantra" <me>')
-		tickdelay = os.clock() + 1.1
-		return true
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+	--local player = windower.ffxi.get_player()
+	
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+		if (buffactive['poison'] or buffactive['Taint'] or buffactive['Blind'] 
+			or buffactive['paralysis'] or buffactive['disease'] or buffactive['plague']) and abil_recasts[15] < latency then		
+			windower.send_command('input /ja "Chakra" <me>')
+			tickdelay = os.clock() + 1.1
+			return
+		end
+	end
+	
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+		if player.hpp < 50 and being_attacked and abil_recasts[19] < latency then 
+			windower.chat.input('/ja "Mantra" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif (player.in_combat or being_attacked) and player.hpp < 40 and abil_recasts[15] < latency then
+			windower.chat.input('/ja "Chakra" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif (player.in_combat or being_attacked) and player.hpp < 41 and abil_recasts[254] < latency then
+			windower.chat.input('/ja "Inner Strength" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		end
 	end
 end
+
 function check_buff()
 	if state.AutoBuffMode.value == 'Auto' and player.in_combat then
 		local abil_recasts = windower.ffxi.get_ability_recasts()

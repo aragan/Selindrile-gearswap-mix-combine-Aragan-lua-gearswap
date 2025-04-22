@@ -617,8 +617,8 @@ function handle_elemental(cmdParams)
 	elseif command == 'enspell' then
 		windower.chat.input('/ma "En'..data.elements.enspell_of[state.ElementalMode.value]..'" <me>')
 		return
-	elseif command == 'barelement' then
-		windower.chat.input('/ma "'..data.elements.BarElement_of[state.ElementalMode.value]..'" <me>')
+	elseif command == 'bar2element' then
+		windower.chat.input('/ma "'..data.elements.Bar2Element_of[state.ElementalMode.value]..'" <me>')
 		return
 	--Leave out target, let shortcuts auto-determine it.
 	elseif command == 'weather' then
@@ -626,9 +626,6 @@ function handle_elemental(cmdParams)
 			windower.chat.input('/ma "Phalanx" <me>')
 		else
 			local spell_recasts = windower.ffxi.get_spell_recasts()
-			if (player.target.type == 'SELF' or not player.target.in_party) and buffactive[data.elements.storm_of[state.ElementalMode.value]] and not buffactive['Klimaform'] and spell_recasts[287] < spell_latency then
-				windower.chat.input('/ma "Klimaform" <me>')
-			else
 				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
 			end
 		end

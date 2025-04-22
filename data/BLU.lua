@@ -551,15 +551,43 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
 		send_command('gs c update')
 		tickdelay = os.clock() + 1.1
     end
+	if not spell.interrupted then
+        if spell.english == "Dream Flower" then
+            send_command('@timers c "Dream Flower ['..spell.target.name..']" 90 down spells/00098.png')
+			send_command('@input /p "Dream Flower Sleep ['..spell.target.name..']" 90 sec')
+
+		elseif spell.english == "Soporific" then
+            send_command('@timers c "Sleep ['..spell.target.name..']" 90 down spells/00259.png')
+			send_command('@input /p "Soporific Sleep ['..spell.target.name..']" 90 sec')
+
+		elseif spell.english == "Sheep Song" then
+            send_command('@timers c "Sheep Song ['..spell.target.name..']" 60 down spells/00098.png')
+			send_command('@input /p "Sheep Song Sleep ['..spell.target.name..']" 60 sec')
+
+		elseif spell.english == "Yawn" then
+            send_command('@timers c "Yawn ['..spell.target.name..']" 60 down spells/00098.png')
+			send_command('@input /p "Yawn Sleep ['..spell.target.name..']" 60 sec')
+
+		elseif spell.english == "Entomb" then
+            send_command('@timers c "Entomb ['..spell.target.name..']" 60 down spells/00547.png')
+			send_command('@input /p "Entomb Petrify ['..spell.target.name..']" 60 sec')
+
+		elseif spell.english == "Tenebral Crush" then
+            send_command('@timers c "Tenebral Crush ['..spell.target.name..']" 90 down spells/00259.png')
+			send_command('@input /p "Tenebral Crush Def. Down -20%. on ['..spell.target.name..']" 90 sec')
+
+		end
+    end
 end
 function job_aftercast(spell, spellMap, eventArgs)
 
-        if state.MagicBurstMode.value == 'Single' then
-			if spell.skill == 'Elemental Magic' or (spell.skill == 'Blue Magic' and spellMap:contains('Magical')) then
-				state.MagicBurstMode:reset()
-				if state.DisplayMode.value then update_job_states()	end
-			end
+	if state.MagicBurstMode.value == 'Single' then
+		if spell.skill == 'Elemental Magic' or (spell.skill == 'Blue Magic' and spellMap:contains('Magical')) then
+			state.MagicBurstMode:reset()
+			if state.DisplayMode.value then update_job_states()	end
 		end
+	end
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -639,51 +667,20 @@ end
 function user_status_change(newStatus, oldStatus, eventArgs)
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
+	--local player = windower.ffxi.get_player()
 
     if (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
 	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
 	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
 	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
-	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
+	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) and spell_recasts[681] < spell_latency then		
 	        windower.send_command('input /ma "Winds of Promy." <me>')
-	        tickdelay = os.clock() + 3.1
+	        tickdelay = os.clock() + 1.1
 
 		
 		return
 	end
-	local abil_recasts = windower.ffxi.get_ability_recasts()
-	local spell_recasts = windower.ffxi.get_spell_recasts()
-	--local player = windower.ffxi.get_player()
 
-	if state.AutoCureMode.value then
-		if player.hpp < 75 and being_attacked and spell_recasts[690] < spell_latency then 
-			windower.chat.input('/ma "White Wind" <me>')
-			tickdelay = os.clock() + 1.1
-		elseif player.hpp < 75 and being_attacked and spell_recasts[593] < spell_latency then 
-			windower.chat.input('/ma "Magic Fruit" <me>')
-			tickdelay = os.clock() + 1.1
-		elseif player.hpp < 75 and being_attacked and spell_recasts[578] < spell_latency then 
-			windower.chat.input('/ma "Wild Carrot" <me>')
-			tickdelay = os.clock() + 1.1
-		elseif player.hpp < 75 and being_attacked and spell_recasts[711] < spell_latency then 
-			windower.chat.input('/ma "Restoral" <me>')
-			tickdelay = os.clock() + 1.1
-		elseif player.hpp < 75 and being_attacked and spell_recasts[645] < spell_latency then 
-			windower.chat.input('/ma "Exuviation" <me>')
-			tickdelay = os.clock() + 1.1
-		elseif player.hpp < 75 and being_attacked and spell_recasts[658] < spell_latency then 
-			windower.chat.input('/ma "Plenilune Embrace" <me>')
-			tickdelay = os.clock() + 1.1
-		elseif player.hpp < 75 and being_attacked and player.sub_job == 'SCH' and spell_recasts[4] < spell_latency then 
-			windower.chat.input('/ma "Cure IV" <me>')
-			tickdelay = os.clock() + 1.1
-		elseif player.sub_job == 'WAR' and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
-			windower.chat.input('/ja "Defender" <me>')
-			tickdelay = os.clock() + 1.1
-			return true
-	
-		end
-	end
 
 end
 -- Handle notifications of general user state change.
@@ -965,7 +962,16 @@ function check_buff()
 				end
 			end
 		end
-		
+		if player.sub_job == 'SCH' then
+
+			if not buffactive[data.elements.storm_of[state.ElementalMode.value]] and actual_cost(get_spell_table_by_name(data.elements.storm_of[state.ElementalMode.value])) < player.mp then
+				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
+				tickdelay = os.clock() + 1.1
+				return true
+			else
+				return false
+			end
+		end
 		if player.in_combat and player.sub_job == 'WAR' then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
 
@@ -1008,16 +1014,7 @@ function check_buff()
 			end
 		end
 		
-		if player.sub_job == 'SCH' then
 
-			if not buffactive[data.elements.storm_of[state.ElementalMode.value]] and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value])) < player.mp then
-				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
-				tickdelay = os.clock() + 1.1
-				return true
-			else
-				return false
-			end
-		end
 	else
 		return false
 	end

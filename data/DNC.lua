@@ -361,7 +361,7 @@ function user_status_change(newStatus, oldStatus, eventArgs)
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 
-	if state.AutoCureMode.value then
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
 		--[[if player.tp > 350 and player.max_hp - player.hp > 600 and abil_recasts[186] < latency then
 			windower.send_command('input /ja Curing Waltz II <me>')
 			]]
@@ -370,11 +370,7 @@ function user_status_change(newStatus, oldStatus, eventArgs)
 			tickdelay = os.clock() + 1.1
 	
 		end
-	end
-    if player.sub_job == 'WAR' and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
-		windower.chat.input('/ja "Defender" <me>')
-		tickdelay = os.clock() + 1.1
-		return true
+	
 
 
 		--[[if being_attacked and player.hpp < 85 and abil_recasts[242] < latency then 

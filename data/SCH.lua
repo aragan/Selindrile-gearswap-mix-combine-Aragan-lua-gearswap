@@ -168,7 +168,12 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 		windower.chat.input:schedule(1.1,'/ja "Perpetuance" <me>')
 		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
 		tickdelay = os.clock() + 1.1
-
+	elseif not buffactive["Dark Arts"] and party.count ~= 1 and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and (spell.english == 'Shell V' or spell.english == 'Protect V') and  get_current_stratagem_count() > 1 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+			cast_delay(2.1)
+			windower.chat.input('/ja "Accession" <me>')
+			windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+			tickdelay = os.clock() + 1.1
+	
 	elseif not buffactive["Dark Arts"] and party.count ~= 1 and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and spell.english == 'Haste' and not buffactive['Perpetuance'] and get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
 		cast_delay(1.1)
 		windower.chat.input('/ja "Perpetuance" <me>')
@@ -466,13 +471,13 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
         send_command('wait 210;input /p <t> [Tabula Rasa just wore off!];')
         send_command('@wait 1;@input /p  >>> Tabula Rasa  minute left: 3.30')
 	end
-	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or blue_magic_maps.Healing:contains(spell.english) or spell.skill == 'Enhancing Magic') and spell.interrupted then
+	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or spell.skill == 'Enhancing Magic') and spell.interrupted then
 		state.CastingMode:set('SIRD')
 		--send_command('gs c set state.CastingMode.value SIRD')
 		send_command('gs c update')
 		tickdelay = os.clock() + 1.1
 	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
-		state.CastingMode:set('Duration')
+		state.CastingMode:set('Normal')
 		send_command('gs c update')
 		tickdelay = os.clock() + 1.1
     end
@@ -1837,7 +1842,13 @@ end)
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-		{Name='Haste',		Buff='Haste',		SpellID=57,		When='Always'},
+	{Name='Reraise III',Buff='Reraise',		SpellID=113,	When='Always'},
+	{Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
+	{Name='Shell V',	Buff='Shell',		SpellID=52,	When='Always'},
+	{Name='Regen V',	Buff='Regen',		SpellID=108,	When='Always'},
+	{Name='Phalanx',	Buff='Phalanx',		SpellID=106,	When='Always'},
+
+	{Name='Haste',		Buff='Haste',		SpellID=57,		When='Always'},
 		{Name='Stoneskin',	Buff='Stoneskin',	SpellID=54,		When='Always'},
 		{Name='Klimaform',	Buff='Klimaform',	SpellID=287,	When='Combat'},
 	},

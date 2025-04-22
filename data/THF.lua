@@ -89,10 +89,12 @@ function get_sets()
         "Black Curry Bun",
         "Rolan. Daifuku",
         "Reraise Earring",}
+
 end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+    attack2 = 4000 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
 
     state.Buff['Sneak Attack'] = buffactive['Sneak Attack'] or false
     state.Buff['Trick Attack'] = buffactive['Trick Attack'] or false
@@ -301,6 +303,19 @@ function job_customize_melee_set(meleeSet)
     return meleeSet
 end
 
+function user_status_change(newStatus, oldStatus, eventArgs)
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+	--local player = windower.ffxi.get_player()
+
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+		if player.hpp < 25 and being_attacked and abil_recasts[0] < latency then 
+			windower.chat.input('/ja "Perfect Dodge" <me>')
+			tickdelay = os.clock() + 1.1
+		end
+	end
+
+end
 
 function job_self_command(commandArgs, eventArgs)
 	gearinfo(commandArgs, eventArgs)
@@ -353,6 +368,7 @@ function gearinfo(commandArgs, eventArgs)
     end
 end
 function job_tick()
+    if user_status_change() then return true end
 	if check_buff() then return true end
 	return false
 end

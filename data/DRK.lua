@@ -96,6 +96,7 @@ end
 
     -- Setup vars that are user-independent.
 function job_setup()
+    attack2 = 5000 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
 
     state.Buff.Souleater = buffactive.Souleater or false
     state.Buff['Dark Seal'] = buffactive['Dark Seal'] or false

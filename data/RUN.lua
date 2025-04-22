@@ -291,11 +291,11 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
     if spell.name == 'Rayke' and not spell.interrupted then
         send_command('@timers c "Rayke ['..spell.target.name..']" '..rayke_duration..' down spells/00136.png')
         send_command('wait '..rayke_duration..';input /p <t> [Rayke just wore off!];')
-        send_command('@input /p  >>> Rayke on ['..spell.target.name..']. Second left: '..rayke_duration..'')
+        send_command('@input /p  >>> '..auto_translate('Rayke')..' on ['..spell.target.name..']. Second left: '..rayke_duration..'')
     elseif spell.name == 'Gambit' and not spell.interrupted then
         send_command('@timers c "Gambit ['..spell.target.name..']" '..gambit_duration..' down spells/00136.png')
         send_command('wait '..gambit_duration..';input /p <t> [Gambit just wore off!];')
-        send_command('@input /p  >>> Gambit on ['..spell.target.name..']. Second left: '..gambit_duration..'')
+        send_command('@input /p  >>> '..auto_translate('Gambit')..' on ['..spell.target.name..']. Second left: '..gambit_duration..'')
     end
 	if (player.in_combat or being_attacked) and spellMap == 'Cure' and spell.interrupted then
 		state.CastingMode:set('SIRD')
@@ -452,7 +452,7 @@ function user_status_change(newStatus, oldStatus, eventArgs)
 		 return true
 
 	
-    elseif state.AutoCureMode.value then
+    elseif state.NeverDieMode.value or state.AutoCureMode.value then 
 		if being_attacked and player.hpp < 85 and abil_recasts[242] < latency then 
 			windower.chat.input('/ja "Vivacious Pulse" <me>')
 			tickdelay = os.clock() + 1.1
@@ -765,11 +765,7 @@ function handle_elemental(cmdParams)
 			windower.chat.input('/ma "Phalanx" <me>')
 		else
 			local spell_recasts = windower.ffxi.get_spell_recasts()
-			if (player.target.type == 'SELF' or not player.target.in_party) and buffactive[data.elements.storm_of[state.ElementalMode.value]] and not buffactive['Klimaform'] and spell_recasts[287] < spell_latency then
-				windower.chat.input('/ma "Klimaform" <me>')
-			else
 				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
-			end
 		end
 		return
 	end
@@ -841,6 +837,14 @@ function check_buff()
 				tickdelay = os.clock() + 2
 				return true
 			end
+		end
+
+		if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] then
+			windower.chat.input('/ma "'..data.elements.BarElement_of[state.ElementalMode.value]..'" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		else
+			return false
 		end
 		if state.AutoBuffMode.value == 'Melee' and player.in_combat then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
@@ -947,7 +951,7 @@ function user_job_target_change(target)
 	if (target ~= nil) and (sub == nil) then
 		if target.name == "Ironshell" or target.name == "Ghast" then
 			--windower.chat.input('gs c set RuneElement Ignis;gs c set ElementalMode Fire;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
-			windower.send_command('input /p >>> '..auto_translate('Rayke')..''..auto_translate('..target.name..')..'['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands:  only Ice damage will be effective.')  -- code add by (Aragan@Asura)
+			windower.send_command('input /p >>> '..auto_translate('Rayke')..''..auto_translate(''..target.name..'')..'['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands:  only Ice damage will be effective.')  -- code add by (Aragan@Asura)
 			windower.send_command('input /echo ['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands:  only Ice damage will be effective.')  -- code add by (Aragan@Asura)
 
 		elseif target.name == "Aminon" then

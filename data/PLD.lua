@@ -497,7 +497,7 @@ function user_status_change(newStatus, oldStatus, eventArgs)
 		return true
 
 	end
-	if state.AutoCureMode.value then
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
 	    local spell_recasts = windower.ffxi.get_spell_recasts()
 		if being_attacked and player.hpp < 85 and spell_recasts[4] < spell_latency then 
 			windower.chat.input('/ma "Cure IV" <me>')
