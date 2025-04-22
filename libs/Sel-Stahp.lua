@@ -323,6 +323,8 @@ function check_reaction(act)
 							windower.chat.input('/ws "Smash Axe" <t>') return
 						elseif available_ws:contains(115) then
 							windower.chat.input('/ws "Leg Sweep" <t>') return
+						elseif available_ws:contains(162) then
+							windower.chat.input('/ws "Brainshaker" <t>') return
 						end
 					end
 				end

@@ -1298,7 +1298,32 @@ function actual_cost(spell)
     end
     return cost
 end
+function check_jump(user)
+	if player.sub_job ~= 'DRG' then
+		if user then
+			add_to_chat(123, "Not currently subbing Dragoon!")
+		end
+		return
+	end
 
+	if user or (state.AutoJumpMode.value and player.status == 'Engaged' and player.tp < 501) then
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+		if abil_recasts[158] < latency then
+			windower.chat.input('/ja "Jump" <t>')
+			add_tick_delay()
+			return true
+		elseif abil_recasts[159] < latency then
+			windower.chat.input('/ja "High Jump" <t>')
+			add_tick_delay()
+			return true
+		else
+			if user then
+				add_to_chat(123, "All jumps currently on cooldown.")
+			end
+			return false
+		end
+	end
+end
 function check_nuke()
 	if state.AutoNukeMode.value and player.target.type == "MONSTER" then
 		local spell = res.spells:with('name',autonuke)

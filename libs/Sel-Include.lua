@@ -161,7 +161,7 @@ function init_include()
 	state.AutoReraiseeMode    = M(true, 'Auto autoReraise Mode')
     state.HippoMode           = M(false, "HippoMode")
 	state.AutoCureMode        = M(true, 'Auto Cure Mode')
-
+	state.AutoJumpMode 		  = M(false, 'Auto Jump Mode')
 
 	state.AutoBuffMode 		  = M{['description'] = 'Auto Buff Mode','Off','Auto'}
 	state.RuneElement 		  = M{['description'] = 'Rune Element','Ignis','Gelus','Flabra','Tellus','Sulpor','Unda','Lux','Tenebrae'}
@@ -1461,6 +1461,7 @@ function default_tick()
 	if check_food() then return true end
 	if check_samba() then return true end
 	if check_ws() then return true end
+	if check_jump() then return true end
 	if check_cpring_buff() then return true end
 	if check_cleanup() then return true end
 	if check_nuke() then return true end

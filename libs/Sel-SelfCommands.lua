@@ -145,6 +145,10 @@ function handle_set(cmdParams)
     -- handle string states: CombatForm, CombatWeapon, etc
 end
 
+function handle_jump()
+	check_jump(true)
+end
+
 -- Function to reset values to their defaults.
 -- User command format: gs c reset [field]
 -- Or: gs c reset all
