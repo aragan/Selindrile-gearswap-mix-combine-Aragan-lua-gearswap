@@ -152,10 +152,10 @@ function init_gear_sets()
 
 	-- Precast sets to enhance JAs
 	sets.precast.JA.Bolster = {body="Bagua Tunic +3"}
-	sets.precast.JA['Life Cycle'] = {head="Azimuth Hood +2", body="Geo. Tunic +3", back="Nantosuelta's Cape"}
+	sets.precast.JA['Life Cycle'] = {head="Azimuth Hood +2", body="Geomancy Tunic +3", back="Nantosuelta's Cape"}
 	sets.precast.JA['Radial Arcana'] = {feet="Bagua Sandals +3"}
 	sets.precast.JA['Mending Halation'] = {legs="Bagua Pants +3"}
-	sets.precast.JA['Full Circle'] = {head="Azimuth Hood +2",hands="Bagua Mitaines +1"}
+	sets.precast.JA['Full Circle'] = {head="Azimuth Hood +2",}--hands="Bagua Mitaines +1"
 	
 	-- Indi Duration in slots that would normally have skill here to make entrust more efficient.
 	sets.buff.Entrust = {}
@@ -389,7 +389,7 @@ function init_gear_sets()
 	sets.midcast.Geomancy = {        main="Idris",
 	range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 	head="Azimuth Hood +2",
-	body="Geo. Tunic +3",
+	body="Geomancy Tunic +3",
 	hands="Geo. Mitaines +3",
 	legs="Geomancy Pants +2",
 	feet="Bagua Sandals +3",
@@ -406,7 +406,7 @@ function init_gear_sets()
 	sets.midcast.Geomancy.Indi = set_combine(sets.midcast.Geomancy, {        main="Idris",
 	range={ name="Dunna", augments={'MP+20','Mag. Acc.+10','"Fast Cast"+3',}},
 	head="Azimuth Hood +2",
-	body="Geo. Tunic +3",
+	body="Geomancy Tunic +3",
 	hands="Geo. Mitaines +3",
 	legs={ name="Bagua Pants +3", augments={'Enhances "Mending Halation" effect',}},
 	feet="Azimuth Gaiters +2",
@@ -509,7 +509,7 @@ function init_gear_sets()
         ear1="Malignance Earring",
         ear2="Regal Earring",
         ring1="Evanescence Ring",
-        body="Geo. Tunic +3",
+        body="Geomancy Tunic +3",
     })
     
     sets.midcast.Aspir = sets.midcast.Drain
@@ -529,7 +529,7 @@ function init_gear_sets()
 		
 	sets.midcast['Enfeebling Magic'] = set_combine(sets.midcast.Macc, {
         head="C. Palug Crown",
-        body="Geo. Tunic +3",
+        body="Geomancy Tunic +3",
         hands="Geo. Mitaines +3",
         legs="Geomancy Pants +2",
         feet="Bagua Sandals +3",

@@ -20,7 +20,7 @@ function user_job_setup()
     state.MagicalDefenseMode:options('MDT')
     state.IdleMode:options('Normal', 'PDH', 'PDT', 'EnemyCritRate', 'Resist', 'Regen', 'Refresh', 'Enmity')
 	
-	state.Weapons:options('Default', 'SWORDS', 'DAGGERS', 'AXE','DualWeapons','DualSavageWeapons','DualEviscerationWeapons','DualMagicWeapons','DualMalevolence')
+	state.Weapons:options('Default','None', 'SWORDS', 'DAGGERS', 'AXE','DualWeapons','DualSavageWeapons','DualEviscerationWeapons','DualMagicWeapons','DualMalevolence')
 	state.Weapongun = M{['description']='Weapon Set', 'normal', 'Holliday', 'Hangaku', 'Fomalhaut', 'Earp','Ullr'}
 
 	--Ikenga_vest_bonus = 190  -- It is 190 at R20. Uncomment if you need to manually adjust because you are using below R20

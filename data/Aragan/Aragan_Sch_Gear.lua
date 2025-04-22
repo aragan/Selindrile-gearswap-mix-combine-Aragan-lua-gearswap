@@ -1310,7 +1310,6 @@ sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.Hybrid,{
    neck="Nefarious Collar +1",})
 sets.engaged.DW.Enspell.DT = set_combine(sets.engaged.DW.Enspell, sets.engaged.Hybrid,{  
    head="Umuthi Hat",
-   hands="Aya. Manopolas +2",
    waist="Orpheus's Sash",})    
 sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.Hybrid,{  
    neck={ name="Bathy Choker +1", augments={'Path: A',}},

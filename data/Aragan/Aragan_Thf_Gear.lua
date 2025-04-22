@@ -882,19 +882,19 @@ sets.precast.WS["Empyreal Arrow"] = {
     }
         
     sets.engaged.DW.STP = {
-        ammo="Yetshila +1",
-        head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-        body="Meg. Cuirie +2",
-        hands="Adhemar Wrist. +1",
-        legs="Gleti's Breeches",
-        legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
-        neck="Nefarious Collar +1",
+        ammo="Aurgelmir Orb +1",
+        head="Malignance Chapeau",
+        body="Malignance Tabard",
+        hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
+        legs="Malignance Tights",
+        feet="Malignance Boots",
+        neck="Iskur Gorget",
         waist="Reiki Yotai",
-        ear1="Odr Earring",
-        ear2="Skulk. Earring +1",
-        ring1="Hetairoi Ring",
-        ring2="Gere Ring",
-        back="Null Shawl",
+        left_ear="Dedition Earring",
+        right_ear="Sherida Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        back="Toutatis's Cape",
     }
 
         sets.engaged.DW.CRIT = {range=empty,

@@ -164,7 +164,7 @@ function init_gear_sets()
     Artifact_Foire.Body_WSD_PTank = ""
     Artifact_Foire.Hands_Mane_Overload = "Foire Dastanas +3"
     Artifact_Foire.Legs_PCure = ""
-    Artifact_Foire.Feet_Repair_PMagic = "Foire Babouches +2"
+    Artifact_Foire.Feet_Repair_PMagic = "Foire Babouches +3"
 
     Relic_Pitre = {}
     Relic_Pitre.Head_PRegen = "Pitre Taj +3" --Enhances Optimization

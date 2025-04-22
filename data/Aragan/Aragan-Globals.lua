@@ -109,15 +109,15 @@ state.SrodaBelt = M(false, 'SrodaBelt')
 state.SrodaNecklace = M(false, 'SrodaNecklace')
 state.NM = M(false, 'NM')
 state.SleepMode = M{['description']='Sleep Mode', 'Normal', 'MaxDuration'}
-state.AutoMedicineMode = M(false, 'Auto Medicine Mode')
-state.AutoReraiseeMode = M(false, 'Auto Reraise Mode')
+state.AutoMedicineMode = M(true, 'Auto Medicine Mode')
+state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
 state.AutoCureMode = M(true, 'Auto Cure Mode')
 state.NeverDieMode = M(true, 'Never Die Mode')
 
 --state.ShieldMode:options('Normal','Genmei','Ammurapi')
 
 --auto equip to PDL ws set is higher than this value .. this value for all job and u can add any value in any job lua . (Aragan@Asura)
-attack2 = 4500 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
+attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
 
 --state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen','Genmei','Ammurapi'} -- , 'Priwen' }
 state.ShieldMode = M{['description'] = 'Shield Mode', 'Normal','Aegis','Ochain','Duban','Genmei','Ammurapi'}
@@ -228,7 +228,7 @@ function global_on_load()
     send_command('bind !/ gs enable all')
     send_command('bind @x gs c toggle RP')  
 	send_command('bind @z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
-	send_command('bind !c gs c cycle CraftingMode')
+	send_command('bind !c gs c weapons None;gs c cycle CraftingMode;')
 	send_command('bind ^c gs c cycle CraftQuality')
 
 	send_command('bind !1 gs c toggle AutoSambaMode')
@@ -506,11 +506,7 @@ function job_state_change(stateField, newValue, oldValue)
     elseif state.CraftQuality.value ~= 'Normal' then
 		equip(sets.crafting[state.CraftQuality.value])
 	end
-    if player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
-		windower.chat.input('/ja "Defender" <me>')
-		tickdelay = os.clock() + 1.1
-		return true
-	end
+
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 		--[[if player.tp > 350 and player.max_hp - player.hp > 600 and abil_recasts[186] < latency then
 			windower.send_command('input /ja Curing Waltz II <me>')
@@ -518,8 +514,12 @@ function job_state_change(stateField, newValue, oldValue)
 	    if player.sub_job == 'DNC' and not state.Buff['SJ Restriction'] and player.tp > 500 and player.max_hp - player.hp > 1000 and abil_recasts[187] < latency then
 			windower.send_command('input /ja Curing Waltz III <me>')
 			tickdelay = os.clock() + 1.1
+		elseif player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
+				windower.chat.input('/ja "Defender" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
 		elseif (player.sub_job == 'SCH' or player.sub_job == 'RDM' or player.sub_job == 'pld' or player.sub_job == 'WHM')
-		and not state.Buff['SJ Restriction'] and player.hpp < 25 and being_attacked and spell_recasts[4] < spell_latency then 
+		    and not state.Buff['SJ Restriction'] and player.hpp < 25 and being_attacked and spell_recasts[4] < spell_latency then 
 			windower.chat.input('/ma "Cure IV" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
@@ -657,7 +657,14 @@ function user_buff_change(buff, gain, eventArgs)
             send_command('input /p '..player.name..' is no longer Sleep!')
         end
     end
-	
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -906,6 +913,7 @@ function is_sc_element_today(spell)
     end
 
 end
+
 
 
 --[[ 
