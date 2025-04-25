@@ -30,7 +30,7 @@ function user_job_setup()
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.WeaponskillMode:options('Match', 'PDL')
-	state.AutoBuffMode:options('Off','Auto','Melee','Fullbuff') --,'Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto') --,,'Melee','Fullbuff''Off','Off','Off','Off','Off',
     state.ShieldMode:options('Normal','Genmei','Ammurapi')
 	state.Weapons:options('None','Maxentius','Queller','Daybreak','Staff','Xoanon','DualDaybreak','DualMaxentius')
 
@@ -55,13 +55,13 @@ function user_job_setup()
 	send_command('bind !\\\\ input /ma "Reraise IV" <me>')
     send_command('bind @s gs c toggle SrodaNecklace')
     send_command('bind f1 gs c cycle HippoMode')
-    send_command('bind f2 gs c cycle BoostSpell')
-    send_command('bind !f2 gs c BoostSpell')
+    send_command('bind f2 gs c cycle AutoBoostStat')
+    send_command('bind !f2 gs c AutoBoostStat')
     send_command('bind f3 gs c cycle BarStatus')
     send_command('bind ^f3 gs c BarStatus')
     send_command('bind f7 gs c cycle ShieldMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind @f5 gs c cycle WeaponskillMode')
-    send_command('bind ^f2 gs c smartcure')
+    --send_command('bind ^f2 gs c smartcure')
 	send_command('bind !f5 gs c toggle AutoWSMode')
 
     select_default_macro_book()

@@ -127,6 +127,9 @@ NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','el
 
 gear.TVRring = "Cornelia's Ring"
 
+state.AutoBarStatus           = M{['description'] = 'Auto BarStatus','Off','Barparalyze','Barsilence','Barpoison','Barvirus','Barpetrify','Barblind','Baramnesia','Barsleep'}
+state.AutoBoostStat           = M{['description'] = 'Auto BoostStat','Off', 'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
+
 --[[Binds you may want to change.
 	Bind special characters.
 	@ = Windows Key
@@ -160,13 +163,14 @@ AutoSambaMode
 AutoRuneMode
 
 AutoAcceptRaiseMode
-
+use <call21>
 gs c set AutoWSRestore true
 gs c set SkipProcWeapons false
 gs showswaps
 lua r gearswap
 AutoCleanupMode add more items
 handle_killstatue
+//get *crystal all
 
 //gs c useitem head Reraise Hairpin +1
 //gs c useitem ring2 warp ring
@@ -312,6 +316,8 @@ function global_unload()
 	send_command('lua u PLD-HUD')--Turns addon off if job non pld.
 	send_command('lua u DNC-hud')--Turns addon off if job non dnc.
 	send_command('lua u sch-hud')--Turns addon off if job non sch.
+	send_command('lua u BST-HUD')
+
 	send_command('input //parse reset')-- reset parse addon every change job
 
 end

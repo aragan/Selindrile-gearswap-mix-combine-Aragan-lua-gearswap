@@ -1089,9 +1089,9 @@ sets.idle.Sphere = set_combine(sets.idle, {
         right_ring="Stikini Ring +1",
         })
 
-    ------------------------------------------------------------------------------------------------
-    ---------------------------------------- Defense Sets ------------------------------------------
-    ------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+---------------------------------------- Defense Sets ------------------------------------------
+------------------------------------------------------------------------------------------------
     sets.defense.PDT = {
         ammo="Staunch Tathlum +1",
         head="Nyame Helm",
@@ -1181,7 +1181,6 @@ sets.engaged.Acc = {
     right_ring="Chirich Ring +1",
     back="Null Shawl",
 }
-
     
 sets.engaged.CRIT = set_combine(sets.engaged, {
     neck="Nefarious Collar +1",
@@ -1190,7 +1189,6 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
 sets.engaged.Enspell = set_combine(sets.engaged, {
     head="Umuthi Hat",
     waist="Orpheus's Sash",
-
 })
 
 sets.engaged.SubtleBlow = set_combine(sets.engaged, {
@@ -1199,8 +1197,6 @@ sets.engaged.SubtleBlow = set_combine(sets.engaged, {
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
-
-
 
 sets.engaged.DT = {
     ammo="Staunch Tathlum +1",
@@ -1215,8 +1211,8 @@ sets.engaged.DT = {
     right_ear="Telos Earring",
     left_ring="Chirich Ring +1",
     right_ring="Defending Ring",
-    back={ name="Aurist's Cape +1", augments={'Path: A',}},
-    }
+    back="Null Shawl",
+}
 
 
 
@@ -1230,14 +1226,12 @@ sets.engaged.DT = {
         left_ear="Suppanomimi",  --5
         right_ear="Eabani Earring", --4
         waist="Patentia Sash",  -- 5% Dual Wield
-
      })
 
     sets.engaged.DW.Acc = set_combine(sets.engaged.Acc, {
         left_ear="Suppanomimi",  --5
         right_ear="Eabani Earring", --4
         waist="Patentia Sash",  -- 5% Dual Wield
-
      })
     sets.engaged.DW.STP = set_combine(sets.engaged.STP, {
         left_ear="Suppanomimi",  --5
@@ -1287,7 +1281,6 @@ sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid,{
 sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid,{})
 sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid,{  
     neck="Nefarious Collar +1",
-
 })
 sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid,{  
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
@@ -1348,8 +1341,7 @@ sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.Hyb
         right_ear="Assuage Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",}
-    sets.buff['Immanence'].Enmity = {
-}
+    sets.buff['Immanence'].Enmity = {}
     
     sets.buff['Immanence'].Proc = {
         main=empty,
@@ -1402,8 +1394,8 @@ sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.Hyb
        body="Peda. Gown +3", --5
        ear1="Savant's Earring", --1
        waist="Embla Sash", --5
-       }
-       sets.buff.DTSublimation = {waist="Embla Sash"}
+    }
+    sets.buff.DTSublimation = {waist="Embla Sash"}
 
     sets.buff.Doom = {    neck="Nicander's Necklace",
     waist="Gishdubar Sash",
