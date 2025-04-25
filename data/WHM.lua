@@ -95,27 +95,34 @@ function job_setup()
 
     state.Buff['Afflatus Solace'] = buffactive['Afflatus Solace'] or false
     state.Buff['Afflatus Misery'] = buffactive['Afflatus Misery'] or false
-	state.Buff['Divine Caress'] = buffactive['Divine Caress'] or false
-	
+	--state.Buff['BarElement'] = buffactive['BarElement'] or false
+	--state.Buff['BarStatus'] = buffactive['BarStatus'] or false
+	--state.Buff['BoostSpell'] = buffactive['BoostSpell'] or false
+
 	state.AutoCaress = M(true, 'Auto Caress Mode')
 	state.Gambanteinn = M(false, 'Gambanteinn Cursna Mode')
 	state.BlockLowDevotion = M(true, 'Block Low Devotion')
 	state.AutoSubMode = M(true, 'Auto Sublimation Mode')
+	state.AutoBaraMode = M(true, 'Auto Barstatus Mode')
 
 	state.HippoMode = M(false, "hippoMode")
     state.MagicBurst = M(false, 'Magic Burst')
     state.SrodaNecklace = M(false, 'SrodaNecklace')
 	state.AutoEquipBurst = M(true)
+    state.Bara1Status = M{['description']='BarStatus', 'Baramnesia', 'Barvira', 'Barparalyzra', 'Barsilencera', 'Barpetra', 'Barpoisonra', 'Barblindra', 'Barsleepra'}
 
+    state.BarElement = M{['description']='BarElement', 'Barfira', 'Barblizzara', 'Baraera', 'Barstonra', 'Barthundra', 'Barwatera'}
     state.BarStatus = M{['description']='BarStatus', 'Baramnesra', 'Barvira', 'Barparalyzra', 'Barsilencera', 'Barpetra', 'Barpoisonra', 'Barblindra', 'Barsleepra'}
-    state.BoostSpell = M{['description']='BoostSpell', 'Boost-STR', 'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
+    state.BoostSpell = M{['description']='BoostSpell',  'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
 
 	barStatus = S{'Barpoison','Barparalyze','Barvirus','Barsilence','Barpetrify','Barblind','Baramnesia','Barsleep','Barpoisonra','Barparalyzra','Barvira','Barsilencera','Barpetra','Barblindra','Baramnesra','Barsleepra'}
+	state.AutoBarStatus           = M{['description'] = 'Auto BarStatus','Barparalyze','Off','Barsilence','Barpoison','Barvirus','Barpetrify','Barblind','Baramnesia','Barsleep'}
+	state.AutoBoostStat           = M{['description'] = 'Auto BoostStat','Boost-STR','Off', 'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
 
 	autows = 'Dagan'
 	autofood = 'Miso Ramen'
 	
-	state.ElementalMode = M{['description'] = 'Elemental Mode','Light','Dark','Fire','Ice','Wind','Earth','Lightning','Water',}
+	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Light','Dark','Ice','Wind','Earth','Lightning','Water',}
 
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","BarStatus","BoostSpell","TreasureMode",})
 	
@@ -384,7 +391,7 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
 			if state.DisplayMode.value then update_job_states()	end
         end
     end
-	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or blue_magic_maps.Healing:contains(spell.english) or spell.skill == 'Enhancing Magic') and spell.interrupted then
+	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or spell.skill == 'Enhancing Magic') and spell.interrupted then
 		state.CastingMode:set('SIRD')
 		--send_command('gs c set state.CastingMode.value SIRD')
 		send_command('gs c update')
@@ -617,17 +624,14 @@ function handle_elemental(cmdParams)
 	elseif command == 'enspell' then
 		windower.chat.input('/ma "En'..data.elements.enspell_of[state.ElementalMode.value]..'" <me>')
 		return
-	elseif command == 'bar2element' then
-		windower.chat.input('/ma "'..data.elements.Bar2Element_of[state.ElementalMode.value]..'" <me>')
-		return
+
 	--Leave out target, let shortcuts auto-determine it.
 	elseif command == 'weather' then
 		if player.sub_job == 'RDM' then
 			windower.chat.input('/ma "Phalanx" <me>')
 		else
 			local spell_recasts = windower.ffxi.get_spell_recasts()
-				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
-			end
+			windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
 		end
 		return
 	end
@@ -678,9 +682,11 @@ function handle_elemental(cmdParams)
 		
 	elseif command == 'helix' then
 		windower.chat.input('/ma "'..data.elements.helix_of[state.ElementalMode.value]..'helix" '..target..'')
-	
-	elseif command == 'enfeeble' then
-		windower.chat.input('/ma "'..data.elements.elemental_enfeeble_of[state.ElementalMode.value]..'" '..target..'')
+	elseif command == 'bardsong' then
+		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' Threnody" '..target..'')
+
+	elseif command == 'bar2element' then
+		windower.chat.input('/ma "'..data.elements.Bar2Element_of[state.ElementalMode.value]..'" <me>')
 	
 	elseif command == 'bardsong' then
 		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' Threnody" '..target..'')
@@ -700,9 +706,58 @@ function check_buff()
 				return true
 			end
 		end
-		
-		if player.sub_job == 'SCH' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
 
+
+		--[[
+		if state.AutoBaraMode.Value == true then
+
+			if not (buffactive.boostspell) then
+	
+				windower.chat.input('gs c boostspell')
+				-- windower.chat.input('gs c boostspell')
+			end
+	    end]]
+		--if (state.ElementalMode.value ~= 'Light' or state.ElementalMode.value ~= 'Dark') and not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] and  spell_recasts[66] < spell_latency then
+			--[[windower.chat.input('/ma "'..data.elements.Bar2Element_of[state.ElementalMode.value]..'" <me>')
+			tickdelay = os.clock() + 1.1
+	    end]]
+		if state.AutoBoostStat.value ~= 'Off' then
+			local buff_name = string.sub(state.AutoBoostStat.value, -3).." Boost"
+		  
+			if not buffactive[buff_name] then
+			  windower.chat.input("/ma "..state.AutoBoostStat.value.." <me>")
+			end
+		end
+		if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] then
+			windower.chat.input('gs c barstatus')
+		end
+		    -- windower.chat.input('gs c boostspell')
+		
+	    --elseif not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] then
+	--[[ 
+			   
+		    windower.chat.input('gs c boostspell')
+		end
+	    ]]
+		local barspell = data.elements.Bar2Element_of[state.ElementalMode.value]
+
+		if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] and (state.ElementalMode.value ~= 'Light' or state.ElementalMode.value ~= 'Dark') then
+			windower.chat.input('/ma "'..barspell..'" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		else
+			return false
+		end
+		local buff_name = string.sub(state.AutoBoostStat.value, -3).." Boost"
+
+		if not buffactive[buff_name] then
+		  windower.chat.input("/ma "..state.AutoBoostStat.value.." <me>")
+		end
+		
+
+		if player.sub_job == 'SCH' and not state.Buff['SJ Restriction'] then
+			--not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] or buffactive[data.elements.BarElement_of[state.ElementalMode.value]]
 			if not buffactive[data.elements.storm_of[state.ElementalMode.value]] and actual_cost(get_spell_table_by_name(data.elements.storm_of[state.ElementalMode.value])) < player.mp then
 				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
 				tickdelay = os.clock() + 1.1
@@ -788,11 +843,11 @@ end
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},
+		--{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},
 		{Name='Shellra V',		Buff='Shell',		SpellID=134,	When='Always'},
 		{Name='Protectra V',	Buff='Protect',		SpellID=129,	When='Always'},
-		{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
-		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Always'},
+		--{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
+		--{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Always'},
 	},
 	Fullbuff = {
 		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},

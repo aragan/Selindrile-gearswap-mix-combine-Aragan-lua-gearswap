@@ -52,8 +52,8 @@
 
 -- Initialization function for this job file.
 function get_sets()
-        -- Load and initialize the include file.
-        include('Sel-Include.lua')
+    -- Load and initialize the include file.
+    include('Sel-Include.lua')
 		
 organizer_items = {
 	"Moogle Amp.",
@@ -119,7 +119,9 @@ item="Rolan. Daifuku",
 end
 
 function job_setup()
+	send_command('lua l BST-HUD')
 
+	
 	state.Buff['Killer Instinct'] = buffactive['Killer Instinct'] or false
 	state.Buff["Unleash"] = buffactive["Unleash"] or false
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false

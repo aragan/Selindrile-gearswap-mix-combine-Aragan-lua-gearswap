@@ -603,7 +603,7 @@ windower.register_event('incoming text',function(org)
 	--abyssea stagger
 	if string.find(org, "staggers") then
 
-		windower.send_command('input /p Stagger! <call14>!') -- code add by (Aragan@Asura)
+		windower.send_command('input /p Stagger! <call21>!') -- code add by (Aragan@Asura)
 		send_command('input //gs c Weapons DualMalevo;gs c set WeaponskillMode Match')--;gc c OffenseMode CRIT;GS C AotuWSMode False
 
 	end

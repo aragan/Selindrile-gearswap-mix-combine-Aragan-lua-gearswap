@@ -1672,8 +1672,16 @@ function check_buff()
 			windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
 			tickdelay = os.clock() + 1.1
 			return true
-		else
-			return false
+
+		
+	    elseif player.sub_job == 'RDM' and not state.Buff['SJ Restriction'] then
+			if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] then
+				windower.chat.input('/ma "'..data.elements.BarElement_of[state.ElementalMode.value]..'" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			else
+				return false
+			end
 		end
 	else
 		return false

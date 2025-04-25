@@ -334,8 +334,18 @@ function job_post_midcast(spell, spellMap, eventArgs)
         end
     end
 end
-
-
+function job_filter_aftercast(spell, spellMap, eventArgs)
+	if (player.in_combat or being_attacked) and (spell.type:endswith('Magic') or spell.type == "Ninjutsu") and spell.interrupted then
+		state.CastingMode:set('SIRD')
+		--send_command('gs c set state.CastingMode.value SIRD')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+		state.CastingMode:set('Normal')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1
+	end
+end
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 function job_aftercast(spell, spellMap, eventArgs)
 	if spell.english == "Mijin Gakure" then
@@ -708,6 +718,7 @@ function update_combat_form()
 end
 
 function job_tick()
+	--if user_status_change() then return true end
 	if check_stance() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
@@ -888,7 +899,7 @@ windower.register_event('incoming text',function(org)
 
 	--abyssea stagger --red pros
 	if string.find(org, "The fiend is frozen in its tracks.") then
-		windower.send_command('/p Stagger! <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/p Stagger! <call21>!')  -- code add by (Aragan@Asura)
 		send_command('gs c Weapons Tauret;gs c set WeaponskillMode Match;gc c OffenseMode CRIT;gs c set TreasureMode Fulltime;gs enable all')
 	end
 
