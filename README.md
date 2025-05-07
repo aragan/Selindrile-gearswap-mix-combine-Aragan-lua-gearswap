@@ -100,6 +100,8 @@ command add macro : CLOSE skillchain with helix and auto magic burst after skill
 SC11H
 /console gs c elemental skillchain11H
 
+SCH add command for solo skillchains from addon schskillchain ssc and script solosc.lua
+
 NOTE: for sortie NM Triboulex use this command for 2step fusion open close close2 ;
 
 -------------
