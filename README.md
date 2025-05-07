@@ -1,5 +1,5 @@
 
--- Aragan (Asura) --- [Author Primary]                                    --
+-- Aragan (Asura) --- [Author]                                    --
 
 --    {{{{{{{this gearswap have all codes}}}}}}}}}                                          --
 	---------------------------------------                        ---------------------------------------  
