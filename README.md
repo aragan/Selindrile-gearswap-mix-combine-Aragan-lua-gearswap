@@ -101,10 +101,12 @@ SC11H
 /console gs c elemental skillchain11H
 
 NOTE: for sortie NM Triboulex use this command for 2step fusion open close close2 ;
+
 -------------
 smn add autofavrmode
 pld add auto foil if /run sub and tankmode active
 run add AutoEffusionMode auto rayke/Gambit tankmode active
+
 -----
 for brd add state.Songset have songsset its copy from AutoBuffBard addon file abb_sets 
 u can add name songsset there and copy name in state.Songset
