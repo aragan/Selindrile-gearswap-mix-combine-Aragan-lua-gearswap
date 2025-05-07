@@ -98,6 +98,7 @@ SC33
 command add macro : CLOSE skillchain with helix and auto magic burst after skillchains
 
 SC11H
+
 /console gs c elemental skillchain11H
 
 SCH add command for solo skillchains from addon schskillchain ssc and script solosc.lua
