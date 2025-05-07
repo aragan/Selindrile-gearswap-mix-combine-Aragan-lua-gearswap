@@ -89,10 +89,15 @@ SC3 /console gs c elemental skillchain3
 command add macro : for auto magic burst after skillchains ,SC11 CLOSE skillchain with T1 ONLY NO HELIX
 
 SC11
+
 /console gs c elemental skillchain11
+
 SC22
+
 /console gs c elemental skillchain22
+
 SC33
+
 /console gs c elemental skillchain33
 
 command add macro : CLOSE skillchain with helix and auto magic burst after skillchains
