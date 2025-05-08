@@ -114,7 +114,7 @@ end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
-	send_command('lua l Singer;sing active off')
+	send_command('lua l Singer;sing off;sing active off')
 
     state.ExtraSongsMode = M{['description']='Extra Songs','FullLength','None','Dummy','Marsyas'}
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
@@ -151,7 +151,7 @@ function job_setup()
         'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
         'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
 
-	state.Songset = M{['description']='Songset','seg','seg4','shinryu','shinryu4','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
+	state.Songset = M{['description']='Songset','seg','seg4','shinryu','shinryu4','mboze','mboze2', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
 		'haste','haste4', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
 
 
@@ -884,6 +884,18 @@ buff_spell_lists = {
 		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Idle'},
 	},
 	melee4 = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+
+	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
+   {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
+   {Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
+   {Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
+
+   --{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Idle'},
+   --{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Idle'},
+   --{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Idle'},
+   --{Name='Blink',				Buff='Blink',			SpellID=53,		When='Idle'},
+    },
+	sortie4 = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 
 	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
    {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
