@@ -202,7 +202,7 @@ function global_on_load()
 	send_command('bind !0 input //zonetimer reset') --Turns addon reset time.
 	send_command('bind ^pagedown input //autoitem off') --Turns addon off.
 	send_command('bind ^pageup input //autoitem on') --Turns addon on.
-	send_command('bind ^delete input //aws toggle') --Turns addon autows on odd. to add ws //aws set "Evisceration" 
+	send_command('bind ^delete input //aws toggle;gs c set AutoWSMode false') --Turns addon autows on odd. to add ws //aws set "Evisceration" 
 	send_command('bind ^insert input //aws reload') --reload addon autows on odd. --//aws set Evisceration
 
 	
@@ -224,7 +224,7 @@ function global_on_load()
 	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f3 gs c toggle AutoTankMode')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
-	send_command('bind f5 gs c toggle AutoWSMode')
+	send_command('bind f5 gs c toggle AutoWSMode;input //aws off')
 	send_command('bind @f1 gs c toggle AutoEngageMode')
 	send_command('bind @f2 gs c toggle AutoBuffMode')
 	send_command('bind @f3 gs c toggle AutoTrustMode')
@@ -260,6 +260,7 @@ function global_on_load()
 	send_command('bind ^- gs c toggle selectnpctargets')
 	send_command('bind !- gs c cycle pctargetmode')
     send_command('lua r runewidget;rw show')--Turns addon off if job non /run.
+	send_command('input //lua u invspace;input //lua u invtracker')--Turns addon off if job non /run.
 
 	--send_command('bind ^] input //put storage slip* case all')
 	--send_command('bind ^[ input //get storage slip* all') --PorterPacker Porter find
@@ -414,6 +415,8 @@ end
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 function job_precast(spell, action, spellMap, eventArgs)
+	default_pretarget(spell, spellMap)
+
     if spell.english == 'Warcry' then
         if buffactive['Warcry'] then
             cancel_spell()
@@ -433,18 +436,32 @@ function job_precast(spell, action, spellMap, eventArgs)
 end
 function job_post_precast(spell)
 	if spell.name == "Holy Water" then
-		 equip(sets.precast.Item['Holy Water'])
+		equip(sets.precast.Item['Holy Water'])
+   end
+   --[[if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
+	equip(sets.precast.WS.SubtleBlow)
+   end
+   ]]
+
+   if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
+	    equip(sets.precast.WS.SubtleBlow)
     end
 	attack = player.attack -- auto equip to PDL ws set - code add by kastra,modi.(Aragan@Asura)
-	if spell.type == 'WeaponSkill' then
-		if attack > attack2 then
-			equip(sets.precast.WS[spell.name].PDL)
-		elseif state.WeaponskillMode.value == 'Proc' then
-			equip(sets.precast.WS[spell.name].Proc)
-		else
-			equip(sets.precast.WS[spell.name])
-		end
-	end
+
+    if spell.type == 'WeaponSkill' then
+        if state.WeaponskillMode.value == 'SubtleBlow' and attack < attack2 then
+            equip(sets.precast.WS.SubtleBlow)
+		elseif state.WeaponskillMode.value == 'SubtleBlow' and attack > attack2 then
+            equip(sets.precast.WS.SubtleBlow)
+        elseif state.WeaponskillMode.value == 'Proc' then
+            equip(sets.precast.WS[spell.name].Proc)
+        elseif attack > attack2 then
+            equip(sets.precast.WS[spell.name].PDL)
+        else
+            equip(sets.precast.WS[spell.name])
+        end
+    end
+
 	if spell.type == 'WeaponSkill' and player.main_job == 'WAR' then
 		if buffactive['Mighty Strikes'] then
 			equip(sets.WSMighty)
@@ -477,6 +494,7 @@ function job_aftercast(spell, spellMap, eventArgs)
 				send_command('timers c "Defense Down '..spell.name..' ['..spell.target.name..']" 180 down')
 				send_command('@input /p  >>> "Defense Down on '..spell.name..' ['..spell.target.name..']. 3 min. ')
 			end
+
 		end
 	end
 	--[[
@@ -520,15 +538,13 @@ function job_state_change(stateField, newValue, oldValue)
 	    if player.sub_job == 'DNC' and not state.Buff['SJ Restriction'] and player.tp > 500 and player.max_hp - player.hp > 1000 and abil_recasts[187] < latency then
 			windower.send_command('input /ja Curing Waltz III <me>')
 			tickdelay = os.clock() + 1.1
-		elseif player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
-				windower.chat.input('/ja "Defender" <me>')
-				tickdelay = os.clock() + 1.1
-				return true
+		elseif player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 then
+			windower.chat.input('/ja "Defender" <me>')
+			tickdelay = os.clock() + 1.1
 		elseif (player.sub_job == 'SCH' or player.sub_job == 'RDM' or player.sub_job == 'pld' or player.sub_job == 'WHM')
 		    and not state.Buff['SJ Restriction'] and player.hpp < 25 and being_attacked and spell_recasts[4] < spell_latency then 
 			windower.chat.input('/ma "Cure IV" <me>')
 			tickdelay = os.clock() + 1.1
-			return true
 		end
 	end
 
@@ -858,7 +874,7 @@ end
 function default_zone_change(new_id,old_id)
 	--tickdelay = os.clock() + 10	
 	if data.areas.cities:contains(world.area)  then
-		send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock;input //tr autodrop off') --Turns addon on.
+		send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock;input //tr autodrop off;input //gs c set cleanup false') --Turns addon on.
 	else
 		send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock;input //tr autodrop on;') --Turns addon off. stats=craftstats addon
 	end
@@ -875,7 +891,7 @@ function default_zone_change(new_id,old_id)
 		send_command('input //NyzulHelper hide;input //NyzulBuddy stop;') --Turns addon off. -- input //iSpy
 	end
 	if world.area:contains('Abyssea') then
-		send_command('input //ept show;') --Turns addon on.
+		send_command('input //ept show;gs c set SkipProcWeapons false;/lockstyleset 1') --Turns addon on.
 	else
 		send_command('input //ept hide;') --Turns addon off.
 	end
@@ -891,6 +907,7 @@ function(new_hpp,old_hpp)
         end
     end
 end)
+
 windower.raw_register_event('incoming text',function(org)
 	if string.find(org, "You find a Volte Tights") or string.find(org, "You find a Volte Tiara") 
 	or string.find(org, "You find a Volte Boots") or string.find(org, "You find a Volte Hose") or string.find(org, "You find a Volte Bracers")
@@ -902,6 +919,7 @@ windower.raw_register_event('incoming text',function(org)
         windower.send_command('input /t '..player.name..' '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14> ' )
 	end
 end)
+
 function is_sc_element_today(spell)
     if spell.type ~= 'WeaponSkill' then
         return
@@ -918,6 +936,40 @@ function is_sc_element_today(spell)
         return false
     end
 
+end
+
+
+function get_attack_increase(target)
+    local buffs = {'Dia', 'Shell Crusher'}
+    local attack_increase = 0
+    for _, buff in ipairs(buffs) do
+        if target and target.buffs[buff] then
+            attack_increase = attack_increase + 1000
+        end
+    end
+    return attack_increase
+end
+
+function get_attack_power()
+    local base_attack = 3500
+    local target = windower.ffxi.get_mob_by_target('t')
+    local attack_increase = get_attack_increase(target)
+    return base_attack + attack_increase
+end
+function display_attack_power(attack_power)
+    add_to_chat(123, '"Attack Power: " '.. tostring(attack_power)'')
+end
+
+function get_attack_power()
+    local base_attack = 3500
+    local target = windower.ffxi.get_mob_by_target('t')
+    local attack_increase = get_attack_increase(target)
+    local attack_power = base_attack + attack_increase
+    
+    display_attack_power(attack_power)
+	add_to_chat(123, '"Attack Power: " '.. tostring(attack_power)'')
+
+    return attack_power
 end
 
 
@@ -938,3 +990,5 @@ disable_priority = T{
     "TreasureHunter",
 }:reverse()
 ]]
+
+

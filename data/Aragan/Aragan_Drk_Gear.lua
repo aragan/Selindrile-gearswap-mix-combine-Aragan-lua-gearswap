@@ -97,13 +97,22 @@ Freezebite > Hard Slash > Freezebite ~
 
 Nightmare Scythe > Vorpal Scythe > Nightmare Scythe >  Vorpal Scythe > Nightmare Scythe >  Vorpal Scythe > Nightmare Scythe >
 
+
+SWORD 
+
+ Red Lotus Blade
+Fast Blade Scission
+Red Lotus Blade Liquefaction
+Fast Blade Scission
+Red Lotus Blade Liquefaction 
+
 --]]
 
 
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal','NOSchereEar', 'STP', 'Acc', 'SubtleBlow','DA', 'CRIT')
-    state.WeaponskillMode:options('Match', 'Acc', 'PDL', 'SC', 'Dread', 'None')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'Acc', 'PDL', 'SC', 'Dread', 'None')
     state.HybridMode:options('DT', 'Normal', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
     state.PhysicalDefenseMode:options( 'PDT', 'HP', 'Enmity','Aminon', 'Dread Spikes', 'SEboost', 'Reraise')
@@ -629,8 +638,11 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
     neck="Abyssal Beads +2",
     right_ear="Heathen's Earring",
     left_ring="Sroda Ring",
-
     })
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     sets.precast.WS.SC = set_combine(sets.precast.WS, {       
        head="Nyame Helm",
        body="Nyame Mail",
@@ -727,7 +739,10 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
     sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Catastrophe'].PDL, {})
     sets.precast.WS['Savage Blade'].SC = set_combine(sets.precast.WS['Catastrophe'].SC, {})
     sets.precast.WS['Savage Blade'].None = {}
-
+    sets.precast.WS['Savage Blade'].PDL.SubtleBlow = set_combine(sets.precast.WS['Savage Blade'].PDL, {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    })
 
     sets.precast.WS['Spiral Hell'] = set_combine(sets.precast.WS, {
         right_ear={ name="Lugra Earring +1", augments={'Path: A',}},
@@ -1032,15 +1047,6 @@ sets.precast.WS['Nightmare Scythe'] = {
         feet="Heath. Sollerets +2",
     })
     sets.precast.WS['Ground Strike'].None =  {}
-    sets.precast.WS['Scourge'] = set_combine(sets.precast.WS['Torcleaver'], {})
-    sets.precast.WS['Scourge'].Dread  = sets.defense['Dread Spikes']
-    sets.precast.WS['Scourge'].PDL = set_combine(sets.precast.WS['Torcleaver'], {
-        ammo="Crepuscular Pebble",
-        head="Heath. Burgeon. +2",
-        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-        right_ear="Heathen's Earring",
-        left_ring="Sroda Ring",
-    })
       
     sets.precast.WS['Torcleaver'] = {
     ammo="Knobkierrie",
@@ -1064,6 +1070,13 @@ sets.precast.WS['Nightmare Scythe'] = {
         right_ear="Heathen's Earring",
         left_ring="Sroda Ring",
     })
+    sets.precast.WS['Torcleaver'].Acc = set_combine(sets.precast.WS['Torcleaver'], {})
+    sets.precast.WS['Torcleaver'].PDL.SubtleBlow = set_combine(sets.precast.WS['Torcleaver'].PDL, {
+        head="Heath. Burgeon. +2",
+        right_ear="Heathen's Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    })
     sets.precast.WS['Torcleaver'].SC = set_combine(sets.precast.WS['Torcleaver'], {
         head="Nyame Helm",
         body="Nyame Mail",
@@ -1073,6 +1086,15 @@ sets.precast.WS['Nightmare Scythe'] = {
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
     sets.precast.WS['Torcleaver'].None = {}
+    sets.precast.WS['Scourge'] = set_combine(sets.precast.WS['Torcleaver'], {})
+    sets.precast.WS['Scourge'].Dread  = sets.defense['Dread Spikes']
+    sets.precast.WS['Scourge'].PDL = set_combine(sets.precast.WS['Torcleaver'], {
+        ammo="Crepuscular Pebble",
+        head="Heath. Burgeon. +2",
+        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+        right_ear="Heathen's Earring",
+        left_ring="Sroda Ring",
+    })
     sets.precast.WS['Spinning Scythe'] = {
         ammo="Crepuscular Pebble",
         head="Heath. Burgeon. +2",
@@ -2093,3 +2115,31 @@ function buff_change(buff, gain)
         end
     end
 end
+
+
+
+--[[
+MBOZE DRK GEAR SUBTLE BLOW
+
+Torcleaver to forehead - Using a Subtle Blow Set with the following gear:
+        main= "Calabolg", R15
+        sub="Kaja Grip", (used this for the -5% DT over Utu grip)
+        ammo="Seeth. Bomblet +1",  (R15 for Haste +5%)
+        head="Sulevia's Mask +2", (SB1 +4 *with Sulevia set bonus from legs)
+        body="Dagon Breast.", (SB2 + 10)
+        hands="Sakpata's Gauntlets", (SB1 +8)
+        legs="Sulev. Cuisses +2", (SB1 +4 *with Sulevia set bonus from head)
+        feet= "Sakpata's Leggings", R20 (SB1+10)
+        neck="Loricate Torque +1", R15 (Used for DT)
+        waist="Ioskeha Belt +1", (Used over Sailfi +1 for Accuracy)
+        left_ear="Odnowa Earring +1", (R11, used for DT and Accuracy)
+        right_ear="Digni. Earring", (SB1 +5)
+        left_ring="Chirich Ring +1", (SB1 +10)
+        right_ring="Niqmaddu Ring", (SB2 +5)
+        back="Ankou's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}
+
+DT  - 50%
+Gear Haste - 25%
+SB1 from gear +41, SB2 from gear +15 
+
+]]

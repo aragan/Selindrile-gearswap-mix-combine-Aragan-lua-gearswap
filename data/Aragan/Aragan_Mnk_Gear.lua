@@ -13,7 +13,7 @@ keyboard binds and chat
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc','STP', 'CRIT','Fodder', 'SubtleBlow')
-    state.WeaponskillMode:options('Match','Normal', 'PDL', 'Fodder')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'Fodder')
     state.HybridMode:options('PDT', 'Normal','Counter')
     state.PhysicalDefenseMode:options('PDT', 'HP')
 	state.MagicalDefenseMode:options('MDT')
@@ -179,6 +179,10 @@ function init_gear_sets()
         legs={ name="Mpaca's Hose", augments={'Path: A',}},
         neck={ name="Mnk. Nodowa +2", augments={'Path: A',}}, 
     })
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     sets.precast.WS.Mod = set_combine(sets.precast.WS, {})
 
 

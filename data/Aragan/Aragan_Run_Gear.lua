@@ -24,7 +24,7 @@ function user_job_setup()
 
 	state.OffenseMode:options('Normal','Acc', 'STP','DA100','CRIT')
 	state.HybridMode:options('Tank','Normal', 'DT','DTLite')
-	state.WeaponskillMode:options('Match','Acc','PDL')
+	state.WeaponskillMode:options('Match', 'SubtleBlow','Acc','PDL')
 	state.CastingMode:options('Normal','SIRD')
 	state.PhysicalDefenseMode:options('PDT_HP','PDT','PDH', 'HP', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT','MDT_HP','Resist','MEVA')
@@ -317,7 +317,10 @@ sets.precast.WS = {
         ammo="Crepuscular Pebble",
         left_ring="Sroda Ring",
     }
-
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     sets.precast.WS['Resolution'] = {  
         ammo="Coiste Bodhar",
            head="Nyame Helm",

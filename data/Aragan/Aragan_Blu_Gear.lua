@@ -39,7 +39,7 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT')--, 'Learning'
 	state.HybridMode:options('DT','Normal')
-    state.WeaponskillMode:options('Match', 'PDL', 'SC','Proc')
+    state.WeaponskillMode:options('Match', 'SubtleBlow','PDL', 'SC','Proc')
     state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT','Proc')
     state.IdleMode:options('DT','Normal','Empy','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
 	state.Passive:options('None','Resist','Refresh','Empy', 'SubtleBlow', 'SubtleBlow40', 'SubtleBlow50')--, 'EnemyCritRate', 'Regen'
@@ -256,7 +256,10 @@ sets.precast.WS = {
     right_ring="Ilabrat Ring",
     back={ name="Rosmerta's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 }
-    
+sets.precast.WS.SubtleBlow =  {
+	left_ring="Chirich Ring +1",
+	right_ring="Chirich Ring +1",
+}
 sets.precast.WS.PDL = set_combine(sets.precast.WS, {
     ammo="Crepuscular Pebble",
     body="Gleti's Cuirass",
@@ -1208,7 +1211,6 @@ sets.passive.Refresh = {
 
 
 sets.passive.SubtleBlow = {
-right_ear="Cessance Earring",
 left_ring="Chirich Ring +1",
 right_ring="Chirich Ring +1",
 }

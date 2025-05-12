@@ -3,6 +3,7 @@ sets.BehemothSuit = {}--{body="Behemoth Suit +1",hands=empty,legs=empty,feet=emp
 sets.Sheltered = {ring2="Sheltered Ring"}
 sets.Capacity = {}--back="Mecisto. Mantle"
 
+
 sets.buff.Doom = {neck="Nicander's Necklace",
 waist="Gishdubar Sash",
 left_ring="Purity Ring",

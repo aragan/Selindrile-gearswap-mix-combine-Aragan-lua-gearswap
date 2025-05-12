@@ -24,7 +24,7 @@ function user_job_setup()
     -- Options: Override default values	
 	state.OffenseMode:options('Normal', 'TP', 'Acc', 'STP', 'CRIT')
     state.HybridMode:options('Tank','Normal','PDT')
-    state.WeaponskillMode:options('Match', 'PDL', 'Acc','Enmity')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'Acc','Enmity')
     state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
 	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation','Resist')
     state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
@@ -294,6 +294,10 @@ function init_gear_sets()
 		legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
 		left_ring="Sroda Ring", 
 	 })
+	 sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
 	 sets.precast.WS.None = {}
 	 sets.precast.WS.Enmity = set_combine(sets.Enmity, {})
 

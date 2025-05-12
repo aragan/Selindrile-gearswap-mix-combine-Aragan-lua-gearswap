@@ -32,14 +32,15 @@ function user_job_setup()
     state.CastingMode:options('Normal','AoE')
 	state.PhysicalDefenseMode:options('PDT', 'Evasion','Aminon')
     state.MagicalDefenseMode:options('MDT')
-    state.WeaponskillMode:options('Match', 'PDL')
+    state.ResistDefenseMode:options('MEVA')
+    state.WeaponskillMode:options('Match','SubtleBlow', 'PDL')
     state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
 	state.Weapons:options('default','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan','None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon')
     state.Passive = M{['description'] = 'Passive Mode','None','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20'}
 
     -- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Never','Always','300','1000',}
-	state.AutoBuffMode:options('Off','Auto','melee4','Regen') --,'Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','melee4','sortie4','Regen') --,'Off','Off','Off','Off','Off',
 
 	gear.melee_jse_back = {name="Intarabus's Cape",augments={'Accuracy+20 Attack+20'}}
 	gear.magic_jse_back = {name="Intarabus's Cape",augments={'CHR+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Damage taken-5%',}}
@@ -56,8 +57,8 @@ function user_job_setup()
 	
 	-- Additional local binds
     send_command('bind ^` gs c cycle ExtraSongsMode')
-	send_command('bind !` input /ma "Chocobo Mazurka" <me>')
-	send_command('bind @` gs c cycle MagicBurstMode')
+	--send_command('bind !` input /ma "Chocobo Mazurka" <me>')
+	--send_command('bind @` gs c cycle MagicBurstMode')
 	send_command('bind @f10 gs c cycle RecoverMode')
 	send_command('bind @f8 gs c toggle AutoNukeMode')
 	send_command('bind !0 gs c weapons None;gs c update')
@@ -259,7 +260,10 @@ function init_gear_sets()
     sets.precast.WS.PDL = set_combine(sets.precast.WS,{
         body="Bunzi's Robe",
         neck={ name="Bard's Charm +2", augments={'Path: A',}},})
-        
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
     sets.precast.WS['Evisceration'] = { range="Linos",
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
@@ -311,7 +315,8 @@ function init_gear_sets()
 }
 sets.precast.WS['Mordant Rime'].PDL = set_combine(sets.precast.WS['Mordant Rime'],{
     body="Bunzi's Robe",})
-sets.precast.WS['Rudras Storm'] = {range="Linos",
+
+sets.precast.WS['Rudra\'s Storm'] = {range="Linos",
 head={ name="Nyame Helm", augments={'Path: B',}},
 body="Bihu Jstcorps. +3",
 hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -325,10 +330,13 @@ ring2="Cornelia's Ring",
 waist="Kentarch Belt +1",
 back={ name="Intarabus's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 }
-sets.precast.WS['Rudras Storm'].PDL = set_combine(sets.precast.WS['Rudras Storm'],{
+sets.precast.WS['Rudra\'s Storm'].PDL = set_combine(sets.precast.WS['Rudra\'s Storm'],{
     body="Bunzi's Robe",
 })
-
+sets.precast.WS['Rudra\'s Storm'].PDL.SubtleBlow = set_combine(sets.precast.WS['Rudra\'s Storm'].PDL,{
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",})
+    
 sets.precast.WS['Savage Blade'] = {range="Linos",
 head={ name="Nyame Helm", augments={'Path: B',}},
 body="Bihu Jstcorps. +3",
@@ -461,7 +469,6 @@ sets.precast.WS['Shattersoul'] = {
 
     
     sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
-        ammo="Pemphredo Tathlum",
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -729,6 +736,21 @@ sets.precast.WS['Shattersoul'] = {
         right_ring="Defending Ring",
         back="Moonlight Cape",
     }
+        
+	sets.defense.MEVA = {  ammo="Yamarang",
+    head={ name="Gleti's Mask", augments={'Path: A',}},
+    body={ name="Gleti's Cuirass", augments={'Path: A',}},
+    hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+    legs={ name="Gleti's Breeches", augments={'Path: A',}},
+    feet={ name="Gleti's Boots", augments={'Path: A',}},
+    neck={ name="Warder's Charm +1", augments={'Path: A',}},
+    waist="Carrier's Sash",
+    left_ear="Etiolation Earring",
+    right_ear="Sanare Earring",
+    left_ring="Shadow Ring",
+    right_ring="Defending Ring",
+    back="Moonlight Cape",}
+
     sets.defense.Aminon = {
         head="Null Masque",
         body="Adamantite Armor",
@@ -868,7 +890,8 @@ sets.idle.Sphere = set_combine(sets.idle, {
 	-- sets if more refined versions aren't defined.
 	-- If you create a set with both offense and defense modes, the offense mode should be first.
 	-- EG: sets.engaged.Dagger.Accuracy.Evasion
-	sets.engaged = {range="Linos",
+	sets.engaged = {
+    ranged="Linos",
 	head={ name="Blistering Sallet +1", augments={'Path: A',}},
 	body="Ashera Harness",
 	hands="Volte Mittens",
@@ -886,7 +909,6 @@ sets.idle.Sphere = set_combine(sets.idle, {
 -- Sets with weapons defined.
 sets.engaged.STP = {
     ranged="Linos",
-    ammo=Empty,
     head="Bunzi's Hat",
     body="Ashera Harness",
     hands="Bunzi's Gloves",
@@ -903,7 +925,6 @@ sets.engaged.STP = {
 
 sets.engaged.CRIT = set_combine(sets.engaged, {
     ranged="Linos",
-    ammo=Empty,
     head="Blistering Sallet +1",
     body="Bihu Jstcorps. +3",
     hands="Bunzi's Gloves",
@@ -1142,7 +1163,7 @@ function select_default_macro_book()
 end
 function user_job_lockstyle()
     if player.equipment.sub:contains('Shield') then
-        if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword/
+        if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword/Shield
         windower.chat.input('/lockstyleset 165')
         end
 	elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.

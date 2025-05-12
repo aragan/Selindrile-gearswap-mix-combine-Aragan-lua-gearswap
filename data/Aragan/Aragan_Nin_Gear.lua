@@ -49,7 +49,7 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'TP', 'ZANISH', 'DOUBLE','CRIT')
 	state.HybridMode:options('Normal','DT')
 	state.RangedMode:options('Normal','Acc')
-    state.WeaponskillMode:options('Match', 'PDL', 'SC', 'Proc')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC', 'Proc')
     state.CastingMode:options('Normal','SIRD')
     state.IdleMode:options( 'DT','Normal', 'Evasion', 'MDT', 'Regen', 'HP', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP', 'Enmity')
@@ -75,7 +75,8 @@ function user_job_setup()
 	send_command('bind !9 gs c weapons Default;gs c set WeaponskillMode Normal;gs c set CastingMode Normal;gs c update')
     send_command('bind f11 gs c cycle CastingMode')
 
-    send_command('bind f2 gs c toggle AutoShadowMode')
+    send_command('bind f3 gs c toggle AutoShadowMode')
+    send_command('bind f2 gs c toggle AutoBuffMode')
 
 	utsusemi_cancel_delay = .3
 	utsusemi_ni_cancel_delay = .06
@@ -118,7 +119,7 @@ function init_gear_sets()
 	sets.weapons.ProcScythe = {main="Maven's Scythe",sub=empty}
 	sets.weapons.ProcPolearm = {main="Sha Wujing's La. +1",sub=empty}
 	sets.weapons.ProcGreatKatana = {main="Zanmato +1",sub="Sword Strap",}
-    sets.weapons.ProcGreatKatana2 = {main="Mutsunokami",sub=empty}
+    sets.weapons.ProcGreatKatana2 = {main="Zanmato +1",sub=empty}
 	sets.weapons.ProcKatana = {main="Debahocho +1",sub=empty}
 	sets.weapons.ProcClub = {main="Caduceus",sub=empty}
 	sets.weapons.ProcStaff = {main="Profane Staff",sub=empty}
@@ -227,7 +228,10 @@ function init_gear_sets()
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
-    
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     sets.precast.WS.PDL = set_combine(sets.precast.WS, {
         ammo="Crepuscular Pebble",
         legs={ name="Mpaca's Hose", augments={'Path: A',}},

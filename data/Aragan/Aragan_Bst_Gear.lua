@@ -13,7 +13,7 @@ keyboard binds and chat
 function user_job_setup()
 	state.OffenseMode:options('Normal','Acc')
 	state.HybridMode:options('PDT','Normal','PetTank','BothDD')
-	state.WeaponskillMode:options('Match', 'Acc', 'PDL')
+	state.WeaponskillMode:options('Match', 'SubtleBlow', 'Acc', 'PDL')
 	state.CastingMode:options('Normal')
 	state.IdleMode:options('Normal', 'MDTMaster', 'Turtle', 'MEva')
 	state.RestingMode:options('Normal')
@@ -335,168 +335,171 @@ sets.midcast.Stun = set_combine(sets.midcast['Elemental Magic'], {
 	right_ring="Stikini Ring +1",
 })
 
-	sets.midcast.Helix = sets.midcast['Elemental Magic']
-	sets.midcast.Helix.Resistant = sets.midcast['Elemental Magic']
+sets.midcast.Helix = sets.midcast['Elemental Magic']
+sets.midcast.Helix.Resistant = sets.midcast['Elemental Magic']
 
-		-- WEAPONSKILLS
-		-- Default weaponskill sets.
+-- WEAPONSKILLS
+-- Default weaponskill sets.
 
-		sets.precast.WS = {
-			ammo="Coiste Bodhar",
-			head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
-			body="Nyame Mail",
-			hands="Nyame Gauntlets",
-			legs="Nyame Flanchard",
-			feet="Nyame Sollerets",
-			neck="Shulmanu Collar",
-			waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-			left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-			right_ear="Thrud Earring",
-			left_ring="Regal Ring",
-			right_ring="Cornelia's Ring",
-			back="Sacro Mantle",
-		}
+sets.precast.WS = {
+	ammo="Coiste Bodhar",
+	head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
+	body="Nyame Mail",
+	hands="Nyame Gauntlets",
+	legs="Nyame Flanchard",
+	feet="Nyame Sollerets",
+	neck="Shulmanu Collar",
+	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+	right_ear="Thrud Earring",
+	left_ring="Regal Ring",
+	right_ring="Cornelia's Ring",
+	back="Sacro Mantle",
+}
+sets.precast.WS.SubtleBlow =  {
+left_ring="Chirich Ring +1",
+right_ring="Chirich Ring +1",
+}
+sets.precast.WS.Acc = {
+	ammo="Coiste Bodhar",
+	head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
+	body="Nyame Mail",
+	hands="Nyame Gauntlets",
+	legs="Nyame Flanchard",
+	feet="Nyame Sollerets",
+	neck="Shulmanu Collar",
+	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+	right_ear="Thrud Earring",
+	left_ring="Regal Ring",
+	right_ring="Cornelia's Ring",
+	back="Sacro Mantle",
+}
+
+sets.precast.WS.PDL = set_combine(sets.precast.WS, {
+	ammo="Crepuscular Pebble",
+	head={ name="Gleti's Mask", augments={'Path: A',}},
+	body={ name="Gleti's Cuirass", augments={'Path: A',}},
+	hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+	legs={ name="Gleti's Breeches", augments={'Path: A',}},
+	feet={ name="Gleti's Boots", augments={'Path: A',}},
+	right_ear="Nukumi Earring +1",
+	left_ring="Sroda Ring",
+})
+
+-- Specific weaponskill sets.
+sets.precast.WS['Ruinator'] = set_combine(sets.precast.WS, {
+	ammo="Coiste Bodhar",
+	head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
+	body={ name="Nyame Mail", augments={'Path: B',}},
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck="Fotia Gorget",
+	waist="Fotia Belt",
+	left_ear={ name="Lugra Earring +1", augments={'Path: A',}},
+	right_ear="Sherida Earring",
+	left_ring="Sroda Ring",
+	right_ring="Gere Ring",
+	back="Null Shawl",
+})
 	
-		sets.precast.WS.Acc = {
-			ammo="Coiste Bodhar",
-			head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
-			body="Nyame Mail",
-			hands="Nyame Gauntlets",
-			legs="Nyame Flanchard",
-			feet="Nyame Sollerets",
-			neck="Shulmanu Collar",
-			waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-			left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-			right_ear="Thrud Earring",
-			left_ring="Regal Ring",
-			right_ring="Cornelia's Ring",
-			back="Sacro Mantle",
-		}
+sets.precast.WS['Ruinator'].Mekira = set_combine(sets.precast.WS['Ruinator'], {head="Gavialis Helm"})
 	
-		sets.precast.WS.PDL = set_combine(sets.precast.WS, {
-			ammo="Crepuscular Pebble",
-			head={ name="Gleti's Mask", augments={'Path: A',}},
-			body={ name="Gleti's Cuirass", augments={'Path: A',}},
-			hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-			legs={ name="Gleti's Breeches", augments={'Path: A',}},
-			feet={ name="Gleti's Boots", augments={'Path: A',}},
-			right_ear="Nukumi Earring +1",
-			left_ring="Sroda Ring",
-		})
-	
-		-- Specific weaponskill sets.
-		sets.precast.WS['Ruinator'] = set_combine(sets.precast.WS, {
-			ammo="Coiste Bodhar",
-			head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
-			body={ name="Nyame Mail", augments={'Path: B',}},
-			hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-			legs={ name="Nyame Flanchard", augments={'Path: B',}},
-			feet={ name="Nyame Sollerets", augments={'Path: B',}},
-			neck="Fotia Gorget",
-			waist="Fotia Belt",
-			left_ear={ name="Lugra Earring +1", augments={'Path: A',}},
-			right_ear="Sherida Earring",
-			left_ring="Sroda Ring",
-			right_ring="Gere Ring",
-			back="Null Shawl",
-		})
-			
-		sets.precast.WS['Ruinator'].Mekira = set_combine(sets.precast.WS['Ruinator'], {head="Gavialis Helm"})
-			
-		sets.precast.WS['Ruinator'].Acc = set_combine(sets.precast.WS.Acc, {})
+sets.precast.WS['Ruinator'].Acc = set_combine(sets.precast.WS.Acc, {})
+
+sets.precast.WS['Ruinator'].PDL = set_combine(sets.precast.WS.PDL, {})
+
+sets.precast.WS['Onslaught'] = set_combine(sets.precast.WS, {})
 		
-		sets.precast.WS['Ruinator'].PDL = set_combine(sets.precast.WS.PDL, {})
-	
-		sets.precast.WS['Onslaught'] = set_combine(sets.precast.WS, {})
-				
-		sets.precast.WS['Onslaught'].Acc = set_combine(sets.precast.Acc, {})
-		
-		sets.precast.WS['Onslaught'].PDL = set_combine(sets.precast.PDL, {})
-	
-		sets.precast.WS['Decimation'] = set_combine(sets.precast.WS, {
-			ammo={ name="Coiste Bodhar", augments={'Path: A',}},
-			head={ name="Nyame Helm", augments={'Path: B',}},
-			body={ name="Nyame Mail", augments={'Path: B',}},
-			hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-			legs={ name="Nyame Flanchard", augments={'Path: B',}},
-			feet={ name="Nyame Sollerets", augments={'Path: B',}},
-			neck="Fotia Gorget",
-			waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-			left_ear="Sherida Earring",
-			right_ear="Nukumi Earring +1",
-			left_ring="Sroda Ring",
-			right_ring="Gere Ring",
-			back="Null Shawl",
-		})
-		sets.precast.WS['Decimation'].PDL = set_combine(sets.precast.WS['Decimation'], {
-			ammo="Crepuscular Pebble",
-			head={ name="Gleti's Mask", augments={'Path: A',}},
-			body={ name="Gleti's Cuirass", augments={'Path: A',}},
-			hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-			legs={ name="Gleti's Breeches", augments={'Path: A',}},
-			feet={ name="Gleti's Boots", augments={'Path: A',}},
-			right_ear="Nukumi Earring +1",
-			left_ring="Sroda Ring",
-		})
-		sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
-			ammo={ name="Coiste Bodhar", augments={'Path: A',}},
-			head={ name="Nyame Helm", augments={'Path: B',}},
-			body={ name="Nyame Mail", augments={'Path: B',}},
-			hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-			legs={ name="Nyame Flanchard", augments={'Path: B',}},
-			feet={ name="Nyame Sollerets", augments={'Path: B',}},
-			neck="Rep. Plat. Medal",
-			waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-			left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-			right_ear="Thrud Earring",
-			left_ring="Sroda Ring",
-			right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-			back="Sacro Mantle",
-		})
-		sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Savage Blade'], {
-			ammo="Crepuscular Pebble",
-			hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-			right_ear="Nukumi Earring +1",
-			left_ring="Sroda Ring",
-		})
-		sets.precast.WS['Rampage '] = set_combine(sets.precast.WS['Decimation'], {})
-		sets.precast.WS['Rampage '].PDL = set_combine(sets.precast.WS['Decimation'].PDL, {})
-	
-	
-		sets.precast.WS['Calamity'] = set_combine(sets.precast.WS, {
-			ammo="Aurgelmir Orb +1",
-			head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
-			body="Nyame Mail",
-			hands="Nyame Gauntlets",
-			legs="Nyame Flanchard",
-			feet="Nyame Sollerets",
-			neck="Shulmanu Collar",
-			waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-			left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-			right_ear="Thrud Earring",
-			left_ring="Sroda Ring",
-			right_ring="Cornelia's Ring",
-			back="Null Shawl",
-		})
-	
-		sets.precast.WS['Mistral Axe'] = set_combine(sets.precast.WS['Calamity'], {})
-	
-		sets.precast.WS['Primal Rend'] = {
-			ammo="Pemphredo Tathlum",
-			head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
-			body="Nyame Mail",
-			hands="Nyame Gauntlets",
-			legs="Nyame Flanchard",
-			feet="Nyame Sollerets",
-			neck="Baetyl Pendant",
-			waist="Orpheus's Sash",
-			left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-			right_ear="Friomisi Earring",
-			left_ring="Epaminondas's Ring",
-			right_ring="Cornelia's Ring",
-			back="Sacro Mantle",
-	
-	}   
+sets.precast.WS['Onslaught'].Acc = set_combine(sets.precast.Acc, {})
+
+sets.precast.WS['Onslaught'].PDL = set_combine(sets.precast.PDL, {})
+
+sets.precast.WS['Decimation'] = set_combine(sets.precast.WS, {
+	ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+	head={ name="Nyame Helm", augments={'Path: B',}},
+	body={ name="Nyame Mail", augments={'Path: B',}},
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck="Fotia Gorget",
+	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+	left_ear="Sherida Earring",
+	right_ear="Nukumi Earring +1",
+	left_ring="Sroda Ring",
+	right_ring="Gere Ring",
+	back="Null Shawl",
+})
+sets.precast.WS['Decimation'].PDL = set_combine(sets.precast.WS['Decimation'], {
+	ammo="Crepuscular Pebble",
+	head={ name="Gleti's Mask", augments={'Path: A',}},
+	body={ name="Gleti's Cuirass", augments={'Path: A',}},
+	hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+	legs={ name="Gleti's Breeches", augments={'Path: A',}},
+	feet={ name="Gleti's Boots", augments={'Path: A',}},
+	right_ear="Nukumi Earring +1",
+	left_ring="Sroda Ring",
+})
+sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
+	ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+	head={ name="Nyame Helm", augments={'Path: B',}},
+	body={ name="Nyame Mail", augments={'Path: B',}},
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck="Rep. Plat. Medal",
+	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+	right_ear="Thrud Earring",
+	left_ring="Sroda Ring",
+	right_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+	back="Sacro Mantle",
+})
+sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Savage Blade'], {
+	ammo="Crepuscular Pebble",
+	hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+	right_ear="Nukumi Earring +1",
+	left_ring="Sroda Ring",
+})
+sets.precast.WS['Rampage '] = set_combine(sets.precast.WS['Decimation'], {})
+sets.precast.WS['Rampage '].PDL = set_combine(sets.precast.WS['Decimation'].PDL, {})
+
+
+sets.precast.WS['Calamity'] = set_combine(sets.precast.WS, {
+	ammo="Aurgelmir Orb +1",
+	head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
+	body="Nyame Mail",
+	hands="Nyame Gauntlets",
+	legs="Nyame Flanchard",
+	feet="Nyame Sollerets",
+	neck="Shulmanu Collar",
+	waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+	right_ear="Thrud Earring",
+	left_ring="Sroda Ring",
+	right_ring="Cornelia's Ring",
+	back="Null Shawl",
+})
+
+sets.precast.WS['Mistral Axe'] = set_combine(sets.precast.WS['Calamity'], {})
+
+sets.precast.WS['Primal Rend'] = {
+	ammo="Pemphredo Tathlum",
+	head={ name="Ankusa Helm +3", augments={'Enhances "Killer Instinct" effect',}},
+	body="Nyame Mail",
+	hands="Nyame Gauntlets",
+	legs="Nyame Flanchard",
+	feet="Nyame Sollerets",
+	neck="Baetyl Pendant",
+	waist="Orpheus's Sash",
+	left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+	right_ear="Friomisi Earring",
+	left_ring="Epaminondas's Ring",
+	right_ring="Cornelia's Ring",
+	back="Sacro Mantle",
+
+}   
 	
 	-- Elemental Weapon Skill --elemental_ws--
 	

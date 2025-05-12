@@ -37,9 +37,10 @@ for pup play easy need addon autocontrol to save more set name and autopup and t
 function user_job_setup()
     state.OffenseMode:options('Normal','Acc','FullAcc','MaxTP','SubtleBlow')
     state.HybridMode:options('Pet','DT','Normal')
-    state.WeaponskillMode:options('Match','Normal', 'PDL', 'SC')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
     state.PhysicalDefenseMode:options('PDT')
     state.MagicalDefenseMode:options('MDT')
+    state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options('Normal','PDT','Empy','EnemyCritRate','Evasion','HP','MDT','Refresh','Sphere')
 	state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners','Tauret','CLUB','Staff')
     state.Animators = M{['description']='Animators', 'AnimatorPI', 'None', 'AnimatorPII', 'NeoAnimator'}
@@ -319,7 +320,10 @@ range="Trollbane",  }
     sets.precast.WS.SC = set_combine(sets.precast.WS, {
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
-
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
     sets.precast.WS["Stringing Pummel"] = {    
         head={ name="Mpaca's Cap", augments={'Path: A',}},

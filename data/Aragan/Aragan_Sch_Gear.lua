@@ -145,6 +145,7 @@ function user_job_setup()
     state.IdleMode:options('DT','Normal','Empy', 'Resist','BoostHP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
     state.PhysicalDefenseMode:options('PDT','BoostHP', 'Evasion', 'Resist')
     state.MagicalDefenseMode:options('MDT')
+    state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('Mpaca','Marin','None','Musa','Xoanon', 'Club','TernionDagger','DualDaybreak','DualMaxentius')
 	state.AutoBuffMode:options('Off','seg','Auto','Fullbuff') --,'Vagary','Off','Off','Off','Off',
 
@@ -358,7 +359,7 @@ right_ear="Telos Earring",
         sets.precast.WS['Myrkr'] = {
             ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
             head="Pixie Hairpin +1",
-            body={ name="Ros. Jaseran +1", augments={'Path: A',}},
+            body="Acad. Gown +3",
             hands={ name="Kaykaus Cuffs +1", augments={'MP+80','MND+12','Mag. Acc.+20',}},
             legs={ name="Psycloth Lappas", augments={'MP+80','Mag. Acc.+15','"Fast Cast"+7',}},
             feet="Arbatel Loafers +3",
@@ -738,7 +739,7 @@ right_ear="Telos Earring",
         sub="Enki Strap",
         ammo="Pemphredo Tathlum",
         head="Pedagogy Mortarboard +3", 
-        body={ name="Agwu's Robe", augments={'Path: A',}},
+        body="Acad. Gown +3",
         hands="Academic's Bracers +3",
         legs={ name="Agwu's Slops", augments={'Path: A',}},
         feet="Academic's loafers +3",
@@ -1405,7 +1406,7 @@ sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.Hyb
 	sets.buff['Light Arts'] = {} --legs="Academic's Pants +3"
 	sets.buff['Dark Arts'] = {} --body="Academic's Gown +3" --body="Acad. Gown +1",
     sets.LightArts = {body="Arbatel Gown +3",}
-    sets.DarkArts = {}--body="Acad. Gown +1",
+    sets.DarkArts = {}--body="Acad. Gown +3",
     sets.Obi = {waist="Hachirin-no-Obi"}
     sets.Bookworm = {back="Bookworm's Cape",}
 

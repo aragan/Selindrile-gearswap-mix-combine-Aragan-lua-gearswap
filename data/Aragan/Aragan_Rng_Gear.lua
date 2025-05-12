@@ -14,10 +14,11 @@ keyboard binds and chat
 function user_job_setup()
 	state.OffenseMode:options('Normal','Acc', 'DA', 'STP', 'Ranged')
 	state.HybridMode:options( 'PDT','Normal')
-	state.RangedMode:options('Normal', 'Acc', 'DA', 'STP', 'Ranged')
+	state.RangedMode:options('Normal', 'SubtleBlow', 'Acc', 'DA', 'STP', 'Ranged')
 	state.WeaponskillMode:options('Match', 'PDL', 'SC')
     state.PhysicalDefenseMode:options('PDT', 'Evasion')
     state.MagicalDefenseMode:options('MDT')
+	state.ResistDefenseMode:options('MEVA')
     state.IdleMode:options('Normal', 'PDH', 'PDT', 'EnemyCritRate', 'Resist', 'Regen', 'Refresh', 'Enmity')
 	
 	state.Weapons:options('Default','None', 'SWORDS', 'DAGGERS', 'AXE','DualWeapons','DualSavageWeapons','DualEviscerationWeapons','DualMagicWeapons','DualMalevolence')
@@ -217,7 +218,10 @@ back="Null Shawl",})
 		feet="Nyame Sollerets",
 		neck={ name="Warder's Charm +1", augments={'Path: A',}},
 	})
-
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     sets.precast.WS['Last Stand'] = {
 		head="Orion Beret +3",
 		body="Amini Caban +2",

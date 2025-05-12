@@ -16,6 +16,8 @@ function user_job_setup()
     state.CastingMode:options('Normal')
     state.IdleMode:options('Normal', 'PDT', 'Regen', 'Sphere', 'MagicalBloodPactRage', 'PhysicalBloodPactRage')
     state.PhysicalDefenseMode:options('Normal','PDT', 'Regen', 'Mdt', 'MagicalBloodPactRage', 'PhysicalBloodPactRage')
+    state.MagicalDefenseMode:options('MDT')
+    state.ResistDefenseMode:options('MEVA')
 
 	state.Weapons:options('None','Grioavolr')
 

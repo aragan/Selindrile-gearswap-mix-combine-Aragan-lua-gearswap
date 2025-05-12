@@ -38,7 +38,7 @@ Savage Blade Scission
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'H2H')
-    state.WeaponskillMode:options('Match', 'SC', 'PDL','Proc')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'SC', 'PDL','Proc')
     state.HybridMode:options('Normal', 'PDT')
     state.PhysicalDefenseMode:options('PDT', 'HP','Evasion','Empy', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
@@ -59,6 +59,7 @@ function user_job_setup()
 	send_command('bind @` gs c cycle SkillchainMode')
     send_command('bind f7 gs c cycle Shield')
     send_command('bind ^m gs c toggle Medicine')
+	send_command('bind f2 gs c toggle AutoBuffMode')
 
 	send_command('bind !8 gs c weapons Greatsword;gs c update')
 	send_command('bind !0 gs c set WeaponskillMode Proc;;gs c set CastingMode Proc;gs c update')
@@ -306,7 +307,10 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         right_ring="Cornelia's Ring",
         back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
      }
-
+     sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
      sets.precast.WS.SC= set_combine(sets.precast.WS, {
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
@@ -1210,7 +1214,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
      -- These allow hybrid acc/pdt sets for difficult content
      sets.Defensive = {
         head={ name="Sakpata's Helm", augments={'Path: A',}}, -- 4% haste
-        body={ name="Sakpata's Plate", augments={'Path: A',}}, -- 2% haste
+        body="Boii Lorica +3",-- 3% haste
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}}, -- 4% haste
         legs={ name="Sakpata's Cuisses", augments={'Path: A',}}, -- 4% haste
         feet={ name="Sakpata's Leggings", augments={'Path: A',}}, -- 2% haste

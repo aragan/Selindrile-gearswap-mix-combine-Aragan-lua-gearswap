@@ -29,7 +29,7 @@ jinpu spam
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'triple', 'SubtleBlow', 'Range' )
     state.HybridMode:options('PDT','Normal','DTLite')
-    state.WeaponskillMode:options('Match','Normal', 'SC', 'Acc', 'PDL','Proc')
+    state.WeaponskillMode:options('Match', 'SubtleBlow','SC', 'Acc', 'PDL','Proc')
     state.RangedMode:options('Normal', 'Acc')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Reraise')
 	state.MagicalDefenseMode:options('MDT')
@@ -47,6 +47,7 @@ function user_job_setup()
 	send_command('bind !0 gs c set skipprocweapons false;gs c weapons ProcWeapon;gs c set WeaponskillMode Proc;gs c update')
 	send_command('bind !9 gs c set skipprocweapons true;gs c weapons Default;gs c set WeaponskillMode Normal;gs c update')
 	send_command('bind ^8 gs c weapons Bow;gs c update')
+	send_command('bind f2 gs c toggle AutoBuffMode')
 
     select_default_macro_book()
 end
@@ -140,6 +141,10 @@ function init_gear_sets()
         left_ring="Regal Ring",
         right_ring="Cornelia's Ring",
         back={ name="Smertrios's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+    }
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
     }
         sets.precast.WS.PDL = set_combine(sets.precast.WS, {
             ammo="Crepuscular Pebble",

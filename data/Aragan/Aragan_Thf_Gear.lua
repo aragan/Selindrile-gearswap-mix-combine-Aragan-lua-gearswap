@@ -4,7 +4,7 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'Ranger')
     state.HybridMode:options('DT','Normal')
     state.RangedMode:options('Normal', 'Acc')
-    state.WeaponskillMode:options('Match','Normal', 'PDL', 'Mod')
+    state.WeaponskillMode:options('Match','SubtleBlow', 'PDL', 'Mod')
 	state.IdleMode:options('DT','Normal','PDT', 'HP', 'Evasion', 'MDT', 'Regen', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP','Regain')
 	state.MagicalDefenseMode:options('MDT')
@@ -102,7 +102,7 @@ function init_gear_sets()
     sets.precast.JA['Accomplice'] = {head="Skulker's Bonnet +2",}
     sets.precast.JA['Flee'] = {}--feet="Pillager's Poulaines +1"
     sets.precast.JA['Hide'] = {body="Pillager's Vest +3"}
-    sets.precast.JA['Conspirator'] = {} --body="Skulker's Vest"
+    sets.precast.JA['Conspirator'] = {body="Skulker's Vest +1"} --body="Skulker's Vest"
     sets.precast.JA['Steal'] = {}
 	sets.precast.JA['Mug'] = {}
     sets.precast.JA['Despoil'] = {feet="Skulk. Poulaines +2",}
@@ -180,7 +180,10 @@ function init_gear_sets()
         legs="Gleti's Breeches",
         left_ring="Sroda Ring", 
     }
-
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
     sets.precast.WS['Exenterator'] = set_combine(sets.precast.WS, {range=empty,
     ammo="C. Palug Stone",
@@ -276,6 +279,7 @@ function init_gear_sets()
         head="Skulker's Bonnet +2",
         hands="Gleti's Gauntlets",
         legs="Gleti's Breeches",
+        right_ear="Skulk. Earring +1",
         left_ring="Sroda Ring", 
     })
     sets.precast.WS.PDL["Rudra's Storm"] = set_combine(sets.precast.WS["Rudra's Storm"], {
@@ -365,16 +369,18 @@ function init_gear_sets()
     neck="Rep. Plat. Medal",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
     left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-    right_ear="Telos Earring",
+    right_ear="Sherida Earring",
     left_ring="Regal Ring",
-    right_ring="Cornelia's Ring",
+    right_ring="Gere Ring",
     back="Sacro Mantle",
 })
-    sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Savage Blade'], {range=empty,
+    sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Savage Blade'], {
+    range=empty,
     ammo="Crepuscular Pebble",
     head="Skulker's Bonnet +2",
-    hands="Gleti's Gauntlets",
+    body="Gleti's Cuirass",
     left_ring="Sroda Ring", 
+    right_ring="Cornelia's Ring",
 })  
    sets.precast.WS['Judgment'] = set_combine(sets.precast.WS, {
     ammo="Oshasha's Treatise",

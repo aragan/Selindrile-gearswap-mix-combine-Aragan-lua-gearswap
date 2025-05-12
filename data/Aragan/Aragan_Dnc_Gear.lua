@@ -25,7 +25,7 @@ keyboard binds and chat
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'Aminon', 'DT')
     state.HybridMode:options( 'PDT','Normal')
-    state.WeaponskillMode:options('Match', 'SC', 'PDL')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'SC', 'PDL')
 	state.IdleMode:options('DT','Normal','PDT','Regen', 'HP', 'Evasion', 'Enmity', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('Evasion', 'PDT', 'DT', 'Enmity', 'HP', 'Aminon')
 	state.MagicalDefenseMode:options('MDT')
@@ -283,7 +283,10 @@ function init_gear_sets()
     neck={ name="Etoile Gorget +2", augments={'Path: A',}},
     right_ear="Maculele Earring",
     })
-    
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     sets.precast.WS.PDL.Clim = {
         ammo="Crepuscular Pebble",
         head="Maculele Tiara +2",
@@ -323,6 +326,7 @@ function init_gear_sets()
         sets.precast.WS['Exenterator'].PDL = set_combine(sets.precast.WS['Exenterator'], {
             ammo="Crepuscular Pebble",
             body={ name="Gleti's Cuirass", augments={'Path: A',}},
+            legs="Maculele Tights +2",
             neck={ name="Etoile Gorget +2", augments={'Path: A',}},
     right_ear="Maculele Earring",
         })
@@ -461,25 +465,26 @@ function init_gear_sets()
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},})
     
-        sets.precast.WS["Shark Bite"].PDL = set_combine(sets.precast.WS["Shark Bite"], {
+    sets.precast.WS["Shark Bite"].PDL = set_combine(sets.precast.WS["Shark Bite"], {
             ammo="Crepuscular Pebble",
             body={ name="Gleti's Cuirass", augments={'Path: A',}},
+            legs="Maculele Tights +2",
             right_ear="Maculele Earring",
             left_ring="Regal Ring",
             right_ring="Cornelia's Ring",
             back="Sacro Mantle",
-        })
-        sets.precast.WS["Shark Bite"].PDL.Clim = set_combine(sets.precast.WS["Shark Bite"], {
-            ammo="Crepuscular Pebble",
-            head="Maculele Tiara +2",
-            hands="Maxixi Bangles +3",
-            body={ name="Gleti's Cuirass", augments={'Path: A',}},
-            right_ear="Maculele Earring",
-            back="Sacro Mantle",
-        })
-        sets.precast.WS["Shark Bite"].Clim = set_combine(sets.precast.WS["Shark Bite"], {
-            head="Maculele Tiara +2",
-        })
+    })
+    sets.precast.WS["Shark Bite"].PDL.Clim = set_combine(sets.precast.WS["Shark Bite"], {
+        ammo="Crepuscular Pebble",
+        head="Maculele Tiara +2",
+        hands="Maxixi Bangles +3",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        right_ear="Maculele Earring",
+        back="Sacro Mantle",
+    })
+    sets.precast.WS["Shark Bite"].Clim = set_combine(sets.precast.WS["Shark Bite"], {
+        head="Maculele Tiara +2",
+    })
         
 
     -- Elemental Weapon Skill --elemental_ws--

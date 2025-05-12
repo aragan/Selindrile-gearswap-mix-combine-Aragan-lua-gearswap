@@ -31,11 +31,12 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'Ranged', 'CRIT')
     state.HybridMode:options( 'PDT','Normal')
     state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow10','SubtleBlow40')
-    state.WeaponskillMode:options('Match', 'PDL', 'SC')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'Resistant')
     state.IdleMode:options('DT','Normal','Empy', 'Evasion', 'HP', 'Regen', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT','Aminon', 'Evasion', 'HP')
     state.MagicalDefenseMode:options('MDT')
+    state.ResistDefenseMode:options('MEVA')
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax','SubtleBlow10','SubtleBlow40'}
 	state.Weapons:options('None','SWORDS','Tauret','Rostam','Kustawi','Ranged')
 	state.CompensatorMode:options('Never','Always','300','1000')
@@ -317,10 +318,15 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         right_ring="Cornelia's Ring",
         back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
     }
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     sets.precast.WS.PDL = set_combine(sets.precast.WS, {
         body="Ikenga's Vest",
 		left_ring="Sroda Ring", 
 	})
+
 	sets.precast.WS.SC = set_combine(sets.precast.WS, {
 		head="Nyame Helm",
 		body="Nyame Mail",
@@ -370,7 +376,13 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         neck={ name="Comm. Charm +2", augments={'Path: A',}},
         waist="Kentarch Belt +1",
 	})
-
+    sets.precast.WS['Savage Blade'].PDL.SubtleBlow = set_combine(sets.precast.WS['Savage Blade'],sets.precast.WS.SubtleBlow, {
+        body="Ikenga's Vest",
+        neck={ name="Comm. Charm +2", augments={'Path: A',}},
+        waist="Kentarch Belt +1",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",    })
+    
     sets.precast.WS['Requiescat'] = {
         head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},

@@ -79,6 +79,7 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Melee', 'Shield')
 	state.CastingMode:options('Normal','SIRD', 'ConserveMP','OccultAcumen')
+    state.WeaponskillMode:options('Match','SubtleBlow')
     state.IdleMode:options('Normal','DT','MDT','HP', 'Regen', 'Refresh', 'Evasion', 'EnemyCritRate','Sphere')
 	state.PhysicalDefenseMode:options('PDT')
 	state.MagicalDefenseMode:options('MDT')
@@ -232,7 +233,10 @@ function init_gear_sets()
         right_ring="Cornelia's Ring",
         back={ name="Aurist's Cape +1", augments={'Path: A',}},
     }
-
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
     sets.precast.WS['Flash Nova'] = {
         ammo="Pemphredo Tathlum",
         head="Nyame Helm",

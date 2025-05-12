@@ -15,14 +15,14 @@ keyboard binds and chat
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow')
-    state.WeaponskillMode:options('Match','Normal', 'SC', 'PDL')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'SC', 'PDL')
     state.HybridMode:options( 'DT','Normal')
     state.PhysicalDefenseMode:options('PDT', 'HP', 'Reraise', 'Regain')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options( 'DT','Normal','Regen', 'HP', 'MDT', 'Evasion', 'EnemyCritRate')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
-	state.Weapons:options('Naegling', 'None', 'Trishula', 'Shining', 'TernionDagger', 'Staff', 'Club', 'DualNaegling', 'DualTernionDagger', 'DualClub')
+	state.Weapons:options('None', 'Naegling', 'Trishula', 'Shining', 'TernionDagger', 'Staff', 'Club', 'DualNaegling', 'DualTernionDagger', 'DualClub')
 	state.Passive = M{['description'] = 'Passive Mode','None','Twilight','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20', 'SubtleBlow30','SubtleBlow62'}
 
     select_default_macro_book()
@@ -33,6 +33,8 @@ function user_job_setup()
 	send_command('bind ^f11 gs c cycle MagicalDefenseMode')
 	send_command('bind @f7 gs c toggle AutoJumpMode')
 	send_command('bind @` gs c cycle SkillchainMode')
+    send_command('bind f2 gs c toggle AutoBuffMode')
+
 end
 
 -- Define sets and vars used by this job file.
@@ -189,12 +191,19 @@ function init_gear_sets()
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
+
 	sets.precast.WS.PDL = set_combine(sets.precast.WS, {
     hands="Gleti's Gauntlets",
     body="Pelt. Plackart +3",
     right_ear="Pel. Earring +1",
     left_ring="Sroda Ring", 
     })
+    sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
+	sets.precast.WS['Sonic Thrust'] = sets.precast.WS
+
 	sets.precast.WS['Stardiver'] = set_combine(sets.precast.WS, {
         ammo="Coiste Bodhar",
         head={ name="Nyame Helm", augments={'Path: B',}},
@@ -293,6 +302,13 @@ function init_gear_sets()
         right_ear="Pel. Earring +1",
         left_ring="Sroda Ring", 
     })
+    sets.precast.WS['Drakesbane'].PDL.SubtleBlow = set_combine(sets.precast.WS['Drakesbane'],sets.precast.WS.SubtleBlow, {
+        hands="Gleti's Gauntlets",
+        body="Pelt. Plackart +3",
+        neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+        right_ear="Pel. Earring +1",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",    })
     sets.precast.WS['Geirskogul'] = set_combine(sets.precast.WS, {
         ammo="Knobkierrie",
         head={ name="Nyame Helm", augments={'Path: B',}},
@@ -371,14 +387,21 @@ function init_gear_sets()
         right_ring="Cornelia's Ring",
         back={ name="Brigantia's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
     })
-    sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS, {
+    sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Savage Blade'], {
         hands="Gleti's Gauntlets",
         body="Pelt. Plackart +3",
         neck={ name="Dgn. Collar +2", augments={'Path: A',}},
         right_ear="Pel. Earring +1",
         left_ring="Sroda Ring", 
     })
-
+    sets.precast.WS['Savage Blade'].PDL.SubtleBlow = set_combine(sets.precast.WS['Savage Blade'],sets.precast.WS.SubtleBlow, {
+        hands="Gleti's Gauntlets",
+        body="Pelt. Plackart +3",
+        neck={ name="Dgn. Collar +2", augments={'Path: A',}},
+        right_ear="Pel. Earring +1",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",    })
+    
     sets.precast.WS['Black Halo'] = {
         ammo="Knobkierrie",
         head={ name="Nyame Helm", augments={'Path: B',}},

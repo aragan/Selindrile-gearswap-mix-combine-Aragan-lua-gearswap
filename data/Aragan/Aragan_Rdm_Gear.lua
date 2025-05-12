@@ -20,7 +20,7 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('None', 'Acc','STP', 'CRIT', 'Enspell', 'SubtleBlow')
     state.HybridMode:options('PDT','Normal')
-	state.WeaponskillMode:options('Match', 'PDL', 'SC')
+	state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
 	state.AutoBuffMode:options('Off','Auto','Default','AutoMelee','MeleeBuff','MageBuff')
 	state.CastingMode:options( 'Duration','Normal', 'Burst', 'SIRD', 'DT')
     state.IdleMode:options('DT','Normal', 'PDT','Empy', 'MDT','Regen', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
@@ -194,6 +194,10 @@ function init_gear_sets()
 		hands="Malignance Gloves",
 		left_ring="Sroda Ring", 
 	})
+	sets.precast.WS.SubtleBlow =  {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
 	sets.precast.WS.SC = set_combine(sets.precast.WS, {
 		head={ name="Nyame Helm", augments={'Path: B',}},
 		body={ name="Nyame Mail", augments={'Path: B',}},
