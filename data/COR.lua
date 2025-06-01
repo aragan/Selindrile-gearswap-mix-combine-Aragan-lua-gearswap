@@ -111,6 +111,8 @@ end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+    attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
+
 	-- Whether to use Compensator under a certain threshhold even when weapons are locked.
 	state.CompensatorMode = M{'Never','300','1000','Always'}
 	-- Whether to automatically generate bullets.
@@ -217,6 +219,12 @@ function job_precast(spell, spellMap, eventArgs)
     end
 end
 
+function job_post_precast(spell, spellMap, eventArgs)
+	if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
+		equip(sets.precast.WS.SubtleBlow)
+	end
+
+end
 function job_post_midcast(spell, spellMap, eventArgs)
 	if spell.action_type == 'Ranged Attack' then
 		if state.Buff['Triple Shot'] and sets.buff['Triple Shot'] then
@@ -479,7 +487,7 @@ end
 -- Set eventArgs.handled to true if we don't want automatic equipping of gear.
 function job_update(cmdParams, eventArgs)
 	check_weaponset()
-    handle_equipping_gear(player.status)
+    --handle_equipping_gear(player.status)
 
 end
 
