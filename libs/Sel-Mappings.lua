@@ -109,8 +109,17 @@ data.elements.strong_to = {['Light']='Dark', ['Dark']='Light', ['Fire']='Water',
 data.elements.storm_of = {['Light']="Aurorastorm", ['Dark']="Voidstorm", ['Fire']="Firestorm", ['Earth']="Sandstorm",
       ['Water']="Rainstorm", ['Wind']="Windstorm", ['Ice']="Hailstorm", ['Lightning']="Thunderstorm",}
 
-data.elements.BarElement_of = {['Fire']='Barfire',['Earth']='Barstone',['Water']='Barwater',['Wind']='Baraero',['Ice']='Barblizzard',['Lightning']='Barthunder'}
-data.elements.Bar2Element_of = {['Fire']='Barfira',['Earth']='Barstonra',['Water']='Barwatera',['Wind']='Baraera',['Ice']='Barblizzara',['Lightning']='Barthundra',}
+data.elements.BarElement_of = {['Light']='Barfire', ['Dark']='Barblizzard',['Fire']='Barfire',['Earth']='Barstone',['Water']='Barwater',['Wind']='Baraero',['Ice']='Barblizzard',['Lightning']='Barthunder'}
+
+data.elements.Bar2Element_of = {['Light']='Barfira', ['Dark']='Barblizzara',['Fire']='Barfira',['Earth']='Barstonra',['Water']='Barwatera',['Wind']='Baraera',['Ice']='Barblizzara',['Lightning']='Barthundra',}
+
+data.boostspell = {['Boost-AGI']='BoostStat',['Boost-CHR']='BoostStat',['Boost-DEX']='BoostStat',['Boost-INT']='BoostStat',['Boost-MND']='BoostStat',['STR Boost']='Boost-STR',['Boost-VIT']='BoostStat',
+	['Gain-AGI']='BoostStat',['Gain-CHR']='BoostStat',['Gain-DEX']='BoostStat',['Gain-INT']='BoostStat',['Gain-MND']='BoostStat',['Gain-STR']='BoostStat',['Gain-VIT']='BoostStat',}
+
+--[[data.elements.barstatus = {['Fire']='Baramnesia',['Barvirus']='BarStatus',['Barvira']='BarStatus',['Barparalyze']='BarStatus',['Ice']='Barparalyzra',
+['Barsilence']='BarStatus',['Barsilencera']='BarStatus',['Barpetrify']='BarStatus',['Barpetra']='BarStatus',['Barpoison']='BarStatus',['Barpoisonra']='BarStatus',
+['Barblind']='BarStatus',['Barblindra']='BarStatus',['Barsleep']='BarStatus',['Barsleepra']='BarStatus',}
+]]
 
 storms = S{"Aurorastorm", "Voidstorm", "Firestorm", "Sandstorm", "Rainstorm", "Windstorm", "Hailstorm", "Thunderstorm",
 		"Aurorastorm II", "Voidstorm II", "Firestorm II", "Sandstorm II", "Rainstorm II", "Windstorm II", "Hailstorm II", "Thunderstorm II"}
@@ -763,6 +772,26 @@ data.skills.one_handed_combat = S{2,3,5,9,11} --Combat skills for one-handed-wea
 -- Stepdown Tables.
 -------------------------------------------------------------------------------------------------------------------
 spell_stepdown = {
+	['Cure IV'] = 'Cure III',
+	['Regen']='Regen',
+	['Rampart']='Rampart',
+	['Refresh']='Refresh',
+	['Protect']='Protect',
+	['Shell']='Shell',
+	['Banish']='Banish',
+	['Holy']='Holy',
+	['Absorb-TP']='Absorb',
+	['Drain III']='Drain',
+	['Poisona']='StatusRemoval',
+	['Barfire']='BarElement',
+	['Baramnesia']='BarStatus',
+	['Gain-AGI']='BoostStat',
+	['Burn']='ElementalEnfeeble',
+	['Katon: Ichi'] = 'ElementalNinjutsu',
+	['Pyrohelix']='Helix',
+	['Firestorm']='Storm',
+	['Utsusemi: Ichi']='Utsusemi',
+	['Battlefield Elegy']='Elegy',['Carnage Elegy']='Elegy',
 	['Aspir III'] = 'Aspir II',
 	['Aspir II'] = 'Aspir',
 	['Sleepga II'] = 'Sleepga',
@@ -776,6 +805,10 @@ spell_stepdown = {
 	['Gravity II'] = 'Gravity',
 	['Horde Lullaby II'] = 'Horde Lullaby',
 	['Foe Lullaby II'] = 'Foe Lullaby',
+	['Dark Threnody II']='Threnody',
+	['Water Maneuver']='Maneuver',
+	['Haste']='Haste',
+	
 }
 
 item_stepdown = {
@@ -793,6 +826,7 @@ item_stepdown = {
 	['Reraise Ring'] = {'Reraise Earring','ear2'},
 	['Reraise Earring'] = {'Reraise Hairpin','head'},
 	['Reraise Hairpin'] = {'Wh. Rarab Cap +1','head'},
+
 }
 
 disable_priority = T{
