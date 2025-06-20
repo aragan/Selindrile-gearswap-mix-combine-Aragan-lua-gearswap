@@ -111,6 +111,7 @@ function job_setup()
     state.HippoMode = M(false, "hippoMode")
 	state.Stance = M{['description']='Stance','None','Ebullience'}
     state.ManaWallMode = M(true, "Mana Wall Mode")
+    state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
 
 	autows = 'Myrkr'
 	autofood = 'Pear Crepe'
@@ -629,11 +630,33 @@ function job_self_command(commandArgs, eventArgs)
 		end
 end
 
+
+function check_tp_mp_lower()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
+	if spell_recasts[275] < spell_latency and silent_can_use(275) then
+		windower.chat.input('/ma "Absorb-TP" <t>')
+		tickdelay = os.clock() + 2
+		return true
+	elseif spell_recasts[247] < spell_latency and silent_can_use(247) then
+		windower.chat.input('/ma "Aspir" <t>')
+		tickdelay = os.clock() + 2
+		return true
+	else
+		return false
+	end
+end
+
 function job_tick()
 	if check_stance() then return true end
 	if check_arts() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
+	if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
+		if check_tp_mp_lower() then return true end
+			tickdelay = os.clock() + 1.5
+		return true
+	end
 	return false
 end
 

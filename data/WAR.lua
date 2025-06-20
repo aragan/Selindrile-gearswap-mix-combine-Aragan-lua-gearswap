@@ -113,7 +113,7 @@ function job_setup()
 	state.Buff.Phalanx = buffactive['Phalanx'] or false
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.RP = M(false, "Reinforcement Points Mode")
-    --state.Medicine = M(false,'Medicine')
+	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
 
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 	state.ConquerorMode = M{['description']='Conqueror Mode','Never','500','1000','Always'}
@@ -187,7 +187,10 @@ function job_precast(spell, spellMap, eventArgs)
 
 end
 -- Modify the default idle set after it was constructed.
-function customize_idle_set(idleSet)
+function job_customize_idle_set(idleSet)
+	if buffactive['Tactician\'s Roll'] then 
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
     if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
@@ -325,14 +328,71 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
 end
 
 function job_buff_change(buff, gain)
-	if state.Medicine.value then
-        if buff == "Defense Down" then
+	if state.AutoReraiseeMode.value == true then
+		if buffactive['weakness'] then
+			equip(sets.Reraise)
+			disable('body','head')
+		else
+			enable('body','head')
+		end
+	end
+	if buff == 'Warcry' then
+		if gain and windower.ffxi.get_ability_recasts()[2] > 297 then
+			lastwarcry = player.name
+		else
+			lastwarcry = ''
+		end
+	end
+	if buff == "Mighty Strikes" then
+        if gain then  			
+            send_command('input /p "Mighty Strikes" [ON]')		
+        else	
+            send_command('input /p "Mighty Strikes" [OFF]')
+        end
+    end
+	if buff == "Warcry" then
+        if gain then  			
+            send_command('input /p "Warcry" [ON]')		
+        else	
+            send_command('input /p "Warcry" [OFF]')
+        end
+    end
+
+    if buff == "Blood Rage" then
+        if gain then  			
+            send_command('input /p "Blood Rage" [ON]')		
+        else	
+            send_command('input /p "Blood Rage" [OFF]')
+        end
+    end    
+    if buff == "petrification" then
+        if gain then    
+            equip(sets.defense.PDT)
+            send_command('input /p Petrification, please Stona.')		
+        else
+            send_command('input /p '..player.name..' is no longer Petrify!')
+            handle_equipping_gear(player.status)
+        end
+    end
+    if buff == "Charm" then
+        if gain then  			
+           send_command('input /p Charmd, please Sleep me.')		
+        else	
+           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        end
+    end
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
 			if gain then  			
 				send_command('input /item "Panacea" <me>')
-			end
-		elseif buff == "Magic Def. Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
 			end
 		elseif buff == "Magic Def. Down" then
 			if gain then  			
@@ -346,7 +406,7 @@ function job_buff_change(buff, gain)
 			if gain then  			
 				send_command('@input /item "panacea" <me>')
 			end
-		elseif buff == "Magic Evasion Downn" then
+		elseif buff == "Magic Evasion Down" then
 			if gain then  			
 				send_command('@input /item "panacea" <me>')
 			end
@@ -400,55 +460,15 @@ function job_buff_change(buff, gain)
 			if gain then
 				send_command('@input /item "panacea" <me>')
 			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
 		end
-    end
-
-	if buff == 'Warcry' then
-		if gain and windower.ffxi.get_ability_recasts()[2] > 297 then
-			lastwarcry = player.name
-		else
-			lastwarcry = ''
+		if not midaction() then
+			job_update()
 		end
 	end
-	if buff == "Mighty Strikes" then
-        if gain then  			
-            send_command('input /p "Mighty Strikes" [ON]')		
-        else	
-            send_command('input /p "Mighty Strikes" [OFF]')
-        end
-    end
-	if buff == "Warcry" then
-        if gain then  			
-            send_command('input /p "Warcry" [ON]')		
-        else	
-            send_command('input /p "Warcry" [OFF]')
-        end
-    end
-
-    if buff == "Blood Rage" then
-        if gain then  			
-            send_command('input /p "Blood Rage" [ON]')		
-        else	
-            send_command('input /p "Blood Rage" [OFF]')
-        end
-    end    
-    if buff == "petrification" then
-        if gain then    
-            equip(sets.defense.PDT)
-            send_command('input /p Petrification, please Stona.')		
-        else
-            send_command('input /p '..player.name..' is no longer Petrify!')
-            handle_equipping_gear(player.status)
-        end
-    end
-    if buff == "Charm" then
-        if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
-        else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
-        end
-    end
-
 	update_melee_groups()
 end
 

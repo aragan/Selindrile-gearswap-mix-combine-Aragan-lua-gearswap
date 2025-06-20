@@ -48,7 +48,6 @@ function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
 	organizer_items = {
-        "Zanmato +1",
 		"Mutsunokami",
         "Airmid's Gorget",
         "Toolbag (Shihe)",
@@ -97,7 +96,28 @@ buff_spell_lists = {
 	Sortie = {	--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 	{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
 	{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
-},
+    },
+	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+	{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
+	{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+	{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+	{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+	{Name='Cocoon',             Buff='Cocoon',          SpellID=547,    When='Always'},
+	{Name='Shell II',	Buff='Shell',		SpellID=49,	When='Always'},
+	{Name='Protect III',	Buff='Protect',		SpellID=45,	When='Always'},
+    },
+	Tank = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+	{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
+	{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
+	{Name='Gekka: Ichi',Buff='Enmity Boost',SpellID=505,When='Combat'},
+
+	{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+	{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+	{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+	{Name='Cocoon',             Buff='Cocoon',          SpellID=547,    When='Always'},
+	{Name='Shell II',	Buff='Shell',		SpellID=49,	When='Always'},
+	{Name='Protect III',	Buff='Protect',		SpellID=45,	When='Always'},
+    },
 	Default = {
 		--{Name='Myoshu: Ichi',Buff='Subtle Blow Plus',SpellID=507,Reapply=false},
 		{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,Reapply=false},
@@ -105,7 +125,7 @@ buff_spell_lists = {
 }
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
-    attack2 = 4000 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
+    attack2 = 4500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
 
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Migawari = buffactive.Migawari or false
@@ -118,6 +138,7 @@ function job_setup()
 	--state.Proc = M(false, 'Proc')
     --state.unProc = M(false, 'unProc')
 	state.Stance = M{['description']='Stance','None','Hasso','Innin','Yonin',}
+	state.NeverDieMode = M(true, 'Never Die Mode')
 
 	autows = "Blade: Shun"
 	autofood = 'Soy Ramen'
@@ -134,7 +155,9 @@ function job_setup()
     DW = false
 	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","ElementalWheel","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","TreasureMode",})
 end
-
+function job_auto_change_target(spell, action, spellMap, eventArgs)
+	eventArgs.SelectNPCTargets = true
+end
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for standard casting events.
 -------------------------------------------------------------------------------------------------------------------
@@ -155,9 +178,12 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
 		tickdelay = os.clock() + 1.1
 	end
+
 end
 
 function job_pretarget(spell, spellMap, eventArgs)
+	default_pretarget(spell, spellMap)
+
     if spell.action_type == 'Ranged Attack' and (player.equipment.ammo == 'Togakushi Shuriken' or player.equipment.ammo == 'Happo Shuriken') then
 		cancel_spell()
 		add_to_chat(123,'Abort: Don\'t throw your good ammo!')
@@ -168,6 +194,9 @@ function job_pretarget(spell, spellMap, eventArgs)
 end
 
 function job_filter_precast(spell, spellMap, eventArgs)
+	if spell.english == "Mijin Gakure" then
+		cancel_spell()
+	end
 	--[[attack = player.attack
 	if attack > attack2 then
         active_ws = sets.precast.WS.PDL
@@ -178,8 +207,29 @@ function job_filter_precast(spell, spellMap, eventArgs)
         equip(active_ws[spell.name])
     end]]
 end
+function auto_change_target(spell, spellMap)
+    local eventArgs = {
+        handled = false,
+        SelectNPCTargets = true
+    }
 
+    if eventArgs.handled then
+        return
+    end
+
+    local selectNPCTargets = eventArgs.SelectNPCTargets
+    local newTarget
+
+    if spell.targets and spell.targets.Enemy and selectNPCTargets and spell.target.raw:startswith('<') then
+        newTarget = '<stnpc>'
+    end
+
+    if newTarget and newTarget ~= spell.target.raw then
+        change_target(newTarget)
+    end
+end
 function job_precast(spell, spellMap, eventArgs)
+
 	if spell.english == 'Mijin Gakure' and windower.ffxi.get_ability_recasts()[0] < latency and not state.UnlockWeapons.value and not state.Weapons.value == 'None' then
 		local mijinmain = standardize_set(sets.precast.JA['Mijin Gakure'].main)
 		local equippedweapons = standardize_set(sets.weapons[state.Weapons.value])
@@ -189,7 +239,7 @@ function job_precast(spell, spellMap, eventArgs)
 		end
 	end
 
-
+--[[ 
 	local player = windower.ffxi.get_player()
     local attack = player.attack
     local defense = player.defense
@@ -205,7 +255,7 @@ function job_precast(spell, spellMap, eventArgs)
     end
 	self = windower.ffxi.get_mob_by_target("me")
 	target = windower.ffxi.get_mob_by_target("t") or windower.ffxi.get_mob_by_target("st") or self
-		
+		]]
     -- Cancel weapon skill if enemy is further than 7 yalms away to prevent losing TP. This value should be larger for "large" model enemies such as Fafnir.
 	--[[if active_ws[spell.name] then
         equip(active_ws[spell.name])
@@ -334,16 +384,22 @@ function job_post_midcast(spell, spellMap, eventArgs)
         end
     end
 end
+
 function job_filter_aftercast(spell, spellMap, eventArgs)
-	if (player.in_combat or being_attacked) and (spell.type:endswith('Magic') or spell.type == "Ninjutsu") and spell.interrupted then
+
+	if spell.interrupted and (spell.type == "Ninjutsu" or spell.type == "WhiteMagic") and (player.in_combat or being_attacked)   then
 		state.CastingMode:set('SIRD')
 		--send_command('gs c set state.CastingMode.value SIRD')
 		send_command('gs c update')
 		tickdelay = os.clock() + 1.1
-	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+	else
 		state.CastingMode:set('Normal')
 		send_command('gs c update')
-		tickdelay = os.clock() + 1.1
+
+	--[[elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+		state.CastingMode:set('Normal')
+		send_command('gs c update')
+		tickdelay = os.clock() + 1.1]]
 	end
 end
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
@@ -399,12 +455,114 @@ function job_buff_change(buff, gain)
         end
     end
 
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			job_update()
+		end
+	end
+
+
 end
 
 function job_status_change(new_status, old_status)
+	if state.NeverDieMode.value then 
+
+		if (player.in_combat or being_attacked) and player.hpp < 25 then
+			state.AutoShadowMode:set('true')
+			state.AutoBuffMode:set('Defend')
+
+			--send_command('gs c update')
+			
+			tickdelay = os.clock() + 1.1
+		end
+	end
+end
+function job_state_change(stateField, newValue, oldValue)
 
 end
-
 -- Handle notifications of general user state change.
 --[[function job_state_change(stateField, newValue, oldValue)
     if stateField == 'Proc' then
@@ -438,7 +596,9 @@ function job_customize_idle_set(idleSet)
     if state.Buff.Migawari then
         idleSet = set_combine(idleSet, sets.buff.Migawari)
     end
-
+	if buffactive['Tactician\'s Roll'] then 
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
     return idleSet
 end
 
@@ -718,10 +878,11 @@ function update_combat_form()
 end
 
 function job_tick()
-	--if user_status_change() then return true end
 	if check_stance() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
+	if job_status_change() then return true end
+
 	if state.AutoTankMode.value and player.in_combat and player.target.type == "MONSTER" and not moving then
 		windower.send_command('gs c SubJobEnmity')
 		tickdelay = os.clock() + 1
@@ -838,18 +999,43 @@ function check_buff()
 			end
 		end
 		
-		if player.in_combat and not state.Buff['SJ Restriction'] then
+		if state.AutoBuffMode.value ~= 'Auto' and state.AutoBuffMode.value ~= 'Defend'and player.in_combat and not state.Buff['SJ Restriction'] then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
 
-			if player.sub_job == 'WAR' and not buffactive.Berserk and not is_defensive() and abil_recasts[1] < latency then
+			if player.sub_job == 'WAR' and not buffactive.Berserk and not buffactive.Defender and abil_recasts[1] < latency then
 				windower.chat.input('/ja "Berserk" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
-			elseif player.sub_job == 'WAR' and not buffactive.Aggressor and not is_defensive() and abil_recasts[4] < latency then
+			elseif player.sub_job == 'WAR' and not buffactive.Aggressor and not buffactive.Defender and abil_recasts[4] < latency then
 				windower.chat.input('/ja "Aggressor" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
 			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			else
+				return false
+			end
+		end
+		
+		if player.in_combat and player.sub_job == 'WAR' and state.AutoBuffMode.value == 'Defend'and not state.Buff['SJ Restriction'] then
+			state.AutoShadowMode:set('true')
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+	
+			if buffactive.Berserk then
+				send_command('@wait .5;cancel Berserk')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif buffactive.Aggressor then
+					send_command('@wait .5;cancel Aggressor')
+					tickdelay = os.clock() + 1.1
+					return true
+			elseif not buffactive.Defender and abil_recasts[3] < latency then
+				windower.chat.input('/ja "Defender" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive.Warcry and abil_recasts[2] < latency then
 				windower.chat.input('/ja "Warcry" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
@@ -899,43 +1085,44 @@ windower.register_event('incoming text',function(org)
 
 	--abyssea stagger --red pros
 	if string.find(org, "The fiend is frozen in its tracks.") then
-		windower.send_command('/p Stagger! <call21>!')  -- code add by (Aragan@Asura)
-		send_command('gs c Weapons Tauret;gs c set WeaponskillMode Match;gc c OffenseMode CRIT;gs c set TreasureMode Fulltime;gs enable all')
+		windower.send_command('input /p Stagger! <call21>!')-- code add by (Aragan@Asura)
+		send_command('gs c Weapons Tauret;gs c set WeaponskillMode Match;gs c set OffenseMode Normal;gs c set TreasureMode Fulltime;gs c set AutoWSMode True')--gs enable all AutoWSMode --gs c Weapons Naegling;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false
 	end
 
-	if state.WeaponskillMode.value == 'Proc' and world.area:contains('Abyssea') then    
+	if state.WeaponskillMode.value == 'Proc' then    
 		if string.find(org, "The fiend appears vulnerable to wind elemental weapon skills!")  then
 			send_command('gs c Weapons ProcGreatKatana;') 
-			send_command('/p RED Proc: Wind - Cyclone(DGR), Tachi: Jinpu(GKT);') 
-		
+			send_command('input /p RED Proc: Wind - Cyclone(DGR), Tachi: Jinpu(GKT);') 
+			send_command('input /echo RED Proc: Wind - Cyclone(DGR), Tachi: Jinpu(GKT);')
+
 		elseif string.find(org, "The fiend appears vulnerable to lightning elemental weapon skills!")  then
 			send_command('gs c Weapons ProcPolearm;')
-			send_command('/p RED Proc: Lightning - Raiden Thrust(PLM);')
-			send_command('/echo RED Proc: Lightning - Raiden Thrust(PLM);')
+			send_command('input /p RED Proc: Lightning - Raiden Thrust(PLM);')
+			send_command('input /echo RED Proc: Lightning - Raiden Thrust(PLM);')
 		
 	    elseif string.find(org, "The fiend appears vulnerable to fire elemental weapon skills!")  then
 			send_command('gs c Weapons ProcSword;')
-			send_command('/p RED Proc: Fire - Red Lotus Blade(SWD);')
-			send_command('/echo RED Proc: Fire - Red Lotus Blade(SWD);')
+			send_command('input /p RED Proc: Fire - Red Lotus Blade(SWD);')
+			send_command('input /echo RED Proc: Fire - Red Lotus Blade(SWD);')
 		
 	    elseif string.find(org, "The fiend appears vulnerable to earth elemental weapon skills!")  then
 			send_command('gs c Weapons ProcStaff;')
-			send_command('/p RED Proc: Earth - Earth Crusher(STF);')
-			send_command('/echo RED Proc: Earth - Earth Crusher(STF);')
+			send_command('input /p RED Proc: Earth - Earth Crusher(STF);')
+			send_command('input /echo RED Proc: Earth - Earth Crusher(STF);')
 		
 	    elseif string.find(org, "The fiend appears vulnerable to ice elemental weapon skills!")  then
 			send_command('gs c Weapons ProcGreatSword;')
-			send_command('/p RED Proc: Ice - Freezebite(GSD);')
-			send_command('/echo RED Proc: Ice - Freezebite(GSD);')
+			send_command('input /p RED Proc: Ice - Freezebite(GSD);')
+			send_command('input /echo RED Proc: Ice - Freezebite(GSD);')
 		
-	    elseif string.find(org, "The fiend appears vulnerable to dark elemental weapon skills!")  then
+	    elseif string.find(org, "The fiend appears vulnerable to darkness elemental weapon skills!")  then
 			send_command('gs c Weapons ProcScythe;')
-			send_command('/p RED Proc: Dark - Energy Drain(DGR), Shadow of Death(SCY), Blade: Ei(KTN);')
-			send_command('/echo RED Proc: Dark - Energy Drain(DGR), Shadow of Death(SCY), Blade: Ei(KTN);')
+			send_command('input /p RED Proc: Dark - Energy Drain(DGR), Shadow of Death(SCY), Blade: Ei(KTN);')
+			send_command('input /echo RED Proc: Dark - Energy Drain(DGR), Shadow of Death(SCY), Blade: Ei(KTN);')
 	    elseif string.find(org, "The fiend appears vulnerable to light elemental weapon skills!")  then
 			send_command('gs c Weapons ProcSword2;')
-			send_command('/p RED Proc: Light - Seraph Blade(SWD), Tachi: Koki(GKT), Seraph Strike(CLB), Sunburst(STF);')
-			send_command('/echo RED Proc: Light - Seraph Blade(SWD), Tachi: Koki(GKT), Seraph Strike(CLB), Sunburst(STF);')
+			send_command('input /p RED Proc: Light - Seraph Blade(SWD), Tachi: Koki(GKT), Seraph Strike(CLB), Sunburst(STF);')
+			send_command('input /echo RED Proc: Light - Seraph Blade(SWD), Tachi: Koki(GKT), Seraph Strike(CLB), Sunburst(STF);')
 	    elseif string.find(org, "Tachi: Jinpu")  then
 			send_command('gs c Weapons ProcDagger2;')
 	    elseif string.find(org, "Cyclone")  then
@@ -1003,3 +1190,219 @@ windower.register_event('incoming text',function(org)
 		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
 	end
 end)
+
+
+function default_zone_change(new_id,old_id)
+
+	if world.area:contains('Abyssea') then
+		send_command('input //ept show;gs c set SkipProcWeapons false;/lockstyleset 1;lua u fastcs') --Turns addon on.
+		set_macro_page(6, 5)
+	else
+		send_command('input //ept hide;') --Turns addon off.
+	end
+end
+
+----------
+
+function variables() 
+	attacks = 0
+	hits = 0
+	trend = {}
+	trend_write_pos = 0
+
+	define_user_functions()
+
+	options = { usePDT = false, meleeMode = 'DD', autopilot = false,
+			HUD = { x = 100, y = 100, visible = true, trendSize = 40 }
+	}
+   
+	build_HUD()
+
+end
+
+
+
+function define_user_functions()
+
+	function swing(hit)
+			trend_write_pos = trend_write_pos + 1
+			if trend_write_pos > options.HUD.trendSize then
+					trend_write_pos = 1
+			end
+		   
+			if hit then
+					hits = hits + 1
+					attacks = attacks + 1
+					trend[trend_write_pos] = 1
+			else
+					attacks = attacks + 1
+					trend[trend_write_pos] = 0
+			end
+		   
+			local overall = math.floor(hits / attacks * 100 - .1)
+			local recent = math.floor(table.sum(trend) / #trend * 100 - .1)
+		   
+			windower.text.set_text(rtAcc, tostring(overall))
+			windower.text.set_text(rtTrend, tostring(recent))
+			
+			if recent >= 92 then
+				windower.text.set_color(rtTrend, 255, 2, 255, 2)
+			elseif recent < 92 then
+				if recent < 79 then
+				windower.text.set_color(rtTrend, 255, 255, 2, 60)
+				else
+				windower.text.set_color(rtTrend, 255, 200, 100, 2)
+				end
+			
+			end
+
+	end
+
+	windower.register_event('action',function (act)
+			if act.actor_id == windower.ffxi.get_player().id then
+					if act.category == 1 then
+							for i=1,act.targets[1].action_count do
+					if act.targets[1].actions[i].message == 1 or act.targets[1].actions[i].message == 67 then
+											swing(true)
+									else
+											swing(false)
+									end
+							end
+					end
+			end
+	end)
+
+
+end
+
+
+function build_HUD()
+
+	hudBord = 'blu_hud_border'
+   
+	windower.prim.create(hudBord)
+	windower.prim.set_color(hudBord, 255, 2, 2, 2)
+	windower.prim.set_position(hudBord, options.HUD.x - 9, options.HUD.y-2)
+	windower.prim.set_size(hudBord, 140, 70)
+	windower.prim.set_visibility(hudBord, options.HUD.visible)
+   
+	hudBG = 'blu_hud_background'
+   
+	windower.prim.create(hudBG)
+	windower.prim.set_color(hudBG, 100, 40, 40, 100)
+	windower.prim.set_position(hudBG, options.HUD.x - 7, options.HUD.y)
+	windower.prim.set_size(hudBG, 135, 65)
+	windower.prim.set_visibility(hudBG, options.HUD.visible)
+   
+	rtAcc = 'blu_realtime_accuracy_display'
+
+	windower.text.create(rtAcc)
+windower.text.set_location(rtAcc, options.HUD.x, options.HUD.y)
+windower.text.set_bg_color(rtAcc, 0, 0, 0, 0)
+windower.text.set_color(rtAcc, 255, 255, 255, 255)
+windower.text.set_font(rtAcc, 'Arial')
+windower.text.set_font_size(rtAcc, 18)
+windower.text.set_bold(rtAcc, false)
+windower.text.set_italic(rtAcc, false)
+windower.text.set_text(rtAcc, '--')
+windower.text.set_bg_visibility(rtAcc, options.HUD.visible)
+	windower.text.set_visibility(rtAcc, options.HUD.visible)
+   
+	rtTrend = 'blu_realtime_accuracy_trend_display'
+
+	windower.text.create(rtTrend)
+windower.text.set_location(rtTrend, options.HUD.x + 40, options.HUD.y + 2)
+windower.text.set_bg_color(rtTrend, 0, 0, 0, 0)
+windower.text.set_color(rtTrend, 255, 255, 255, 255)
+windower.text.set_font(rtTrend, 'Arial')
+windower.text.set_font_size(rtTrend, 24)
+windower.text.set_bold(rtTrend, false)
+windower.text.set_italic(rtTrend, false)
+windower.text.set_text(rtTrend, '--')
+windower.text.set_bg_visibility(rtTrend, options.HUD.visible)
+	windower.text.set_visibility(rtTrend, options.HUD.visible)
+   
+	gMode = 'blu_gear_mode_display'
+
+	windower.text.create(gMode)
+windower.text.set_location(gMode, options.HUD.x + 40, options.HUD.y + 40)
+windower.text.set_bg_color(gMode, 0, 0, 0, 0)
+windower.text.set_color(gMode, 255, 255, 0, 0)
+windower.text.set_font(gMode, 'Arial')
+windower.text.set_font_size(gMode, 11)
+windower.text.set_bold(gMode, true)
+windower.text.set_italic(gMode, false)
+windower.text.set_text(gMode, 'Recent')
+windower.text.set_bg_visibility(gMode, options.HUD.visible)
+	windower.text.set_visibility(gMode, options.HUD.visible)
+   
+	abText = 'blu_ability_availability_display'
+
+	windower.text.create(abText)
+windower.text.set_location(abText, options.HUD.x-1, options.HUD.y - 12)
+windower.text.set_bg_color(abText, 0, 0, 0, 0)
+windower.text.set_color(abText, 255, 200, 180, 0)
+windower.text.set_font(abText, 'Lucida Console')
+windower.text.set_font_size(abText, 8)
+windower.text.set_bold(abText, true)
+windower.text.set_italic(abText, false)
+windower.text.set_text(abText, '')
+windower.text.set_bg_visibility(abText, options.HUD.visible)
+	windower.text.set_visibility(abText, options.HUD.visible)
+   
+end
+
+function file_unload()
+	windower.prim.delete(hudBord or "")
+	windower.prim.delete(hudBG or "")
+	windower.text.delete(gMode or "")
+	windower.text.delete(rtTrend or "")
+	windower.text.delete(rtAcc or "")
+	windower.text.delete(abText or "")
+end
+
+fSTR = 0
+D = 0
+pDIF = 0
+total_damage = 0
+total_damage_array = L{}
+max_count = 15
+max_acc_count = 10
+total_crit = 0
+
+
+windower.register_event('action',function (act)
+local actor = act.actor_id
+local category = act.category
+local player = windower.ffxi.get_player()
+  
+if actor == player.id and category == 1 then
+
+	local round_hits = act.targets[1].action_count
+	
+	for i = 1,round_hits do
+		if act.targets[1].actions[i].reaction == 8 then
+			if act.targets[1].actions[i].message ~= 67 then
+			total_damage_array:append(act.targets[1].actions[i].param)
+			end
+		end
+	end
+		approximate_pdif()
+end
+end)
+
+
+function approximate_pdif()
+local total_damage = 0
+local total_hits = math.min(max_count,total_damage_array:length())
+ 
+if total_damage_array:length() < 1 then
+	return
+end
+ 
+for i=1,total_hits do
+	local v = total_damage_array:last(i)
+	total_damage = total_damage+v
+end
+pDIF = ( (total_damage/total_hits) / (D + fSTR) )
+end

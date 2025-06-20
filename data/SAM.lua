@@ -95,6 +95,7 @@ end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+    attack2 = 4500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
 
     state.Buff.Sekkanoki = buffactive.Sekkanoki or false
     state.Buff.Sengikori = buffactive.Sengikori or false
@@ -104,6 +105,8 @@ function job_setup()
     state.Buff.Hasso = buffactive.Hasso or false
     state.Buff.Seigan = buffactive.Seigan or false
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
+	state.SubtleBlowMode = M(false, 'SubtleBlow Mode') 
+	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
 
 	autows = 'Tachi: Fudo'
 	rangedautows = "Apex Arrow"
@@ -247,9 +250,23 @@ function job_customize_melee_set(meleeSet)
 		meleeSet = set_combine(meleeSet, sets.buff['Third Eye'])
     end
 
+	if state.SubtleBlowMode.value then
+		if buffactive['Auspice'] then
+			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlow)
+		else
+			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlowII)
+		end
+	end
     return meleeSet
 end
 
+function job_customize_idle_set(idleSet)
+
+	if buffactive['Tactician\'s Roll'] then 
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
+	return idleSet
+end
 -- Run after the default midcast() is done.
 -- eventArgs is the same one used in job_midcast, in case information needs to be persisted.
 function job_post_midcast(spell, spellMap, eventArgs)
@@ -279,10 +296,17 @@ end
 function job_tick()
 	if check_hasso() then return true end
 	if check_buff() then return true end
+
+	
 	return false
 end
 
-function job_buff_change(buff, gain)
+windower.raw_register_event('prerender',function()
+
+end)
+function job_buff_change(id, data,buff, gain, eventArgs)
+
+
     if buff == 'Meikyo Shisui' and not gain then
 		enable('feet')
     end
@@ -300,8 +324,114 @@ function job_buff_change(buff, gain)
             send_command('input /p "Yaegasumi" [OFF]')
         end
     end
+	if state.AutoReraiseeMode.value == true then
+		if buffactive['weakness'] then
+			equip(sets.Reraise)
+			disable('body','head')
+		else
+			enable('body','head')
+		end
+	end
+
+	-- Create a timer when we gain weakness.  Remove it when weakness is gone.
+	if buff:lower() == 'weakness' then
+			send_command('timers create "Weakness" 300 up abilities/00255.png')
+	else
+			send_command('timers delete "Weakness"')
+		
+	end
+    if buffactive['Charm'] then		
+           send_command('input /p Charmd, please Sleep me.')		
+    else	
+           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        
+    end
+    if buffactive['petrification'] then
+            equip(sets.defense.PDT)
+            send_command('input /p Petrification, please Stona.')		
+    else
+            send_command('input /p '..player.name..' is no longer Petrify!')
+            handle_equipping_gear(player.status)
+    end
+    if buffactive['Sleep'] then
+            send_command('input /p ZZZzzz, please cure.')		
+    else
+            send_command('input /p '..player.name..' is no longer Sleep!')
+        
+    end
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+
 	update_melee_groups()
 end
+windower.raw_register_event('postrender',function()
+
+	if state.AutoMedicineMode.value == true then
+		if buffactive['Defense Down'] then			
+				send_command('input /item "Panacea" <me>')
+		elseif buffactive['Magic Def. Down'] then			
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['Max HP Down'] then			
+				send_command('@input /item "panacea" <me>')
+		elseif buffactive['Evasion Down'] then			
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['Magic Evasion Down'] then			
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['Dia'] then			
+				send_command('@input /item "panacea" <me>')
+			  
+		elseif buffactive['Bio'] then			
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['Bind'] then			
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['slow'] then			
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['weight'] then			
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['Attack Down'] then			
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['Accuracy Down'] then			
+				send_command('@input /item "panacea" <me>')
+		end
+		if buffactive['VIT Down'] then
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['INT Down'] then
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['MND Down'] then
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['STR Down'] then
+				send_command('@input /item "panacea" <me>')
+			
+		elseif buffactive['AGI Down'] then
+				send_command('@input /item "panacea" <me>')
+		elseif buffactive['poison'] then
+				send_command('input /item "remedy" <me>')
+				tickdelay = os.clock() + 2.4
+		end
+
+		if not midaction() then
+			job_update()
+		end
+	end
+end)
+
 
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.

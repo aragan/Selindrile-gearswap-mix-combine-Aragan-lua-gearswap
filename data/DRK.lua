@@ -111,6 +111,9 @@ function job_setup()
     state.WeaponLock = M(false, 'Weapon Lock')
     state.AutoEquipBurst = M(true)
     state.RP = M(false, "Reinforcement Points Mode")    
+	state.SubtleBlowMode = M(false, 'SubtleBlow Mode') 
+	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
+    state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
 
 	autows = ''
 	autofood = 'Soy Ramen'
@@ -260,7 +263,9 @@ function job_customize_idle_set(idleSet)
     else
         enable('neck')
     end
-
+	if buffactive['Tactician\'s Roll'] and __rollNum == 11 then
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
     return idleSet
 end
 
@@ -276,6 +281,13 @@ function job_customize_melee_set(meleeSet)
         enable('neck')
     end
 
+	if state.SubtleBlowMode.value then
+		if buffactive['Auspice'] then
+			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlow)
+		else
+			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlowMBOZE)
+		end
+	end
     return meleeSet
 end
 
@@ -354,60 +366,84 @@ Wants_Dark_Seal_maps = S{
 
 
 function job_post_midcast(spell, spellMap, eventArgs)
-if spell.skill == 'Elemental Magic' and default_spell_map ~= 'ElementalEnfeeble' and spell.english ~= 'Impact' then
-	if state.MagicBurstMode.value ~= 'Off' then equip(sets.MagicBurst) end
-	if spell.element == world.weather_element or spell.element == world.day_element then
-		if state.CastingMode.value == 'Fodder' then
-			if spell.element == world.day_element then
-				if item_available('Zodiac Ring') then
-					sets.ZodiacRing = {ring2="Zodiac Ring"}
-					equip(sets.ZodiacRing)
+	if spell.skill == 'Elemental Magic' and default_spell_map ~= 'ElementalEnfeeble' and spell.english ~= 'Impact' then
+		if state.MagicBurstMode.value ~= 'Off' then 
+			equip(sets.MagicBurst) 
+		end
+		if spell.element == world.weather_element or spell.element == world.day_element then
+			if state.CastingMode.value == 'Fodder' then
+				if spell.element == world.day_element then
+					if item_available('Zodiac Ring') then
+						sets.ZodiacRing = {ring2="Zodiac Ring"}
+						equip(sets.ZodiacRing)
+					end
 				end
 			end
 		end
-	end
-	
-	if spell.element and sets.element[spell.element] then
-		equip(sets.element[spell.element])
-	end
-elseif spell.skill == 'Dark Magic' then
-	if state.Buff['Nether Void'] and sets.buff['Nether Void'] and (Wants_Dark_Seal_maps:contains(spell.english) or spell.english == 'Absorb-Attri') then
-		equip(sets.buff['Nether Void'])
-	end
-	if state.Buff['Dark Seal'] and sets.buff['Dark Seal'] and Wants_Dark_Seal_maps:contains(spell.english)  then
-		equip(sets.buff['Dark Seal'])
-	end
-	if (spell.english == 'Drain II' or spell.english == 'Drain III') and state.DrainSwapWeaponMode.value ~= 'Never' then
-		if sets.DrainWeapon and (state.DrainSwapWeaponMode.value == 'Always' or tonumber(state.DrainSwapWeaponMode.value) > player.tp) then
-			enable('main','sub','range','ammo')
-			equip(sets.DrainWeapon)
+		
+		if spell.element and sets.element[spell.element] then
+			equip(sets.element[spell.element])
 		end
-	end
+	elseif spell.skill == 'Dark Magic' then
+		if state.Buff['Nether Void'] and sets.buff['Nether Void'] and (Wants_Dark_Seal_maps:contains(spell.english) or spell.english == 'Absorb-Attri') then
+			equip(sets.buff['Nether Void'])
+		end
+		if state.Buff['Dark Seal'] and sets.buff['Dark Seal'] and Wants_Dark_Seal_maps:contains(spell.english)  then
+			equip(sets.buff['Dark Seal'])
+		end
+		if (spell.english == 'Drain II' or spell.english == 'Drain III') and state.DrainSwapWeaponMode.value ~= 'Never' then
+			if sets.DrainWeapon and (state.DrainSwapWeaponMode.value == 'Always' or tonumber(state.DrainSwapWeaponMode.value) > player.tp) then
+				enable('main','sub','range','ammo')
+				equip(sets.DrainWeapon)
+			end
+		end
 		if Wants_Dark_Seal_maps:contains(spell.english) and spellMap == "Absorb" and state.DrainSwapWeaponMode.value ~= 'Never' then
-		if sets.AbsorbWeapon and (state.DrainSwapWeaponMode.value == 'Always' or tonumber(state.DrainSwapWeaponMode.value) > player.tp) then
-			enable('main','sub','range','ammo')
-			equip(sets.AbsorbWeapon)
+			if sets.AbsorbWeapon and (state.DrainSwapWeaponMode.value == 'Always' or tonumber(state.DrainSwapWeaponMode.value) > player.tp) then
+				enable('main','sub','range','ammo')
+				equip(sets.AbsorbWeapon)
+			end
 		end
-	end
 		if spell.english == 'Dread Spikes' and state.DrainSwapWeaponMode.value ~= 'Never' then
-		if sets.DreadWeapon and (state.DrainSwapWeaponMode.value == 'Always' or tonumber(state.DrainSwapWeaponMode.value) > player.tp) then
-			enable('main','sub','range','ammo')				
-			equip(sets.DreadWeapon)
+			if sets.DreadWeapon and (state.DrainSwapWeaponMode.value == 'Always' or tonumber(state.DrainSwapWeaponMode.value) > player.tp) then
+				enable('main','sub','range','ammo')				
+				equip(sets.DreadWeapon)
+			end
+		end
+		if spell.skill == 'Elemental Magic' and (state.MagicBurst.value or AEBurst) then
+			equip(sets.magicburst)
+			if spell.english == "Impact" then
+				equip(sets.midcast.Impact)
+			end
 		end
 	end
-	if spell.skill == 'Elemental Magic' and (state.MagicBurst.value or AEBurst) then
-        equip(sets.magicburst)
-        if spell.english == "Impact" then
-            equip(sets.midcast.Impact)
-        end
-    end
-end
 end 
+
+
+function check_tp_mp_lower()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
+	if spell_recasts[275] < spell_latency and silent_can_use(275) then
+		windower.chat.input('/ma "Absorb-TP" <t>')
+		tickdelay = os.clock() + 2
+		return true
+	elseif spell_recasts[247] < spell_latency and silent_can_use(247) then
+		windower.chat.input('/ma "Aspir" <t>')
+		tickdelay = os.clock() + 2
+		return true
+	else
+		return false
+	end
+end
 
 function job_tick()
 	if check_hasso() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
+	if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
+		if check_tp_mp_lower() then return true end
+			tickdelay = os.clock() + 1.5
+		return true
+	end
 	return false
 end
 function update_combat_form()
@@ -626,6 +662,94 @@ function job_buff_change(buff, gain)
             send_command('input /p "Souleater" [OFF]')
         end
     end
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "paralysis" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			job_update()
+		end
+	end
 end
 	
 function update_melee_groups()

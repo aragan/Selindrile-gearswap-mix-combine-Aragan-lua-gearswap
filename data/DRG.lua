@@ -83,6 +83,7 @@ end
 
 -- Setup vars that are user-independent.
 function job_setup()
+	attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
 
     state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
 	state.Buff['Spirit Surge'] = buffactive['Spirit Surge'] or false
@@ -110,7 +111,6 @@ function job_setup()
 end
 
 function job_precast(spell, spellMap, eventArgs)
-
 	if spell.type == 'WeaponSkill' and state.AutoBuffMode.value ~= 'Off' then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		if player.sub_job == 'SAM' and not state.Buff['SJ Restriction'] then
@@ -141,6 +141,9 @@ function job_precast(spell, spellMap, eventArgs)
 end
 
 function job_post_precast(spell, spellMap, eventArgs)
+	if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
+		equip(sets.precast.WS.SubtleBlow)
+	end
 	if spell.type == 'WeaponSkill' then
 		local WSset = standardize_set(get_precast_set(spell, spellMap))
 		local wsacc = check_ws_acc()
@@ -165,6 +168,10 @@ function job_post_precast(spell, spellMap, eventArgs)
 			end
 		end
 	end
+
+	--[[if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
+		equip(sets.precast.WS.SubtleBlow)
+	end]]
 end
 
 -- Run after the default midcast() is done.
@@ -266,6 +273,95 @@ function job_buff_change(buff, gain)
            send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
         end
     end
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			job_update()
+		end
+	end
+
 end
 
 function job_update(cmdParams, eventArgs)
@@ -365,6 +461,13 @@ function job_customize_melee_set(meleeSet)
     return meleeSet
 end
 
+function job_customize_idle_set(idleSet)
+
+	if buffactive['Tactician\'s Roll'] then 
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
+	return id
+end
 function check_hasso()
 if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or state.Buff['SJ Restriction'] or main_weapon_is_one_handed() or silent_check_amnesia()) then
 		

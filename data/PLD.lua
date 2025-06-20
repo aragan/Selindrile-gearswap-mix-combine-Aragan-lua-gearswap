@@ -62,8 +62,6 @@ function get_sets()
 		"Crab Sushi",
 		"Om. Sandwich",
 		"Red Curry Bun",
-		"Foreshock Sword",
-		"Hepatizon Axe +1",
 		"Sword Strap",
 		"Gyudon",
 		"Reraiser",
@@ -125,7 +123,7 @@ function job_setup()
 
 	
 
-	autows = 'Savage Blade'
+	autows = ''
 	autofood = 'Miso Ramen'
 	
 	Haste = 0
@@ -210,15 +208,17 @@ function job_pretarget(spell, spellMap, eventArgs)
 
 end
 
-function job_precast(spell, spellMap, eventArgs)
+function job_filter_precast(spell, spellMap, eventArgs)
 
-	if spell.english == 'Flash' then
+	if (spell.english == 'Flash' or spell.english == 'Holy II' or spell.english == 'Holy') then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		if abil_recasts[80] < latency and not silent_check_amnesia() and spell_recasts[112] < spell_latency and state.AutoEmblem.value then
 			eventArgs.cancel = true
 			windower.chat.input('/ja "Divine Emblem" <me>')
-			windower.chat.input:schedule(1,'/ma "Flash" '..spell.target.raw..'')
+			--windower.chat.input:schedule(1,'/ma "Flash" '..spell.target.raw..'')
+			windower.chat.input:schedule(1,'/ma "'..spell.english..'" '..spell.target.raw..'')
+
 		end
 	end
 
@@ -355,6 +355,95 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
 end
 function job_buff_change(buff, gain)
 	update_melee_groups()
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			job_update()
+		end
+	end
+
 end
 
 -- Handling Elemental spells within Gearswap.
@@ -404,7 +493,7 @@ function handle_elemental(cmdParams)
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 	
 		if command == 'nuke' then
-			local tiers = {'Holy II','Holy','Banish III','Banish II','Banish'}
+			local tiers = {'Holy II','Holy','Banish II','Banish'}
 			for k in ipairs(tiers) do
 				if spell_recasts[get_spell_table_by_name(tiers[k]).id] < spell_latency and actual_cost(get_spell_table_by_name(tiers[k])) < player.mp then
 					windower.chat.input('/ma "'..tiers[k]..'" '..target..'')
@@ -468,7 +557,7 @@ function job_state_change(stateField, newValue, oldValue)
     check_weaponset()
 
 end
-function user_status_change(newStatus, oldStatus, eventArgs)
+function job_status_change(newStatus, oldStatus, eventArgs)
    local abil_recasts = windower.ffxi.get_ability_recasts()
 
     if (player.in_combat or being_attacked) and not buffactive.Sentinel and player.hpp < 25 and abil_recasts[75] < latency then
@@ -499,7 +588,7 @@ function user_status_change(newStatus, oldStatus, eventArgs)
 	end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 	    local spell_recasts = windower.ffxi.get_spell_recasts()
-		if being_attacked and player.hpp < 85 and spell_recasts[4] < spell_latency then 
+		if being_attacked and player.hpp < 75 and spell_recasts[4] < spell_latency then 
 			windower.chat.input('/ma "Cure IV" <me>')
 			tickdelay = os.clock() + 1.1
 		end
@@ -838,7 +927,7 @@ function update_defense_mode()
 end
 
 function job_tick()
-	if user_status_change() then return true end
+	if job_status_change() then return true end
 	if check_arts() then return true end
 	if check_majesty() then return true end
 	if check_hasso() then return true end
@@ -851,6 +940,8 @@ function job_tick()
 			tickdelay = os.clock() + 1
 			return true
 		end
+		if check_flash_foil() then return true end
+
 	end
 	return false
 end
@@ -885,7 +976,26 @@ function check_flash()
 		return false
 	end
 end
-
+function check_flash_foil()
+	if silent_check_silence() then return false end
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+	
+	if not buffactive['Enmity Boost'] and spell_recasts[476] < spell_latency then
+		windower.chat.input('/ma "Crusade" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+	elseif spell_recasts[112] < spell_latency then
+		windower.chat.input('/ma "Flash" <t>')
+		tickdelay = os.clock() + 1.1
+		return true
+	elseif spell_recasts[840] < spell_latency then
+		windower.chat.input('/ma "Foil" <me>')
+		tickdelay = os.clock() + 1.1
+		return true
+	else
+		return false
+	end
+end
 function update_melee_groups()
 	if player.equipment.main then
 		classes.CustomMeleeGroups:clear()
@@ -948,21 +1058,72 @@ function check_buff()
 				return true
 			end
 		end
-		
-		if (player.in_combat or being_attacked and not moving) then
-			local abil_recasts = windower.ffxi.get_ability_recasts()
 
-			if not buffactive['Majesty'] and abil_recasts[150] < latency then
-				windower.chat.input('/ja "Majesty" <me>')
-				tickdelay = os.clock() + 1.1
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+	    if state.AutoBuffMode.value == 'Aminon' and player.in_combat and spell_recasts[112] < spell_latency and player.mp > res.spells[112].mp_cost then
+			if abil_recasts[80] < latency and not silent_check_amnesia() then
+				windower.chat.input('/ja "Divine Emblem" <me>')
+			end
+			windower.chat.input:schedule(1,'/ma "Flash" <t>')	
+			tickdelay = os.clock() + 2.5
+			return true
+		elseif not buffactive['Enmity Boost'] and spell_recasts[476] < spell_latency and not silent_check_silence() and player.mp > res.spells[476].mp_cost then
+			windower.chat.input('/ma "Crusade" <me>')
+			tickdelay = os.clock() + 2.5
+			return true
+		elseif not silent_check_amnesia() and abil_recasts[75] < latency then
+			send_command('input /ja "Sentinel" <me>')
+			tickdelay = os.clock() + 2.5
+			return true
+		elseif not silent_check_amnesia() and abil_recasts[42] < latency then
+			send_command('input /ja "Palisade" <me>')
+			tickdelay = os.clock() + 2.5
+			return true
+		elseif state.AutoWSMode.value and player.tp > 1001 and not (player.mpp < 35 and abil_recasts[79] < latency) and player.in_combat and player.target.type == "MONSTER" and not silent_check_amnesia() then
+			--send_command('input /attack on;wait 1;input /ws "' .. autows .. '" <t>;wait 2;input /attack off')
+
+			send_command('input /ws "' .. autows .. '" <t>')
+			add_to_chat(262,'WS -> ' .. autows)
+			tickdelay = os.clock() + 2.5
+			return true
+		end
+		if state.AutoBuffMode.value == 'TankFull' and (player.in_combat or being_attacked) then
+			if not silent_check_amnesia() and abil_recasts[77] < latency then
+				send_command('input /ja "Rampart" <me>')
+				tickdelay = os.clock() + 2.5
+				return true
+			elseif not silent_check_amnesia() and abil_recasts[75] < latency then
+				send_command('input /ja "Sentinel" <me>')
+				tickdelay = os.clock() + 2.5
+				return true
+			elseif not silent_check_amnesia() and abil_recasts[42] < latency then
+				send_command('input /ja "Palisade" <me>')
+				tickdelay = os.clock() + 2.5
 				return true
 			else
 				return false
 			end
 		end
-	    if player.sub_job == 'RUN' then
-				windower.chat.input('gs c set AutoRuneMode true')
-				tickdelay = os.clock() + 1.1
+
+
+		if not buffactive['Majesty'] and abil_recasts[150] < latency then
+			windower.chat.input('/ja "Majesty" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		end
+		if abil_recasts[79] < latency and (player.mpp < 25 and player.tp > 1300) and not silent_check_amnesia() then
+			windower.chat.input('/ja "Chivalry" <me>')
+			tickdelay = os.clock() + 2.0
+			return true
+		end
+
+
+		
+		if player.sub_job == 'RUN' then
+			windower.chat.input('gs c set AutoRuneMode true')
+			tickdelay = os.clock() + 1.1
 				
 		end
 	else
@@ -1026,12 +1187,23 @@ buff_spell_lists = {
 		{Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
 	},
+	TankFull = {	
+		{Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
+		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
+		{Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
+		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
+		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
+		{Name='Stoneskin',Buff='Stoneskin',SpellID=54,When='Always'},
+		{Name='Aquaveil',Buff='Aquaveil',SpellID=55,When='Always'}
+	},
 	Odyss = {	
+		{Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
 		{Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
 	},
 	Aminon = {	
+		{Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
 		{Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
 		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},

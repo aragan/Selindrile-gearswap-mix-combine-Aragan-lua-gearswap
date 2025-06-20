@@ -70,7 +70,7 @@ function job_setup()
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.HippoMode = M(false, "hippoMode")
     state.AutoCureMode = M(true, 'Auto Cure Mode')
-
+	state.AutoEffusionMode = M(true, 'Auto Effusion Mode')
 	rayke_duration = 49
     gambit_duration = 96
 	--autows = 'Resolution'
@@ -335,6 +335,95 @@ function job_buff_change(buff, gain)
             status_change(player.status)
         end
     end
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			job_update()
+		end
+	end
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -458,13 +547,16 @@ function user_status_change(newStatus, oldStatus, eventArgs)
 			tickdelay = os.clock() + 1.1
 	    elseif player.sub_job == 'SCH' and player.hpp < 85  and being_attacked and spell_recasts[4] < spell_latency then 
 			windower.chat.input('/ma "Cure IV" <me>')
-
 			tickdelay = os.clock() + 1.1
-		    
 		end
+	elseif player.hpp < 30 and abil_recasts[118] < latency then
+		windower.chat.input('/ja "One for All" <me>')
+		tickdelay = os.clock() + 1.5
+	elseif player.hpp < 65 and abil_recasts[120] < latency  then
+		windower.chat.input('/ja "Battuta" <me>')
+		tickdelay = os.clock() + 1.1
+		return true		
 	end
-
- 
 end
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements self-commands.
@@ -655,7 +747,8 @@ end
 
 function job_tick()
 	if user_status_change() then return true end
-
+	if check_offensive_ja() then return true end		
+	
 	if check_arts() then return true end
 	if check_hasso() then return true end
 	if check_buff() then return true end
@@ -1070,3 +1163,22 @@ attack staggers the fiend!
 		end
 	end
 end)
+
+function check_offensive_ja()
+
+	if  player.in_combat then
+		if state.AutoEffusionMode.value and player.status == 'Engaged' then	
+			local abil_recasts = windower.ffxi.get_ability_recasts()		
+			if abil_recasts[119] < latency and buffactive[state.RuneElement.value] > 2 then
+				windower.chat.input('/ja "Rayke" <t>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif abil_recasts[116] < latency  and buffactive[state.RuneElement.value] > 2 then
+				windower.chat.input('/ja "Gambit" <t>')
+				tickdelay = os.clock() + 1.1
+				return true
+			end
+		end
+	end
+	return false
+end		

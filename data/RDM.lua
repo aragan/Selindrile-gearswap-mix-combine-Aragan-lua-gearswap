@@ -99,8 +99,9 @@ function job_setup()
     state.SleepMode = M(false, 'MaxDuration')
 
     state.EnspellMode = M(false, 'Enspell Melee Mode')
-	state.NM = M(false, 'NM')
+	state.NM = M(true, 'NM')
     state.SrodaNecklace = M(false, 'SrodaNecklace')
+    state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
 
     LowTierNukes = S{'Stone', 'Water', 'Aero', 'Fire', 'Blizzard', 'Thunder',
         'Stone II', 'Water II', 'Aero II', 'Fire II', 'Blizzard II', 'Thunder II',
@@ -511,6 +512,95 @@ function job_buff_change(buff, gain)
             send_command('input /p '..player.name..' is no longer Sleep!')
         end
     end
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			job_update()
+		end
+	end
+
 	update_melee_groups()
 end
 
@@ -525,6 +615,15 @@ function job_state_change(stateField, newValue, oldValue)
         enable('main','sub')
     end
 	check_weaponset()
+end
+
+function job_status_change(newStatus, oldStatus, eventArgs)
+	if state.NeverDieMode.value then 
+		if player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 25 then
+			state.AutoShadowMode:set('true')
+			tickdelay = os.clock() + 1.1
+		end
+	end
 end
 function update_combat_form()
 
@@ -674,16 +773,20 @@ function job_customize_idle_set(idleSet)
 				end
 			end
 		end
-   end
-   if state.HippoMode.value == true then 
-	idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
-   end
-   if state.RP.current == 'on' then
-	equip(sets.RP)
-	disable('neck')
+    end
+	if state.HippoMode.value == true then 
+		idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
+	end
+	if buffactive['Tactician\'s Roll'] then 
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
+    if state.RP.current == 'on' then
+	   equip(sets.RP)
+	   disable('neck')
     else
-	enable('neck')
+	   enable('neck')
     end 
+	
 	check_weaponset()
     return idleSet
 end
@@ -981,10 +1084,33 @@ function handle_elemental(cmdParams)
     end
 end
 
+
+function check_tp_mp_lower()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
+	if spell_recasts[275] < spell_latency and silent_can_use(275) then
+		windower.chat.input('/ma "Absorb-TP" <t>')
+		tickdelay = os.clock() + 2
+		return true
+	elseif spell_recasts[247] < spell_latency and silent_can_use(247) then
+		windower.chat.input('/ma "Aspir" <t>')
+		tickdelay = os.clock() + 2
+		return true
+	else
+		return false
+	end
+end
+
 function job_tick()
 	if check_arts() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
+	if job_status_change() then return true end
+	if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
+		if check_tp_mp_lower() then return true end
+			tickdelay = os.clock() + 1.5
+		return true
+	end
 	return false
 end
 

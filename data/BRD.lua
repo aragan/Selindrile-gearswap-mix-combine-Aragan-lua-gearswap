@@ -114,11 +114,14 @@ end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+	attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
+
 	send_command('lua l Singer;sing off;sing active off')
 
-    state.ExtraSongsMode = M{['description']='Extra Songs','FullLength','None','Dummy','Marsyas'}
+    state.ExtraSongsMode = M{['description']='Extra Songs','Cheer','FullLength','None','Dummy','Marsyas'}
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Always','300','1000','Never'}
+	state.Pianissimode = M(false, 'Use Miracle Cheer when Pianissimo is active.')
 
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff['Pianissimo'] = buffactive['Pianissimo'] or false
@@ -131,6 +134,7 @@ function job_setup()
 	autonuke = 'Absorb-TP'
 
 	state.AutoSongMode = M(false, 'Auto Song Mode')
+    state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
 
     state.Carol = M{['description']='Carol',
         'Fire Carol', 'Fire Carol II', 'Ice Carol', 'Ice Carol II', 'Wind Carol', 'Wind Carol II',
@@ -441,7 +445,94 @@ function job_buff_change(buff, gain)
         else
             send_command('input /p '..player.name..' is no longer Sleep!')
         end
-    end
+    end	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			job_update()
+		end
+	end
 end
 
 function job_get_spell_map(spell, default_spell_map)
@@ -514,6 +605,9 @@ function job_customize_idle_set(idleSet)
     if state.HippoMode.value == true then 
         idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
     end
+	if buffactive['Tactician\'s Roll'] then 
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
     return idleSet
 end
 function customize_melee_set(meleeSet)
@@ -533,6 +627,23 @@ function display_current_job_state(eventArgs)
     eventArgs.handled = true
 end
 
+
+function check_tp_mp_lower()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
+	if spell_recasts[275] < spell_latency and silent_can_use(275) then
+		windower.chat.input('/ma "Absorb-TP" <t>')
+		tickdelay = os.clock() + 2
+		return true
+	elseif spell_recasts[247] < spell_latency and silent_can_use(247) then
+		windower.chat.input('/ma "Aspir" <t>')
+		tickdelay = os.clock() + 2
+		return true
+	else
+		return false
+	end
+end
+
 -------------------------------------------------------------------------------------------------------------------
 -- Utility functions specific to this job.
 -------------------------------------------------------------------------------------------------------------------
@@ -548,11 +659,20 @@ function get_song_class(spell)
         return 'Gjallarhorn'
     elseif state.ExtraSongsMode.value == 'Marsyas' then
         return 'Marsyas'
+	elseif state.ExtraSongsMode.value == 'Cheer' then
+        return 'Cheer'
     else
         return 'SongEffect'
     end
 end
-
+function job_status_change(newStatus, oldStatus, eventArgs)
+	if state.NeverDieMode.value then 
+		if player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 25 then
+			state.AutoShadowMode:set('true')
+			tickdelay = os.clock() + 1.1
+		end
+	end
+end
 -- Examine equipment to determine what our current TP weapon is.
 function update_melee_groups()
 	if player.equipment.main then
@@ -780,6 +900,12 @@ function job_tick()
 	if check_song() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
+	if job_status_change() then return true end
+	if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
+		if check_tp_mp_lower() then return true end
+			tickdelay = os.clock() + 1.5
+		return true
+	end
 	return false
 end
 

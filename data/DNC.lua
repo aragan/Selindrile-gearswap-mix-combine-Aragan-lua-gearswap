@@ -107,6 +107,8 @@ end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
     send_command('lua l DNC-hud')
+    --auto equip to PDL ws set is higher than this value .. this value for all job and u can add any value in any job lua . (Aragan@Asura)
+    attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
 
     state.Buff['Climactic Flourish'] = buffactive['Climactic Flourish'] or false
 	state.Buff['Building Flourish'] = buffactive['Building Flourish'] or false
@@ -293,6 +295,26 @@ function job_post_precast(spell, spellMap, eventArgs)
         end
 		]]
 
+		if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
+			equip(sets.precast.WS.SubtleBlow)
+		end
+		--[[ ]
+		attack = player.attack -- auto equip to PDL ws set - code add by kastra,modi.(Aragan@Asura)
+	
+		if spell.type == 'WeaponSkill' then
+			if state.WeaponskillMode.value == 'SubtleBlow' and (attack > attack2 or attack < attack2) then
+				equip(sets.precast.WS.SubtleBlow)
+			elseif state.WeaponskillMode.value == 'Proc' then
+				equip(sets.precast.WS[spell.name].Proc)
+			elseif buffactive["Climactic Flourish"] and attack > attack2 then
+				equip(sets.precast.WS[spell.name].PDL.Clim)
+			elseif attack > attack2 then
+				equip(sets.precast.WS[spell.name].PDL)
+			else
+				equip(sets.precast.WS[spell.name])
+			end
+		end
+		]]
 		if buffactive["Climactic Flourish"] and spell.type == 'WeaponSkill' and not data.weaponskills.elemental:contains(spell.name) then
             if state.WeaponskillMode.value == 'PDL' then
                 equip(sets.precast.WS.PDL.Clim)
@@ -351,12 +373,99 @@ function job_buff_change(buff,gain)
 	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
 	        windower.send_command('input /ja Healing Waltz <me>')
 	        tickdelay = os.clock() + 1.1
-
-		
 		return
 	end
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+			windower.chat.input('/ma "Poisona" <me>')
+			tickdelay = os.clock() + 1.1
+			
+		end
+	end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if not midaction() then
+			job_update()
+		end
+	end
+
 end
-function user_status_change(newStatus, oldStatus, eventArgs)
+function job_status_change(newStatus, oldStatus, eventArgs)
 	
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
@@ -409,6 +518,9 @@ end
 
 
 function job_customize_idle_set(idleSet)
+	if buffactive['Tactician\'s Roll'] then 
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
     return idleSet
 end
 
@@ -494,7 +606,7 @@ end
 
 function job_tick()
 	if job_buff_change() then return true end
-	if user_status_change() then return true end
+	if job_status_change() then return true end
 	if check_dance() then return true end
 	if check_buff() then return true end
 	return false
