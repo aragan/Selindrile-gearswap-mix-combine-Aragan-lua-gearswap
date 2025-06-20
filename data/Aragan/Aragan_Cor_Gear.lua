@@ -33,7 +33,7 @@ function user_job_setup()
     state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow10','SubtleBlow40')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'Resistant')
-    state.IdleMode:options('DT','Normal','Empy', 'Evasion', 'HP', 'Regen', 'EnemyCritRate')
+    state.IdleMode:options('DT','Normal','Empy', 'Evasion', 'HP', 'Regen','Regain', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT','Aminon', 'Evasion', 'HP')
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
@@ -98,7 +98,10 @@ function user_job_setup()
     send_command('bind !6 gs c cycle Rollset;awit;input //gs c Rollset')
     send_command('bind f1 gs c cycle Rollset;awit;input //gs c Rollset')
     send_command('bind !f1 gs c cycleback Rollset;awit;input //gs c Rollset')
+    send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
 
+
+    
     --send_command('alias melee input //roller roll1 Chaos Roll;wait .1;input //roller roll2 Samurai Roll')
     --send_command('alias magic input //roller roll1 Wizard\'s Roll;wait .1;input //roller roll2 Caster\'s Roll')
     -- Define the roll commands in a table
@@ -890,7 +893,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
     sets.defense.Aminon = {
         head="Null Masque",
         body={ name="Nyame Mail", augments={'Path: B',}},
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        hands="Regal Gloves",
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Rep. Plat. Medal",
@@ -956,6 +959,21 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     })
+    
+    sets.idle.Regain = {
+        head="Null Masque",
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands="Regal Gloves",
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Rep. Plat. Medal",
+        waist="Carrier's Sash",
+        left_ear="Tuisto Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Shadow Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+    }
     sets.idle.EnemyCritRate = set_combine(sets.idle.DT, { 
         left_ring="Warden's Ring",
         right_ring="Fortified Ring",
@@ -972,6 +990,8 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
 
     sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+    sets.rollerRing = {left_ring="Roller's Ring"}
+
 	sets.DWMax = {
         body="Adhemar Jacket +1",
         hands="Floral Gauntlets", --5

@@ -41,7 +41,7 @@ function user_job_setup()
 	state.HybridMode:options('DT','Normal')
     state.WeaponskillMode:options('Match', 'SubtleBlow','PDL', 'SC','Proc')
     state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT','Proc')
-    state.IdleMode:options('DT','Normal','Empy','MDT', 'Evasion','Regen', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
+    state.IdleMode:options('DT','Normal','Empy','MDT', 'Evasion','Regen','Regain', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
 	state.Passive:options('None','Resist','Refresh','Empy', 'SubtleBlow', 'SubtleBlow40', 'SubtleBlow50')--, 'EnemyCritRate', 'Regen'
 	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
@@ -83,6 +83,7 @@ function user_job_setup()
     send_command('bind ` gs c cycle Spellset;')
     send_command('bind @` gs c cycleback Spellset;')
     send_command('bind ^` gs c Spellset')
+	send_command('bind @6 gs c toggle AutoBLUSpam')
 
 	send_command('bind !` input //lua l bluguide') --Turns addon on .addon 
 
@@ -218,7 +219,9 @@ function init_gear_sets()
 	sets.precast.FC.Utsusemi = set_combine(sets.precast.FC, {
 		waist="Rumination Sash",
 	})
+	--Ranged Attack
     sets.precast.RA = {ammo=empty,
+	range="Trollbane",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -563,7 +566,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.midcast.FastRecast = {}
 	sets.midcast.Utsusemi = sets.SIRD
 	
-	sets.midcast.RA = {		
+	sets.midcast.RA = {
+	ammo=empty,
 	range="Trollbane",
 	head="Malignance Chapeau",
 	body="Nisroch Jerkin",
@@ -1063,6 +1067,22 @@ sets.idle.Regen = set_combine(sets.idle, {
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
+
+
+sets.idle.Regain = {
+	head="Null Masque",
+	body={ name="Gleti's Cuirass", augments={'Path: A',}},
+	hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+	legs={ name="Gleti's Breeches", augments={'Path: A',}},
+	feet={ name="Gleti's Boots", augments={'Path: A',}},
+	neck="Rep. Plat. Medal",
+	waist="Carrier's Sash",
+	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	left_ring="Chirich Ring +1",
+	right_ring="Defending Ring",
+	back="Moonlight Cape",
+}
 sets.idle.MDT = set_combine(sets.defense.MDT, {})
 sets.idle.Enmity = set_combine(sets.defense.Enmity, {})
 sets.idle.Town = {legs="Carmine Cuisses +1",
@@ -1178,15 +1198,16 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 --  \_____|  \____/  |_| \_| |_____/  |_____|    |_|    |_____|  \____/  |_| \_| /_/    \_\ |______|  --
 ----																								----
 --------------------------------------------------------------------------------------------------------
-    -- Extra Melee sets.  Apply these on top of melee sets.
-    sets.Knockback = {}
-    sets.MP = {waist="Flume Belt +1",ear1="Suppanomimi", ear2="Ethereal Earring"}
-    sets.MP_Knockback = {}
-	sets.SuppaBrutal = {ear1="Suppanomimi", ear2="Brutal Earring"}
-	sets.DWEarrings = {ear1="Suppanomimi",ear2="Eabani Earring"}
-	sets.DWMax = {ear1="Suppanomimi",ear2="Eabani Earring",body="Adhemar Jacket +1",waist="Reiki Yotai",legs="Carmine Cuisses +1"}
-	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
-	
+-- Extra Melee sets.  Apply these on top of melee sets.
+sets.Knockback = {}
+sets.MP = {waist="Flume Belt +1",ear1="Suppanomimi", ear2="Ethereal Earring"}
+sets.MP_Knockback = {}
+sets.SuppaBrutal = {ear1="Suppanomimi", ear2="Brutal Earring"}
+sets.DWEarrings = {ear1="Suppanomimi",ear2="Eabani Earring"}
+sets.DWMax = {ear1="Suppanomimi",ear2="Eabani Earring",body="Adhemar Jacket +1",waist="Reiki Yotai",legs="Carmine Cuisses +1"}
+sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+sets.rollerRing = {left_ring="Roller's Ring"}
+
 
 -- Passive set
 

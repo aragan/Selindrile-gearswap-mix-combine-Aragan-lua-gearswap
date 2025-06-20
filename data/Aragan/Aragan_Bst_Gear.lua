@@ -15,13 +15,13 @@ function user_job_setup()
 	state.HybridMode:options('PDT','Normal','PetTank','BothDD')
 	state.WeaponskillMode:options('Match', 'SubtleBlow', 'Acc', 'PDL')
 	state.CastingMode:options('Normal')
-	state.IdleMode:options('Normal', 'MDTMaster', 'Turtle', 'MEva')
+	state.IdleMode:options('Normal', 'MDTMaster', 'Turtle', 'MEva','Regain')
 	state.RestingMode:options('Normal')
 	state.PhysicalDefenseMode:options('PDT', 'PetPDT', 'Reraise', 'Killer')
 	state.MagicalDefenseMode:options('PetMDT', 'MDT', 'Petregen')
 	state.ResistDefenseMode:options('PetMEVA', 'MEVA')
 	state.Weapons:options('None', 'SWORDS', 'AXE', 'SCYTHE', 'DAGGERS', 'CLUB','Staff')
-	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Knockback','Suppa','DWEarrings'}
+	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','SubtleBlow','Knockback','Suppa','DWEarrings'}
 	
 	autows_list = {['PetPDTAxe']='Ruinator',['DualWeapons']='Ruinator'}
 
@@ -593,9 +593,12 @@ sets.precast.WS['Primal Rend'] = {
 	-- blockhead > spinning top > doubleclaw (fireball) > spinning top (fireball)
 	-- Razor Fang > Brain Crush > Claw Cyclone > Brain Crush > Razor Fang > fireball
 
-		-- Swap to these on Moonshade using WS if at 3000 TP
+	-- Extra Melee sets.  Apply these on top of melee sets.
+
+	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Brutal Earring",ear2="Sherida Earring",}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
+	sets.rollerRing = {left_ring="Roller's Ring"}
 
 				-- PET SIC & READY MOVES
 	sets.midcast.Pet.WS = {main="Agwu's Axe",
@@ -698,7 +701,21 @@ sets.precast.WS['Primal Rend'] = {
 		right_ring="Defending Ring",
 		back="Moonlight Cape",
 }
-			
+		
+sets.idle.Regain = {
+	head="Null Masque",
+	body={ name="Gleti's Cuirass", augments={'Path: A',}},
+    hands="Regal Gloves",
+	legs={ name="Gleti's Breeches", augments={'Path: A',}},
+	feet={ name="Gleti's Boots", augments={'Path: A',}},
+	neck="Rep. Plat. Medal",
+	waist="Carrier's Sash",
+	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	left_ring="Chirich Ring +1",
+	right_ring="Defending Ring",
+	back="Moonlight Cape",
+}	
 	sets.idle.MDTMaster = {		
 		main="Izizoeksi",
 		sub={ name="Digirbalag", augments={'Pet: Damage taken -4%','Pet: Accuracy+15 Pet: Rng. Acc.+15','Pet: Attack+19 Pet: Rng.Atk.+19',}},
@@ -1040,7 +1057,10 @@ sets.precast.WS['Primal Rend'] = {
 	sets.Knockback = {}
 	sets.SuppaBrutal = {ear1="Suppanomimi", ear2="Sherida Earring"}
 	sets.DWEarrings = {ear1="Suppanomimi", ear2="Sherida Earring"}
-	
+	sets.SubtleBlow ={        
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
 
 -------------------------------------------------------------------------------------------------------------------
 -- Complete Lvl 76-99 Jug Pet Precast List +Funguar +Courier +Amigo

@@ -29,7 +29,7 @@ function user_job_setup()
 	state.PhysicalDefenseMode:options('PDT_HP','PDT','PDH', 'HP', 'Evasion', 'Enmity')
 	state.MagicalDefenseMode:options('MDT','MDT_HP','Resist','MEVA')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
-	state.Passive:options('None','AbsorbMP','EnemyCritRate','Regen','Refresh','Resist')
+	state.Passive:options('None','Parry','AbsorbMP','EnemyCritRate','Regen','Refresh','Resist')
 	state.IdleMode:options('Tank','Normal','KiteTank', 'HP','PDH', 'PDT','Evasion', 'Resist','MEVA', 'Regen', 'Enmity') --,'Normal','Sphere'
 	state.Weapons:options('None','Epeolatry','Lycurgos','Naegling','MalignanceSword',
 	'Reikiko','Loxotic','Dolichenus','DualWeapons','DualNaegling','DualDolichenus','DualLoxotic')
@@ -580,6 +580,7 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
     sets.midcast['Regen'] = set_combine(sets.midcast['Enhancing Magic'],{        
 	head="Rune. Bandeau +3",
 	neck="Sacro Gorget",
+	waist="Sroda Belt",
 	right_ear="Erilaz Earring +2"}) 
 	sets.midcast['Regen'].SIRD = set_combine(sets.midcast.SIRD, {
         head="Rune. Bandeau +3",
@@ -706,6 +707,21 @@ sets.idle.Regen = set_combine(sets.idle, {
 	left_ring="Chirich Ring +1",
 	right_ring="Chirich Ring +1",
 })
+
+sets.idle.Regain = {
+	head="Wakido Kabuto +3",
+	body="Adamantite Armor",
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck="Rep. Plat. Medal",
+	waist="Carrier's Sash",
+	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	left_ring="Shadow Ring",
+	right_ring="Defending Ring",
+	back="Moonlight Cape",
+}
 sets.idle.PDH = {
 	ammo="Staunch Tathlum +1",
 	head="Erilaz Galea +2",
@@ -868,6 +884,11 @@ sets.idle.MEVA = {ammo="Yamarang",
 		left_ring="Stikini Ring +1",
 		right_ring="Stikini Ring +1",
  }
+    sets.passive.Parry = {
+		hands="Turms Mittens +1",
+        legs="Erilaz Leg Guards +2",
+        feet="Turms Leggings +1",
+        back="Ogma's Cape",}
 	 sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
 
 	-- Defense Sets
@@ -901,21 +922,21 @@ sets.idle.MEVA = {ammo="Yamarang",
 		left_ring="Defending Ring",
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back="Ogma's Cape",
-		}
-		sets.defense.Enmity = { 
-			ammo="Iron Gobbet",
-			head="Halitus Helm",
-			body={ name="Emet Harness +1", augments={'Path: A',}},
-			hands="Kurys Gloves",
-			legs="Erilaz Leg Guards +2",
-			feet="Erilaz Greaves +2",
-			neck="Moonlight Necklace",
-			waist="Plat. Mog. Belt",
-			left_ear="Cryptic Earring",
-			right_ear="Trux Earring",
-			left_ring="Vengeful Ring",
-			right_ring="Petrov Ring",
-			back="Reiki Cloak",
+	}
+	sets.defense.Enmity = { 
+		ammo="Iron Gobbet",
+		head="Halitus Helm",
+		body={ name="Emet Harness +1", augments={'Path: A',}},
+		hands="Kurys Gloves",
+		legs="Erilaz Leg Guards +2",
+		feet="Erilaz Greaves +2",
+		neck="Moonlight Necklace",
+		waist="Plat. Mog. Belt",
+		left_ear="Cryptic Earring",
+		right_ear="Trux Earring",
+		left_ring="Vengeful Ring",
+		right_ring="Petrov Ring",
+		back="Reiki Cloak",
 		}
 		sets.defense.Evasion = {    
 			ammo="Yamarang",
@@ -989,6 +1010,8 @@ sets.idle.MEVA = {ammo="Yamarang",
         body="Nyame Mail",hands="Nyame Gauntlets",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
         back="Moonlight Cape",waist="Engraved Belt",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 	
+	-- Extra Melee sets.  Apply these on top of melee sets.
+
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Brutal Earring"}
 	sets.AccMaxTP = {ear1="Telos Earring"}
@@ -1383,7 +1406,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
         windower.chat.input('/lockstyleset 149')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
-        windower.chat.input('/lockstyleset 165')
+        windower.chat.input('/lockstyleset 167')
     else
         windower.chat.input('/lockstyleset 151') --Catchall
     end

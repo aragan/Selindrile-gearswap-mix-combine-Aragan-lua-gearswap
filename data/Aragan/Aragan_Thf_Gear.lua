@@ -5,11 +5,12 @@ function user_job_setup()
     state.HybridMode:options('DT','Normal')
     state.RangedMode:options('Normal', 'Acc')
     state.WeaponskillMode:options('Match','SubtleBlow', 'PDL', 'Mod')
-	state.IdleMode:options('DT','Normal','PDT', 'HP', 'Evasion', 'MDT', 'Regen', 'EnemyCritRate')
+	state.IdleMode:options('DT','Normal','PDT', 'HP', 'Evasion', 'MDT', 'Regen','Regain', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP','Regain')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('None','Twashtar','Centovente', 'Tauret', 'Aeneas', 'Naegling')
+	state.Passive:options('None', 'SubtleBlow','Parry','MDT', 'Enspell')
 
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Suppa','DWMax','Parry','SubtleBlow'}
 	state.AmbushMode = M(false, 'Ambush Mode')
@@ -61,14 +62,30 @@ function init_gear_sets()
 	sets.Suppa = {ear1="Suppanomimi", ear2="Sherida Earring"}
 	sets.DWEarrings = {ear1="Suppanomimi", ear2="Eabani Earring"}
 	sets.DWMax = {ear1="Suppanomimi", ear2="Eabani Earring",body="Adhemar Jacket +1",hands="Floral Gauntlets",waist="Reiki Yotai"}
-	sets.Parry = {hands="Turms Mittens +1",ring2="Defending Ring"}
+	sets.Parry = {hands="Turms Mittens +1"}
 	sets.Ambush = {body="Plunderer's Vest +3"}
-    sets.SubtleBlow = {head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
-    feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
+    sets.SubtleBlow = {
     left_ear="Sherida Earring",
-    right_ear="Skulk. Earring +1",
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",}
+    sets.rollerRing = {left_ring="Roller's Ring"}
+
+    	--Passive set
+	sets.passive.MDT = {
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+    }
+	sets.passive.Enspell = {waist="Orpheus's Sash",}
+	sets.passive.Parry = {
+        hands="Turms Mittens +1"
+        feet="Turms Leggings +1",
+    }
+
+    sets.passive.SubtleBlow = {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        left_ear="Sherida Earring",
+	}
 
 	-- Weapons sets
 
@@ -181,6 +198,7 @@ function init_gear_sets()
         left_ring="Sroda Ring", 
     }
     sets.precast.WS.SubtleBlow =  {
+        left_ear="Sherida Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     }
@@ -506,6 +524,7 @@ sets.precast.WS["Empyreal Arrow"] = {
     })
 
 
+	-- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Ishvara Earring",ear2="Sherida Earring"}
@@ -746,6 +765,23 @@ sets.precast.WS["Empyreal Arrow"] = {
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
     })
+    
+    sets.idle.Regain = {
+        ammo="Staunch Tathlum +1",
+        head="Null Masque",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        hands="Regal Gloves",
+        legs={ name="Gleti's Breeches", augments={'Path: A',}},
+        feet={ name="Gleti's Boots", augments={'Path: A',}},
+        neck="Rep. Plat. Medal",
+        waist="Engraved Belt",
+        left_ear="Eabani Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        right_ring="Defending Ring",
+        back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    }
+
     sets.idle.Sphere = set_combine(sets.idle, {})
     
     sets.idle.Weak = set_combine(sets.idle, {})

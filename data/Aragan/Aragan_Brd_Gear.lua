@@ -34,7 +34,7 @@ function user_job_setup()
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
     state.WeaponskillMode:options('Match','SubtleBlow', 'PDL')
-    state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere')
+    state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere','Regain')
 	state.Weapons:options('default','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan','None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon')
     state.Passive = M{['description'] = 'Passive Mode','None','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20'}
 
@@ -49,6 +49,7 @@ function user_job_setup()
     info.ExtraSongInstrument = 'Daurdabla'
 	info.SongHorn = 'Gjallarhorn'
     info.SongMarsyas = 'Marsyas'
+    info.SongCheer = 'Miracle Cheer'
 	-- How many extra songs we can keep from Daurdabla/Terpander
     info.ExtraSongs = 2
 	
@@ -60,7 +61,7 @@ function user_job_setup()
 	--send_command('bind !` input /ma "Chocobo Mazurka" <me>')
 	--send_command('bind @` gs c cycle MagicBurstMode')
 	send_command('bind @f10 gs c cycle RecoverMode')
-	send_command('bind @f8 gs c toggle AutoNukeMode')
+	--send_command('bind @f8 gs c toggle AutoNukeMode')
 	send_command('bind !0 gs c weapons None;gs c update')
 	send_command('bind !8 gs c weapons NukeWeapons;gs c update')
 	send_command('bind !9 gs c weapons Swords;gs c update')
@@ -74,6 +75,7 @@ function user_job_setup()
     send_command('bind f1 gs c cycle HippoMode')
     send_command('bind tab gs c cycle Etude')
     send_command('bind @tab gs c cycleback Etude')
+    send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
 
     --[[
     send_command('bind ^2 gs c cycle Etude')
@@ -220,13 +222,14 @@ function init_gear_sets()
 	sets.precast.FC['Horde Lullaby II'].Resistant = {range="Daurdabla"}
 	sets.precast.FC['Horde Lullaby II'].AoE = {range="Daurdabla"}
 		
-	sets.precast.FC.Mazurka = set_combine(sets.precast.FC.BardSong,{range="Marsyas"})
+	sets.precast.FC.Mazurka = set_combine(sets.precast.FC.BardSong,{range="Miracle Cheer"})
 	sets.precast.FC['Honor March'] = set_combine(sets.precast.FC.BardSong,{range="Marsyas"})
 
 	sets.precast.FC.Daurdabla = set_combine(sets.precast.FC.BardSong, {range=info.ExtraSongInstrument})
 	sets.precast.DaurdablaDummy = sets.precast.FC.Daurdabla
 	sets.precast.FC.Gjallarhorn = set_combine(sets.precast.FC.BardSong, {range="Gjallarhorn"})
     sets.precast.FC.Marsyas = set_combine(sets.precast.FC.BardSong, {range="Marsyas"})
+    sets.precast.FC.Cheer = set_combine(sets.precast.FC.BardSong, {range="Miracle Cheer"})
 
 
 	-- Precast sets to enhance JAs
@@ -496,7 +499,7 @@ sets.precast.WS['Shattersoul'] = {
 
 	-- Gear to enhance certain classes of songs
 	sets.midcast.Ballad = {legs="Fili Rhingrave +2"}
-	sets.midcast.Lullaby = {range="Marsyas",hands="Brioso Cuffs +2"}
+	sets.midcast.Lullaby = {range="Marsyas",hands="Brioso Cuffs +3"}
 	sets.midcast.Lullaby.Resistant = {range="Daurdabla"}
 	sets.midcast['Horde Lullaby'] = {range="Marsyas"}
 	sets.midcast['Horde Lullaby'].Resistant = {range="Daurdabla"}
@@ -515,13 +518,13 @@ sets.precast.WS['Shattersoul'] = {
     sets.midcast.Etude = {head="Mousai Turban +1",}
     sets.midcast.Threnody = {body="Mou. Manteel +1"}
 
-	sets.midcast["Sentinel's Scherzo"] = {feet="Fili Cothurnes +2"}
+	sets.midcast["Sentinel's Scherzo"] = {range="Marsyas",feet="Fili Cothurnes +2"}
 	sets.midcast['Magic Finale'] = {range="Daurdabla",
     neck="Null Loop",
     waist="Null Belt",
     neck="Null Loop",
     legs="Fili Rhingrave +2",}
-	sets.midcast.Mazurka = {range="Marsyas"}
+	sets.midcast.Mazurka = {range="Miracle Cheer"}
 	
 	-- For song buffs (duration and AF3 set bonus)
 	sets.midcast.SongEffect = {    main="Carnwenhan",
@@ -568,6 +571,7 @@ sets.precast.WS['Shattersoul'] = {
     sets.midcast.Daurdabla = {range=info.ExtraSongInstrument}
     sets.midcast.Gjallarhorn =  {range=info.SongHorn}
     sets.midcast.Marsyas = set_combine(sets.midcast.SongEffect, {range=info.SongMarsyas})
+    sets.midcast.Cheer = set_combine(sets.midcast.SongEffect, {range=info.SongCheer})
 
 	-- Dummy song with Daurdabla; minimize duration to make it easy to overwrite.
     sets.midcast.DaurdablaDummy = set_combine(sets.midcast.SongRecast, {range=info.ExtraSongInstrument})
@@ -832,6 +836,21 @@ sets.idle.Regen = set_combine(sets.idle, {
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
+
+sets.idle.Regain = {
+    head="Null Masque",
+    body="Adamantite Armor",
+    hands="Regal Gloves",
+    legs="Fili Rhingrave +2",
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck="Rep. Plat. Medal",
+    waist="Carrier's Sash",
+    left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    right_ear="Fili Earring +1",
+    left_ring="Chirich Ring +1",
+    right_ring="Defending Ring",
+    back="Moonlight Cape",
+}
 sets.idle.Sphere = set_combine(sets.idle, {
     body="Annoint. Kalasiris",
 })
@@ -848,11 +867,14 @@ sets.idle.Sphere = set_combine(sets.idle, {
     right_ring="Defending Ring",
     back="Intarabus's Cape",    }
 
+-- Extra Melee sets.  Apply these on top of melee sets.
 
     sets.buff.Doom = {    neck="Nicander's Necklace",
     waist="Gishdubar Sash",
     left_ring="Purity Ring",
     right_ring="Blenmot's Ring +1",}
+
+    sets.rollerRing = {left_ring="Roller's Ring"}
 
 	sets.Kiting = {feet="Fili Cothurnes +2"}
 	sets.latent_refresh = {waist="Fucho-no-obi"}
@@ -863,8 +885,6 @@ sets.idle.Sphere = set_combine(sets.idle, {
     sets.passive.SubtleBlow ={        
         hands="Volte Mittens",
         feet="Volte Spats",
-        neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Sarissapho. Belt",
         left_ear="Sherida Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
@@ -1168,10 +1188,10 @@ function user_job_lockstyle()
         end
 	elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         if res.items[item_name_to_id(player.equipment.sub)].skill == 3 then --Sword/Sword.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 150')
         end
     else
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 150')
     end
 end
 

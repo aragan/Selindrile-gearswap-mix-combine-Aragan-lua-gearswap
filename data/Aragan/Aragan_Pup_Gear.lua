@@ -41,8 +41,9 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT')
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options('Normal','PDT','Empy','EnemyCritRate','Evasion','HP','MDT','Refresh','Sphere')
-	state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners','Tauret','CLUB','Staff')
+	state.IdleMode:options('Normal','PDT','Empy','EnemyCritRate','Evasion','HP','MDT','Regain','Refresh','Sphere')
+    state.Passive:options('None', 'SubtleBlow','SubtleBlowPET', 'SubtleBlowII','SubtleBlowPETII','SubtleBlowPETONLY','MDT', 'Enspell')
+    state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners','Tauret','CLUB','Staff')
     state.Animators = M{['description']='Animators', 'AnimatorPI', 'None', 'AnimatorPII', 'NeoAnimator'}
 
     state.PetMode = M{['description']='Pet Mode', 'None','Melee','MaxAcc','Ranged','MaxTP','Regen','Bruiser','Tank','LightTank','Magic','Heal','Nuke'}
@@ -615,7 +616,37 @@ range="Trollbane",  }
 	--sets.midcast.Pet.WeaponSkill = {}
 
     -- Sets to return to when not performing an action.
-    
+    sets.passive.SubtleBlow = {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        waist="Moonbow Belt +1",
+        left_ear="Sherida Earring",
+        right_ring="Niqmaddu Ring",
+
+	}
+    sets.passive.SubtleBlowPET = {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        waist="Moonbow Belt +1",
+        right_ear="Gelai Earring",
+        left_ear="Sherida Earring",
+        right_ring="Niqmaddu Ring",
+	}
+    sets.passive.SubtleBlowII = {
+        waist="Moonbow Belt +1",
+        left_ear="Sherida Earring",
+        right_ring="Niqmaddu Ring",
+	}
+    sets.passive.SubtleBlowPETII = {
+        waist="Moonbow Belt +1",
+        left_ear="Sherida Earring",
+        right_ear="Gelai Earring",
+        right_ring="Niqmaddu Ring",
+	}
+    sets.passive.SubtleBlowPETONLY = {
+        waist="Isa Belt",
+        right_ear="Gelai Earring",
+	}
     -- Resting sets
     sets.resting = {
         main="Denouements",
@@ -672,6 +703,20 @@ range="Trollbane",  }
     sets.idle.Sphere = set_combine(sets.idle, {
         body="Annoint. Kalasiris",
     })
+    sets.idle.Regain = {
+        head="Wakido Kabuto +3",
+		body="Adamantite Armor",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Rep. Plat. Medal",
+		waist="Carrier's Sash",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Shadow Ring",
+		right_ring="Defending Ring",
+		back="Moonlight Cape",
+	}
 	sets.idle.Refresh = {
         head="Null Masque",
         body={ name="Nyame Mail", augments={'Path: B',}},

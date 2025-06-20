@@ -121,6 +121,7 @@ function user_job_setup()
     --send_command('bind !f3 input //gs c geo')
 	send_command('bind ^f1 gs c cycle HippoMode')
 	send_command('bind ^f2 gs c toggle AutoStunMode')
+    send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
 
 	indi_duration = 290
 	

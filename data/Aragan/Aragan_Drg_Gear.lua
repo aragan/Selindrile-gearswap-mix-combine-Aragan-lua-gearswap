@@ -20,7 +20,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'HP', 'Reraise', 'Regain')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options( 'DT','Normal','Regen', 'HP', 'MDT', 'Evasion', 'EnemyCritRate')
+	state.IdleMode:options( 'DT','Normal','Regen', 'HP', 'MDT', 'Evasion', 'EnemyCritRate', 'Regain')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Weapons:options('None', 'Naegling', 'Trishula', 'Shining', 'TernionDagger', 'Staff', 'Club', 'DualNaegling', 'DualTernionDagger', 'DualClub')
 	state.Passive = M{['description'] = 'Passive Mode','None','Twilight','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20', 'SubtleBlow30','SubtleBlow62'}
@@ -199,6 +199,7 @@ function init_gear_sets()
     left_ring="Sroda Ring", 
     })
     sets.precast.WS.SubtleBlow =  {
+        left_ear="Sherida Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     }
@@ -695,6 +696,21 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         right_ring="Chirich Ring +1",
     })
 
+    sets.idle.Regain = {
+        ammo="Staunch Tathlum +1",
+        head="Null Masque",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
+        legs={ name="Gleti's Breeches", augments={'Path: A',}},
+        feet={ name="Gleti's Boots", augments={'Path: A',}},
+        neck="Rep. Plat. Medal",
+        waist="Carrier's Sash",
+        left_ear="Eabani Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        right_ring="Defending Ring",
+        back="Moonlight Cape", 
+    }
 	sets.idle.Weak = set_combine(sets.idle, {
 		head="Crepuscular Helm",
 		body="Crepuscular Mail",
@@ -748,6 +764,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.passive.Enspell = {waist="Orpheus's Sash",}
 
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
+    
+	-- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Sherida Earring",}
@@ -756,7 +774,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.DayMaxTPWSEars = {ear1="Brutal Earring",ear2="Sherida Earring",}
 	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.DayWSEars = {ear1="Moonshade Earring",ear2="Sherida Earring",}
-	
+    sets.rollerRing = {left_ring="Roller's Ring"}
+
 	-- Engaged sets
 
 	-- Variations for TP weapon and (optional) offense/defense modes.  Code will fall back on previous
@@ -830,6 +849,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
     sets.engaged.SubtleBlow = set_combine(sets.engaged, {        
             body="Dagon Breast.",
+            left_ear="Sherida Earring",
             left_ring="Chirich Ring +1",
             right_ring="Niqmaddu Ring",
 

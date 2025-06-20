@@ -30,11 +30,11 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
     state.MagicalDefenseMode:options('MDT','MDT_HP','MDT_Reraise')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
-	state.IdleMode:options('Tank','Kiting','DT','PDT','PDH','Block','Evasion','MDT','MEVA','Regen','Normal')
+	state.IdleMode:options('Tank','Kiting','DT','PDT','PDH','Block','Evasion','MDT','MEVA','Regen','Regain','Normal')
 	state.Weapons:options('Burtgang','None','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole',
 	'Shining','DualNaegling','DualReikiko','DualReikikoThibron','DualNaeglingThibron')
 	state.ShieldMode = M{['description']='Shield Mode', 'Aegis','Srivatsa','Normal','Ochain','Duban', 'Priwen'} -- , 'Priwen' }
-	state.AutoBuffMode:options('Off','Auto','Odyss','Defense','Reprisal','Aminon') --,'Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','Odyss','Defense','Reprisal','Aminon','TankFull') --,'Off','Off','Off','Off','Off',
 
     state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','ReverenceGauntlets', 'Refresh', 'Resist', 'EnemyTPaccumulation','MP','Twilight'}
 	
@@ -62,21 +62,20 @@ function user_job_setup()
 	send_command('bind !w gs c toggle WeaponLock')
     send_command('bind f11 gs c cycle CastingMode')
     send_command('bind !f11 gs c set DefenseMode Magical')
-    send_command('bind !f11 gs c set DefenseMode Magical')
     send_command('bind @3 gs c cycle passive')
 
 	send_command('bind @s gs c toggle SrodaBelt')
 	send_command('bind f1 gs c cycle HippoMode')
-	send_command('bind f2 gs c toggle AutoRuneMode')
+	send_command('bind @f2 gs c toggle AutoRuneMode')
 	--send_command('bind f3 gs c cycle RuneElement')
 	send_command('bind f4 gs c cycle ElementalMode;gs c cycle RuneElement')
 
 	send_command('bind !f3 gs c toggle AutoTankMode')
 	send_command('bind !f2 gs c toggle TankAutoDefense')
 	send_command('bind !f4 gs c toggle AutoDefenseMode')
-	send_command('bind !f5 gs c toggle AutoWSMode')
+	--send_command('bind !f5 gs c toggle AutoWSMode')
 	send_command('bind @f1 gs c toggle AutoEngageMode')
-	send_command('bind @f2 gs c toggle AutoBuffMode')
+	send_command('bind f2 gs c toggle AutoBuffMode')
 	send_command('bind @f3 gs c toggle AutoTrustMode')
 	send_command('bind @f4 gs c toggle AutoFoodMode')
 	send_command('bind ^f1 gs c toggle AutoStunMode')
@@ -521,6 +520,7 @@ function init_gear_sets()
 		back="Null Shawl",
     })
 
+    -- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Cessance Earring",ear2="Brutal Earring",}
@@ -599,7 +599,7 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
     neck="Moonlight Necklace",
     waist="Audumbla Sash",
-    left_ear={ name="Chev. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+11','Mag. Acc.+11','Damage taken-3%',}},
+    left_ear="Chev. Earring +1",
     right_ear={ name="Nourish. Earring +1", augments={'Path: A',}},
     right_ring="Defending Ring",
     left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
@@ -684,7 +684,8 @@ sets.SrodaBelt = {waist="Sroda Belt"}
 	}
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
 
-    sets.midcast['Enhancing Magic'] = {main="Colada",
+    sets.midcast['Enhancing Magic'] = {
+	main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 	sub={ name="Ajax +1", augments={'Path: A',}}, 
 	ammo="Staunch Tathlum +1",
    head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
@@ -700,8 +701,8 @@ sets.SrodaBelt = {waist="Sroda Belt"}
    back={ name="Weard Mantle", augments={'VIT+1','Enmity+3','Phalanx +5',}},}
 	 
    sets.midcast['Enhancing Magic'].SIRD = {
-	main="Colada",
-	sub={ name="Ajax +1", augments={'Path: A',}},
+   main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
+   sub={ name="Ajax +1", augments={'Path: A',}},
    ammo="Staunch Tathlum +1",
    head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
    body={ name="Sakpata's Plate", augments={'Path: A',}},
@@ -727,6 +728,10 @@ sets.SrodaBelt = {waist="Sroda Belt"}
     left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
     back="Solemnity Cape",
    }) 
+   sets.midcast['Regen'] = set_combine(sets.midcast['Enhancing Magic'],{        
+	neck="Sacro Gorget",
+	waist="Sroda Belt",}) 
+	sets.midcast['Regen'].SIRD = set_combine(sets.midcast['Enhancing Magic'].SIRD,sets.SIRD, {})
 
    sets.midcast.Stoneskin = set_combine(sets.midcast['Enhancing Magic'], {
 	legs="Haven Hose",
@@ -788,14 +793,14 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 	sets.midcast.Phalanx.DT = set_combine(sets.DT, {})
 	sets.midcast.Phalanx.ConserveMP = set_combine(sets.midcast.Phalanx.SIRD, {})
 	sets.midcast.Phalanx.Duration = set_combine(sets.midcast.Phalanx, {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
+		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 		sub={ name="Ajax +1", augments={'Path: A',}},
 		body="Shab. Cuirass +1",
 		hands="Regal Gauntlets",
 	})
 
 	sets.Phalanx_Received = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
+		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 		sub={ name="Ajax +1", augments={'Path: A',}},
 		head={ name="Odyssean Helm", augments={'INT+5','"Cure" potency +8%','Phalanx +4','Accuracy+15 Attack+15','Mag. Acc.+7 "Mag.Atk.Bns."+7',}},
 		body="Shab. Cuirass +1",
@@ -1020,8 +1025,23 @@ sets.idle.Evasion={
 		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 		left_ring="Chirich Ring +1",
 		right_ring="Chirich Ring +1",
-		back="Rudianos's Mantle",}
+		back="Rudianos's Mantle",
+	}
 
+    sets.idle.Regain = {
+        head="Wakido Kabuto +3",
+		body="Adamantite Armor",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Rep. Plat. Medal",
+		waist="Carrier's Sash",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Shadow Ring",
+		right_ring="Defending Ring",
+		back="Moonlight Cape",
+	}
 	sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.Adoulin = {body="Councilor's Garb",}
 

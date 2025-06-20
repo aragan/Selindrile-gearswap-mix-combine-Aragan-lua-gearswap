@@ -66,6 +66,8 @@ function user_job_setup()
     send_command('bind @c gs c toggle Capacity')
     send_command('bind f1 gs c cycle HippoMode')
     send_command('bind !f6 gs c cycleback Weapons')
+    send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
+
     --[[]	send_command('bind ^backspace input /ma "Stun" <t>')
 	send_command('bind !backspace input /ja "Enmity Douse" <t>')
 	send_command('bind @backspace input /ja "Alacrity" <me>')

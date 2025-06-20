@@ -19,7 +19,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'Evasion')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-    state.IdleMode:options('Normal', 'PDH', 'PDT', 'EnemyCritRate', 'Resist', 'Regen', 'Refresh', 'Enmity')
+    state.IdleMode:options('Normal', 'PDH', 'PDT', 'EnemyCritRate', 'Resist', 'Regen', 'Regain', 'Refresh', 'Enmity')
 	
 	state.Weapons:options('Default','None', 'SWORDS', 'DAGGERS', 'AXE','DualWeapons','DualSavageWeapons','DualEviscerationWeapons','DualMagicWeapons','DualMalevolence')
 	state.Weapongun = M{['description']='Weapon Set', 'normal', 'Holliday', 'Hangaku', 'Fomalhaut', 'Earp','Ullr'}
@@ -418,9 +418,12 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	back="Null Shawl",
 })
 
+	-- Extra Melee sets.  Apply these on top of melee sets.
+
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {}
 	sets.AccMaxTP = {}
+    sets.rollerRing = {left_ring="Roller's Ring"}
 
 	-- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
 
@@ -613,6 +616,21 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         body="Malignance Tabard",hands="Malignance Gloves",ring1="Defending Ring",ring2="Vengeful Ring",
         back="Moonlight Cape",waist="Carrier's Sash",legs="Malignance Tights",feet="Malignance Boots"}
 
+	sets.idle.Regain = {
+		head="Null Masque",
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands="Regal Gloves",
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Rep. Plat. Medal",
+		waist="Carrier's Sash",
+		left_ear="Tuisto Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Shadow Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back="Moonlight Cape",
+	}
+		
     sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.DayIdle = {}
 	sets.NightIdle = {}

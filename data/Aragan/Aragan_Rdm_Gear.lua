@@ -23,7 +23,7 @@ function user_job_setup()
 	state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
 	state.AutoBuffMode:options('Off','Auto','Default','AutoMelee','MeleeBuff','MageBuff')
 	state.CastingMode:options( 'Duration','Normal', 'Burst', 'SIRD', 'DT')
-    state.IdleMode:options('DT','Normal', 'PDT','Empy', 'MDT','Regen', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
+    state.IdleMode:options('DT','Normal', 'PDT','Empy', 'MDT','Regen', 'Regain', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
     state.PhysicalDefenseMode:options('PDT','NukeLock')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
@@ -45,7 +45,7 @@ function user_job_setup()
 	send_command('bind f12 gs c cycle CastingMode')
 	send_command('bind f1 gs c cycle HippoMode')
 	send_command('bind @z gs c cycle EnSpell')
-	send_command('bind ^4 gs c cycle EnSpell')
+	send_command('bind ^5 gs c cycle EnSpell')
 
     send_command('bind f2 gs c cycle GainSpell')
     send_command('bind f3 gs c cycle BarElement')
@@ -77,6 +77,8 @@ function user_job_setup()
 	send_command('bind @\\\\ input /ma "Shell V" <t>')
 	send_command('bind !\\\\ input /ma "Reraise" <me>')
 	send_command('bind @3 gs c cycle RecoverMode')
+	send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
+
 	--send_command('bind ^r gs c set skipprocweapons true;gs c reset weaponskillmode;gs c weapons Default;gs c set unlockweapons false')
 	send_command('bind ^0 gs c set weapons enspellonly;gs c set unlockweapons true')
 	--send_command('bind !r gs c set skipprocweapons true;gs c reset weaponskillmode;gs c set weapons none')
@@ -457,7 +459,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 
 	sets.Duration = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
+		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 		sub="Ammurapi Shield",
 		head="Telchine Cap",
 		body="Lethargy Sayon +3",
@@ -523,7 +525,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
 
 	sets.midcast['Enhancing Magic'] = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
+		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 		sub="Ammurapi Shield",
 		head="Befouled Crown",
 		body="Telchine Chas.",
@@ -539,7 +541,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		back={ name="Sucellos's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	sets.midcast['Enhancing Magic'].SelfDuration = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
+		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 		sub="Ammurapi Shield",
 		head="Telchine Cap",
 		body="Telchine Chas.",
@@ -555,7 +557,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		back={ name="Sucellos's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	sets.midcast['Enhancing Magic'].Duration = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
+		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 		sub="Ammurapi Shield",
 		head="Leth. Chappel +2",   
 		body="Telchine Chas.",
@@ -580,7 +582,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	--Red Mage enhancing sets are handled in a different way from most, layered on due to the way Composure works
 	--Don't set combine a full set with these spells, they should layer on Enhancing Set > Composure (If Applicable) > Spell
 	sets.EnhancingSkill = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +3','Mag. Acc.+20','DMG:+6',}},
+		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 		sub="Ammurapi Shield",
 		head="Befouled Crown",
 		hands="Leth. Ganth. +2",
@@ -883,6 +885,20 @@ sets.midcast['Enfeebling Magic'].Potency = {
 		
 	sets.idle.DT = set_combine(sets.PDT, {})
 
+	sets.idle.Regain = {
+		head="Null Masque",
+		body="Adamantite Armor",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Rep. Plat. Medal",
+		waist="Carrier's Sash",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Shadow Ring",
+		right_ring="Defending Ring",
+		back="Moonlight Cape",
+	}
 sets.idle.MDT = {
 	ammo="Staunch Tathlum +1",
 	head={ name="Bunzi's Hat", augments={'Path: A',}},
@@ -1002,7 +1018,11 @@ sets.idle.Sphere = set_combine(sets.idle, {
 
 	sets.defense.NukeLock = sets.midcast['Elemental Magic']
 		
+	-- Extra Melee sets.  Apply these on top of melee sets.
+
 	sets.latent_refresh = {waist="Fucho-no-obi",}
+
+	sets.rollerRing = {left_ring="Roller's Ring"}
 
 	sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.latent_refresh = {waist="Fucho-no-obi"}

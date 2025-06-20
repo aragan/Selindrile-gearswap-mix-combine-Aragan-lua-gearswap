@@ -29,14 +29,14 @@ add auto use ja Ebullience for blm job if sub /sch and in fight.
 add code tell msg if u get proc in abyssea and auto swap gear after msg for job war nin blm
 and add in macro special line for proc those job war nin blm. 
 add bind for reset addon zonetimer for sortie bosses F/H to calc 3min run away before tpmove or use ja run or bind or kitting
-
+add cor auto fold when buffactive bust
 in macro job blm sch rdm nin drk geo whm pld for fast used i add :
 
 /con gs c elemental nuke -- for clear magic burst mobs in A/C and spam mb on bosses 
 /con gs c elemental smallnuke -- for proc in sortie boss HAND B/D and F/H
 u can use addon automb 
 
-sch i add macro for fast make skillchain :
+sch job i add macro for fast make skillchain :
 
 command add macro :
 SC1
@@ -77,15 +77,22 @@ state.DisplayMode = M(true, 'Display Mode') --Set this to false if you don't wan
 --}
 
 --Options for automation.
-state.ReEquip 		  		= M(true, 'ReEquip Mode')		 --Set this to false if you don't want to equip your current Weapon set when you aren't wearing any weapons.
-state.AutoArts 		  		= M(false, 'AutoArts') 		 --Set this to false if you don't want to automatically try to keep up Solace/Arts.
-state.AutoLockstyle	 	    = M(true, 'AutoLockstyle Mode') --Set this to false if you don't want gearswap to automatically lockstyle on load and weapon change.
-state.CancelStoneskin 		= M(true, 'Cancel Stone Skin') --Set this to false if you don't want to automatically cancel stoneskin when you're slept.
-state.SkipProcWeapons 		= M(true, 'Skip Proc Weapons') --Set this to false if you want to display weapon sets fulltime rather than just Aby/Voidwatch.
-state.NotifyBuffs	  		= M(true, 'Notify Buffs') 	 --Set this to true if you want to notify your party when you recieve a specific buff/debuff. (List Below)
+state.ReEquip 		  	  = M(true, 'ReEquip Mode')		 --Set this to false if you don't want to equip your current Weapon set when you aren't wearing any weapons.
+state.AutoArts 		  	  = M(true, 'AutoArts') 		 --Set this to false if you don't want to automatically try to keep up Solace/Arts.
+state.AutoLockstyle	 	  = M(true, 'AutoLockstyle Mode') --Set this to false if you don't want gearswap to automatically lockstyle on load and weapon change.
+state.CancelStoneskin 	  = M(true, 'Cancel Stone Skin') --Set this to false if you don't want to automatically cancel stoneskin when you're slept.
+state.SkipProcWeapons 	  = M(true, 'Skip Proc Weapons') --Set this to false if you want to display weapon sets fulltime rather than just Aby/Voidwatch.
+state.NotifyBuffs	  	  = M(false, 'Notify Buffs') 	 --Set this to true if you want to notify your party when you recieve a specific buff/debuff. (List Below)
 state.UnlockWeapons		  = M(true, 'Unlock Weapons')
 state.CraftingMode		  = M{['description'] = 'Crafting Mode','None','Goldsmithing','Smithing','Cooking','Fishing',}
 state.CraftQuality  	  = M{['description'] = 'Crafting Quality','Normal','HQ','NQ'}
+state.AutoDefenseMode 	  = M(true, 'Auto Defense') 
+state.AutoStunMode 	      = M(true, 'Auto Stun') 
+state.AutoCleanupMode  	  = M(true, 'Auto Cleanup Mode')
+state.AutoWSRestore		  = M(true, 'Auto Weaponskill Restore Mode')
+state.SelectNPCTargets    = M(false, 'Select NPC Targets')
+state.PCTargetMode        = M{['description'] = 'PC Target Mode', 'default', 'stpt', 'stal', 'stpc'}
+state.SubtleBlowMode      = M(true, 'SubtleBlow Mode') 
 
 state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
 'haste', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
@@ -100,19 +107,20 @@ state.Spellset = M{['description']='Spellset','vagary', 'aoe', 'aoe2'}
 state.Avatars = M{['description']='Avatars', "Ifrit", "Ramuh", "Titan", "Siren", "Garuda", "Diabolos", "Carbuncle", "Fenrir", "Leviathan", "Shiva", "Odin", "Alexander", "Cait Sith"}
 state.Passive = M{['description'] = 'Passive Mode','None'}
 
-state.Passive:options('None','EnemyCritRate','Regen','Resist','Refresh','Empy', 'SubtleBlow', 'SubtleBlow40', 'SubtleBlow50')
+--state.Passive:options('None','EnemyCritRate','Regen','Resist','Refresh','Empy', 'SubtleBlow', 'SubtleBlow40', 'SubtleBlow50')
 
 state.WeaponLock = M(false, 'Weapon Lock')
 state.RP = M(false, "Reinforcement Points Mode")
 state.StormSurge = M(false, 'Stormsurge')
 state.SrodaBelt = M(false, 'SrodaBelt')
 state.SrodaNecklace = M(false, 'SrodaNecklace')
-state.NM = M(false, 'NM')
+state.NM = M(true, 'NM')
 state.SleepMode = M{['description']='Sleep Mode', 'Normal', 'MaxDuration'}
-state.AutoMedicineMode = M(true, 'Auto Medicine Mode')
+state.AutoMedicineMode = M(false, 'Auto Medicine Mode')
 state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
 state.AutoCureMode = M(true, 'Auto Cure Mode')
 state.NeverDieMode = M(true, 'Never Die Mode')
+state.AutoShadowMode 	  = M(false, 'Auto Shadow Mode')
 
 --state.ShieldMode:options('Normal','Genmei','Ammurapi')
 
@@ -153,7 +161,6 @@ need add
 	send_command('bind ^f1 gs c toggle AutoStunMode')
 	send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind ^f1 gs c toggle AutoStunMode')
-	send_command('bind ^f2 gs c toggle SubJobEnmity')
 	send_command('bind @5 gs c toggle  AutoFoodMode')
 	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
 	send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
@@ -161,6 +168,13 @@ need add
 AutoShadowMode
 AutoSambaMode
 AutoRuneMode
+
+state.AutoTomahawkMode = M(false, 'AutoTomahawkMode')
+state.AutoTPReductionMode = M(false, 'Auto TP Reduction Mode')
+state.AutoBLUSpam = M(false, 'AutoBLUSpam')
+
+Autodef.downMode
+AutozergMode
 
 AutoAcceptRaiseMode
 use <call21>
@@ -177,8 +191,10 @@ handle_killstatue
 (Aragan) Treasure Hunter set Equip
 (Aragan) HPboost set gear Equiped ready 
 send_command('input /p Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
-
-
+--for non change warp ring if equip 
+ using any item, //gs c useitem slot Item Name
+So, for example //gs c useitem head Reraise Hairpin +1
+//gs c useitem ring2 warp ring
 ]]
 
 -- Function to bind GearSwap binds when loading a GS script.
@@ -208,11 +224,12 @@ function global_on_load()
 	
 	send_command('bind !delete input //smrt on;input //smrt') --Turns addon smarttarget on odd.
 	send_command('bind !insert input //smrt off') --Turns addon smarttarget off odd.
-	send_command('bind !pagedown input //autoNukes off') --Turns addon off.addon use for spamm aspir on sortie aminon
-	send_command('bind !pageup input //autoNukes on') --Turns addon on. addon use for spamm aspir on sortie aminon
-	send_command('bind ^4 input //autoNukes on') --Turns addon on.addon use for spamm aspir on sortie aminon
-	send_command('bind ^5 input //autoNukes off') --Turns addon off.addon use for spamm aspir on sortie aminon
-	
+	-- send_command('bind !pagedown input //autoNukes off') --Turns addon off.addon use for spamm aspir on sortie aminon
+	--send_command('bind !pageup input //autoNukes on') --Turns addon on. addon use for spamm aspir on sortie aminon
+	--send_command('bind ^4 input //autoNukes on') --Turns addon on.addon use for spamm aspir on sortie aminon
+	-- send_command('bind ^5 input //autoNukes off') --Turns addon off.addon use for spamm aspir on sortie aminon
+	send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  --use for spam absort tp and aspir on sortie aminon
+
 	send_command('bind ^backspace input //automb on') --Turns addon on.addon automb
 	send_command('bind !backspace input //automb off') --Turns addon off.addon automb
 	
@@ -437,29 +454,34 @@ end
 function job_post_precast(spell)
 	if spell.name == "Holy Water" then
 		equip(sets.precast.Item['Holy Water'])
-   end
-   --[[if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
+    end
+    --[[if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
 	equip(sets.precast.WS.SubtleBlow)
-   end
-   ]]
+    end
+    ]]
 
-   if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
+    if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
 	    equip(sets.precast.WS.SubtleBlow)
     end
 	attack = player.attack -- auto equip to PDL ws set - code add by kastra,modi.(Aragan@Asura)
 
     if spell.type == 'WeaponSkill' then
-        if state.WeaponskillMode.value == 'SubtleBlow' and attack < attack2 then
-            equip(sets.precast.WS.SubtleBlow)
-		elseif state.WeaponskillMode.value == 'SubtleBlow' and attack > attack2 then
+
+        if state.WeaponskillMode.value == 'SubtleBlow' then --and (attack > attack2 or attack < attack2)
             equip(sets.precast.WS.SubtleBlow)
         elseif state.WeaponskillMode.value == 'Proc' then
             equip(sets.precast.WS[spell.name].Proc)
+		elseif player.main_job == 'DNC' and buffactive["Climactic Flourish"] and not data.weaponskills.elemental:contains(spell.name) and attack > attack2 then
+			equip(sets.precast.WS[spell.name].PDL.Clim)
         elseif attack > attack2 then
             equip(sets.precast.WS[spell.name].PDL)
-        else
+			 --windower.add_to_chat(123, 'Auto WS Mode: PDL')
+
+        --[[else
             equip(sets.precast.WS[spell.name])
+			]]
         end
+
     end
 
 	if spell.type == 'WeaponSkill' and player.main_job == 'WAR' then
@@ -508,7 +530,7 @@ function job_aftercast(spell, spellMap, eventArgs)
 
 end
 -- Handle notifications of general user state change.
-function job_state_change(stateField, newValue, oldValue)
+function user_state_change(stateField, newValue, oldValue)
     if state.WeaponLock.value == true then
         disable('main','sub')
     else
@@ -545,11 +567,21 @@ function job_state_change(stateField, newValue, oldValue)
 		    and not state.Buff['SJ Restriction'] and player.hpp < 25 and being_attacked and spell_recasts[4] < spell_latency then 
 			windower.chat.input('/ma "Cure IV" <me>')
 			tickdelay = os.clock() + 1.1
+		elseif player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 25 then
+			state.AutoShadowMode:set('true')
+			tickdelay = os.clock() + 1.1
+		elseif player.inventory['Vile Elixir +1'] and (player.in_combat or being_attacked) and player.hpp < 20 then
+            send_command('input /item "Vile Elixir +1" <me>')
+            tickdelay = os.clock() + 1.1
+            return true
+        elseif player.inventory['Vile Elixir'] and (player.in_combat or being_attacked) and player.hpp > 20 then
+            send_command('input /item "Vile Elixir" <me>')
+            tickdelay = os.clock() + 1.1
+            return true
 		end
 	end
 
 end
-	
 
 
 function gearinfo(commandArgs, eventArgs)
@@ -579,7 +611,7 @@ end
 
 
 -- Modify the default idle set after it was constructed.
-function job_customize_idle_set(idleSet)
+function user_customize_idle_set(idleSet)
     if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
@@ -597,7 +629,7 @@ function job_customize_idle_set(idleSet)
     return idleSet
 end
 -- Modify the default melee set after it was constructed.
-function job_customize_melee_set(meleeSet)
+function user_customize_melee_set(meleeSet)
 	if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
@@ -617,18 +649,20 @@ function job_customize_melee_set(meleeSet)
         enable('head','body')
 	    end
 	end
+
     return meleeSet
 end
 
 -- Global intercept on buff change.
 function user_buff_change(buff, gain, eventArgs)
+
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 		if player.sub_job == 'DNC' and not state.Buff['SJ Restriction'] and player.tp > 200 and abil_recasts[215] < latency and (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
 	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
-	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
+	    or buffactive['Evasion Down'] or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
 	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
 	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
 	        windower.send_command('input /ja Healing Waltz <me>')
@@ -638,46 +672,39 @@ function user_buff_change(buff, gain, eventArgs)
 	end
 
 	if state.AutoReraiseeMode.value == true then
-		if buff == "weakness" then
-			if gain then
-				equip(sets.Reraise)
-				 disable('body','head')
-				else
-				 enable('body','head')
-			end
+		if buffactive['weakness'] then
+			equip(sets.Reraise)
+			disable('body','head')
+		else
+			enable('body','head')
 		end
 	end
 
 	-- Create a timer when we gain weakness.  Remove it when weakness is gone.
 	if buff:lower() == 'weakness' then
-		if gain then
 			send_command('timers create "Weakness" 300 up abilities/00255.png')
-		else
+	else
 			send_command('timers delete "Weakness"')
-		end
+		
 	end
-    if buff == "Charm" then
-        if gain then  			
+    if buffactive['Charm'] then		
            send_command('input /p Charmd, please Sleep me.')		
-        else	
+    else	
            send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
-        end
+        
     end
-    if buff == "petrification" then
-        if gain then    
+    if buffactive['petrification'] then
             equip(sets.defense.PDT)
             send_command('input /p Petrification, please Stona.')		
-        else
+    else
             send_command('input /p '..player.name..' is no longer Petrify!')
             handle_equipping_gear(player.status)
-        end
     end
-    if buff == "Sleep" then
-        if gain then    
+    if buffactive['Sleep'] then
             send_command('input /p ZZZzzz, please cure.')		
-        else
+    else
             send_command('input /p '..player.name..' is no longer Sleep!')
-        end
+        
     end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 
@@ -687,87 +714,69 @@ function user_buff_change(buff, gain, eventArgs)
 			
 		end
 	end
+
 	if state.AutoMedicineMode.value == true then
-		if buff == "Defense Down" then
-			if gain then  			
+		if buffactive['Defense Down'] then			
 				send_command('input /item "Panacea" <me>')
-			end
-		elseif buff == "Magic Def. Down" then
-			if gain then  			
+		elseif buffactive['Magic Def. Down'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Max HP Down" then
-			if gain then  			
+			
+		elseif buffactive['Max HP Down'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Evasion Down" then
-			if gain then  			
+		elseif buffactive['Evasion Down'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Magic Evasion Down" then
-			if gain then  			
+			
+		elseif buffactive['Magic Evasion Down'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Dia" then
-			if gain then  			
+			
+		elseif buffactive['Dia'] then			
 				send_command('@input /item "panacea" <me>')
-			end  
-		elseif buff == "Bio" then
-			if gain then  			
+			  
+		elseif buffactive['Bio'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Bind" then
-			if gain then  			
+			
+		elseif buffactive['Bind'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "slow" then
-			if gain then  			
+			
+		elseif buffactive['Slow'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "weight" then
-			if gain then  			
+			
+		elseif buffactive['weight'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Attack Down" then
-			if gain then  			
+			
+		elseif buffactive['Attack Down'] then			
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Accuracy Down" then
-			if gain then  			
+			
+		elseif buffactive['Accuracy Down'] then			
 				send_command('@input /item "panacea" <me>')
-			end
+			
 		end
 	
-		if buff == "VIT Down" then
-			if gain then
+		if buffactive['VIT Down'] then
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "INT Down" then
-			if gain then
+			
+		elseif buffactive['INT Down'] then
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "MND Down" then
-			if gain then
+			
+		elseif buffactive['MND Down'] then
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "STR Down" then
-			if gain then
+			
+		elseif buffactive['STR Down'] then
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "AGI Down" then
-			if gain then
+			
+		elseif buffactive['AGI Down'] then
 				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "poison" then
-			if gain then  
+		elseif buffactive['poison'] then
 				send_command('input /item "remedy" <me>')
-			end
+				tickdelay = os.clock() + 2.4
 		end
 		if not midaction() then
-			status_change(player.status)
+			job_update()
 		end
 	end
+
 end
+
 
 --[[		elseif buff == "Warcry" then
 			if gain then  
@@ -874,9 +883,9 @@ end
 function default_zone_change(new_id,old_id)
 	--tickdelay = os.clock() + 10	
 	if data.areas.cities:contains(world.area)  then
-		send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock;input //tr autodrop off;input //gs c set cleanup false') --Turns addon on.
+		send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock;input //tr autodrop off;input //gs c set AutoCleanupMode false') --Turns addon on.
 	else
-		send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock;input //tr autodrop on;') --Turns addon off. stats=craftstats addon
+		send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock;input //tr autodrop on;input //gs c set AutoCleanupMode true') --Turns addon off. stats=craftstats addon
 	end
 	
 	if data.areas.laggy:contains(world.area)  then
@@ -894,6 +903,18 @@ function default_zone_change(new_id,old_id)
 		send_command('input //ept show;gs c set SkipProcWeapons false;/lockstyleset 1') --Turns addon on.
 	else
 		send_command('input //ept hide;') --Turns addon off.
+	end
+
+	if world.area:contains('Sortie') or world.area:contains('Odyssey') then
+		send_command('AutoItem on') --Turns addon on.
+	else
+		send_command('input //ept hide;') --Turns addon off.
+	end
+
+	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+		windower.chat.input('/ma "Poisona" <me>')
+		tickdelay = os.clock() + 1.1
+		
 	end
 end
 
@@ -938,7 +959,7 @@ function is_sc_element_today(spell)
 
 end
 
-
+--[[
 function get_attack_increase(target)
     local buffs = {'Dia', 'Shell Crusher'}
     local attack_increase = 0
@@ -971,7 +992,7 @@ function get_attack_power()
 
     return attack_power
 end
-
+]]
 
 
 --[[ 

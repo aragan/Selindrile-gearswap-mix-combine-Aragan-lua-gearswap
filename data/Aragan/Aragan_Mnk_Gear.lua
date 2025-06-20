@@ -18,8 +18,9 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'HP')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options('DT','Normal', 'PDT', 'HP', 'Evasion', 'MDT', 'Regen', 'EnemyCritRate')
-	state.Weapons:options('None','Godhands','Karambit','Club','Staff','ProcStaff','ProcClub','ProcSword','ProcGreatSword','ProcScythe','ProcPolearm','ProcGreatKatana')
+	state.IdleMode:options('DT','Normal', 'PDT', 'HP', 'Evasion', 'MDT', 'Regen','Regain', 'EnemyCritRate')
+    state.Passive:options('None', 'SubtleBlow','MDT', 'Enspell')
+    state.Weapons:options('None','Godhands','Karambit','Club','Staff','ProcStaff','ProcClub','ProcSword','ProcGreatSword','ProcScythe','ProcPolearm','ProcGreatKatana')
 	state.AutoBuffMode:options('Off','Auto','Full','Defend') --,'Vagary','Off','Off','Off','Off',
 
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None'}
@@ -504,11 +505,33 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 
-	
+	-- Extra Melee sets.  Apply these on top of melee sets.
+
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Brutal Earring",ear2="Sherida Earring",}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	
+    sets.rollerRing = {left_ring="Roller's Ring"}
+
+    --Passive set
+	sets.passive.MDT = {
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Carrier's Sash",
+    }
+	sets.passive.Enspell = {waist="Orpheus's Sash",}
+
+    sets.passive.SubtleBlow = {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        waist="Moonbow Belt +1",
+        left_ear="Sherida Earring",
+        right_ring="Niqmaddu Ring",
+
+	}
+    sets.passive.SubtleBlowII = {
+        waist="Moonbow Belt +1",
+        left_ear="Sherida Earring",
+        right_ring="Niqmaddu Ring",
+	}
 	-- Midcast Sets
 	sets.midcast.FastRecast = {}
 		
@@ -637,7 +660,20 @@ sets.defense.Evasion = {
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     })
-
+	sets.idle.Regain = {
+		head="Null Masque",
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Rep. Plat. Medal",
+		waist="Carrier's Sash",
+		left_ear="Tuisto Earring",
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Shadow Ring",
+		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		back="Moonlight Cape",
+	}
 	sets.Kiting = {feet="Hermes' Sandals +1",}
 
 	-- Engaged sets

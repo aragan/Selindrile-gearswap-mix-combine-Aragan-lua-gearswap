@@ -26,13 +26,13 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'Aminon', 'DT')
     state.HybridMode:options( 'PDT','Normal')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'SC', 'PDL')
-	state.IdleMode:options('DT','Normal','PDT','Regen', 'HP', 'Evasion', 'Enmity', 'EnemyCritRate')
+	state.IdleMode:options('DT','Normal','PDT','Regen', 'HP', 'Evasion', 'Enmity', 'EnemyCritRate','Regain')
     state.PhysicalDefenseMode:options('Evasion', 'PDT', 'DT', 'Enmity', 'HP', 'Aminon')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('Twashtar','None','Centovente','Aeneas','Tauret','Swords','Club','H2H','Staff')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Suppa','DWEarrings','DWMax'}
-	state.Passive:options('None','MDT', 'Enspell')
+	state.Passive:options('None', 'SubtleBlow','Parry','MDT', 'Enspell')
 	state.AutoBuffMode:options('Off','Auto','Attack','Defend') --,'Off','Off','Off','Off','Off',
 
 	
@@ -108,7 +108,15 @@ function init_gear_sets()
     }
 	sets.passive.Enspell = {waist="Orpheus's Sash",}
 
-
+    sets.passive.SubtleBlow = {
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+        left_ear="Sherida Earring",
+	}
+	sets.passive.Parry = {
+        hands="Turms Mittens +1"
+        feet="Turms Leggings +1",
+    }
     -- Precast Sets
     
     -- Precast sets to enhance JAs
@@ -218,7 +226,7 @@ function init_gear_sets()
     }
 
     sets.precast.Flourish3 = {}
-    sets.precast.Flourish3['Striking Flourish'] = {body="Macu. Casaque +1"}
+    sets.precast.Flourish3['Striking Flourish'] = {body="Macu. Casaque +2"}
     sets.precast.Flourish3['Climactic Flourish'] = {head="Maculele Tiara +2"}
 
     -- Fast cast sets for spells
@@ -416,11 +424,11 @@ function init_gear_sets()
         })
         sets.precast.WS["Rudra's Storm"].SC = set_combine(sets.precast.WS["Rudra's Storm"], {
             head={ name="Nyame Helm", augments={'Path: B',}},
-    body={ name="Nyame Mail", augments={'Path: B',}},
-    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-    legs={ name="Nyame Flanchard", augments={'Path: B',}},
-    feet={ name="Nyame Sollerets", augments={'Path: B',}},
-        neck={ name="Warder's Charm +1", augments={'Path: A',}},})
+            body={ name="Nyame Mail", augments={'Path: B',}},
+            hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+            legs={ name="Nyame Flanchard", augments={'Path: B',}},
+            feet={ name="Nyame Sollerets", augments={'Path: B',}},
+            neck={ name="Warder's Charm +1", augments={'Path: A',}},})
     
         sets.precast.WS["Rudra's Storm"].PDL = set_combine(sets.precast.WS["Rudra's Storm"], {
             ammo="Crepuscular Pebble",
@@ -570,10 +578,13 @@ function init_gear_sets()
         back="Null Shawl",
     })
     
+    -- Extra Melee sets.  Apply these on top of melee sets.
+
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Ishvara Earring",ear2="Sherida Earring"}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Sherida Earring"}
-	
+    sets.rollerRing = {left_ring="Roller's Ring"}
+
     sets.Skillchain = {} --hands="Charis Bangles +2"
     
     
@@ -760,6 +771,21 @@ function init_gear_sets()
         right_ring="Chirich Ring +1",
     })
         
+    sets.idle.Regain = {
+        ammo="Staunch Tathlum +1",
+        head="Null Masque",
+        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        hands="Regal Gloves",
+        legs={ name="Gleti's Breeches", augments={'Path: A',}},
+        feet={ name="Gleti's Boots", augments={'Path: A',}},
+        neck="Rep. Plat. Medal",
+        waist="Engraved Belt",
+        left_ear="Eabani Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        right_ring="Defending Ring",
+        back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    }
         sets.idle.Weak = {    ammo="Staunch Tathlum +1",
         head={ name="Gleti's Mask", augments={'Path: A',}},
         body="Adamantite Armor",

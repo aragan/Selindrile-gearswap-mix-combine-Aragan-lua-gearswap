@@ -192,7 +192,8 @@ function user_job_setup()
     send_command('bind f2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
 	send_command('bind !f2 gs c cycle RecoverMode')
     send_command('bind @f2 gs c cycle AutoBuffMode') --Automatically keeps certain buffs up, job-dependant.
-	send_command('bind @f8 gs c toggle AutoNukeMode')
+	--send_command('bind @f8 gs c toggle AutoNukeMode')
+    send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
 	send_command('bind !pause gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind @^` input /ja "Parsimony" <me>')
 	--send_command('bind ^backspace input /ma "Stun" <t>')
@@ -203,7 +204,7 @@ function user_job_setup()
 	send_command('bind ^\\\\ input /ma "Protect V" <t>')
 	send_command('bind @\\\\ input /ma "Shell V" <t>')
 	send_command('bind !\\\\ input /ma "Reraise III" <me>')
-	
+
     select_default_macro_book()
 
 
@@ -236,7 +237,7 @@ function init_gear_sets()
     sets.precast.JA['Tabula Rasa'] = {legs="Peda. Pants +3"}
     sets.precast.JA['Enlightenment'] = {body="Peda. Gown +3"}
     sets.precast.JA['Sublimation'] = {
-        head="Acad. Mortar. +2", --4
+        head="Acad. Mortar. +3", --4
         body="Peda. Gown +3", --5
         ear1="Savant's Earring", --1
         waist="Embla Sash", --5   
@@ -1391,7 +1392,7 @@ sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.Hyb
 	
 
     sets.buff.FullSublimation = {
-       head="Acad. Mortar. +2", --4
+       head="Acad. Mortar. +3", --4
        body="Peda. Gown +3", --5
        ear1="Savant's Earring", --1
        waist="Embla Sash", --5

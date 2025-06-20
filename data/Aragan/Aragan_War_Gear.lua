@@ -43,7 +43,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'HP','Evasion','Empy', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.IdleMode:options( 'DT','Normal', 'Tank', 'MDT', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
+	state.IdleMode:options( 'DT','Normal', 'Tank', 'MDT', 'HP', 'Regen', 'Regain', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular', 'EnemyCritRate','EnemyTPaccumulation','Resist', 'Regen'}
 	state.Weapons:options('None','Naegling','Loxotic','Shining','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
@@ -60,6 +60,7 @@ function user_job_setup()
     send_command('bind f7 gs c cycle Shield')
     send_command('bind ^m gs c toggle Medicine')
 	send_command('bind f2 gs c toggle AutoBuffMode')
+	send_command('bind !n gs c toggle AutoReraiseeMode')
 
 	send_command('bind !8 gs c weapons Greatsword;gs c update')
 	send_command('bind !0 gs c set WeaponskillMode Proc;;gs c set CastingMode Proc;gs c update')
@@ -915,7 +916,8 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.precast.WS['Tachi: Koki'].Proc = set_combine(sets.precast.WS.Proc,{})
 	
 
-    
+    -- Extra Melee sets.  Apply these on top of melee sets.
+
 	-- Swap to these on Moonshade using WS if at 3000 TP
 	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Telos Earring",}
 	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
@@ -923,7 +925,8 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.DayMaxTPWSEars = {ear1="Ishvara Earring",ear2="Brutal Earring",}
 	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
 	sets.DayWSEars = {ear1="Brutal Earring",ear2={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},}
-	
+    sets.rollerRing = {left_ring="Roller's Ring"}
+
 	--Specialty WS set overwrites.
 	sets.AccWSMightyCharge = {ammo="Yetshila +1",feet="Boii Calligae +2",}
 	sets.AccWSCharge = {}
@@ -1102,6 +1105,23 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     })
+    
+
+    sets.idle.Regain = {
+        head="Null Masque",
+		body="Adamantite Armor",
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck="Rep. Plat. Medal",
+		waist="Carrier's Sash",
+		left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Shadow Ring",
+		right_ring="Defending Ring",
+		back="Moonlight Cape",
+	}
+
     sets.idle.Refresh = set_combine(sets.idle, {
         left_ring="Stikini Ring +1",
         right_ring="Stikini Ring +1",

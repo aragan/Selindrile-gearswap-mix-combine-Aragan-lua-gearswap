@@ -21,6 +21,11 @@ right_ring="Blenmot's Ring +1",}
 gear.taeon_phalanx_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
 gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
 
+gear.herculean_treasure_legs = {name="Herculean Trousers", augments={'"Dbl.Atk."+1','AGI+6','"Treasure Hunter"+2','Accuracy+11 Attack+11','Mag. Acc.+9 "Mag.Atk.Bns."+9',}}
+
+
+--legs={ name="Herculean Trousers", augments={'"Dbl.Atk."+1','AGI+6','"Treasure Hunter"+2','Accuracy+11 Attack+11','Mag. Acc.+9 "Mag.Atk.Bns."+9',}},
+
 --Augmented items that you'll use among multiple jobs.
 --[[
 gear.gada_enhancing_club = {name="Gada",augments={'Enh. Mag. eff. dur. +6','STR+3','Mag. Acc.+8','"Mag.Atk.Bns."+17','DMG:+7',}}
