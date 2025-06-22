@@ -399,13 +399,12 @@ function user_status_change(newStatus, oldStatus, eventArgs)
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 	--local player = windower.ffxi.get_player()
 
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	if state.NeverDieMode.value then 
 		if player.hpp < 25 and being_attacked and abil_recasts[0] < latency then 
 			windower.chat.input('/ja "Perfect Dodge" <me>')
 			tickdelay = os.clock() + 1.1
 		end
 	end
-
 end
 
 function job_self_command(commandArgs, eventArgs)
@@ -561,3 +560,30 @@ function update_melee_groups()
 	end	
 end
 
+windower.register_event('incoming text',function(org)     
+
+	if string.find(org, "Aita readies Vivisection") then
+		windower.chat.input('/ja "Perfect Dodge" <me>')
+		state.MagicalDefenseMode:set('MDT')
+        windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
+		windower.send_command('input /p Aita uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Degei readies Vivisection") then
+		windower.chat.input('/ja "Perfect Dodge" <me>')
+		state.MagicalDefenseMode:set('MDT')
+        windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
+		windower.send_command('input /p Degei uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Triboulex readies Setting the Stage") then
+		windower.chat.input('/ja "Perfect Dodge" <me>')
+		state.MagicalDefenseMode:set('MDT')
+        windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
+		windower.send_command('input /p Triboulex uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Skomora readies Setting the Stage") then
+		windower.chat.input('/ja "Perfect Dodge" <me>')
+		state.MagicalDefenseMode:set('MDT')
+        windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
+		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+	end
+end)

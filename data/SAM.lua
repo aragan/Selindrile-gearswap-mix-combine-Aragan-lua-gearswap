@@ -524,3 +524,31 @@ function(new_hpp,old_hpp)
     end
 end
 )
+
+windower.register_event('incoming text',function(org)     
+
+	if string.find(org, "Aita readies Vivisection") then
+		windower.chat.input('/ja "Yaegasumi" <me>')
+		state.MagicalDefenseMode:set('MDT')
+        windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
+		windower.send_command('input /p Aita uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Degei readies Vivisection") then
+		windower.chat.input('/ja "Yaegasumi" <me>')
+		state.MagicalDefenseMode:set('MDT')
+        windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
+		windower.send_command('input /p Degei uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Triboulex readies Setting the Stage") then
+		windower.chat.input('/ja "Yaegasumi" <me>')
+		state.MagicalDefenseMode:set('MDT')
+        windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
+		windower.send_command('input /p Triboulex uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+	end
+	if string.find(org, "Skomora readies Setting the Stage") then
+		windower.chat.input('/ja "Yaegasumi" <me>')
+		state.MagicalDefenseMode:set('MDT')
+        windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
+		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+	end
+end)
