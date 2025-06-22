@@ -77,7 +77,7 @@ function init_gear_sets()
     }
 	sets.passive.Enspell = {waist="Orpheus's Sash",}
 	sets.passive.Parry = {
-        hands="Turms Mittens +1"
+        hands="Turms Mittens +1",
         feet="Turms Leggings +1",
     }
 

@@ -130,6 +130,7 @@ attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack valu
 --state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen','Genmei','Ammurapi'} -- , 'Priwen' }
 state.ShieldMode = M{['description'] = 'Shield Mode', 'Normal','Aegis','Ochain','Duban','Genmei','Ammurapi'}
 state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
+state.Ascws = M{['description']='Ascws','Exudation','Realmrazer','Black Halo','Blade: Teki','Blade: Chi','Blade: To','Blade: Shun','Tachi: Kagero','Tachi: Goten','Tachi: Koki','Tachi: Fudo','Torcleaver','Savage Blade','Requiescat','Victory Smite','Shijin Spiral','Evisceration','Rudra\'s Storm','Cross Reaper','Spiral Hell','Insurgency','Vorpal Scythe',}
 
 NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
 
@@ -256,6 +257,8 @@ function global_on_load()
 	send_command('bind !2 gs c toggle AutoShadowMode')
 	send_command('bind !3 gs c toggle AutoRuneMode')
 	send_command('bind !4 gs c cycle passive')
+	--send_command('bind ~2 gs c cycle passive')
+
 	send_command('bind !5 gs c toggle stance')
 	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
 	send_command('bind ^f2 gs c set AutoBuffMode off ') --
@@ -339,6 +342,22 @@ function global_unload()
 	send_command('input //parse reset')-- reset parse addon every change job
 
 end
+
+--addon ascs autosc
+send_command('bind ~f1 asc') --Turns addon on off.
+send_command('bind ~f2 asc toggle') --Turns addon show/hide.
+send_command('bind ~f3 asc open') --Turns addon open ws no/off.
+send_command('bind ~f4 gs c cycle ascws;gs c ascws') --wait 1;
+send_command('bind ~f5 gs c cycleback ascws;gs c ascws') --wait 1;
+
+send_command('bind ~1 asc c 1') --Turns addon clos sc 1 .
+send_command('bind ~2 asc c 2') --Turns addon clos sc 2.
+send_command('bind ~3 asc c 3') --
+send_command('bind ~4 asc c 4') --
+--send_command('bind ~z input //gs c ascws') --wait 1;
+
+
+----
 
 send_command('bind !home lua l trust') --Turns addon trust  on.
 send_command('bind !end lua u trust') --Turns addon trust off.
@@ -492,17 +511,17 @@ function job_post_precast(spell)
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
-	if pet.isvalid then
-		if (spell.action_type == 'Magic' and player.hpp < Breath_HPP) or spell.english == 'Steady Wing' or spell.english == 'Restoring Breath' then
-			petWillAct = os.clock()
-			equip(sets.HealingBreath)
-			eventArgs.handled = true
-		elseif spell.english == 'Smiting Breath' and sets.SmitingBreath then
-			petWillAct = os.clock()
-			equip(sets.SmitingBreath)
-			eventArgs.handled = true
-		end
-	end
+	-- if pet.isvalid then
+	-- 	if (spell.action_type == 'Magic' and player.hpp < Breath_HPP) or spell.english == 'Steady Wing' or spell.english == 'Restoring Breath' then
+	-- 		petWillAct = os.clock()
+	-- 		equip(sets.HealingBreath)
+	-- 		eventArgs.handled = true
+	-- 	elseif spell.english == 'Smiting Breath' and sets.SmitingBreath then
+	-- 		petWillAct = os.clock()
+	-- 		equip(sets.SmitingBreath)
+	-- 		eventArgs.handled = true
+	-- 	end
+	-- end
 	-- < this mean low  
 	if spell.type == 'WeaponSkill' then
 		if (spell.english == "Shell Crusher" or spell.english == "Armor Break") then
@@ -609,6 +628,29 @@ function gearinfo(commandArgs, eventArgs)
 end
 
 
+-- Allow jobs to override this code
+function user_self_command(commandArgs, eventArgs)
+
+
+
+	if commandArgs[1]:lower() == 'ascws' then
+		send_command('@asc ws "'..state.Ascws.value..'"')
+	elseif commandArgs[1]:lower() == 'carol' then
+		send_command('@input /ma "'..state.Carol.value..'" <stpc>')
+	elseif commandArgs[1]:lower() == 'threnody1' then
+		send_command('@input /ma "'..state.Threnody.value..'" <stnpc>')
+	end
+	if commandArgs[1]:lower() == 'songsetnoph' then
+		send_command('@input //abb "'..state.Songset.value..'" noph')
+	elseif commandArgs[1]:lower() == 'songsetph' then
+		send_command('@input //abb "'..state.Songset.value..'" ph')
+	elseif commandArgs[1]:lower() == 'songsetphccsv' then
+		send_command('@input //abb "'..state.Songset.value..'" ph ccsv')
+	elseif commandArgs[1]:lower() == 'songset' then
+		send_command('@input //abb "'..state.Songset.value..'" ccsv') 
+	end
+end
+	
 
 -- Modify the default idle set after it was constructed.
 function user_customize_idle_set(idleSet)
