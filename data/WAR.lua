@@ -94,6 +94,7 @@ end
 
     -- Setup vars that are user-independent.
 function job_setup()
+    set_dual_wield()
 
 	state.Buff['Brazen Rush'] = buffactive['Brazen Rush'] or false
 	state.Buff.Berserk = buffactive['Berserk'] or false
@@ -114,6 +115,7 @@ function job_setup()
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.RP = M(false, "Reinforcement Points Mode")
 	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
+	state.AutoTomahawkMode = M(false, 'AutoTomahawkMode')
 
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 	state.ConquerorMode = M{['description']='Conqueror Mode','Never','500','1000','Always'}
@@ -152,6 +154,12 @@ function job_filtered_action(spell, eventArgs)
 end
 
 function job_precast(spell, spellMap, eventArgs)
+	if spell.english == 'Warcry' then
+        if buffactive['Warcry'] then
+            cancel_spell()
+            add_to_chat(123, spell.name..' Canceled: Warcry its up [active]')
+        end
+    end
 	if spell.type == 'WeaponSkill' then
 		if state.AutoBuffMode.value ~= 'Off' then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
@@ -197,7 +205,9 @@ function job_customize_idle_set(idleSet)
     else
         enable('neck')
     end
-
+	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    idleSet = set_combine(idleSet, sets.Reraise)
+    end
     return idleSet
 end
 -- Modify the default melee set after it was constructed.
@@ -219,6 +229,9 @@ function job_customize_melee_set(meleeSet)
     if state.TreasureMode.value == 'Fulltime' then
         meleeSet = set_combine(meleeSet, sets.TreasureHunter)
     end
+	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    meleeSet = set_combine(meleeSet, sets.Reraise)
+    end
     return meleeSet
 end
 
@@ -232,7 +245,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
 					local AccMaxTPset = standardize_set(sets.AccMaxTP)
 
@@ -328,7 +341,7 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
 end
 
 function job_buff_change(buff, gain)
-	if state.AutoReraiseeMode.value == true then
+	if state.AutoReraiseeMode.value and not buffactive['Reraise']then
 		if buffactive['weakness'] then
 			equip(sets.Reraise)
 			disable('body','head')
@@ -546,6 +559,10 @@ function check_buff()
 			windower.chat.input('/ja "Warcry" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
+		elseif abil_recasts[7] < latency and state.AutoTomahawkMode.value then
+			windower.chat.input('/ja "Tomahawk" <t>')
+			tickdelay = os.clock() + 1.1
+			return true
 		else
 			return false
 		end
@@ -586,6 +603,10 @@ function check_buff()
 			windower.chat.input('/ja "Brazen Rush" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
+		elseif abil_recasts[7] < latency and state.AutoTomahawkMode.value then
+			windower.chat.input('/ja "Tomahawk" <t>')
+			tickdelay = os.clock() + 1.1
+			return true
 		end
 	end
 	if state.AutoBuffMode.value == 'Defend' and player.in_combat then
@@ -602,6 +623,10 @@ function check_buff()
 			return true
 		elseif not buffactive.Warcry and abil_recasts[2] < latency then
 			windower.chat.input('/ja "Warcry" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		elseif abil_recasts[7] < latency and state.AutoTomahawkMode.value then
+			windower.chat.input('/ja "Tomahawk" <t>')
 			tickdelay = os.clock() + 1.1
 			return true
 		else
@@ -647,20 +672,30 @@ function check_weaponset()
 
 end
 
-windower.register_event('hpp change', -- code add from Aragan Asura
-function(new_hpp,old_hpp)
-    if new_hpp < 5 then
-        equip(sets.Reraise)
-    end
-end
-)
+-- windower.register_event('hpp change', -- code add from Aragan Asura
+-- function(new_hpp,old_hpp)
+--     if state.AutoReraiseeMode.value and new_hpp < 5 then
+--         equip(sets.Reraise)
+--     end
+-- end
+-- )
 
+zombie_last_check = 0
+
+windower.register_event('prerender', function()
+    local now = os.clock()
+    if now - zombie_last_check > 1 then -- كل 1 ثانية
+        zombie_last_check = now
+
+		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+        end
+    end
+end)
 
 buff_spell_lists = {
 	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
 	},
 	
-	Defend = {
-		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	Reapply=false},
-	},}
+}

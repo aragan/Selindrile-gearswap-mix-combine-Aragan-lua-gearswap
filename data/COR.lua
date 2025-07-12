@@ -112,7 +112,7 @@ end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
     attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
-
+    set_dual_wield()
 	-- Whether to use Compensator under a certain threshhold even when weapons are locked.
 	state.CompensatorMode = M{'Never','300','1000','Always'}
 	-- Whether to automatically generate bullets.
@@ -199,8 +199,26 @@ end
 function job_pretarget(spell, spellMap, eventArgs)
 
 end
+already_announced_roll = false
+
+function string.endswith(str, ending)
+    return ending == "" or str:sub(-#ending) == ending
+end
+
+function has_any_roll_buff()
+    for buff, active in pairs(buffactive) do
+        if type(buff) == 'string' and buff:endswith("Roll") then
+            return true
+        end
+    end
+    return false
+end
 
 function job_precast(spell, spellMap, eventArgs)
+    if spell.type == 'CorsairRoll' and not has_any_roll_buff() and not already_announced_roll then
+        send_command('@input /p Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
+        already_announced_roll = true
+    end
 	if spell.action_type == 'Ranged Attack' then
 		state.CombatWeapon:set(player.equipment.range)
     -- Check that proper ammo is available if we're using ranged attacks or similar.
@@ -316,13 +334,38 @@ end
 local command_count = 0
 local rate_limit = 5 -- commands per 10 seconds
 
-function update_combat_form()
+function filter_update_combat_form()
+    if player.sub_job == 'NIN' or player.sub_job == 'DNC' or player.sub_job == 'THF' then
+        state.CombatForm:set('DW')
+    else
+        state.CombatForm:reset()
+    end
+    if player.sub_job == 'NIN' or player.sub_job == 'DNC' or player.sub_job == 'THF' then
+        state.CombatForm:set('DW')
+        windower.add_to_chat(123, '>> تم تفعيل DW عبر CombatForm')
+    else
+        state.CombatForm:reset()
+        windower.add_to_chat(123, '>> تم إلغاء DW: Subjob غير مؤهل')
+    end
     if DW == true then
         state.CombatForm:set('DW')
     elseif DW == false then
         state.CombatForm:reset()
     end
 end
+
+windower.register_event('load', function()
+    coroutine.schedule(function()
+        job_update()
+    end, 1)
+end)
+
+windower.register_event('login', function()
+    coroutine.schedule(function()
+        job_update()
+    end, 1)
+end)
+
 function job_self_command(commandArgs, eventArgs)
     gearinfo(commandArgs, eventArgs)
 
@@ -523,7 +566,17 @@ function job_buff_change(buff, gain)
 			if gain then  
 				send_command('input /item "remedy" <me>')
 			end
+        elseif buff == "paralysis" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
 		end
+        if buff == "curse" then
+            if gain then  
+                send_command('input /item "Holy Water" <me>')
+                equip(sets.precast.Item['Holy Water'])
+            end
+        end
 		if not midaction() then
 			job_update()
 		end
@@ -548,6 +601,7 @@ function job_state_change(stateField, newValue, oldValue)
 end
 -- Modify the default idle set after it was constructed.
 function job_customize_idle_set(idleSet)
+
     if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
@@ -562,6 +616,7 @@ function job_customize_idle_set(idleSet)
 end
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
+
     if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
@@ -588,6 +643,11 @@ end
 function job_update(cmdParams, eventArgs)
 	check_weaponset()
     --handle_equipping_gear(player.status)
+    if player.sub_job == 'NIN' or player.sub_job == 'DNC' or player.sub_job == 'THF' then
+        state.CombatForm:set('DW')
+    else
+        state.CombatForm:reset()
+    end
 
 end
 
@@ -598,7 +658,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if data.weaponskills.elemental:contains(spell.english) then
 					if wsacc:contains('Acc') and sets.MagicalAccMaxTP then
 						equip(sets.MagicalAccMaxTP[spell.english] or sets.MagicalAccMaxTP)
@@ -870,7 +930,9 @@ end
 
 function job_tick()
 	if check_ammo() then return true end
-    if job_buff_change() then return true end
+    if check_buff() then return true end
+
+    -- if job_buff_change() then return true end
 
     
     if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
@@ -880,3 +942,38 @@ function job_tick()
 	end
 	return false
 end
+
+
+function check_buff()
+	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
+        if player.in_combat  then
+            local abil_recasts = windower.ffxi.get_ability_recasts()
+
+            if not buffactive['Triple Shot'] and abil_recasts[84] < latency then
+                windower.chat.input('/ja "Triple Shot" <me>')
+                tickdelay = os.clock() + 1.1
+                return true
+            else
+                return false
+            
+            end
+        end
+
+	else
+		return false
+	end
+end
+
+
+
+buff_spell_lists = {
+	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+
+		--{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Idle'},
+		--{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Idle'},
+		--{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Idle'},
+		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Idle'},
+	},
+
+}
+

@@ -53,6 +53,7 @@ end
 
 -- Setup vars that are user-independent.
 function job_setup()
+    set_dual_wield()
 
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
 	state.Buff['Valiance'] = buffactive['Valiance'] or false
@@ -71,6 +72,8 @@ function job_setup()
     state.HippoMode = M(false, "hippoMode")
     state.AutoCureMode = M(true, 'Auto Cure Mode')
 	state.AutoEffusionMode = M(true, 'Auto Effusion Mode')
+	state.RuneElement = M{['description']='Rune Element','Ignis','Gelus','Flabra','Tellus','Sulpor','Unda','Lux','Tenebrae'}
+    state.RuneElement:set('Ignis')  -- اختر أي رون تريده كبداية
 	rayke_duration = 49
     gambit_duration = 96
 	--autows = 'Resolution'
@@ -252,7 +255,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
 					equip(sets.AccMaxTP[spell.english] or sets.AccMaxTP)
 				elseif sets.MaxTP then
@@ -516,7 +519,7 @@ function job_state_change(stateField, newValue, oldValue)
 end
 
 
-function user_status_change(newStatus, oldStatus, eventArgs)
+function job_status_change(newStatus, oldStatus, eventArgs)
 	
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
@@ -746,9 +749,8 @@ function rune_count(rune)
 end
 
 function job_tick()
-	if user_status_change() then return true end
+	if job_status_change() then return true end
 	if check_offensive_ja() then return true end		
-	
 	if check_arts() then return true end
 	if check_hasso() then return true end
 	if check_buff() then return true end
@@ -987,11 +989,11 @@ function check_buff()
 				tickdelay = os.clock() + 1.1
 				return true
 			elseif state.AutoRuneMode.Value == false then
-				windower.chat.input('gs c set AutoRuneMode true')
+				windower.chat.input('//gs c set AutoRuneMode true')
 				return true
 
 			--[[elseif state.AutoRuneMode.Value == false then
-				windower.chat.input('gs c elemental barelement')
+				windower.chat.input('//gs c elemental barelement')
 				return true
             ]]
 			else
@@ -1041,18 +1043,18 @@ function user_job_target_change(target)
 	
 	local target = windower.ffxi.get_mob_by_target('t')
 	local sub= windower.ffxi.get_mob_by_target('st')
-	if (target ~= nil) and (sub == nil) then
-		if target.name == "Ironshell" or target.name == "Ghast" then
+	if (state.AutoBuffMode.Value == 'Sortie' or state.AutoBuffMode.Value == 'Aminon') and (target ~= nil) and (sub == nil) then
+		if target.name == "Leshonn" or target.name == "Gartell" then --test Ironshell Ghast
 			--windower.chat.input('gs c set RuneElement Ignis;gs c set ElementalMode Fire;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
-			windower.send_command('input /p >>> '..auto_translate('Rayke')..''..auto_translate(''..target.name..'')..'['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands:  only Ice damage will be effective.')  -- code add by (Aragan@Asura)
-			windower.send_command('input /echo ['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands:  only Ice damage will be effective.')  -- code add by (Aragan@Asura)
-
+			windower.send_command('gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+			windower.chat.input('/p >>> '..auto_translate('Rayke')..''..auto_translate(''..target.name..'')..'['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands: only Ice damage will be effective.')  -- code add by (Aragan)
+			windower.send_command('input /echo ['..target.name..'] RUN Thunder hand USE Tellus / Wind hand USE Gelus .. Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands:  only Ice damage will be effective.')  -- code add by (Aragan)
 		elseif target.name == "Aminon" then
-			windower.chat.input('gs c set RuneElement Lux;gs c set ElementalMode Light;gs c set AutoBuffMode Aminon;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+			windower.send_command('gs c set RuneElement Lux;gs c set ElementalMode Light;gs c set AutoBuffMode Aminon;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
         elseif target.name == "Ghatjot" or target.name == "Dhartok" then
-			windower.chat.input('gs c set RuneElement Tellus;gs c set ElementalMode Earth;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+			wwindower.send_command('gs c set RuneElement Tellus;gs c set ElementalMode Earth;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
 		elseif target.name == "Skomora" or target.name == "Triboulex" then
-			windower.chat.input('gs c set RuneElement Ignis;gs c set ElementalMode Fire;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+			windower.send_command('gs c set RuneElement Ignis;gs c set ElementalMode Fire;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
 		end
 	end
 end
@@ -1065,37 +1067,36 @@ The fiend appears vulnerable to ice elemental magic!
 proc done
 attack staggers the fiend!
 ]]
-
 	if string.find(org, "Aita readies Vivisection") then
-		windower.chat.input('/ja "Elemental Sforzo" <me>')
+		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
-		windower.send_command('input /p Aita uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
-		windower.chat.input('/ja "Liement" <me>')
+		windower.chat.input('/p Aita uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/ja "Liement" <me>')
 	end
 	if string.find(org, "Degei readies Vivisection") then
-		windower.chat.input('/ja "Elemental Sforzo" <me>')
+		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
-		windower.send_command('input /p Degei uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
-		windower.chat.input('/ja "Liement" <me>')
+		windower.chat.input('/p Degei uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/ja "Liement" <me>')
 	end
 	if string.find(org, "Triboulex readies Setting the Stage") then
-		windower.chat.input('/ja "Elemental Sforzo" <me>')
+		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
-		windower.send_command('input /p Triboulex uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
-		windower.chat.input('/ja "Liement" <me>')
+		windower.chat.input('/p Triboulex uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/ja "Liement" <me>')
 	end
 	if string.find(org, "Skomora readies Setting the Stage") then
-		windower.chat.input('/ja "Elemental Sforzo" <me>')
+		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
-		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
-		windower.chat.input('/ja "Liement" <me>')
+		windower.chat.input('/p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/ja "Liement" <me>')
 	end
-	if string.find(org, "Chokehold") then
-		windower.chat.input('gs c set ElementalMode Ice')
-
+	-- if string.find(org, "Chokehold") then
+	if string.find(org, "Undulating Shockwave") then
+		windower.send_command('gs c set ElementalMode Ice;gs c set RuneElement Gelus')
 			--windower.send_command('input //gs c set ElementalMode Ice')
 			--windower.send_command('input /ma Blizzard <bt>')
-			--windower.send_command('input /p Chokehold >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
+			windower.chat.input('/p its Changes hands to Wind >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
 			--windower.chat.input('input /p Chokehold >> ITS WEAK ICE PROC <call14>!')
 	end
 	--[[if string.find(org, "Leshonn uses Tearing Gust ") then
@@ -1115,7 +1116,7 @@ attack staggers the fiend!
 		if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
 			windower.send_command('input //gs c set ElementalMode water')
 			windower.send_command('input /ma water <bt>')
-			windower.send_command('input /p Flaming Kick >> ITS WEAK WATER PROC <call14>!')  -- code add by (Aragan@Asura)
+			windower.chat.input('/p Flaming Kick >> ITS WEAK WATER PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
 			return true
 	
@@ -1124,7 +1125,7 @@ attack staggers the fiend!
 		if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
 			windower.send_command('input //gs c set ElementalMode Lightning')
 			windower.send_command('input /ma thunder <bt>')
-			windower.send_command('input /p Flashflood >> ITS WEAK THUNDER PROC <call14>!')  -- code add by (Aragan@Asura)
+			windower.chat.input('/p Flashflood >> ITS WEAK THUNDER PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
 			return true
 	
@@ -1132,7 +1133,7 @@ attack staggers the fiend!
 		if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
 			windower.send_command('input //gs c set ElementalMode Fire')
 			windower.send_command('input /ma fire <bt>')
-			windower.send_command('input /p Flashflood >> ITS WEAK FIRE PROC <call14>!')  -- code add by (Aragan@Asura)
+			windower.chat.input('/p Flashflood >> ITS WEAK FIRE PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
 			return true
 	
@@ -1140,7 +1141,7 @@ attack staggers the fiend!
 		if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
 			windower.send_command('input //gs c set ElementalMode Wind')
 			windower.send_command('input /ma wind <bt>')
-			windower.send_command('input /p Flashflood >> ITS WEAK WIND PROC <call14>!')  -- code add by (Aragan@Asura)
+			windower.chat.input('/p Flashflood >> ITS WEAK WIND PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
 			return true
 	
@@ -1148,7 +1149,7 @@ attack staggers the fiend!
 		if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
 			windower.send_command('input //gs c set ElementalMode Earth')
 			windower.send_command('input /ma Stone <bt>')
-			windower.send_command('input /p Flashflood >> ITS WEAK STONE PROC <call14>!')  -- code add by (Aragan@Asura)
+			windower.chat.input('/p Flashflood >> ITS WEAK STONE PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
 			return true
 	
@@ -1156,7 +1157,7 @@ attack staggers the fiend!
 		if string.find(org, "Blast of Reticence") then
 			windower.send_command('input //gs c set ElementalMode Ice')
 			windower.send_command('input /ma Blizzard <bt>')
-			windower.send_command('input /p Flashflood >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
+			windower.chat.input('/p Flashflood >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
 			return true
 	
@@ -1165,20 +1166,37 @@ attack staggers the fiend!
 end)
 
 function check_offensive_ja()
-
-	if  player.in_combat then
+	if player.in_combat then
 		if state.AutoEffusionMode.value and player.status == 'Engaged' then	
-			local abil_recasts = windower.ffxi.get_ability_recasts()		
-			if abil_recasts[119] < latency and buffactive[state.RuneElement.value] > 2 then
-				windower.chat.input('/ja "Rayke" <t>')
-				tickdelay = os.clock() + 1.1
-				return true
-			elseif abil_recasts[116] < latency  and buffactive[state.RuneElement.value] > 2 then
-				windower.chat.input('/ja "Gambit" <t>')
+
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+			local rayke_id = 119
+			local gambit_id = 116
+			local rayke_cd = abil_recasts[rayke_id] or 999
+			local gambit_cd = abil_recasts[gambit_id] or 999
+		
+			local rune = state.RuneElement and state.RuneElement.value or nil
+			local rune_count = (rune and buffactive[rune]) or 0
+		
+		
+			if rune_count < 3 then
+				return false
+			end
+		
+			if rayke_cd == 0 then
+				windower.send_command('input /ja "Rayke" <t>')
 				tickdelay = os.clock() + 1.1
 				return true
 			end
+		
+			if gambit_cd == 0 then
+				windower.send_command('input /ja "Gambit" <t>')
+				tickdelay = os.clock() + 1.1
+				return true
+			end
+		
+			return false
 		end
 	end
-	return false
-end		
+
+end

@@ -92,6 +92,7 @@ end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+    set_dual_wield()
 
     state.Buff['Afflatus Solace'] = buffactive['Afflatus Solace'] or false
     state.Buff['Afflatus Misery'] = buffactive['Afflatus Misery'] or false
@@ -311,7 +312,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if sets.MaxTP and get_effective_player_tp(spell, WSset) > 3200 then
+			if sets.MaxTP and get_effective_player_tp(spell, WSset) >= 3000 then
 				equip(sets.MaxTP[spell.english] or sets.MaxTP)
 			end
 		end

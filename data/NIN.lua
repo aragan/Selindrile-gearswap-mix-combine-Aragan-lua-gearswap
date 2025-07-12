@@ -126,6 +126,7 @@ buff_spell_lists = {
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
     attack2 = 4500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
+    set_dual_wield()
 
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Migawari = buffactive.Migawari or false
@@ -139,6 +140,10 @@ function job_setup()
     --state.unProc = M(false, 'unProc')
 	state.Stance = M{['description']='Stance','None','Hasso','Innin','Yonin',}
 	state.NeverDieMode = M(true, 'Never Die Mode')
+	state.abyssea = M{['description']='abyssea'}
+	state.abyssea:options('Ulhuadshi','Chloris','Dragua','Bukhis','Alfard','Briareus','Sobek','Apademak','Kukulkan','Azdaja','Sedna')
+	    -- state.Abyssea = M{['description']='Abyssea','Ulhuadshi','Chloris','Dragua','Bukhis','Alfard','Briareus','Sobek','Apademak','Kukulkan','Azdaja','Sedna' }
+state.AutoLoggerMode = M(false, 'AutoLoggerMode')
 
 	autows = "Blade: Shun"
 	autofood = 'Soy Ramen'
@@ -310,7 +315,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
 					local AccMaxTPset = standardize_set(sets.AccMaxTP)
 
@@ -401,6 +406,25 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
 		send_command('gs c update')
 		tickdelay = os.clock() + 1.1]]
 	end
+		if state.AutoLoggerMode.value and not spell.interrupted then
+        local msg = nil
+
+        if spell.type == 'WeaponSkill' then
+            msg = player.name .. ' used WS: ' .. spell.name .. ' on ' .. spell.target.name
+        elseif spell.type == 'Magic' then
+            msg = player.name .. ' casted: ' .. spell.name .. ' on ' .. spell.target.name
+        elseif spell.type == 'JobAbility' then
+            msg = player.name .. ' used JA: ' .. spell.name .. ' on ' .. spell.target.name
+        elseif spell.type == 'PetCommand' then
+            msg = player.name .. ' used Pet: ' .. spell.name .. ' on ' .. spell.target.name
+        elseif spell.type == 'Item' then
+            msg = player.name .. ' used Item: ' .. spell.name .. ' on ' .. spell.target.name
+        end
+
+        if msg then
+            send_command('input /p  ' .. msg)
+        end
+    end
 end
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 function job_aftercast(spell, spellMap, eventArgs)
@@ -418,6 +442,7 @@ function job_aftercast(spell, spellMap, eventArgs)
 			end
 			if state.DisplayMode.value then update_job_states()	end
     end
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -725,7 +750,10 @@ end
 
 function job_self_command(commandArgs, eventArgs)
 	gearinfo(commandArgs, eventArgs)
-
+    if commandArgs[1]:lower() == 'abyssea' then
+        send_command('@input //ept track "' .. state.abyssea.value .. '"')
+        eventArgs.handled = true
+    end
 	if commandArgs[1]:lower() == 'elemental' then
 		handle_elemental(commandArgs)
 		eventArgs.handled = true

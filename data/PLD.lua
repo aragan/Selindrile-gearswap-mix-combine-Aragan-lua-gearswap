@@ -96,6 +96,7 @@ end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
     send_command('lua l PLD-HUD')
+    set_dual_wield()
 
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Sentinel = buffactive.Sentinel or false
@@ -112,6 +113,7 @@ function job_setup()
     state.MagicBurst = M(false, 'Magic Burst')
     state.AutoEquipBurst = M(true)
     state.AutoCureMode = M(true, 'Auto Cure Mode')
+    state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
 
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 
@@ -233,7 +235,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
 					local AccMaxTPset = standardize_set(sets.AccMaxTP)
 
@@ -286,9 +288,9 @@ function job_post_precast(spell, spellMap, eventArgs)
             end
         end
     end
-	if state.WeaponSkillMode.value == 'Enmity' then
-		equip(sets.precast.WS.Enmity)
-	end
+	-- if state.WeaponSkillMode.value == 'Enmity' then
+	-- 	equip(sets.precast.WS.Enmity)
+	-- end
 
 end
 
@@ -823,7 +825,10 @@ function job_customize_idle_set(idleSet)
 		if player.hpp < 71 then
 			idleSet = set_combine(idleSet, sets.latent_regen)
 		end
+	elseif state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+		idleSet = set_combine(idleSet, sets.Reraise)
     end
+
 	if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
@@ -831,6 +836,8 @@ function job_customize_idle_set(idleSet)
         enable('neck')
     end
 
+		
+    
     check_weaponset()
 
     return idleSet
@@ -841,6 +848,9 @@ function job_customize_melee_set(meleeSet)
 
     if state.ExtraDefenseMode.value ~= 'None' then
         meleeSet = set_combine(meleeSet, sets[state.ExtraDefenseMode.value])
+    
+	elseif state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+		meleeSet = set_combine(meleeSet, sets.Reraise)
     end
 	check_weaponset()
 
@@ -851,6 +861,8 @@ end
 function job_customize_defense_set(defenseSet)
     if state.ExtraDefenseMode.value ~= 'None' then
         defenseSet = set_combine(defenseSet, sets[state.ExtraDefenseMode.value])
+	elseif state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+        defenseSet = set_combine(defenseSet, sets.Reraise)
     end
 	check_weaponset()
 
@@ -1163,13 +1175,13 @@ function check_buffup()
 	end
 end
 
-windower.register_event('hpp change', -- code add from Aragan Asura
-function(new_hpp,old_hpp)
-    if new_hpp < 5 then
-        equip(sets.Reraise)
-    end
-end
-)
+-- windower.register_event('hpp change', -- code add from Aragan Asura
+-- function(new_hpp,old_hpp)
+--     if new_hpp < 5 then
+--         equip(sets.Reraise)
+--     end
+-- end
+-- )
 
 buff_spell_lists = {
 	Auto = {	
@@ -1228,3 +1240,17 @@ buff_spell_lists = {
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,Reapply=false},
 	},
 }
+
+
+zombie_last_check = 0
+
+windower.register_event('prerender', function()
+    local now = os.clock()
+    if now - zombie_last_check > 1 then -- كل 1 ثانية
+        zombie_last_check = now
+
+		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+        end
+    end
+end)

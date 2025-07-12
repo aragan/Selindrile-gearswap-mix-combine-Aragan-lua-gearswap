@@ -54,6 +54,7 @@
         SATA - Will equip TH gear sufficient for initial contact with a mob, and when using SATA
         Fulltime - Will keep TH gear equipped fulltime
 
+        add auto flee when moving
 --]]
 
 -- Initialization function for this job file.
@@ -95,6 +96,7 @@ end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
     attack2 = 4000 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
+    set_dual_wield()
 
     state.Buff['Sneak Attack'] = buffactive['Sneak Attack'] or false
     state.Buff['Trick Attack'] = buffactive['Trick Attack'] or false
@@ -162,9 +164,31 @@ function job_filtered_precast(spell, spellMap, eventArgs)
 
 end
 ]]
-function job_precast(spell, spellMap, eventArgs)
 
+function job_filter_precast(spell, action, spellMap, eventArgs)
+    -- if spell.type == 'WeaponSkill' then
+    --     local targets = windower.ffxi.get_mob_array()
+    --     local current_target = spell.target.id
+
+    --     for id, mob in pairs(targets) do
+    --         if mob.valid_target and mob.distance < 25 and mob.id ~= current_target and mob.is_npc and mob.hpp > 0 then
+    --             eventArgs.cancel = true
+    --             windower.chat.input('/target '..mob.name)
+    --             coroutine.schedule(function()
+    --                 windower.chat.input('/ws "'..spell.english..'" <t>')
+    --             end, 0.5) -- نصف ثانية تأخير للسماح بالتارجت
+    --             return true
+    --         end
+    --     end
+    -- end
 end
+-- function job_filter_precast(spell, action, spellMap, eventArgs)
+--     if spell.type == 'WeaponSkill'  then
+-- 		eventArgs.cancel = true
+-- 		windower.chat.input('/ws "'..[spell.english]..'" '..spell.target.raw..'')
+-- 		return true
+--     end
+-- end
 
 function job_post_precast(spell, spellMap, eventArgs)
 
@@ -181,7 +205,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not state.Buff['Sneak Attack'] and not state.Buff['Trick Attack'] and sets.AccMaxTP then
 					equip(sets.AccMaxTP[spell.english] or sets.AccMaxTP)
 				elseif sets.MaxTP then
@@ -246,6 +270,7 @@ function job_buff_change(buff, gain)
     else
         enable('ring2')
     end
+
     if state.NeverDieMode.value or state.AutoCureMode.value then 
 
 		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
@@ -329,7 +354,17 @@ function job_buff_change(buff, gain)
 			if gain then  
 				send_command('input /item "remedy" <me>')
 			end
+        elseif buff == "paralysis" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
 		end
+        if buff == "curse" then
+            if gain then  
+                send_command('input /item "Holy Water" <me>')
+                equip(sets.precast.Item['Holy Water'])
+            end
+        end
 		if not midaction() then
 			job_update()
 		end
@@ -369,7 +404,13 @@ end
 
 
 function job_customize_idle_set(idleSet)
+    local abil_recasts = windower.ffxi.get_ability_recasts()
 
+    if not data.areas.cities:contains(world.area) and not buffactive['Flee'] and moving and not player.in_combat and abil_recasts[62] < latency then 
+        windower.chat.input('/ja "Flee" <me>')
+        tickdelay = os.clock() + 1.1
+        
+    end
     -- if (player.in_combat or being_attacked) and (state.IdleMode.current:contains('Normal') or state.IdleMode.current:contains('Refresh')) then
     --     idleSet = set_combine(idleSet, sets.idle.PDT)
     -- end
@@ -394,7 +435,7 @@ function job_customize_melee_set(meleeSet)
     return meleeSet
 end
 
-function user_status_change(newStatus, oldStatus, eventArgs)
+function job_status_change(newStatus, oldStatus, eventArgs)
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 	--local player = windower.ffxi.get_player()
@@ -458,7 +499,7 @@ function gearinfo(commandArgs, eventArgs)
     end
 end
 function job_tick()
-    if user_status_change() then return true end
+    if job_status_change() then return true end
 	if check_buff() then return true end
 	return false
 end
@@ -523,6 +564,10 @@ function check_buff()
 				windower.chat.input('/ja "Berserk" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
+            elseif buffactive.Defender then
+                send_command('@wait .5;cancel Defender')
+                tickdelay = os.clock() + 1.1
+                return true
 			elseif not buffactive.Aggressor and abil_recasts[4] < latency then
 				windower.chat.input('/ja "Aggressor" <me>')
 				tickdelay = os.clock() + 1.1
@@ -531,9 +576,44 @@ function check_buff()
 				windower.chat.input('/ja "Warcry" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
-			end
+			
+
+            -- elseif not buffactive['Assassin\'s Charge'] and abil_recasts[67] < latency then
+            --         windower.chat.input('/ja "Assassin\'s Charge" <me>')
+            --         tickdelay = os.clock() + 1.1
+            --         return true
+            else
+                return false
+            
+            end
 		end
-		
+		if state.AutoBuffMode.value == 'Defend' and player.in_combat then
+
+            local abil_recasts = windower.ffxi.get_ability_recasts()
+    
+            if buffactive.Berserk then
+                send_command('@wait .5;cancel Berserk')
+                tickdelay = os.clock() + 1.1
+                return true
+            elseif not buffactive.Defender and abil_recasts[3] < latency then
+                windower.chat.input('/ja "Defender" <me>')
+                tickdelay = os.clock() + 1.1
+                return true
+            elseif not buffactive.Warcry and abil_recasts[2] < latency then
+                windower.chat.input('/ja "Warcry" <me>')
+                tickdelay = os.clock() + 1.1
+                return true
+            else
+                return false
+            end
+        end
+        local abil_recasts = windower.ffxi.get_ability_recasts()
+
+        if  player.in_combat and not buffactive['Conspirator'] and abil_recasts[40] < latency then
+            windower.chat.input('/ja "Conspirator" <me>')
+            tickdelay = os.clock() + 1.1
+            return true
+        end
 	else
 		return false
 	end
@@ -587,3 +667,10 @@ windower.register_event('incoming text',function(org)
 		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
 	end
 end)
+
+buff_spell_lists = {
+	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+	},
+	
+}

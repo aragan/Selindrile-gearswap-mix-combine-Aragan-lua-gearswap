@@ -68,6 +68,7 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+
 	organizer_items = {		
 		"Airmid's Gorget",
 		"Tumult's Blood",
@@ -115,8 +116,9 @@ end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
 	attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
+    set_dual_wield()
 
-	send_command('lua l Singer;sing off;sing active off')
+	send_command('lua l Singer')--;sing off;sing active off
 
     state.ExtraSongsMode = M{['description']='Extra Songs','Cheer','FullLength','None','Dummy','Marsyas'}
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
@@ -156,7 +158,10 @@ function job_setup()
         'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
 
 	state.Songset = M{['description']='Songset','seg','seg4','shinryu','shinryu4','mboze','mboze2', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
-		'haste','haste4', 'magic', 'aria', 'ph','sortie4', 'ody4', 'ody','sortie',}
+		'haste','haste4', 'magic',  'ph','sortie4', 'ody4', 'ody','sortie',} -- 'aria',
+		
+	state.Singer = M{['description']='Singer','seg','Cuijatender','haste4','seg','seg4','shinryu','shinryu4','mboze','mboze2', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
+		'haste','haste4', 'magic', 'ph','sortie4', 'ody4', 'ody','sortie',} --'aria',
 
 
 	Haste = 0
@@ -167,7 +172,7 @@ function job_setup()
 	determine_haste_group()
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Songset","Passive","RuneElement","ExtraSongsMode","ElementalMode","CastingMode","CarnMode","Etude","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Songset","Passive","RuneElement","ExtraSongsMode","ElementalMode","CastingMode","IdleMode","CarnMode","Etude","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -261,14 +266,7 @@ function job_midcast(spell, spellMap, eventArgs)
 			end
         end
     end
-	if spellMap == 'Lullaby' then 
-		send_command('input /p >> Sleep ,  aoe   "'..spell.name..'" on >> '..spell.target.name..' <<')		
-    end
-	if string.find(spell.english,'Lullaby') then
-        send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
-    elseif string.find(spell.english,'Lullaby II') then
-        send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 120 down spells/00220.png') --with maceto ja 4.40min
-    end
+
 end
 --send_command('@input /ja "Pianissimo" <me>; wait 1.1; input /ma "'..spell.name..'" '..spell.target.name)
 function job_post_precast(spell, spellMap, eventArgs)
@@ -300,9 +298,6 @@ function job_post_precast(spell, spellMap, eventArgs)
 					equip(sets.midcast[get_spell_map(spell, default_spell_map)])
 				end
 			end
-			
-
-		
 		end
 
 		if state.CarnMode.value ~= 'Never' and (state.CarnMode.value == 'Always' or tonumber(state.CarnMode.value) > player.tp) then
@@ -392,8 +387,15 @@ function job_post_midcast(spell, spellMap, eventArgs)
 			equip(sets.RecoverMP)
 		end
     end
+	if spell.english == "Sentinel's Scherzo" then
+        if buffactive['Troubadour'] and buffactive['Soul Voice'] or buffactive['Troubadour'] and buffactive['Marcato'] or buffactive['Soul Voice'] and buffactive['Marcato']  then
+            -- Nitro sv active
+            equip(sets.midcast.ScherzoNitro)
+        end
+    end
 end
 function job_filter_aftercast(spell, spellMap, eventArgs)
+
 end
 -- Set eventArgs.handled to true if we don't want automatic gear equipping to be done.
 function job_aftercast(spell, spellMap, eventArgs)
@@ -412,7 +414,14 @@ function job_aftercast(spell, spellMap, eventArgs)
 				end
 			end
 		end
-
+		if spellMap == 'Lullaby' and not state.AutoLoggerMode.value then 
+			windower.send_command('input /p >> '.. auto_translate('Sleep')..'   aoe   "'..spell.name..'" on >> '..spell.target.name..' <<')		
+		end
+		if string.find(spell.english,'Lullaby') then
+			send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+		elseif string.find(spell.english,'Lullaby II') then
+			send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 120 down spells/00220.png') --with maceto ja 4.40min
+		end
 	elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
 		state.MagicBurstMode:reset()
 		if state.DisplayMode.value then update_job_states()	end
@@ -423,29 +432,8 @@ end
 
 function job_buff_change(buff, gain)
 	update_melee_groups()
-    if buff == "Charm" then
-        if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
-        else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
-        end
-    end
-    if buff == "petrification" then
-        if gain then    
-            equip(sets.defense.PDT)
-            send_command('input /p Petrification, please Stona.')		
-        else
-        send_command('input /p '..player.name..' is no longer Petrify!')
-        handle_equipping_gear(player.status)
-        end
-    end
-    if buff == "sleep" then
-        if gain then    
-            send_command('input /p ZZZzzz, please cure.')		
-        else
-            send_command('input /p '..player.name..' is no longer Sleep!')
-        end
-    end	if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
 
 		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
 			windower.chat.input('/ma "Poisona" <me>')
@@ -527,6 +515,16 @@ function job_buff_change(buff, gain)
 		elseif buff == "poison" then
 			if gain then  
 				send_command('input /item "remedy" <me>')
+			end
+		elseif buff == "paralysis" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+		if buff == "curse" then
+			if gain then  
+				send_command('input /item "Holy Water" <me>')
+				equip(sets.precast.Item['Holy Water'])
 			end
 		end
 		if not midaction() then
@@ -709,6 +707,8 @@ function job_self_command(commandArgs, eventArgs)
 		send_command('@input //abb "'..state.Songset.value..'" ph ccsv')
 	elseif commandArgs[1]:lower() == 'songset' then
 		send_command('@input //abb "'..state.Songset.value..'" ccsv') 
+	elseif commandArgs[1]:lower() == 'singer' then
+		send_command('@input //sing playlist "'..state.Singer.value..'"') 
 	end
 end
 
@@ -927,11 +927,11 @@ end)
 function check_song()
 	if state.AutoSongMode.value then
 		if not buffactive.march then
-			windower.chat.input('/ma "Honor March" <me>;wait 5;input /ma "Victory March" <me>')
+			send_command('input /ma "Advancing March" <me>;wait 5;input /ma "Victory March" <me>;wait 1')
 			tickdelay = os.clock() + 2
 			return true
 		elseif not buffactive.minuet then
-			windower.chat.input('//gs c set ExtraSongsMode Dummy;wait 5;input /ma "Valor Minuet V" <me>;wait 5;input /ma "Valor Minuet IV" <me>')
+			send_command('input /ma "Valor Minuet V" <me>;wait 5;gs c set ExtraSongsMode Dummy;wait 1;input /ma "Valor Minuet IV" <me>;wait 1;gs c set ExtraSongsMode Cheer;wait 9;input /ma "Valor Minuet IV" <me>')
 			tickdelay = os.clock() + 2
 			return true
 		--[[elseif not buffactive.madrigal then

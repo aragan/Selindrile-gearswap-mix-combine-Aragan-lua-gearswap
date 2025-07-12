@@ -434,7 +434,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
 					equip(sets.AccMaxTP[spell.english] or sets.AccMaxTP)
 				elseif sets.MaxTP then
@@ -771,12 +771,12 @@ function job_update(cmdParams, eventArgs)
 
 end
 
-function user_status_change(newStatus, oldStatus, eventArgs)
+function job_status_change(newStatus, oldStatus, eventArgs)
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 	--local player = windower.ffxi.get_player()
 
-    if (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
+    if (buffactive['slow'] or buffactive['Rasp'] 
 	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
 	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
 	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
@@ -883,7 +883,7 @@ function unbridled_ready()
 end
 
 function job_tick()
-	if user_status_change() then return true end
+	if job_status_change() then return true end
 	if check_arts() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end

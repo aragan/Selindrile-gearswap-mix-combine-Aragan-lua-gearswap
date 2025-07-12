@@ -94,6 +94,7 @@ end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
     send_command('lua l AutoGEO')
+    set_dual_wield()
 
 	state.Buff.Entrust = buffactive.Entrust or false
 	state.Buff['Blaze of Glory'] = buffactive['Blaze of Glory'] or false
@@ -110,7 +111,7 @@ function job_setup()
    
 	state.indi =  M{['description']='indi', 'Indi Acumen', 'Indi Fury', 'Indi Refresh', 'Indi Haste', 'Indi INT', 'Indi Wilt', 'Indi Precision', 'Indi Languor', 'Indi Torpor', 'Indi Voidance', 'Indi Focus',
     'Indi Fend', 'Indi Fade', 'Indi Barrier','Indi Regen', 'Indi Attunement'}
-    state.indi2 =  M{['description']='indi2', 'Indi INT', 'Indi Haste', 'Indi Acumen', 'Indi Fury', 'Indi Refresh', 'Indi Wilt', 'Indi Precision', 'Indi Languor', 'Indi Torpor', 'Indi Voidance', 'Indi Focus',
+    state.indi2 =  M{['description']='indi2', 'Indi INT', 'Indi Refresh', 'Indi Haste', 'Indi Acumen', 'Indi Fury', 'Indi Wilt', 'Indi Precision', 'Indi Languor', 'Indi Torpor', 'Indi Voidance', 'Indi Focus',
     'Indi Fend', 'Indi Fade', 'Indi Barrier', 'Indi Attunement'}
     state.geo =  M{['description']='geo', 'Geo Malaise', 'Geo Frailty', 'Geo Wilt', 'Geo Precision', 'Geo Languor', 'Geo Torpor', 'Geo Voidance', 'Geo Focus',
     'Geo Fend', 'Geo Fade', 'Geo Barrier', 'Geo Attunement'}
@@ -231,7 +232,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if sets.MaxTP and get_effective_player_tp(spell, WSset) > 3200 then
+			if sets.MaxTP and get_effective_player_tp(spell, WSset) >= 3000 then
 				equip(sets.MaxTP[spell.english] or sets.MaxTP)
 			end
 		end
@@ -676,7 +677,7 @@ function job_self_command(commandArgs, eventArgs)
 	if commandArgs[1]:lower() == 'indi' then
         send_command('@input /ma "'..state.indi.value..'" <me>')
     elseif commandArgs[1]:lower() == 'geo' then
-        send_command('@input /ma "'..state.geo.value..'" <st>')
+        send_command('@input /ma "'..state.geo.value..'" <bt>')
     elseif commandArgs[1]:lower() == 'indi2' then
         send_command('@input /ja "Entrust" <me>')
         send_command('@@input /ma "'..state.indi2.value..'" <st>')

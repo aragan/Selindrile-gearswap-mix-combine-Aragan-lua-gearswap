@@ -106,6 +106,8 @@ function get_sets()
 end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+	set_dual_wield()
+
 	--include('Sel-TreasureHunte.lua')
     LowTierNukes = S{'Stone', 'Water', 'Aero', 'Fire', 'Blizzard', 'Thunder',
         'Stone II', 'Water II', 'Aero II', 'Fire II', 'Blizzard II', 'Thunder II',
@@ -128,7 +130,8 @@ function job_setup()
     state.HippoMode = M(false, "hippoMode")
     state.TabulaRasaMode = M(true, "Tabula Rasa Mode")
     state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
-
+    state.AutoAPMode = M(true, 'AutoAPMode')
+    state.AutoAOE = M(false, 'AutoAOE')
 	-- Mote has capitalization errors in the default Absorb mappings, so we use our own
     absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
     state.Storms =  M{['description']='storms', 'Aurorastorm II', 'Voidstorm II', 'Firestorm II', 'Sandstorm II', 'Rainstorm II', 'Windstorm II', 'Hailstorm II', 'Thunderstorm II',
@@ -240,7 +243,111 @@ function job_pretarget(spell, spellMap, eventArgs)
 end
 
 function job_precast(spell, spellMap, eventArgs)
+	local AP_spells = S{'Regen V','Animus Minuo','Embrava','Barblizzard','Barparalyze'}
+    local Accession_spells = S{'Protect V','Shell V','Sneak','Invisible','Adloquium','Aquaveil'}
+    local Perpetuance_spells = S{'Refresh'}
+    local AOE_na_spells = S{'Blindna','Cursna','Paralyna','Poisona','Silena','Stona','Viruna','Erase'}
 
+	if spell.action_type == 'Magic' then
+        if ((spell.id == 478 or spell.id == 502) and not buffactive['Tabula Rasa']) then
+            add_to_chat(123,"Abort: Tabula Rasa not active - You don't have access to ["..(spell[language] or spell.id).."]")
+            eventArgs.cancel = true
+            return false
+		elseif spell.skill == 'Elemental Magic' and default_spell_map ~= 'ElementalEnfeeble' then
+			if spell.english:contains('helix') then
+				local abil_recasts = windower.ffxi.get_ability_recasts()
+				if get_current_stratagem_count() > 0 and abil_recasts[233] < latency and player.target.type == "MONSTER" and not (buffactive['Ebullience'] or silent_check_amnesia()) and not (buffactive['Enlightenment'] or silent_check_amnesia()) then
+					if buffactive['Dark Arts'] or buffactive['Addendum: Black'] then
+						windower.chat.input('/ja "Ebullience" <me>')
+						windower.chat.input:schedule(1.6,'/ma "'..spell.english..'" '..spell.target.raw..'')
+						add_to_chat(122,'Ebullience - "'..spell.english..'" !')
+						eventArgs.cancel = true
+						tickdelay = os.clock() + 4.6
+					elseif buffactive['Light Arts'] or buffactive['Addendum: White'] then
+						windower.chat.input('/ja "Enlightenment" <me>')
+						windower.chat.input:schedule(1.6,'/ma "'..spell.english..'" '..spell.target.raw..'')
+						add_to_chat(122,'Enlightenment/Ebullience - "'..spell.english..'" !')
+						eventArgs.cancel = true
+						tickdelay = os.clock() + 6.2
+					else 
+						if abil_recasts[232] < latency and abil_recasts[233] < latency then
+							windower.chat.input('/ja "Dark Arts" <me>')
+							windower.chat.input:schedule(1.6,'/ja "Ebullience" <me>')
+							windower.chat.input:schedule(3.2,'/ma "'..spell.english..'" '..spell.target.raw..'')
+							add_to_chat(122,'Ebullience - "'..spell.english..'" !')
+							eventArgs.cancel = true
+							tickdelay = os.clock() + 6.2
+						end
+					end
+				end
+			end
+		-- Accession + Perpetuance
+		elseif (AP_spells:contains(spell.english)) and state.AutoAPMode.value then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+			if get_current_stratagem_count() > 1 and not(silent_check_amnesia()) and not(buffactive['Perpetuance'] and buffactive['Accession']) then
+				if state.Buff['Light Arts'] or state.Buff['Addendum: White'] then
+                    windower.chat.input('/ja "Accession" <me>') 
+                    windower.chat.input:schedule(1.6,'/ja "Perpetuance" <me>')
+                    windower.chat.input:schedule(3.2,'/ma "'..spell.english..'" '..spell.target.raw..'')
+                    add_to_chat(122,'Acc/Perp - "'..spell.english..'" !')
+					eventArgs.cancel = true
+					tickdelay = os.clock() + 5.6
+				else
+					if abil_recasts[228] < latency then
+						windower.chat.input('/ja "Light Arts" <me>')
+						windower.chat.input:schedule(1.6,'/ja "Accession" <me>')
+						windower.chat.input:schedule(3.2,'/ja "Perpetuance" <me>')
+						windower.chat.input:schedule(4.8,'/ma "'..spell.english..'" '..spell.target.raw..'')
+						add_to_chat(122,'Acc/Perp - "'..spell.english..'" !')
+						eventArgs.cancel = true
+						tickdelay = os.clock() + 7.5
+					end
+				end
+            end
+		-- Accession
+		elseif ((Accession_spells:contains(spell.english)) and state.AutoAPMode.value) or (state.AutoAOE.value and AOE_na_spells:contains(spell.english)) then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+			if get_current_stratagem_count() > 0 and not(buffactive.Accession or silent_check_amnesia()) then
+				if state.Buff['Light Arts'] or state.Buff['Addendum: White'] then
+					windower.chat.input('/ja "Accession" <me>')
+					windower.chat.input:schedule(1.6,'/ma "'..spell.english..'" '..spell.target.raw..'')
+					add_to_chat(122,'Accession - "'..spell.english..'" !')
+					eventArgs.cancel = true
+					tickdelay = os.clock() + 4.6
+				else
+					if abil_recasts[228] < latency then
+						windower.chat.input('/ja "Light Arts" <me>')
+						windower.chat.input:schedule(1.6,'/ja "Accession" <me>')
+						windower.chat.input:schedule(3.2,'/ma "'..spell.english..'" '..spell.target.raw..'')
+						add_to_chat(122,'Accession - "'..spell.english..'" !')
+						eventArgs.cancel = true
+						tickdelay = os.clock() + 6.2
+					end
+				end
+			end
+		-- Perpetuance
+		elseif (Perpetuance_spells:contains(spell.english)) and state.AutoAPMode.value then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+			if get_current_stratagem_count() > 0 and not(buffactive.Perpetuance or silent_check_amnesia()) then
+				if state.Buff['Light Arts'] or state.Buff['Addendum: White'] then
+					windower.chat.input('/ja "Perpetuance" <me>')
+					windower.chat.input:schedule(1.6,'/ma "'..spell.english..'" '..spell.target.raw..'')
+					add_to_chat(122,'Perpetuance - "'..spell.english..'" !')
+					eventArgs.cancel = true
+					tickdelay = os.clock() + 4.6
+				else
+					if abil_recasts[228] < latency then
+						windower.chat.input('/ja "Light Arts" <me>')
+						windower.chat.input:schedule(1.6,'/ja "Perpetuance" <me>')
+						windower.chat.input:schedule(3.2,'/ma "'..spell.english..'" '..spell.target.raw..'')
+						add_to_chat(122,'Perpetuance - "'..spell.english..'" !')
+						eventArgs.cancel = true
+						tickdelay = os.clock() + 6.2
+					end
+				end
+			end
+		end
+	end
 	if spell.action_type == 'Magic' then
 		if spellMap == 'Cure' or spellMap == 'Curaga' then
 			gear.default.obi_back = gear.obi_cure_back
@@ -284,7 +391,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if sets.MaxTP and get_effective_player_tp(spell, WSset) > 3200 then
+			if sets.MaxTP and get_effective_player_tp(spell, WSset) >= 3000 then
 				equip(sets.MaxTP[spell.english] or sets.MaxTP)
 			end
 		end
@@ -834,8 +941,9 @@ function job_self_command(commandArgs, eventArgs)
 	elseif commandArgs[1]:lower() == 'storms' then
         send_command('@input /ma "'..state.Storms.value..'" <stpc>')
 	elseif commandArgs[1]:lower() == 'showcharge' then
-		add_to_chat(204, '~~~Current Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
-		send_command('@input /p  <recast=Stratagems>')
+		-- send_command('@input /echo <recast=Stratagems>')
+		add_to_chat(204, 'Current Stratagem Charges Available: ['..get_current_stratagem_count()..']')
+		send_command('@wait 0.5;input /p  <recast=Stratagems>')
 
 	end
 end

@@ -84,6 +84,7 @@ end
 -- Setup vars that are user-independent.
 function job_setup()
 	attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
+    set_dual_wield()
 
     state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
 	state.Buff['Spirit Surge'] = buffactive['Spirit Surge'] or false
@@ -92,6 +93,7 @@ function job_setup()
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 	state.AutoJumpMode = M(false, 'Auto Jump Mode')
 	state.AutoBondMode = M(true, 'Auto Bond Mode')
+	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
 
 	absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
 
@@ -150,7 +152,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
 					equip(sets.AccMaxTP[spell.english] or sets.AccMaxTP)
 				elseif sets.MaxTP then
@@ -243,6 +245,14 @@ end
 
 function job_buff_change(buff, gain)
 	update_melee_groups()
+	if state.AutoReraiseeMode.value and not buffactive['Reraise']then
+		if buffactive['weakness'] then
+			equip(sets.Reraise)
+			disable('body','head')
+		else
+			enable('body','head')
+		end
+	end
 	if buff == "Dragon Breaker" then
         if gain then  			
             send_command('input /p "Dragon Breaker" [ON]')		
@@ -261,16 +271,11 @@ function job_buff_change(buff, gain)
         if gain then    
             equip(sets.defense.PDT)
             send_command('input /p Petrification, please Stona.')		
-        else
-            send_command('input /p '..player.name..' is no longer Petrify!')
-            handle_equipping_gear(player.status)
         end
     end
 	if buff == "Charm" then
         if gain then  			
            send_command('input /p Charmd, please Sleep me.')		
-        else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
         end
     end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
@@ -458,11 +463,16 @@ end
 
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
+	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    meleeSet = set_combine(meleeSet, sets.Reraise)
+    end
     return meleeSet
 end
 
 function job_customize_idle_set(idleSet)
-
+	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    idleSet = set_combine(idleSet, sets.Reraise)
+    end
 	if buffactive['Tactician\'s Roll'] then 
 		idleSet = set_combine(idleSet, sets.rollerRing)
 	end
@@ -570,15 +580,26 @@ function find_breath_hpp()
 	end
 end
 
-windower.register_event('hpp change', -- code add from Aragan Asura
-function(new_hpp,old_hpp)
-    if new_hpp < 5 then
-        equip(sets.Reraise)
+-- windower.register_event('hpp change', -- code add from Aragan Asura
+-- function(new_hpp,old_hpp)
+--     if new_hpp < 5 then
+--         equip(sets.Reraise)
+--     end
+-- end
+-- )
+
+zombie_last_check = 0
+
+windower.register_event('prerender', function()
+    local now = os.clock()
+    if now - zombie_last_check > 1 then -- كل 1 ثانية
+        zombie_last_check = now
+
+		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+        end
     end
-end
-)
-
-
+end)
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
@@ -592,3 +613,4 @@ buff_spell_lists = {
 		{Name='Phalanx',		Buff='Phalanx',		SpellID=106,	Reapply=false},
 	},
 }
+

@@ -120,6 +120,7 @@ end
 
 function job_setup()
 	send_command('lua l BST-HUD')
+    set_dual_wield()
 
 	
 	state.Buff['Killer Instinct'] = buffactive['Killer Instinct'] or false
@@ -292,8 +293,14 @@ function job_setup()
 	state.AutoCallPet = M(false, 'Auto Call Pet')
 	state.PetMode = M{['description']='Pet Mode','Tank','DD'}
 	state.RewardMode = M{['description']='Reward Mode', 'Theta', 'Zeta', 'Eta'}
-    state.JugMode = M{['description']='Jug Mode', 'ScissorlegXerin', 'BlackbeardRandy', 'AttentiveIbuki', 'AgedAngus',
+    state.JugMode = M{['description']='Jug Mode', 'GenerousArthur','ScissorlegXerin', 'BlackbeardRandy', 'AttentiveIbuki', 'AgedAngus',
                 'RedolentCandi','DroopyDortwin','WarlikePatrick','HeraldHenry','AlluringHoney','SwoopingZhivago','AcuexFamiliar'}
+	
+	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
+
+	ready_moves.default.FatsoFargann = 'TP Drainkiss'
+    ready_moves.default.GenerousArthur = 'Purulent Ooze'
+    --ready_moves.default.GenerousArthur = 'Corrosive Ooze'
 
 	UnleashLock = true
 	UnleashLocked = false
@@ -338,7 +345,7 @@ function job_filter_precast(spell, spellMap, eventArgs)
     end
 end
 
-function job_precast(spell, spellMap, eventArgs)
+function job_filter_precast(spell, spellMap, eventArgs)
         if spell.type == "WeaponSkill" and spell.english ~= 'Mistral Axe' and spell.english ~= 'Bora Axe' and spell.target.distance > target_distance then
                 eventArgs.cancel = true
                 add_to_chat(123, spell.name..' Canceled: [Out of Range]')
@@ -394,6 +401,8 @@ function job_precast(spell, spellMap, eventArgs)
 					equip(sets.precast.JA['Bestial Loyalty']['DaringRoland'])
 				elseif state.JugMode.value == 'SlimeFamiliar' and item_available('Putrescent Broth') then
 					equip(sets.precast.JA['Bestial Loyalty']['SultryPatrice'])
+				elseif state.JugMode.value == 'GenerousArthur' then
+					equip(sets.precast.JA['Bestial Loyalty']['GenerousArthur'])
 				else
 					equip(sets.precast.JA['Bestial Loyalty'][state.JugMode.value])
 				end
@@ -420,7 +429,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
 					local AccMaxTPset = standardize_set(sets.AccMaxTP)
 
@@ -540,7 +549,9 @@ function job_customize_idle_set(idleSet)
 	if pet.isvalid and pet.status == 'Engaged' and can_dual_wield and sets.idle.Pet.Engaged.DW then
 		equip(sets.idle.Pet.Engaged.DW)
 	end
-	
+	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    idleSet = set_combine(idleSet, sets.Reraise)
+    end
     return idleSet
 end
 
@@ -568,6 +579,9 @@ end
 
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
+	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    meleeSet = set_combine(meleeSet, sets.Reraise)
+    end
     return meleeSet
 end
 
@@ -920,3 +934,17 @@ function get_ready_charge_timer()
 		return charge_timer
 	end
 end
+
+
+zombie_last_check = 0
+
+windower.register_event('prerender', function()
+    local now = os.clock()
+    if now - zombie_last_check > 1 then -- كل 1 ثانية
+        zombie_last_check = now
+
+		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+        end
+    end
+end)

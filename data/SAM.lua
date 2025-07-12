@@ -188,7 +188,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if spell.skill == 25 then
 					if wsacc:contains('Acc') and sets.RangedAccMaxTP then
 						equip(sets.RangedAccMaxTP)
@@ -257,6 +257,9 @@ function job_customize_melee_set(meleeSet)
 			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlowII)
 		end
 	end
+	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    meleeSet = set_combine(meleeSet, sets.Reraise)
+    end
     return meleeSet
 end
 
@@ -265,6 +268,9 @@ function job_customize_idle_set(idleSet)
 	if buffactive['Tactician\'s Roll'] then 
 		idleSet = set_combine(idleSet, sets.rollerRing)
 	end
+	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    idleSet = set_combine(idleSet, sets.Reraise)
+    end
 	return idleSet
 end
 -- Run after the default midcast() is done.
@@ -324,7 +330,8 @@ function job_buff_change(id, data,buff, gain, eventArgs)
             send_command('input /p "Yaegasumi" [OFF]')
         end
     end
-	if state.AutoReraiseeMode.value == true then
+
+	if state.AutoReraiseeMode.value and not buffactive['Reraise']then
 		if buffactive['weakness'] then
 			equip(sets.Reraise)
 			disable('body','head')
@@ -517,13 +524,13 @@ function check_buff()
 	return false
 end
 
-windower.register_event('hpp change', -- code add from Aragan Asura
-function(new_hpp,old_hpp)
-    if new_hpp < 5 then
-        equip(sets.Reraise)
-    end
-end
-)
+-- windower.register_event('hpp change', -- code add from Aragan Asura
+-- function(new_hpp,old_hpp)
+--     if new_hpp < 5 then
+--         equip(sets.Reraise)
+--     end
+-- end
+-- )
 
 windower.register_event('incoming text',function(org)     
 
@@ -551,4 +558,18 @@ windower.register_event('incoming text',function(org)
         windower.send_command('wait 5;gs c set MagicalDefenseMode OFF')
 		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
 	end
+end)
+
+
+zombie_last_check = 0
+
+windower.register_event('prerender', function()
+    local now = os.clock()
+    if now - zombie_last_check > 1 then -- كل 1 ثانية
+        zombie_last_check = now
+
+		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+        end
+    end
 end)

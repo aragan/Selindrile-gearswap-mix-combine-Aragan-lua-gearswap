@@ -129,6 +129,7 @@ function job_setup()
 	state.DanceStance = M{['description']='Dance Stance','None','Saber Dance','Fan Dance'}
 	state.RefineWaltz		  = M(false, 'RefineWaltz')
 	state.AutoCureMode = M(true, 'Auto Cure Mode')
+	state.AutoBuilding = M(false, 'Auto Building Flourish Mode')
 
 
 	autows = "Rudra's Storm"
@@ -202,6 +203,13 @@ function job_precast(spell, spellMap, eventArgs)
 			windower.chat.input:schedule(1,'/ws "'..spell.english..'" '..spell.target.raw..'')
 			tickdelay = os.clock() + 1.25
 			return
+		elseif state.AutoBuilding.value and not under3FMs() and not state.Buff['Climactic Flourish'] and not state.Buff['Presto'] and abil_recasts[222] < latency and player.status == 'Engaged' then
+			eventArgs.cancel = true
+			windower.chat.input('/ja "Building Flourish" <me>')
+			windower.chat.input:schedule(1.6,'/ws "'..spell.english..'" '..spell.target.raw..'')
+			tickdelay = os.clock() + 2.8
+			return
+		end
 		elseif not under3FMs() and not state.Buff['Climactic Flourish'] and abil_recasts[222] < latency then
 			eventArgs.cancel = true
 			windower.chat.input('/ja "Building Flourish" <me>')
@@ -276,7 +284,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if get_effective_player_tp(spell, WSset) > 3200 then
+			if get_effective_player_tp(spell, WSset) >= 3000 then
 				if wsacc:contains('Acc') and not buffactive['Sneak Attack'] and sets.AccMaxTP then
 					equip(sets.AccMaxTP[spell.english] or sets.AccMaxTP)
 				elseif sets.MaxTP then

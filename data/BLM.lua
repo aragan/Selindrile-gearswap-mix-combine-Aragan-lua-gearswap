@@ -149,7 +149,7 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 
-	if spell.skill == 'Elemental Magic' and  get_current_stratagem_count() > 0 then
+	if spell.skill == 'Elemental Magic' and player.sub_job == 'SCH' and get_current_stratagem_count() > 0 then
 		cast_delay(1.1)
 		windower.chat.input('/ja "Ebullience" <me>')
 		--windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
@@ -273,7 +273,7 @@ function job_post_precast(spell, spellMap, eventArgs)
 		
 		if (WSset.ear1 == "Moonshade Earring" or WSset.ear2 == "Moonshade Earring") then
 			-- Replace Moonshade Earring if we're at cap TP
-			if sets.MaxTP and get_effective_player_tp(spell, WSset) > 3200 then
+			if sets.MaxTP and get_effective_player_tp(spell, WSset) >= 3000 then
 				equip(sets.MaxTP[spell.english] or sets.MaxTP)
 			end
 		end
@@ -1005,3 +1005,30 @@ buff_spell_lists = {
 		{Name='Phalanx',		Buff='Phalanx',			SpellID=106,	Reapply=false},
 	},
 }
+
+res = require('resources')
+
+ignored_spells = {
+    ["Sneak"] = true,
+    ["Invisible"] = true,
+    ["Stoneskin"] = true,
+    ["Blink"] = true,
+}
+
+windower.register_event('action', function(act)
+    -- if not state.AutoStunMode.value then return end
+    if act.category ~= 8 then return end  -- Magic cast only
+
+    local actor = act.actor_id
+    local mob = windower.ffxi.get_mob_by_id(actor)
+    if not mob or not mob.name then return end
+
+    local param = act.param
+    local spell = res.spells[param]
+    if not spell or not spell.en then return end
+
+    local spell_name = spell.en
+    if ignored_spells[spell_name] then return end
+
+    windower.send_command('input /ma "Stun" '..mob.name)
+end)
