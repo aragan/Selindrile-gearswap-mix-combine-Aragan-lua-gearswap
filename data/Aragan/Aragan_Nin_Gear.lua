@@ -68,8 +68,8 @@ function user_job_setup()
     daggerList = S{'Tauret'}
     katanaList = S{'Heishi Shorinken','Kunimitsu'}
 
-	send_command('bind ^` input /ja "Innin" <me>')
-	send_command('bind !` input /ja "Yonin" <me>')
+	-- send_command('bind ^` input /ja "Innin" <me>')
+	-- send_command('bind !` input /ja "Yonin" <me>')
     send_command('bind !5 gs c toggle stance')
 	send_command('bind @` gs c cycle SkillchainMode')
 	send_command('bind !0 gs c set WeaponskillMode Proc;;gs c set CastingMode Proc;gs c update')
@@ -78,12 +78,29 @@ function user_job_setup()
 
     send_command('bind f3 gs c toggle AutoShadowMode')
     send_command('bind f2 gs c toggle AutoBuffMode')
+    send_command('bind ` gs c toggle abyssea;wait 0.1;gs c abyssea')
+    send_command('bind ^` ept toggle')
 
 	utsusemi_cancel_delay = .3
 	utsusemi_ni_cancel_delay = .06
     Haste = 0
     DW_needed = 0
     DW = false
+    
+local was_chat_open = false
+windower.register_event('prerender', function()
+    local chat_open = windower.ffxi.get_info().chat_open
+    if chat_open and not was_chat_open then
+		send_command('unbind `')
+		-- send_command('unbind tab')
+        was_chat_open = true
+    elseif not chat_open and was_chat_open then
+        send_command('bind ` gs c toggle abyssea;wait 0.1;gs c abyssea')
+        was_chat_open = false
+    end
+end)
+
+
     determine_haste_group()
     update_combat_form()  
 	select_default_macro_book()
@@ -806,12 +823,12 @@ sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
 	-- Extra Melee sets.  Apply these on top of melee sets.
 
 -- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Ishvara Earring",ear2="Lugra Earring +1",}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayMaxTPWSEars = {ear1="Cessance Earring",ear2="Brutal Earring",}
-	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayWSEars = {ear1="Moonshade Earring",ear2="Brutal Earring",}
+sets.MaxTP = {ear1="Ishvara Earring"}
+sets.AccMaxTP = {}
+sets.AccDayMaxTPWSEars = {}
+sets.DayMaxTPWSEars = {}
+sets.AccDayWSEars = {}
+sets.DayWSEars = {}
     sets.rollerRing = {left_ring="Roller's Ring"}
 
 	--Passive set
@@ -1674,7 +1691,7 @@ back="Andartia's Mantle",
 
 end
 function user_job_lockstyle()
-    if world.area:contains("Abyssea") then
+    if not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
         windower.chat.input('/lockstyleset 1')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 151')
@@ -1742,3 +1759,5 @@ function buff_change(buff, gain)
         end
     end
 end
+
+

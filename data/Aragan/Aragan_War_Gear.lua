@@ -45,7 +45,7 @@ function user_job_setup()
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options( 'DT','Normal', 'Tank', 'MDT', 'HP', 'Regen', 'Regain', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
-	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular', 'EnemyCritRate','EnemyTPaccumulation','Resist', 'Regen'}
+	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular', 'EnemyCritRate','EnemyTPaccumulation','Resist', 'Regen','SphereRegain' , 'Death Spikes'}
 	state.Weapons:options('None','Naegling','Loxotic','Shining','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
     state.Shield = M{['description']='Weapon Set', 'Normal', 'BlurredShield', 'AdapaShield', 'SacroBulwark'}
 	state.AutoBuffMode:options('Off','Auto','Full','Defend') --,'Vagary','Off','Off','Off','Off',
@@ -65,7 +65,10 @@ function user_job_setup()
 	send_command('bind !8 gs c weapons Greatsword;gs c update')
 	send_command('bind !0 gs c set WeaponskillMode Proc;;gs c set CastingMode Proc;gs c update')
 	send_command('bind !9 gs c weapons Default;gs c set WeaponskillMode Normal;gs c set CastingMode Normal;gs c update')
-	--Ikenga_axe_bonus = 300  -- It is 300 at R25. Uncomment if you need to manually adjust because you are using below R25 or above
+    -- send_command('bind f11 gs c cycle MagicalDefenseMode;gs c set DefenseMode Magical') --Changes your magical defense set.
+
+    
+    --Ikenga_axe_bonus = 300  -- It is 300 at R25. Uncomment if you need to manually adjust because you are using below R25 or above
 	
 	select_default_macro_book()
 end
@@ -919,12 +922,12 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     -- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Telos Earring",}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayMaxTPWSEars = {ear1="Ishvara Earring",ear2="Brutal Earring",}
-	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayWSEars = {ear1="Brutal Earring",ear2={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},}
+	sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
     sets.rollerRing = {left_ring="Roller's Ring"}
 
 	--Specialty WS set overwrites.
@@ -950,6 +953,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	 }
 
 	 -- passive set
+     sets.passive['Death Spikes'] = {body="Tartarus Platemail",}
 
      sets.passive.Crepuscular = {
 		head="Crepuscular Helm",
@@ -976,7 +980,10 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     }
-	sets.EnemyTPaccumulation ={
+    sets.passive.SphereRegain = {
+        body="Makora Meikogai",
+     }
+	sets.passive.EnemyTPaccumulation ={
         head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
     }
      -- Defense sets
@@ -1109,7 +1116,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 
     sets.idle.Regain = {
         head="Null Masque",
-		body="Adamantite Armor",
+        body="Makora Meikogai",
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	    feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -1325,7 +1332,7 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
-	if world.area:contains("Abyssea") then
+    if not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
         windower.chat.input('/lockstyleset 1')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 151')

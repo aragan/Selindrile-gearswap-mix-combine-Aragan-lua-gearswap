@@ -24,6 +24,9 @@ macro
 /con gs c Roller2
 /con input //roll
 
+----------
+skillchains for farm apex fast kill
+Last Stand(3000TP) - Requiescat - Savage Blade - Last Stand (Light) - Last Stand (Radiance) 
 ]]
 
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
@@ -38,7 +41,7 @@ function user_job_setup()
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax','SubtleBlow10','SubtleBlow40'}
-	state.Weapons:options('None','SWORDS','Tauret','Rostam','Kustawi','Ranged')
+	state.Weapons:options('None','DualSWORDS','DualRostam','DualTauret','DualKustawi','DualRanged','SWORDS','Tauret','Rostam','Kustawi','Ranged')--'DualHotShot','DualLeaden','Leaden','HotShot'
 	state.CompensatorMode:options('Never','Always','300','1000')
     --state.ranged:options('normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp')
     state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
@@ -89,7 +92,7 @@ function user_job_setup()
     send_command('bind @x gs c toggle RP')  
 	send_command('bind @z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
     send_command('bind !f3 gs c cycle QDMode')
-    send_command('bind !c gs c toggle CompensatorMode')  
+    send_command('bind !z gs c toggle CompensatorMode')  
     send_command('bind f2 gs c cycle Roller1;input //gs c Roller1')
     send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
     send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
@@ -126,16 +129,18 @@ function init_gear_sets()
 	gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
 
 
-	-- Weapons sets
-    sets.weapons.SWORDS = {main="Naegling", sub="Crepuscular Knife",}
-    sets.weapons.Rostam = {main={ name="Rostam", augments={'Path: A',}}, sub="Tauret"}
-	sets.weapons.Tauret = {main="Tauret", sub="Crepuscular Knife",}
-    sets.weapons.Kustawi = {main="Kustawi +1", sub="Crepuscular Knife",}
-    sets.weapons.Ranged = {main="Rostam",sub="Nusku Shield",range="Fomalhaut"}
+	sets.weapons.DualSWORDS = {main="Naegling",sub="Crepuscular Knife"}
+	--sets.weapons.DualSavage = {main="Naegling", sub="Crepuscular Knife",}
+    sets.weapons.DualRostam = {main={ name="Rostam", augments={'Path: A',}}, sub="Tauret"}
+	sets.weapons.DualTauret = {main="Tauret", sub="Crepuscular Knife",}
+    sets.weapons.DualKustawi = {main="Kustawi +1", sub="Crepuscular Knife",}
+    sets.weapons.DualRanged = {main="Rostam",sub="Nusku Shield",}
+    sets.weapons.DualLeaden = {main="Rostam",sub="Tauret",}
+    sets.weapons.DualHotShot = {main="Naegling", sub="Tauret",}
+    -- sets.weapons.procsword = {main="Naegling", sub="Tauret",}
 
-   --[[  sets.weapons.Default = {main="Naegling",sub="Nusku Shield",range="Fomalhaut"}
-	sets.weapons.DualWeapons = {main="Naegling",sub="Blurred Knife +1",range="Fomalhaut"}
-	sets.weapons.DualSavageWeapons = {main="Naegling", sub="Crepuscular Knife",}
+--[[ 
+    sets.weapons.Default = {main="Naegling",sub="Nusku Shield",range="Fomalhaut"}
 	sets.weapons.DualEvisceration = {main="Tauret", sub="Crepuscular Knife",}
 	sets.weapons.DualLeadenRanged = {main="Rostam",sub="Tauret",range="Fomalhaut"}
 	sets.weapons.DualLeadenMelee = {main="Naegling",sub="Atoyac",range="Fomalhaut"}
@@ -143,6 +148,14 @@ function init_gear_sets()
 	sets.weapons.DualLeadenMeleeAcc = {main="Naegling",sub="Blurred Knife +1",range="Fomalhaut"}
 	sets.weapons.DualRanged = {main="Rostam",sub="Kustawi +1",range="Fomalhaut"}]]
 
+	-- Weapons sets
+    sets.weapons.SWORDS = {main="Naegling"}
+    sets.weapons.Rostam = {main={ name="Rostam", augments={'Path: A',}}}
+	sets.weapons.Tauret = {main="Tauret"}
+    sets.weapons.Kustawi = {main="Kustawi +1"}
+    sets.weapons.Ranged = {main="Rostam",sub="Nusku Shield"}
+    sets.weapons.Leaden = {main="Rostam",sub="Tauret",}
+    sets.weapons.HotShot = {main="Naegling", sub="Tauret",}
     --Weapongun
     sets.normal = {}
     sets.DeathPenalty = {range="Death Penalty"}
@@ -589,11 +602,13 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 })
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {}
-	sets.AccMaxTP = {}
-        
+	sets.MaxTP = {left_ear="Ishvara Earring",}
+	sets.AccMaxTP = {left_ear="Ishvara Earring",}
+    sets.MagicalMaxTP = {left_ear="Crematio Earring",}
+    sets.RangedMaxTP = {left_ear="Enervating Earring",}
+    
+    
     -- Midcast Sets
-    sets.midcast.FastRecast =  sets.precast.FC
         
     -- Specific spells
 
@@ -604,7 +619,9 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         ear1="Halasz Earring", --5
         ring2="Evanescence Ring", --5
         waist="Rumination Sash", --10
-        }
+    }
+    sets.midcast.FastRecast =  sets.precast.FC
+
 	sets.midcast.Cure = {
         head="Carmine Mask +1",ear2="Mendi. Earring",
         hands="Leyline Gloves",
@@ -1345,13 +1362,6 @@ sets.engaged.DW.CRIT.PDT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, s
 sets.engaged.DW.Ranged.PDT.MaxHaste = set_combine(sets.engaged.DW.Ranged.MaxHaste, sets.engaged.Hybrid)
 sets.engaged.DW.STP.PDT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
 
-
-
-
-
-
-
-
 end
 
 -- Select default macro book on initial load or subjob change.
@@ -1373,7 +1383,7 @@ function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 151')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
-        windower.chat.input('/lockstyleset 164')
+        windower.chat.input('/lockstyleset 163')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
         windower.chat.input('/lockstyleset 172')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.

@@ -204,6 +204,7 @@ function user_job_setup()
 	send_command('bind ^\\\\ input /ma "Protect V" <t>')
 	send_command('bind @\\\\ input /ma "Shell V" <t>')
 	send_command('bind !\\\\ input /ma "Reraise III" <me>')
+    send_command('bind @f6 gs c set toggle AutoAPMode')
 
     select_default_macro_book()
 
@@ -504,7 +505,7 @@ right_ear="Telos Earring",
         head="Agwu's Cap",
         body="Rosette Jaseran +1",
         hands={ name="Chironic Gloves", augments={'Mag. Acc.+11','Spell interruption rate down -10%','MND+8',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        legs="Lengo Pants",
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
         waist="Rumination Sash",

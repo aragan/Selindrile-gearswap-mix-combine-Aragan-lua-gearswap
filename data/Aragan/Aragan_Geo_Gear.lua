@@ -111,8 +111,8 @@ function user_job_setup()
 	--send_command('bind ^backspace input /ja "Entrust" <me>')
 	--send_command('bind !backspace input /ja "Life Cycle" <me>')
 	--send_command('bind @backspace input /ma "Sleep II" <t>')
-	send_command('bind ^delete input /ma "Aspir III" <t>')
-	send_command('bind @delete input /ma "Sleep" <t>')
+	--send_command('bind ^delete input /ma "Aspir III" <t>')
+	--send_command('bind @delete input /ma "Sleep" <t>')
 	send_command('bind f1 gs c cycle Indi2')
     send_command('bind f2 gs c cycle Indi')
     send_command('bind f3 gs c cycle geo')
@@ -170,7 +170,7 @@ function init_gear_sets()
 	sets.precast.FC = {        head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
 	hands="Agwu's Gages",
 	body="Shango Robe",
-	legs="Geomancy Pants +2",
+	legs="Geomancy Pants +3",
 	feet={ name="Merlinic Crackows", augments={'Mag. Acc.+3','"Fast Cast"+6','CHR+1','"Mag.Atk.Bns."+4',}},
 	ring1="Prolix Ring",
 	ring2="Kishar Ring",
@@ -194,6 +194,7 @@ function init_gear_sets()
         ring1="Mallquis Ring",})
 
     sets.precast.RA = {ammo=empty,
+    range="Trollbane",
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -369,7 +370,7 @@ function init_gear_sets()
         head={ name="Agwu's Cap", augments={'Path: A',}},
         body={ name="Ros. Jaseran +1", augments={'Path: A',}},
         hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
-        legs="Geomancy Pants +2",
+        legs="Geomancy Pants +3",
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
         left_ring="Freke Ring",
     }
@@ -396,7 +397,7 @@ function init_gear_sets()
 	head="Azimuth Hood +2",
 	body="Geomancy Tunic +3",
 	hands="Geo. Mitaines +3",
-	legs="Geomancy Pants +2",
+	legs="Geomancy Pants +3",
 	feet="Bagua Sandals +3",
 	neck={ name="Bagua Charm +2", augments={'Path: A',}},
 	waist={ name="Shinjutsu-no-Obi +1", augments={'Path: A',}},
@@ -495,7 +496,7 @@ function init_gear_sets()
         right_ring="Stikini Ring +1",
         back={ name="Aurist's Cape +1", augments={'Path: A',}},
     }
-    sets.midcast['Dark Magic'] = {ammo="Pemphredo Tathlum",
+    sets.midcast['Dark Magic'] = {
        neck="Erra Pendant",ear1="Regal Earring",ear2="Malignance Earring",
        hands="Amalric Gages +1",ring1="Metamor. Ring +1",ring2="Stikini Ring +1",
        legs="Merlinic Shalwar"}
@@ -536,7 +537,7 @@ function init_gear_sets()
         head="C. Palug Crown",
         body="Geomancy Tunic +3",
         hands="Geo. Mitaines +3",
-        legs="Geomancy Pants +2",
+        legs="Geomancy Pants +3",
         feet="Bagua Sandals +3",
         neck="Incanter's Torque",
         waist="Luminary Sash",
@@ -565,7 +566,7 @@ function init_gear_sets()
 	
 	sets.midcast['Divine Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {ring1="Stikini Ring +1"})
 		
-	sets.midcast['Enhancing Magic'] = {ammo="Pemphredo Tathlum",
+	sets.midcast['Enhancing Magic'] = {
 	head="Telchine Cap",
 	body="Telchine Chas.",
 	hands="Telchine Gloves",
@@ -601,6 +602,25 @@ function init_gear_sets()
 	sets.midcast.Shell = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear2="Malignance Earring"})
 	sets.midcast.Shellra = set_combine(sets.midcast['Enhancing Magic'], {ring2="Sheltered Ring",ear2="Malignance Earring"})
     sets.Phalanx_Received = set_combine(sets.midcast['Enhancing Magic'], {})
+
+    sets.rangeammo = {ammo=empty,range="Trollbane"}
+
+        -- Ranged gear
+        sets.midcast.RA = {ammo=empty,
+        range="Trollbane",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Iskur Gorget",
+        waist="Yemaya Belt",
+        left_ear="Telos Earring",
+        right_ear="Crep. Earring",
+        left_ring="Dingir Ring",
+        right_ring="Cacoethic Ring +1",
+        back="Null Shawl",
+    }
 
 	--------------------------------------
 	-- Idle/resting/defense/etc sets
@@ -688,7 +708,8 @@ function init_gear_sets()
         back="Moonlight Cape",
     }
     sets.idle.EnemyCritRate = set_combine(sets.idle.HP, { 
-        ammo="Eluder's Sachet",
+        ammo=empty,
+        range="Trollbane",
         left_ring="Warden's Ring",
         right_ring="Fortified Ring",
         back="Reiki Cloak",
@@ -912,7 +933,7 @@ function check_trust()
 	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
 		local party = windower.ffxi.get_party()
 
-        if world.area == 'Temenos' and party.p3 == nil then
+        if (world.area == 'Temenos' or world.area == 'Apollyon') and party.p3 == nil then
 			local spell_recasts = windower.ffxi.get_spell_recasts()
 			
 			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
@@ -931,7 +952,7 @@ function check_trust()
 				return false
 			end
 		end
-        if world.area ~= 'Temenos' and party.p5 == nil then
+        if (world.area ~= 'Temenos' or world.area ~= 'Apollyon') and party.p5 == nil then
 			local spell_recasts = windower.ffxi.get_spell_recasts()
 			
 			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then

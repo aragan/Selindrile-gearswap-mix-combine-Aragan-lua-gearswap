@@ -52,7 +52,7 @@ function user_job_setup()
 	send_command('bind f4 gs c cycle ElementalMode;gs c cycle RuneElement')
 
 	--send_command('bind f4 gs c cycle RuneElement')
-	send_command('bind f3 gs c RuneElement')
+	--send_command('bind f3 gs c RuneElement')
 	send_command('bind f2 gs c toggle AutoBuffMode')
 	send_command('bind f3 gs c toggle AutoRuneMode')
 	--send_command('bind ^delete input /ja "Provoke" <stnpc>')
@@ -1013,8 +1013,12 @@ sets.idle.MEVA = {ammo="Yamarang",
 	-- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Brutal Earring"}
-	sets.AccMaxTP = {ear1="Telos Earring"}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
 
 	--------------------------------------
 	-- Engaged sets

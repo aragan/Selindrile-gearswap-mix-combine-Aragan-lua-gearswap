@@ -35,7 +35,7 @@ function user_job_setup()
     state.ResistDefenseMode:options('MEVA')
     state.WeaponskillMode:options('Match','SubtleBlow', 'PDL')
     state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere','Regain')
-	state.Weapons:options('default','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan','None','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon')
+	state.Weapons:options('None','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon')
     state.Passive = M{['description'] = 'Passive Mode','None','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20'}
 
     -- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
@@ -50,6 +50,11 @@ function user_job_setup()
 	info.SongHorn = 'Gjallarhorn'
     info.SongMarsyas = 'Marsyas'
     info.SongCheer = 'Miracle Cheer'
+
+    sets.SongCheer = {range="Miracle Cheer"}
+    sets.Daurdabla = {range="Daurdabla"}
+
+
 	-- How many extra songs we can keep from Daurdabla/Terpander
     info.ExtraSongs = 2
 	
@@ -73,8 +78,11 @@ function user_job_setup()
 	send_command('bind ^3 gs c Elemental BardSong')  --Casts Threnody based on chosen element.
 	
     send_command('bind f1 gs c cycle HippoMode')
-    send_command('bind tab gs c cycle Etude')
-    send_command('bind @tab gs c cycleback Etude')
+    send_command('bind tab gs c cycle Singer;gs c singer')
+    send_command('bind @tab gs c cycleback Singer;gs c singer;')
+
+    send_command('bind ^tab gs c cycle Etude')
+    -- send_command('bind ^tab gs c cycleback Etude')
     send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
 
     --[[
@@ -98,6 +106,21 @@ function user_job_setup()
     send_command('bind f2 gs c songsetphccsv')
     --send_command('bind ^f4 gs c cycleback songsetphccsv')
     --send_command('bind !f2 gs c Songset')
+    
+local was_chat_open = false
+windower.register_event('prerender', function()
+    local chat_open = windower.ffxi.get_info().chat_open
+    if chat_open and not was_chat_open then
+		send_command('unbind `')
+		send_command('unbind tab')
+        was_chat_open = true
+    elseif not chat_open and was_chat_open then
+        send_command('bind ` gs c cycle Songset;')
+        send_command('bind tab gs c cycle Singer;gs c singer')
+        was_chat_open = false
+    end
+end)
+
 	select_default_macro_book()
 end
 
@@ -108,6 +131,13 @@ function init_gear_sets()
 	--------------------------------------
     
 	---- WeaponSet ----
+	sets.weapons.DualTwashtar = {main="Twashtar", sub="Centovente"}
+    sets.weapons.DualTwashtarCrepuscular = {main="Twashtar", sub="Crepuscular Knife"}
+    sets.weapons.DualTauret = {main="Tauret", sub="Crepuscular Knife"}
+    sets.weapons.DualNaegling = {main="Naegling", sub="Centovente"}
+    sets.weapons.DualNaeglingCrepuscular = {main="Naegling", sub="Crepuscular Knife"}
+    sets.weapons.DualAeneas = {main="Aeneas", sub="Centovente"}
+    sets.weapons.DualCarnwenhan = {main="Carnwenhan", sub="Crepuscular Knife"}
 
     sets.weapons.Twashtar = {main="Twashtar", sub="Genmei Shield"}
     sets.weapons.Tauret = {main="Tauret", sub="Genmei Shield"}
@@ -118,13 +148,6 @@ function init_gear_sets()
     
     sets.weapons.default = {main="Twashtar", sub="Centovente"}
 
-	sets.weapons.DualTwashtar = {main="Twashtar", sub="Centovente"}
-    sets.weapons.DualTwashtarCrepuscular = {main="Twashtar", sub="Crepuscular Knife"}
-    sets.weapons.DualTauret = {main="Tauret", sub="Crepuscular Knife"}
-    sets.weapons.DualNaegling = {main="Naegling", sub="Centovente"}
-    sets.weapons.DualNaeglingCrepuscular = {main="Naegling", sub="Crepuscular Knife"}
-    sets.weapons.DualAeneas = {main="Aeneas", sub="Centovente"}
-    sets.weapons.DualCarnwenhan = {main="Carnwenhan", sub="Crepuscular Knife"}
 
 
 	--[[sets.weapons.DualTwashtar = {main="Twashtar", sub="Centovente"}
@@ -179,7 +202,7 @@ function init_gear_sets()
 		body={ name="Chironic Doublet", augments={'"Mag.Atk.Bns."+5','"Cure" potency +10%','MND+4','Mag. Acc.+1',}},
 		legs="Doyen Pants",
 		feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
-		waist="Witful Belt",
+        waist="Plat. Mog. Belt",
 		neck="Baetyl Pendant",
 		left_ear="Loquac. Earring",
 		right_ear="Mendi. Earring",
@@ -196,8 +219,8 @@ function init_gear_sets()
 		waist="Siegel Sash",})
 	
 	sets.precast.FC.BardSong = {
-	main="Carnwenhan",
-	sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+	-- main="Carnwenhan",
+	-- sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
 	head="Fili Calot +2",
 	body="Inyanga Jubbah +2",
 	hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
@@ -497,6 +520,36 @@ sets.precast.WS['Shattersoul'] = {
 	-- General set for recast times.
 	sets.midcast.FastRecast = sets.precast.FC
 
+    	-- For song buffs (duration and AF3 set bonus)
+	sets.midcast.SongEffect = {    main="Carnwenhan",
+    -- sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+    head="Fili Calot +2",
+    body="Fili Hongreline +2",
+    hands="Fili Manchettes +2",
+    legs="Inyanga Shalwar +2",
+    feet="Brioso Slippers +3",
+    neck="Mnbw. Whistle +1",
+    ear2="Odnowa Earring +1",
+    ear1="Loquac. Earring",
+    ring1="Stikini Ring +1",
+    ring2="Stikini Ring +1",
+    waist="Witful Belt",
+    back="Intarabus's Cape",}
+		
+	sets.midcast.SongEffect.DW = {    main="Carnwenhan",
+    sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
+    head="Fili Calot +2",
+    body="Fili Hongreline +2",
+    hands="Fili Manchettes +2",
+    legs="Inyanga Shalwar +2",
+    feet="Brioso Slippers +3",
+    neck="Mnbw. Whistle +1",
+    ear2="Odnowa Earring +1",
+    ear1="Loquac. Earring",
+    ring1="Stikini Ring +1",
+    ring2="Stikini Ring +1",
+    waist="Witful Belt",
+    back="Intarabus's Cape",}
 	-- Gear to enhance certain classes of songs
 	sets.midcast.Ballad = {legs="Fili Rhingrave +2"}
 	sets.midcast.Lullaby = {range="Marsyas",hands="Brioso Cuffs +3"}
@@ -518,31 +571,18 @@ sets.precast.WS['Shattersoul'] = {
     sets.midcast.Etude = {head="Mousai Turban +1",}
     sets.midcast.Threnody = {body="Mou. Manteel +1"}
 
-	sets.midcast["Sentinel's Scherzo"] = {range="Marsyas",feet="Fili Cothurnes +2"}
-	sets.midcast['Magic Finale'] = {range="Daurdabla",
-    neck="Null Loop",
+	sets.midcast["Sentinel's Scherzo"] = {range="Miracle Cheer",feet="Fili Cothurnes +2"}
+	sets.midcast.ScherzoNitro = {
+        range="Marsyas",
+        feet="Fili Cothurnes +2",
+    }
+    sets.midcast['Magic Finale'] = {range="Daurdabla",
     waist="Null Belt",
     neck="Null Loop",
     legs="Fili Rhingrave +2",}
 	sets.midcast.Mazurka = {range="Miracle Cheer"}
 	
-	-- For song buffs (duration and AF3 set bonus)
-	sets.midcast.SongEffect = {    main="Carnwenhan",
-    sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
-    head="Fili Calot +2",
-    body="Fili Hongreline +2",
-    hands="Fili Manchettes +2",
-    legs="Inyanga Shalwar +2",
-    feet="Brioso Slippers +3",
-    neck="Mnbw. Whistle +1",
-    ear2="Odnowa Earring +1",
-    ear1="Loquac. Earring",
-    ring1="Stikini Ring +1",
-    ring2="Stikini Ring +1",
-    waist="Witful Belt",
-    back="Intarabus's Cape",}
-		
-	sets.midcast.SongEffect.DW = sets.midcast.SongEffect
+
 
 	-- For song defbuffs (duration primary, accuracy secondary)
 	sets.midcast.SongDebuff = {     range="Marsyas",
@@ -568,13 +608,13 @@ sets.precast.WS['Shattersoul'] = {
 	sets.midcast.SongRecast = sets.precast.FC.BardSong
 		
 	-- Cast spell with normal gear, except using Daurdabla instead
-    sets.midcast.Daurdabla = {range=info.ExtraSongInstrument}
-    sets.midcast.Gjallarhorn =  {range=info.SongHorn}
+    sets.midcast.Daurdabla = set_combine(sets.midcast.SongEffect,{range=info.ExtraSongInstrument})
+    sets.midcast.Gjallarhorn =  set_combine(sets.midcast.SongEffect, {range=info.SongHorn})
     sets.midcast.Marsyas = set_combine(sets.midcast.SongEffect, {range=info.SongMarsyas})
     sets.midcast.Cheer = set_combine(sets.midcast.SongEffect, {range=info.SongCheer})
 
 	-- Dummy song with Daurdabla; minimize duration to make it easy to overwrite.
-    sets.midcast.DaurdablaDummy = set_combine(sets.midcast.SongRecast, {range=info.ExtraSongInstrument})
+    sets.midcast.DaurdablaDummy = set_combine(sets.midcast.SongEffect, {range=info.ExtraSongInstrument})
 
 
     --dummy songs
@@ -591,6 +631,7 @@ sets.precast.WS['Shattersoul'] = {
     legs={ name="Vanya Slops", augments={'Healing magic skill +20','"Cure" spellcasting time -7%','Magic dmg. taken -3',}},
     feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
     neck="Nodens Gorget",
+    waist="Plat. Mog. Belt",
     right_ear="Mendi. Earring",
     left_ring="Stikini Ring +1",
     right_ring="Stikini Ring +1",
@@ -687,10 +728,14 @@ sets.precast.WS['Shattersoul'] = {
 	})
 
 	-- Resting sets
-	sets.resting = {        body="Annoint. Kalasiris",
+	sets.resting = {  
+    head="Null Masque",  
+    body="Annoint. Kalasiris",
 	hands="Inyan. Dastanas +2",
 	legs="Assid. Pants +1",
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
 	neck={ name="Bathy Choker +1", augments={'Path: A',}},
+    waist="Null Belt",
 	left_ear="Infused Earring",
 	left_ring="Stikini Ring +1",
 	right_ring="Stikini Ring +1",}
@@ -1185,7 +1230,11 @@ function user_job_lockstyle()
     if player.equipment.sub:contains('Shield') then
         if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword/Shield
         windower.chat.input('/lockstyleset 165')
+        elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+        windower.chat.input('/lockstyleset 164')
         end
+    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+        windower.chat.input('/lockstyleset 164')
 	elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         if res.items[item_name_to_id(player.equipment.sub)].skill == 3 then --Sword/Sword.
         windower.chat.input('/lockstyleset 150')
@@ -1206,7 +1255,26 @@ function check_trust()
 	if not moving then
 		if state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Elvorseal'] or buffactive['Reive Mark'] or not player.in_combat) then
 			local party = windower.ffxi.get_party()
-			if party.p5 == nil then
+            if (world.area == 'Temenos' or world.area == 'Apollyon') and party.p3 == nil then
+				local spell_recasts = windower.ffxi.get_spell_recasts()
+			
+				if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
+					windower.send_command('input /ma "Ygnas" <me>')
+					tickdelay = os.clock() + 3
+					return true
+				elseif spell_recasts[952] < spell_latency and not have_trust("Koru-Moru") then
+					windower.send_command('input /ma "Koru-Moru" <me>')
+					tickdelay = os.clock() + 3
+					return true
+				elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+					windower.send_command('input /ma "Sylvie (UC)" <me>')
+					tickdelay = os.clock() + 3
+					return true
+				else
+					return false
+				end
+			end
+            if (world.area ~= 'Temenos' or world.area ~= 'Apollyon') and party.p5 == nil then
 				local spell_recasts = windower.ffxi.get_spell_recasts()
 			
 				if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then

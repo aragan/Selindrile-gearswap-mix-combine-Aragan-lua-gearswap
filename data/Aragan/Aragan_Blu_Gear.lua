@@ -91,7 +91,18 @@ function user_job_setup()
     send_command('alias lamp input /targetnpc;wait .1; input //tradenpc 1 "Smoldering Lamp";wait 1.4;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey right down;wait .4;setkey right up;wait .1;setkey numpadenter down;wait .1;setkey numpadenter up;')  --//lamp
     send_command('alias glowing input /targetnpc;wait .1; input //tradenpc 1 "Glowing Lamp";wait 1.8;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;') -- //glowing 
 	
-
+	local was_chat_open = false
+	windower.register_event('prerender', function()
+		local chat_open = windower.ffxi.get_info().chat_open
+		if chat_open and not was_chat_open then
+			send_command('unbind `')
+			-- send_command('unbind tab')
+			was_chat_open = true
+		elseif not chat_open and was_chat_open then
+			send_command('bind ` gs c cycle Spellset;')
+			was_chat_open = false
+		end
+	end)
 
 	select_default_macro_book()
 end
@@ -517,8 +528,12 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 })
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Cessance Earring",ear2="Brutal Earring"}
-	sets.AccMaxTP = {ear1="Regal Earring",ear2="Telos Earring"}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
 
 	-- Midcast Sets
 	sets.ConserveMP = {    
@@ -530,7 +545,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	}
 	sets.SIRD = {
 		ammo="Staunch Tathlum +1",
-		sub="Culminus",
+		-- sub="Culminus",
 		hands={ name="Rawhide Gloves", augments={'Mag. Acc.+15','INT+7','MND+7',}},
 		legs="Assim. Shalwar +3",
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
@@ -675,7 +690,6 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Evasion+10','"Mag.Atk.Bns."+10','Evasion+15',}},}
 		 
 	sets.midcast['Blue Magic'].Magical.SIRD = set_combine(sets.SIRD, sets.midcast['Blue Magic'].Magical)
-
 		 
 	sets.midcast['Blue Magic'].Subduction = sets.midcast['Blue Magic'].Magical
 					 

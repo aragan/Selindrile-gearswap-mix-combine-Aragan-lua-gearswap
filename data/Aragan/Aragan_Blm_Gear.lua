@@ -359,7 +359,12 @@ function init_gear_sets()
     sets.precast.WS['Vidohunir'] = sets.precast.WS["Shell Crusher"]
 
 	sets.MaxTPMyrkr = {}
-    
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
     
     ---- Midcast Sets ----
 
@@ -370,6 +375,7 @@ function init_gear_sets()
         head={ name="Agwu's Cap", augments={'Path: A',}},
         body={ name="Ros. Jaseran +1", augments={'Path: A',}},
         hands={ name="Amalric Gages +1", augments={'INT+12','Mag. Acc.+20','"Mag.Atk.Bns."+20',}},
+        legs="Lengo Pants",
         feet="Wicce Sabots +2",
         waist="Rumination Sash",
         right_ring="Freke Ring",

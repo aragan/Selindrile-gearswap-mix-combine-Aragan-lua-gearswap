@@ -33,7 +33,7 @@ function user_job_setup()
 	-- Additional local binds
 	send_command('bind ^` input /ja "Boost" <me>')
 	send_command('bind !` input /ja "Perfect Counter" <me>')
-	send_command('bind ^backspace input /ja "Mantra" <me>')
+	-- send_command('bind ^backspace input /ja "Mantra" <me>')
 	send_command('bind @` gs c cycle SkillchainMode')
     send_command('bind f1 gs c cycle HippoMode')
 
@@ -64,7 +64,7 @@ function init_gear_sets()
 	-- Precast Sets
 	
 	-- Precast sets to enhance JAs on use
-    sets.precast.JA['Hundred Fists'] = {}--legs="Hesychast's Hose +1"
+    sets.precast.JA['Hundred Fists'] = {legs="Hesychast's Hose +1"}
     sets.precast.JA['Boost'] = {}--hands="Anchorite's Gloves +1"
     sets.precast.JA['Dodge'] = {feet="Anch. Gaiters +3"}
     sets.precast.JA['Focus'] = {}--head="Anchorite's Crown +1"
@@ -508,8 +508,12 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
 	-- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Brutal Earring",ear2="Sherida Earring",}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
     sets.rollerRing = {left_ring="Roller's Ring"}
 
     --Passive set

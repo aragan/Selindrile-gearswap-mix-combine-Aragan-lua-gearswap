@@ -20,9 +20,10 @@ function user_job_setup()
 	state.PhysicalDefenseMode:options('PDT', 'PetPDT', 'Reraise', 'Killer')
 	state.MagicalDefenseMode:options('PetMDT', 'MDT', 'Petregen')
 	state.ResistDefenseMode:options('PetMEVA', 'MEVA')
-	state.Weapons:options('None', 'SWORDS', 'AXE', 'SCYTHE', 'DAGGERS', 'CLUB','Staff')
+	state.Weapons:options('None','Agwu', 'SWORDS', 'AXE', 'SCYTHE', 'DAGGERS', 'CLUB','Staff')
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','SubtleBlow','Knockback','Suppa','DWEarrings'}
-	
+	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular', 'EnemyCritRate','EnemyTPaccumulation','Resist', 'Regen','SphereRegain' , 'Death Spikes'}
+
 	autows_list = {['PetPDTAxe']='Ruinator',['DualWeapons']='Ruinator'}
 
 	gear.PHYKumbha1 = {name="Kumbhakarna", augments={'Pet: "Mag.Atk.Bns."+18','Pet: Haste+3','Pet: TP Bonus+160',}}
@@ -35,7 +36,7 @@ function user_job_setup()
 	send_command('alias glowing input /targetnpc;wait .1; input //tradenpc 1 "Glowing Lamp";wait 1.8;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;') -- //glowing 
 	-- Set up Jug Pet cycling and keybind Ctrl+F7
 	-- INPUT PREFERRED JUG PETS HERE
-	state.JugMode = M{['description']='Jug Mode','FatsoFargann','ScissorlegXerin','BlackbeardRandy','AttentiveIbuki','DroopyDortwin','WarlikePatrick','AcuexFamiliar'}
+	state.JugMode = M{['description']='Jug Mode','GenerousArthur','FatsoFargann','ScissorlegXerin','BlackbeardRandy','AttentiveIbuki','DroopyDortwin','WarlikePatrick','AcuexFamiliar'}
 	send_command('bind f1 gs c cycle JugMode')
 	send_command('bind !f1 gs c cycleback JugMode')
 	-- Set up Monster Correlation Modes and keybind Alt+F7
@@ -69,13 +70,15 @@ function init_gear_sets()
 
 
     sets.weapons.SWORDS = {main="Naegling"}
+	sets.weapons.Agwu = {main="Agwu's Axe",sub="Sacro Bulwark",}
+	
     sets.weapons.AXE = {main="Dolichenus"}
     sets.weapons.SCYTHE = {main="Drepanum"}
     sets.weapons.DAGGERS = {main="Ternion Dagger +1",}
     sets.weapons.CLUB = {main="Mafic Cudgel"}
 	sets.weapons.Staff = {main="Gozuki Mezuki",sub="Niobid Strap"}
-
-    sets.SACRO = {sub="Sacro Bulwark",}
+    -- pet macc {main="Agwu's Axe",sub="Arktoi",
+    sets.DefaultShield = {sub="Sacro Bulwark",}
 
 	-- Weapons sets
 	--sets.weapons.PetPDTAxe = {main ="Izizoeksi"}
@@ -593,11 +596,48 @@ sets.precast.WS['Primal Rend'] = {
 	-- blockhead > spinning top > doubleclaw (fireball) > spinning top (fireball)
 	-- Razor Fang > Brain Crush > Claw Cyclone > Brain Crush > Razor Fang > fireball
 
+
+	
+	 -- passive set
+     sets.passive['Death Spikes'] = {body="Tartarus Platemail",}
+
+     sets.passive.Crepuscular = {
+		head="Crepuscular Helm",
+        body="Crepuscular Mail",
+	}
+    sets.passive.EnemyCritRate = {
+        ammo="Eluder's Sachet",
+        left_ring="Warden's Ring",
+        right_ring="Fortified Ring",
+        back="Reiki Cloak",
+    }
+    sets.passive.Resist = {
+       ammo="Staunch Tathlum +1",
+       neck={ name="Warder's Charm +1", augments={'Path: A',}},
+       waist="Carrier's Sash",
+    }
+    sets.passive.Regen = {
+        body="Sacro Breastplate",
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        waist="Null Belt",
+        left_ear="Infused Earring",
+        left_ring="Chirich Ring +1",
+        right_ring="Chirich Ring +1",
+    }
+    sets.passive.SphereRegain = {
+        body="Makora Meikogai",
+     }
+
+
 	-- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Brutal Earring",ear2="Sherida Earring",}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
 	sets.rollerRing = {left_ring="Roller's Ring"}
 
 				-- PET SIC & READY MOVES

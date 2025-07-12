@@ -26,7 +26,7 @@ function user_job_setup()
     state.HybridMode:options('Tank','Normal','PDT')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'Acc','Enmity')
     state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
-	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation','Resist')
+	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation','Resist','SphereRegain')
     state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
     state.MagicalDefenseMode:options('MDT','MDT_HP','MDT_Reraise')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
@@ -523,8 +523,12 @@ function init_gear_sets()
     -- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Cessance Earring",ear2="Brutal Earring",}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
 
 
 	--------------------------------------
@@ -1030,7 +1034,7 @@ sets.idle.Evasion={
 
     sets.idle.Regain = {
         head="Wakido Kabuto +3",
-		body="Adamantite Armor",
+        body="Makora Meikogai",
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	    feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -1086,6 +1090,12 @@ sets.idle.Evasion={
 	neck={ name="Warder's Charm +1", augments={'Path: A',}},
 	waist="Carrier's Sash",
 }
+sets.passive.SphereRegain = {
+	body="Makora Meikogai",
+ }
+ 
+ ----
+
 	sets.MP_Knockback = {}
     sets.Twilight = {head="Crepuscular Helm", body="Crepuscular Mail",}
 	sets.EnemyCritRate = {

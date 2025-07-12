@@ -112,6 +112,8 @@ Red Lotus Blade Liquefaction
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal','NOSchereEar', 'STP', 'Acc', 'SubtleBlow','DA', 'CRIT')
+    state.RangedMode:options('Normal', 'Acc')
+
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'Acc', 'PDL', 'SC', 'Dread', 'None')
     state.HybridMode:options('DT', 'Normal', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
@@ -122,12 +124,13 @@ function user_job_setup()
 	state.Weapons:options('Normal', 'Caladbolg', 'Lycurgos', 'Liberator', 'Anguta', 'Apocalypse', 'Drepanum', 
     'AgwuClaymore', 'Naegling', 'Loxotic', 'TernionDagger', 'Dolichenus',
     'DualNaegling', 'DualLoxotica', 'DualTernionDagger', 'DualDolichenus',
-    'ProcScythe','ProcGreatSword')
+    'ProcScytheTwilight','ProcH2H','ProcDagger','ProcClub','ProcStaff','ProcRanger','ProcScythe','ProcGreatSword')
 	state.shield = M{['description']='Weapon Set', 'Normal', 'shield'}
 
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Empy'}
-	state.Passive = M{['description'] = 'Passive Mode','None','Twilight','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20','SubtleBlowMBOZE','SB'}
+	state.Passive = M{['description'] = 'Passive Mode','None','SphereRegain','Crepuscular','MDT','Enspell','Death Spikes', 'SubtleBlow', 'SubtleBlow20','SubtleBlowMBOZE','SubtleBlowFULL','SubtleBlowDT'}
 	state.DrainSwapWeaponMode = M{'Never','Always','300','1000'}
+	state.AutoBuffMode:options('Off','Auto','Sortie','Defend') --,'Vagary','Off','Off','Off','Off',
 
 	--use //listbinds    .. to show command keys
 	-- Additional local binds
@@ -136,7 +139,7 @@ function user_job_setup()
 	send_command('bind @` gs c cycle SkillchainMode')
     send_command('bind f3 gs c cycle Absorbs')
     send_command('bind !f3 gs c cycleback Absorbs')
-    send_command('bind f2 input //gs c Absorbs')
+    send_command('bind f2 gs c cycle AutoBuffMode')
     send_command('bind f7 gs c cycle shield')
 	--send_command('bind f5 gs c cycle WeaponskillMode')
 	send_command('bind f4 gs c cycle ElementalMode')
@@ -179,9 +182,14 @@ sets.weapons.Loxotic = {main="Loxotic Mace +1", sub="Blurred Shield +1",}
 sets.weapons.TernionDagger = {main="Ternion Dagger +1", sub="Blurred Shield +1",}
 sets.weapons.Dolichenus = {main="Dolichenus", sub="Blurred Shield +1",}
 
+sets.weapons.ProcScytheTwilight = {main="Twilight Scythe",sub="Sword Strap",}
 sets.weapons.ProcScythe = {main="Maven's Scythe",sub="Sword Strap",}
 sets.weapons.ProcGreatSword = {main="Irradiance Blade",sub="Sword Strap",}
-
+sets.weapons.ProcH2H = {main="Karambit",}
+sets.weapons.ProcRanger = {main="Naegling", sub="Blurred Shield +1",range="Ullr", ammo="Antlion Arrow",}
+sets.weapons.ProcDagger = {main="Ternion Dagger +1", sub="Blurred Shield +1",}
+sets.weapons.ProcClub = {main="Caduceus",sub="Trainee Sword"}
+sets.weapons.ProcStaff = {main="Profane Staff",sub="Sword Strap"}
 
 sets.Normal = {}
 sets.shield = {sub="Blurred Shield +1"}
@@ -239,6 +247,7 @@ sets.Capacity = {}
     legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
     feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
     neck={ name="Loricate Torque +1", augments={'Path: A',}},
+    waist="Sanctuary Obi +1",
     left_ear="Halasz Earring",
     right_ear="Mendi. Earring",
     right_ring="Evanescence Ring",
@@ -258,6 +267,7 @@ sets.ConserveMP = {
         legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
         feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        waist="Sanctuary Obi +1",
         left_ear="Halasz Earring",
         left_ring="Evanescence Ring",
     }
@@ -296,13 +306,14 @@ sets.ConserveMP = {
 			left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 			back="Moonlight Cape",
 	}
-	sets.midcast['Dread Spikes'].SIRD = set_combine(sets.midcast['Dread Spikes'],sets.SIRD, {
-		ammo="Staunch Tathlum +1",
-        legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
-        feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        left_ear="Halasz Earring",
-        left_ring="Evanescence Ring",
+	sets.midcast['Dread Spikes'].SIRD = set_combine(sets.SIRD, {
+		-- ammo="Staunch Tathlum +1",
+        -- legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
+        -- feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
+        -- neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        -- waist="Sanctuary Obi +1",
+        -- left_ear="Halasz Earring",
+        -- left_ring="Evanescence Ring",
 	})
     sets.midcast['Dark Magic'] = {
         ammo="Pemphredo Tathlum",
@@ -324,6 +335,7 @@ sets.ConserveMP = {
         legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
         feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        waist="Sanctuary Obi +1",
         left_ear="Halasz Earring",
         left_ring="Evanescence Ring",
 	})
@@ -350,6 +362,7 @@ sets.ConserveMP = {
         legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
         feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        waist="Sanctuary Obi +1",
         left_ear="Halasz Earring",
         left_ring="Evanescence Ring",
 	})    
@@ -373,6 +386,7 @@ sets.ConserveMP = {
         legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
         feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        waist="Sanctuary Obi +1",
         left_ear="Halasz Earring",
         left_ring="Evanescence Ring",
 	})        
@@ -391,6 +405,7 @@ sets.ConserveMP = {
         legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
         feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        waist="Sanctuary Obi +1",
         left_ear="Halasz Earring",
         left_ring="Evanescence Ring",
 	})
@@ -514,11 +529,12 @@ sets.ConserveMP = {
     left_ring="Stikini Ring +1",
     right_ring="Stikini Ring +1",
 }
-sets.midcast['Enhancing Magic'].SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.SIRD, {
+sets.midcast['Enhancing Magic'].SIRD = set_combine(sets.SIRD,sets.midcast['Enhancing Magic'], {
 	ammo="Staunch Tathlum +1",
 	legs={ name="Founder's Hose", augments={'MND+5','Mag. Acc.+5','Attack+3','Breath dmg. taken -2%',}},
 	feet={ name="Odyssean Greaves", augments={'"Mag.Atk.Bns."+23','Magic dmg. taken -5%','INT+9',}},
 	neck={ name="Loricate Torque +1", augments={'Path: A',}},
+    waist="Sanctuary Obi +1",
 	left_ear="Halasz Earring",
 	left_ring="Evanescence Ring",
 })
@@ -581,8 +597,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
     }
 
 	
-    sets.precast.RA = { ammo=empty,
-        range="Trollbane",  
+    sets.precast.RA = {
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -594,8 +609,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         left_ring="Purity Ring",
         right_ring="Ilabrat Ring",
     }
-    sets.midcast.RA = { ammo=empty,
-        range="Trollbane",  
+    sets.midcast.RA = {
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
         hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -608,6 +622,10 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         right_ring="Ilabrat Ring",
     }	
          
+    sets.midcast.RA.Acc = { 
+    range="Trollbane",  
+
+}
     -- Weaponskill sets
     -- Default set for any weaponskill that isn't any more specifically defined
     sets.precast.WS = {
@@ -1254,16 +1272,14 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS["Armor Break"], {
 		right_ring="Chirich Ring +1",
 	}           
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Telos Earring"}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayMaxTPWSEars = {ear1="Ishvara Earring",ear2="Brutal Earring",}
-	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayWSEars = {ear1="Brutal Earring",ear2={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},}
-     
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
 
     -- Extra defense sets.  Apply these on top of melee or defense sets.
-	sets.Twilight = {head="Crepuscular Helm", body="Crepuscular Mail",}
     sets.MP = {neck="Coatl Gorget +1",ear2="Ethereal Earring",waist="Flume Belt +1",}
 
     -- Defense sets
@@ -1439,7 +1455,7 @@ sets.defense.SEboost = {
     sets.idle.Regain = {
         ammo="Staunch Tathlum +1",
         head="Ratri Sallet +1",
-        body={ name="Sakpata's Plate", augments={'Path: A',}},
+        body="Makora Meikogai",
         hands={ name="Macabre Gaunt. +1", augments={'Path: A',}},
         legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
         feet={ name="Sakpata's Leggings", augments={'Path: A',}},
@@ -1516,6 +1532,7 @@ sets.defense.SEboost = {
 	
 	sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.passive.Reraise = {head="Crepuscular Helm",body="Crepuscular Mail"}
+	sets.passive['Death Spikes'] = {body="Tartarus Platemail",}
 
     sets.passive.SubtleBlow ={        
         body="Dagon Breast.",
@@ -1528,17 +1545,16 @@ sets.defense.SEboost = {
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     }
-    sets.passive.SubtleBloFULL ={        
+    sets.passive.SubtleBlowFULL ={        
         body="Dagon Breast.",
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-        feet="Volte Spats",
+        feet= "Sakpata's Leggings", --R20 (SB1+10)
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
         left_ear="Digni. Earring",
         left_ring="Chirich Ring +1",
         right_ring="Niqmaddu Ring",
     }
     sets.passive.SubtleBlowMBOZE ={        
-
         ammo="Seeth. Bomblet +1", -- (R15 for Haste +5%)
         head="Sulevia's Mask +2", --(SB1 +4 *with Sulevia set bonus from legs)
         body="Dagon Breast.", --(SB2 + 10)
@@ -1553,7 +1569,7 @@ sets.defense.SEboost = {
         right_ring="Niqmaddu Ring", --(SB2 +5)
 		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
     }
-    sets.passive.SB  = {
+    sets.passive.SubtleBlowDT  = {
         ammo="Aurgelmir Orb +1",
         head="Sakpata's Helm",
         neck="Abyssal Beads +2",
@@ -1565,16 +1581,18 @@ sets.defense.SEboost = {
 		ring2="Defending Ring",
         waist="Ioskeha Belt +1",
         legs="Sakpata's Cuisses",
-        feet="Fall. Sollerets +3"
+        feet= "Sakpata's Leggings", --R20 (SB1+10)
     }
     sets.passive.MDT = {
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
         waist="Carrier's Sash",
     }
 	sets.passive.Enspell = {waist="Orpheus's Sash",}
+    sets.passive.SphereRegain = {
+        body="Makora Meikogai",}
+    sets.passive.Crepuscular = {head="Crepuscular Helm", body="Crepuscular Mail",}
 
-	sets.buff.Doom = set_combine(sets.buff.Doom, {})
-	sets.buff.Sleep = {neck="Vim Torque +1"}
+
 	sets.buff['Dark Seal'] = {} --head="Fallen's Burgeonet +3"
 
     -- Extra Melee sets.  Apply these on top of melee sets.
@@ -2087,7 +2105,7 @@ sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
 	--Extra Special Sets
 	
 	sets.buff.Souleater = {}
-	sets.buff.Doom = set_combine(sets.buff.Doom, {
+	sets.buff.Doom = set_combine(sets.buff.Doom,sets.Reraise, {
 		neck="Nicander's Necklace",
 		waist="Gishdubar Sash",
 		left_ring="Purity Ring",
@@ -2118,6 +2136,7 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
+
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 151')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

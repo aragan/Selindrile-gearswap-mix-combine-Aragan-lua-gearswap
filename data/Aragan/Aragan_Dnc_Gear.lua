@@ -68,10 +68,11 @@ function user_job_setup()
 end
 
 
-autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",
-['DualNaegling']='Savage Blade',['Tauret']='Evisceration',['DualTauret']='Evisceration',
-['DualNaeglingCrepuscular']='Savage Blade',['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",
-['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",['Xoanon']="Retribution"}
+autows_list = {['Aeneas']="Aeolian Edge",['Twashtar']="Rudra's Storm",
+['Tauret']='Evisceration',['DualTauret']='Evisceration',
+['Carnwenhan']="Mordant Rime",['DualCarnwenhan']="Mordant Rime",
+['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",
+['Xoanon']="Retribution"}
 
 -- Define sets and vars used by this job file.
 function init_gear_sets()
@@ -114,7 +115,7 @@ function init_gear_sets()
         left_ear="Sherida Earring",
 	}
 	sets.passive.Parry = {
-        hands="Turms Mittens +1"
+        hands="Turms Mittens +1",
         feet="Turms Leggings +1",
     }
     -- Precast Sets
@@ -581,12 +582,12 @@ function init_gear_sets()
     -- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Ishvara Earring",ear2="Sherida Earring"}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Sherida Earring"}
+	sets.MaxTP = {ear1="Mache Earring +1"}
+	sets.AccMaxTP = {}
+    sets.MagicalMaxTP = {left_ear="Crematio Earring",}
     sets.rollerRing = {left_ring="Roller's Ring"}
 
     sets.Skillchain = {} --hands="Charis Bangles +2"
-    
     
     -- Midcast Sets
     

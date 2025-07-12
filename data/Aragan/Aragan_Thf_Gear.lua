@@ -4,13 +4,14 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'Ranger')
     state.HybridMode:options('DT','Normal')
     state.RangedMode:options('Normal', 'Acc')
-    state.WeaponskillMode:options('Match','SubtleBlow', 'PDL', 'Mod')
+    state.WeaponskillMode:options('Match', 'Proc','SubtleBlow', 'PDL', 'Mod')
 	state.IdleMode:options('DT','Normal','PDT', 'HP', 'Evasion', 'MDT', 'Regen','Regain', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP','Regain')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('None','Twashtar','Centovente', 'Tauret', 'Aeneas', 'Naegling')
+	state.Weapons:options('None','Twashtar','Centovente', 'Tauret', 'Aeneas', 'Naegling')--'test',
 	state.Passive:options('None', 'SubtleBlow','Parry','MDT', 'Enspell')
+	state.AutoBuffMode:options('Off','Auto','Defend') --,'Vagary','Off','Off','Off','Off',
 
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Suppa','DWMax','Parry','SubtleBlow'}
 	state.AmbushMode = M(false, 'Ambush Mode')
@@ -32,6 +33,8 @@ function user_job_setup()
 	send_command('bind ^\\\\ input /ja "Despoil" <t>')
 	send_command('bind !\\\\ input /ja "Mug" <t>')
 
+    send_command('bind f2 gs c toggle AutoBuffMode')
+
     Haste = 0
     DW_needed = 0
     DW = false
@@ -48,7 +51,17 @@ function init_gear_sets()
     -- Special sets (required by rules)
     --------------------------------------
 
-	sets.TreasureHunter = {hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}}, waist="Chaac Belt", feet="Skulk. Poulaines +2", }
+    -- Weapons sets
+
+    sets.weapons.Twashtar = {main="Twashtar", sub="Crepuscular Knife",}
+    sets.weapons.Centovente = {main="Twashtar", sub="Centovente",}
+    sets.weapons.Tauret = {main="Tauret", sub={ name="Gleti's Knife", augments={'Path: A',}},}
+    sets.weapons.Aeneas = {main="Aeneas", sub="Malevolence"}
+    sets.weapons.Naegling = {main="Naegling", sub="Centovente"}
+    -- sets.weapons.test = {    main="Excalipoor II",sub="Caduceus",}
+
+    
+	sets.TreasureHunter = {hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}},feet="Skulk. Poulaines +2", }
     sets.Kiting =  {feet="Jute Boots +1"}
 
 	sets.buff.Doom = set_combine(sets.buff.Doom, {})
@@ -87,13 +100,6 @@ function init_gear_sets()
         left_ear="Sherida Earring",
 	}
 
-	-- Weapons sets
-
-    sets.weapons.Twashtar = {main="Twashtar", sub="Crepuscular Knife",}
-    sets.weapons.Centovente = {main="Twashtar", sub="Centovente",}
-    sets.weapons.Tauret = {main="Tauret", sub={ name="Gleti's Knife", augments={'Path: A',}},}
-    sets.weapons.Aeneas = {main="Aeneas", sub="Malevolence"}
-    sets.weapons.Naegling = {main="Naegling", sub="Centovente"}
 
 
     -- Actions we want to use to tag TH.
@@ -202,6 +208,10 @@ function init_gear_sets()
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     }
+    sets.precast.WS.Proc =  {
+    }
+    -- sets.precast.WS["Fast Blade"] =  set_combine(sets.precast.WS.Proc,{})
+
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
     sets.precast.WS['Exenterator'] = set_combine(sets.precast.WS, {range=empty,
     ammo="C. Palug Stone",
@@ -527,8 +537,12 @@ sets.precast.WS["Empyreal Arrow"] = {
 	-- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Ishvara Earring",ear2="Sherida Earring"}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Sherida Earring"}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
 
     --------------------------------------
     -- Midcast sets
@@ -541,6 +555,24 @@ sets.precast.WS["Empyreal Arrow"] = {
     left_ear="Loquac. Earring",
     right_ear="Etiolation Earring",
     left_ring="Prolix Ring",}
+
+
+    sets.midcast["Dark Magic"] = set_combine(sets.precast.WS, {
+        ammo="Pemphredo Tathlum",
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+        right_ear="Crep. Earring",
+        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
+    })
+    
 
     -- Specific spells
 	sets.midcast.Utsusemi = {ammo="Sapience Orb",
@@ -570,7 +602,6 @@ sets.precast.WS["Empyreal Arrow"] = {
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
         feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
 	}
-    -- Ranged gear
 
     -- Ranged gear
     sets.midcast.RA = {ammo=empty,
@@ -587,7 +618,6 @@ sets.precast.WS["Empyreal Arrow"] = {
         left_ring="Dingir Ring",
         right_ring="Cacoethic Ring +1",
         back="Null Shawl",
-
     }
 
     sets.midcast.RA.Acc = {

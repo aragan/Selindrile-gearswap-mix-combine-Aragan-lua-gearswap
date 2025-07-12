@@ -23,7 +23,7 @@ function user_job_setup()
 	state.IdleMode:options( 'DT','Normal','Regen', 'HP', 'MDT', 'Evasion', 'EnemyCritRate', 'Regain')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Weapons:options('None', 'Naegling', 'Trishula', 'Shining', 'TernionDagger', 'Staff', 'Club', 'DualNaegling', 'DualTernionDagger', 'DualClub')
-	state.Passive = M{['description'] = 'Passive Mode','None','Twilight','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20', 'SubtleBlow30','SubtleBlow62'}
+	state.Passive = M{['description'] = 'Passive Mode','None','SphereRegain','Twilight','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20', 'SubtleBlow30','SubtleBlow62' , 'Death Spikes'}
 
     select_default_macro_book()
 	
@@ -633,7 +633,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     sets.defense.Regain = {
         ammo="Staunch Tathlum +1",
         head="Null Masque",
-        body={ name="Gleti's Cuirass", augments={'Path: A',}},
+        body="Makora Meikogai",
         hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
         legs={ name="Gleti's Breeches", augments={'Path: A',}},
         feet={ name="Gleti's Boots", augments={'Path: A',}},
@@ -729,6 +729,10 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.buff.Sleep = {neck="Vim Torque +1"}
 	
     -- Extra defense sets.  Apply these on top of melee or defense sets.
+    
+    -- passive set
+
+    sets.passive['Death Spikes'] = {body="Tartarus Platemail",}
     sets.passive.MP = {ear2="Ethereal Earring",waist="Flume Belt +1"}
     sets.passive.Twilight = {head="Crepuscular Helm",
 	body="Crepuscular Mail",}
@@ -762,18 +766,22 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         waist="Carrier's Sash",
     }
 	sets.passive.Enspell = {waist="Orpheus's Sash",}
+    
+    sets.passive.SphereRegain = {
+        body="Makora Meikogai",
+     }
 
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
     
 	-- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Lugra Earring +1",ear2="Sherida Earring",}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayMaxTPWSEars = {ear1="Brutal Earring",ear2="Sherida Earring",}
-	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayWSEars = {ear1="Moonshade Earring",ear2="Sherida Earring",}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
     sets.rollerRing = {left_ring="Roller's Ring"}
 
 	-- Engaged sets

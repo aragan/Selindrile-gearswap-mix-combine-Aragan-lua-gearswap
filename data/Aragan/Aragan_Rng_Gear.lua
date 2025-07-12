@@ -421,8 +421,14 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	-- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {}
-	sets.AccMaxTP = {}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {left_ear="Ishvara Earring",}
+    sets.MagicalMaxTP = {left_ear="Crematio Earring",}
+    sets.RangedMaxTP = {left_ear="Enervating Earring",}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
     sets.rollerRing = {left_ring="Roller's Ring"}
 
 	-- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.

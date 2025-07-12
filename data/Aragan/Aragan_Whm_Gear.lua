@@ -398,7 +398,12 @@ function init_gear_sets()
         back="Null Shawl",
     })
 		
-	sets.MaxTP = {ear1="Cessance Earring",ear2="Brutal Earring"}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
 	sets.MaxTP.Dagan = {ear1="Etiolation Earring"}
 
     --sets.precast.WS['Flash Nova'] = {}
@@ -427,6 +432,7 @@ function init_gear_sets()
         sub="Culminus",
         hands={ name="Chironic Gloves", augments={'Mag. Acc.+11','Spell interruption rate down -10%','MND+8',}},
         body={ name="Ros. Jaseran +1", augments={'Path: A',}},
+		legs="Bunzi's Pants",
         feet="Theo. Duckbills +3",
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
         left_ring="Mephitas's Ring +1",
@@ -436,7 +442,7 @@ function init_gear_sets()
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Ros. Jaseran +1", augments={'Path: A',}},
         hands={ name="Chironic Gloves", augments={'Mag. Acc.+11','Spell interruption rate down -10%','MND+8',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		legs="Bunzi's Pants",
         feet="Theo. Duckbills +3",
         neck={ name="Loricate Torque +1", augments={'Path: A',}},
         waist={ name="Shinjutsu-no-Obi +1", augments={'Path: A',}},

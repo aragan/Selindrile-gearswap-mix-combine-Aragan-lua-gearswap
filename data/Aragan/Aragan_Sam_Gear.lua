@@ -30,7 +30,7 @@ function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'triple', 'SubtleBlow', 'Range' )
     state.HybridMode:options('PDT','Normal','DTLite')
     state.WeaponskillMode:options('Match', 'SubtleBlow','SC', 'Acc', 'PDL','Proc')
-    state.Passive = M{['description'] = 'Passive Mode','None','SubtleBlow','SubtleBlowII'}
+    state.Passive = M{['description'] = 'Passive Mode','None','SubtleBlow','SubtleBlowII','SphereRegain','Death Spikes'}
     state.RangedMode:options('Normal', 'Acc')
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Reraise')
 	state.MagicalDefenseMode:options('MDT')
@@ -646,16 +646,17 @@ function init_gear_sets()
     -- Extra Melee sets.  Apply these on top of melee sets.
 
 	-- Swap to these on Moonshade using WS if at 3000 TP
-	sets.MaxTP = {ear1="Thrud Earring",ear2="Lugra Earring +1",}
-	sets.AccMaxTP = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.AccDayMaxTPWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayMaxTPWSEars = {ear1="Thrud Earring",ear2="Brutal Earring",}
-	sets.AccDayWSEars = {ear1="Mache Earring +1",ear2="Telos Earring"}
-	sets.DayWSEars = {ear1="Thrud Earring",ear2="Moonshade Earring",}
+    sets.MaxTP = {ear1="Ishvara Earring"}
+	sets.AccMaxTP = {}
+	sets.AccDayMaxTPWSEars = {}
+	sets.DayMaxTPWSEars = {}
+	sets.AccDayWSEars = {}
+	sets.DayWSEars = {}
     sets.rollerRing = {left_ring="Roller's Ring"}
 
 
 	-- passive set
+	sets.passive['Death Spikes'] = {body="Tartarus Platemail",}
 
     sets.passive.SubtleBlow = {
         left_ring="Chirich Ring +1",
@@ -668,6 +669,9 @@ function init_gear_sets()
         feet={ name="Ryuo Sune-Ate +1", augments={'HP+65','"Store TP"+5','"Subtle Blow"+8',}},
         left_ring="Niqmaddu Ring",
     })
+    sets.passive.SphereRegain = {
+        body="Makora Meikogai",
+     }
     sets.midcast['Blue Magic'] = set_combine(sets.precast.WS['Tachi: Ageha'], {})
     -- Midcast Sets
     sets.midcast.FastRecast = {
@@ -867,7 +871,7 @@ sets.midcast.Stun = set_combine(sets.midcast['Dark Magic'], {})
     })
     sets.idle.Regain = {
         head="Wakido Kabuto +3",
-		body="Adamantite Armor",
+        body="Makora Meikogai",
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	    feet={ name="Nyame Sollerets", augments={'Path: B',}},
