@@ -117,7 +117,7 @@ function user_job_setup()
 	
     select_default_macro_book()
     send_command("bind !e gs c toggle AutoMan")
-    send_command("bind ^home gs c toggle setftp")
+    send_command("bind ^end gs c toggle setftp")
     send_command("bind ^PAGEUP gs c toggle autodeploy")
     send_command("bind ^PAGEDOWN gs c hide keybinds")
 	send_command('bind @` gs c cycle SkillchainMode')
@@ -130,6 +130,7 @@ function user_job_setup()
     send_command('bind f11 gs c cycle PhysicalDefenseMode;gs c set DefenseMode Physical') --Turns your physical defense set on.
     send_command('bind f10 gs c cycle HybridMode') --Changes defense settings for melee such as PDT.
 	send_command('bind f7 gs c cycle Animators')
+	send_command('bind !` gs c hub lite')
 
     send_command("bind f4 gs c toggle AutoMan")
     send_command('bind f1 gs c cycle HippoMode')
@@ -138,6 +139,10 @@ function user_job_setup()
 	init_job_states({"Capacity","AutoPuppetMode","PetWSGear","AutoRepairMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode","PetMode","Animators"})
 
 end
+
+autows_list = {['Godhands']='Victory Smite',['Xiucoatl']='Victory Smite',['Ohtas']='Victory Smite',
+['Condemners']='Victory Smite',['Karambit']='Asuran Fists',['Tauret']='Aeolian Edge',
+['CLUB']='Judgment',['Staff']='Cataclysm'}
 
 -- Define sets used by this job file.
 function init_gear_sets()
@@ -1378,5 +1383,3 @@ function user_job_lockstyle()
     end
 end
 
-autows_list = {['Godhands']='Victory Smite',['Xiucoatl']='Victory Smite',['Ohtas']='Victory Smite',
-['Condemners']='Victory Smite',['Karambit']='Asuran Fists'}

@@ -17,18 +17,21 @@ u can use addon automb
 
 
 function user_job_setup()
+	send_command('amb t 5')--;automb addon set tier spell
+
 	-- Options: Override default values
     state.OffenseMode:options('None', 'Acc','STP', 'CRIT', 'Enspell', 'SubtleBlow')
     state.HybridMode:options('PDT','Normal')
 	state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
-	state.AutoBuffMode:options('Off','Auto','Default','AutoMelee','MeleeBuff','MageBuff')
 	state.CastingMode:options( 'Duration','Normal', 'Burst', 'SIRD', 'DT')
-    state.IdleMode:options('DT','Normal', 'PDT','Empy', 'MDT','Regen', 'Regain', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
+	state.Passive:options('None','Enspellhand','Shiniryu1','Shiniryu2','Enspell','EnspellFULL','EnspellFULLDT','SubtleBlow','DT25','DT50')--, ,'Resist','Refresh''EnemyCritRate', 'Regen'
+	state.IdleMode:options('DT','Normal', 'PDT','Empy', 'MDT','Regen', 'Regain', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
     state.PhysicalDefenseMode:options('PDT','NukeLock')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('None','DualSWORDS','DualCrocea','DualClub','DualDAGGERS','SWORDS', 'Crocea', 'DAGGERS', 'Club','Staff')
+	state.Weapons:options('None','DualSWORDS','DualSWORDS2','DualCrocea','DualRedLotus','DualEnspell','DualSanguine','DualClub','DualDAGGERS','DualAeolian','SWORDS', 'Crocea','Sanguine', 'DAGGERS', 'Club','Staff')
 	state.Shield = M{['description']='Weapon Set', 'Normal', 'Ammurapi', 'Bulwark'}
+	state.AutoBuffMode:options('Off','Shiniryu','Auto','Default','AutoMelee','MeleeBuff','MageBuff')--,'Vagary','Off','Off','Off','Off','Defend'
 	--state.WeaponSet = M{['description']='Weapon Set', 'Normal', 'SWORDS', 'Crocea', 'DAGGERS', 'Club'}
 
 	gear.stp_jse_back = {}
@@ -40,22 +43,24 @@ function user_job_setup()
 	send_command('bind f10 gs c cycle IdleMode')
 	send_command('bind ^f10 gs c set DefenseMode Physical')
 	send_command('bind ^f11 gs c set DefenseMode Magical')
-	send_command('bind f5 gs c cycle WeaponskillMode')
+	-- send_command('bind f5 gs c cycle WeaponskillMode')
 	send_command('bind f11 gs c cycle Enfeeb')
 	send_command('bind f12 gs c cycle CastingMode')
 	send_command('bind f1 gs c cycle HippoMode')
 	send_command('bind @z gs c cycle EnSpell')
 	send_command('bind ^5 gs c cycle EnSpell')
+	send_command('bind ` gs c cycle EnSpell;gs c EnSpell')
 
     send_command('bind f2 gs c cycle GainSpell')
-    send_command('bind f3 gs c cycle BarElement')
-    send_command('bind ^f4 gs c cycle BarStatus')
+    -- send_command('bind f3 gs c cycle BarElement')
+    send_command('bind f3 gs c cycle BarStatus')
+
     send_command('bind @a gs c toggle NM')
     send_command('bind !s gs c cycle SleepMode')
 	send_command('bind @s gs c toggle SrodaNecklace')
     send_command('bind ^/ gs disable all')
     send_command('bind !/ gs enable all')
-	send_command('bind ^3 gs c toggle AutoDefenseMode')
+	-- send_command('bind ^3 gs c toggle AutoDefenseMode')
 	send_command('bind f7 gs c cycle Shield')
 
 	send_command('bind f6 gs c cycle Weapons') --Cycle through weapons sets.
@@ -67,12 +72,12 @@ function user_job_setup()
 	--send_command('bind ^backspace input /ja "Saboteur" <me>')
 	--send_command('bind !backspace input /ja "Spontaneity" <t>')
 	--send_command('bind @backspace input /ja "Composure" <me>')
-	send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
-	send_command('bind != input /ja "Penury" <me>')
-	send_command('bind @= input /ja "Parsimony" <me>')
-	send_command('bind ^delete input /ja "Dark Arts" <me>')
-	send_command('bind !delete input /ja "Addendum: Black" <me>')
-	send_command('bind @delete input /ja "Manifestation" <me>')
+	-- send_command('bind ^1 gs c toggle AutoNukeMode') --Turns auto-nuke mode on and off.
+	-- send_command('bind != input /ja "Penury" <me>')
+	-- send_command('bind @= input /ja "Parsimony" <me>')
+	-- send_command('bind ^delete input /ja "Dark Arts" <me>')
+	-- send_command('bind !delete input /ja "Addendum: Black" <me>')
+	-- send_command('bind @delete input /ja "Manifestation" <me>')
 	send_command('bind ^\\\\ input /ma "Protect V" <t>')
 	send_command('bind @\\\\ input /ma "Shell V" <t>')
 	send_command('bind !\\\\ input /ma "Reraise" <me>')
@@ -88,6 +93,10 @@ function user_job_setup()
 	select_default_macro_book()
 end
 
+autows_list = {['SWORDS']={'Savage Blade',1000},['Crocea']={'Seraph Blade',1000},['Sanguine']={'Sanguine Blade',1000},['Club']={'Black Halo',1000},
+['DAGGERS']={'Aeolian Edge',1000},['DualAeolian']={'Aeolian Edge',1000},['DualClub']={'Black Halo',1000},['DualSWORDS']={'Savage Blade',1000},['DualSWORDS2']={'Savage Blade',1000},
+['DualCrocea']={'Seraph Blade',1000},['DualRedLotus']={'Red Lotus Blade',1750},['DualSanguine']={'Sanguine Blade',1000},['DualEnspell']={'Sanguine Blade',1000},['DualDAGGERS']={'Aeolian Edge',1000}}
+--['DualRedLotus']={ 'Red Lotus Blade',1750}
 function init_gear_sets()
 	--------------------------------------
 	-- Start defining the sets
@@ -97,15 +106,20 @@ function init_gear_sets()
 
 	sets.weapons.Normal = {}
 	sets.weapons.SWORDS = {main="Naegling",}
-	sets.weapons.Crocea = {main="Crocea Mors", }
+	sets.weapons.Crocea = {main="CrDocea Mors", }
+	sets.weapons.Sanguine = {main="Crocea Mors", }
 	sets.weapons.Club = {main="Maxentius", }
 	sets.weapons.Staff = {main="Xoanon",sub="Niobid Strap"}
-
-	sets.weapons.DAGGERS = {main="Tauret", }
+	sets.weapons.DAGGER = {main="Tauret", }
 	sets.weapons.DualSWORDS = {main="Naegling", sub="Demers. Degen +1"}
+	sets.weapons.DualSWORDS2 = {main="Naegling", sub="Thibron"}
 	sets.weapons.DualCrocea = {main="Crocea Mors", sub="Daybreak"}
+	sets.weapons.DualRedLotus = {main="Crocea Mors", sub="Thibron"}
+	sets.weapons.DualEnspell = {main="Crocea Mors", sub={ name="Pukulatmuj +1", augments={'Path: A',}},}
+	sets.weapons.DualSanguine = {main="Crocea Mors", sub="Bunzi's Rod"}
 	sets.weapons.DualClub = {main="Maxentius", sub="Thibron"}
 	sets.weapons.DualDAGGERS = {main="Tauret", sub="Gleti's Knife",}
+	sets.weapons.DualAeolian = {main="Tauret", sub="Thibron",}
 
     --[[sets.Normal = {}
 	sets.SWORDS = {main="Naegling", sub="Demers. Degen +1"}
@@ -386,7 +400,7 @@ sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
 	right_ear="Friomisi Earring",
 	left_ring="Cornelia's Ring",
 	right_ring="Freke Ring",
-	back="Argocham. Mantle",
+	back={ name="Sucellos's Cape", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 })
 
 sets.precast.WS["Red Lotus Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
@@ -585,7 +599,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
 		sub="Ammurapi Shield",
 		head="Befouled Crown",
-		hands="Leth. Ganth. +2",
+		body="Telchine Chas.",
+		hands={ name="Chironic Gloves", augments={'Mag. Acc.+11','Spell interruption rate down -10%','MND+8',}},
 		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
 		feet="Leth. Houseaux +2",
 		neck="Incanter's Torque",
@@ -603,12 +618,17 @@ sets.midcast.Shellra = sets.midcast.Shell
 --sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Skill, {})
 sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
     sets.midcast['Enhancing Magic'].GainSpell = set_combine(sets.midcast['Enhancing Magic'].SelfDuration, {})
-	
-    sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
+	sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
+
+    set_combine(sets.EnhancingSkill, {
+		back={ name="Ghostfyre Cape", augments={'Enfb.mag. skill +9','Enha.mag. skill +2','Mag. Acc.+7',}},
+	})
 	sets.midcast.Aquaveil = {hands="Regal Cuffs",}
 	sets.midcast.BarElement = {}
 	sets.midcast.Temper = sets.EnhancingSkill
-	sets.midcast.Enspell = sets.midcast.Temper
+	sets.midcast.Enspell = set_combine(sets.EnhancingSkill, {
+		main={ name="Pukulatmuj +1", augments={'Path: A',}},
+		back="Ghostfyre Cape", })
 	sets.midcast.BoostStat = {}
 	sets.midcast.Protect = {ring2="Sheltered Ring"}
 	sets.midcast.Shell = {ring2="Sheltered Ring"}
@@ -630,8 +650,8 @@ sets.midcast.Aquaveil = set_combine(sets.midcast['Enhancing Magic'].Duration, {
 	hands="Regal Cuffs",
 })
 sets.midcast['Enfeebling Magic'] = {
-	ammo=empty,
-	range="Ullr",
+	-- ammo=empty,
+	-- range="Ullr",
 	head="Leth. Chappel +2",   
 	body="Lethargy Sayon +3",
 	hands="Regal Cuffs",
@@ -647,8 +667,8 @@ sets.midcast['Enfeebling Magic'] = {
 }
 
 sets.midcast['Enfeebling Magic'].Macc = set_combine(sets.midcast['Enfeebling Magic'], {
-	ammo=empty,
-	range="Ullr",
+	-- ammo=empty,
+	-- range="Ullr",
 	head="Leth. Chappel +2",   
 	body="Lethargy Sayon +3",
 	hands="Regal Cuffs",
@@ -664,8 +684,8 @@ sets.midcast['Enfeebling Magic'].Macc = set_combine(sets.midcast['Enfeebling Mag
 })
 	
 sets.midcast['Enfeebling Magic'].Skill = {
-	ammo=empty,
-	range="Ullr",
+	-- ammo=empty,
+	-- range="Ullr",
 	head={ name="Viti. Chapeau +3", augments={'Enfeebling Magic duration','Magic Accuracy',}},
 	body="Lethargy Sayon +3",
 	hands="Leth. Ganth. +2",
@@ -1019,6 +1039,91 @@ sets.idle.Sphere = set_combine(sets.idle, {
 	sets.defense.NukeLock = sets.midcast['Elemental Magic']
 		
 	-- Extra Melee sets.  Apply these on top of melee sets.
+    -- Passive set
+
+
+	sets.passive.SubtleBlow = {
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+	}
+	sets.passive.Enspell = {
+		-- hands="Aya. Manopolas +2",
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+		waist="Orpheus's Sash",
+	}
+	sets.passive.Enspellhand = {
+		hands="Aya. Manopolas +2",
+		right_ear="Sherida Earring",
+		left_ear="Suppanomimi",
+		left_ring="Hetairoi Ring",
+		right_ring="Petrov Ring",
+	}
+	sets.passive.EnspellFULL = {
+		head="Umuthi Hat",
+		hands="Aya. Manopolas +2",
+		legs={ name="Viti. Tights +3", augments={'Enspell Damage','Accuracy',}},
+		waist="Orpheus's Sash",
+		back={ name="Ghostfyre Cape", augments={'Enfb.mag. skill +9','Enha.mag. skill +2','Mag. Acc.+7',}},
+	}
+	sets.passive.EnspellFULLDT = {
+		head="Umuthi Hat",
+		body="Lethargy Sayon +3",
+		hands="Aya. Manopolas +2",
+		legs={ name="Viti. Tights +3", augments={'Enspell Damage','Accuracy',}},
+		feet="Malignance Boots",
+		neck={ name="Loricate Torque +1", augments={'Path: A',}},
+		waist="Orpheus's Sash",
+		left_ear="Eabani Earring",
+		right_ear="Suppanomimi",
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		right_ring="Defending Ring",
+		back={ name="Ghostfyre Cape", augments={'Enfb.mag. skill +9','Enha.mag. skill +2','Mag. Acc.+7',}},
+	}
+	sets.passive.Shiniryu1 = {
+		ammo="Aurgelmir Orb +1",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck="Anu Torque",
+		waist="Orpheus's Sash",
+		left_ear="Sherida Earring",
+		right_ear="Dedition Earring",
+		left_ring="Chirich Ring +1",
+		right_ring="Chirich Ring +1",
+		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+	}
+	sets.passive.Shiniryu2 = {
+		ammo="Aurgelmir Orb +1",
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Aya. Manopolas +2",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		neck="Anu Torque",
+		waist="Reiki Yotai",
+		right_ear="Sherida Earring",
+		left_ear="Suppanomimi",
+		left_ring="Hetairoi Ring",
+		right_ring="Petrov Ring",
+		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+	}
+	sets.passive.DT25 = {
+		body="Malignance Tabard",
+		feet="Malignance Boots",
+		right_ring="Defending Ring",
+
+	}
+	sets.passive.DT50 = {
+		head="Malignance Chapeau",
+		body="Malignance Tabard",
+		hands="Malignance Gloves",
+		legs="Malignance Tights",
+		feet="Malignance Boots",
+		right_ring="Defending Ring",
+	}
 
 	sets.latent_refresh = {waist="Fucho-no-obi",}
 
@@ -1081,17 +1186,17 @@ sets.engaged.Acc = {
 sets.engaged.STP = {
 	ammo="Aurgelmir Orb +1",
 	head="Malignance Chapeau",
-		body="Malignance Tabard",
-		hands="Malignance Gloves",
-		legs="Malignance Tights",
-		feet="Malignance Boots",
-		neck="Ainia Collar",
-		waist={ name="Kentarch Belt +1", augments={'Path: A',}},
-		left_ear="Sherida Earring",
-		right_ear="Telos Earring",
-		left_ring="Chirich Ring +1",
-		right_ring="Chirich Ring +1",
-		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},		
+	body="Malignance Tabard",
+	hands="Malignance Gloves",
+	legs="Malignance Tights",
+	feet="Malignance Boots",
+	neck="Anu Torque",
+	waist={ name="Kentarch Belt +1", augments={'Path: A',}},
+	left_ear="Sherida Earring",
+	right_ear="Telos Earring",
+	left_ring="Chirich Ring +1",
+	right_ring="Chirich Ring +1",
+	back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},		
 }
 sets.engaged.CRIT = {
 	ammo="Yetshila +1",
@@ -1100,7 +1205,7 @@ sets.engaged.CRIT = {
 	hands="Bunzi's Gloves",
 	legs="Zoar Subligar +1",
 	feet="Thereoid Greaves",
-	neck="Rep. Plat. Medal",
+	neck="Anu Torque",
 	waist="Sailfi Belt +1",
 	ear1="Brutal Earring",
 	ear2="Sherida Earring",
@@ -1115,7 +1220,7 @@ sets.engaged.CRIT = {
 		ands="Aya. Manopolas +2",
 		legs="Viti. Tights +3",
 		feet="Malignance Boots",
-		neck="Sanctity Necklace",
+		neck="Anu Torque",
 		waist="Orpheus's Sash",
 		left_ear="Sherida Earring",
 		right_ear="Brutal Earring",
@@ -1186,7 +1291,7 @@ sets.engaged.CRIT = {
 			hands="Malignance Gloves",
 			legs="Malignance Tights",
 			feet="Malignance Boots",
-			neck="Ainia Collar",
+			neck="Anu Torque",
 			waist={ name="Kentarch Belt +1", augments={'Path: A',}},
 			left_ear="Sherida Earring",
 			right_ear="Telos Earring",
@@ -1217,7 +1322,7 @@ sets.engaged.CRIT = {
 		hands="Aya. Manopolas +2",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck="Sanctity Necklace",
+		neck="Anu Torque",
 		waist="Orpheus's Sash",
 		left_ear="Eabani Earring",
 		right_ear="Suppanomimi",
@@ -1233,7 +1338,7 @@ sets.engaged.CRIT = {
 		hands="Aya. Manopolas +2",
 		legs="Malignance Tights",
 		feet={ name="Nyame Sollerets", augments={'Path: B',}},
-		neck="Asperity Necklace",
+		neck="Anu Torque",
 		waist="Orpheus's Sash",
 		left_ear="Suppanomimi",
 		right_ear="Eabani Earring",
@@ -1318,39 +1423,44 @@ sets.engaged.CRIT = {
 ---------------------------------------- Hybrid Sets -------------------------------------------
 ------------------------------------------------------------------------------------------------
 	sets.engaged.Hybrid = {
-		ammo="Staunch Tathlum +1",
+		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
+		right_ring="Defending Ring",
+
 	}
 
 	sets.engaged.PDT = set_combine(sets.engaged , {
-		ammo="Staunch Tathlum +1",
+		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
+		right_ring="Defending Ring",
+
 	})
 	sets.engaged.Acc.PDT = set_combine(sets.engaged , {
-			ammo="Staunch Tathlum +1",
+			-- ammo="Staunch Tathlum +1",
 			head="Malignance Chapeau",
 			body="Malignance Tabard",
 			hands="Malignance Gloves",
 			legs="Malignance Tights",
 			feet="Malignance Boots",
+			right_ring="Defending Ring",
+
 	})
 	sets.engaged.STP.PDT =  set_combine(sets.engaged.STP , {
 		ammo="Coiste Bodhar",
-		head="Umuthi Hat",
+		head="Malignance Chapeau",
 		body="Malignance Tabard",
-		ands="Aya. Manopolas +2",
+		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		waist="Orpheus's Sash",
-		left_ring="Chirich Ring +1",
+
 	})
 	sets.engaged.Enspell.PDT =  set_combine(sets.engaged.Enspell , {
 		ammo="Coiste Bodhar",
@@ -1361,6 +1471,7 @@ sets.engaged.CRIT = {
 		feet="Malignance Boots",
 		waist="Orpheus's Sash",
 		left_ring="Chirich Ring +1",
+		right_ring="Defending Ring",
 	})
 	sets.engaged.EnspellDBL.PDT = set_combine(sets.engaged.EnspellDBL , {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -1380,6 +1491,7 @@ sets.engaged.CRIT = {
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
+		right_ring="Defending Ring",
 	})
 	sets.engaged.SubtleBlow.PDT = set_combine(sets.SubtleBlow ,{
 		ammo="Staunch Tathlum +1",
@@ -1396,7 +1508,7 @@ sets.engaged.CRIT = {
 	--DW-DT
 
 	sets.engaged.DW.PDT = set_combine(sets.engaged.DW , {
-		ammo="Staunch Tathlum +1",
+		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -1404,9 +1516,11 @@ sets.engaged.CRIT = {
 		feet="Malignance Boots",
 		waist="Reiki Yotai",
 		left_ear="Suppanomimi",
+		right_ring="Defending Ring",
+
 	})
 	sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.Acc , {
-		ammo="Staunch Tathlum +1",
+		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -1414,9 +1528,11 @@ sets.engaged.CRIT = {
 		feet="Malignance Boots",
 		waist="Reiki Yotai",
 		left_ear="Suppanomimi",
+		right_ring="Defending Ring",
+
 	})
 	sets.engaged.DW.STP.PDT = set_combine(sets.engaged.STP , {
-		ammo="Staunch Tathlum +1",
+		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -1424,9 +1540,11 @@ sets.engaged.CRIT = {
 		feet="Malignance Boots",
 		waist="Reiki Yotai",
 		left_ear="Suppanomimi",
+		right_ring="Defending Ring",
+
 	})
 	sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.CRIT , {
-		ammo="Staunch Tathlum +1",
+		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -1434,6 +1552,7 @@ sets.engaged.CRIT = {
 		feet="Malignance Boots",
 		waist="Reiki Yotai",
 		left_ear="Suppanomimi",
+		right_ring="Defending Ring",
 	})
 	sets.engaged.DW.Enspell.PDT =  set_combine(sets.engaged.Enspell , {
 		ammo="Coiste Bodhar",
@@ -1446,6 +1565,8 @@ sets.engaged.CRIT = {
 		left_ear="Suppanomimi",
 		left_ear="Eabani Earring",
 		left_ring="Chirich Ring +1",
+		right_ring="Defending Ring",
+
 	})
 	sets.engaged.DW.EnspellDBL.PDT = set_combine(sets.engaged.EnspellDBL , {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -1458,10 +1579,11 @@ sets.engaged.CRIT = {
 		left_ear="Suppanomimi",
 		right_ear="Eabani Earring",
 		left_ring="Hetairoi Ring",
+		right_ring="Defending Ring",
 		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	})
 	sets.engaged.DW.SubtleBlow.PDT = set_combine(sets.SubtleBlow ,{
-		ammo="Staunch Tathlum +1",
+		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -1556,9 +1678,9 @@ end
 
 function user_job_lockstyle()
 	if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
-    elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
-        windower.chat.input('/lockstyleset 164')
+        windower.chat.input('/lockstyleset 152')
+    -- elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
+    --     windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
         windower.chat.input('/lockstyleset 172')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 11 then --Club in main hand.
@@ -1566,7 +1688,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 	
 	
@@ -1614,9 +1736,6 @@ function user_job_lockstyle()
 	end]]
 end
 
-autows_list = {['SWORDS']='Savage Blade',['Crocea']='Seraph Blade',['Club']='Black Halo',
-['DAGGERS']='Aeolian Edge',['DualClub']='Black Halo',['DualSWORDS']='Savage Blade',
-['DualCrocea']='Seraph Blade',['DualDAGGERS']='Aeolian Edge'}
 
 --[[ 
 function buff_change(buff, gain)

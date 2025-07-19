@@ -110,6 +110,8 @@ Red Lotus Blade Liquefaction
 
 
 function user_job_setup()
+    send_command('amb t 3')--;automb addon set tier spell
+
 	-- Options: Override default values
     state.OffenseMode:options('Normal','NOSchereEar', 'STP', 'Acc', 'SubtleBlow','DA', 'CRIT')
     state.RangedMode:options('Normal', 'Acc')
@@ -128,7 +130,7 @@ function user_job_setup()
 	state.shield = M{['description']='Weapon Set', 'Normal', 'shield'}
 
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Empy'}
-	state.Passive = M{['description'] = 'Passive Mode','None','SphereRegain','Crepuscular','MDT','Enspell','Death Spikes', 'SubtleBlow', 'SubtleBlow20','SubtleBlowMBOZE','SubtleBlowFULL','SubtleBlowDT'}
+	state.Passive = M{['description'] = 'Passive Mode','None','SubtleBlow20','SphereRegain','Crepuscular','MDT','Enspell','Death Spikes', 'SubtleBlow', 'SubtleBlowMBOZE','SubtleBlowFULL','SubtleBlowDT'}
 	state.DrainSwapWeaponMode = M{'Never','Always','300','1000'}
 	state.AutoBuffMode:options('Off','Auto','Sortie','Defend') --,'Vagary','Off','Off','Off','Off',
 
@@ -695,6 +697,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
     sets.precast.WS.Judgment.None = {}
+    sets.precast.WS['Fell Cleave'] = set_combine(sets.precast.WS, {})
 
     sets.precast.WS['Vorpal Scythe'] = set_combine(sets.precast.WS, {
         ammo="Yetshila +1",
@@ -1589,7 +1592,10 @@ sets.defense.SEboost = {
     }
 	sets.passive.Enspell = {waist="Orpheus's Sash",}
     sets.passive.SphereRegain = {
-        body="Makora Meikogai",}
+        head="Null Masque",
+        body="Makora Meikogai",
+        neck="Rep. Plat. Medal",    
+    }
     sets.passive.Crepuscular = {head="Crepuscular Helm", body="Crepuscular Mail",}
 
 

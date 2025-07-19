@@ -21,7 +21,6 @@ macro
 
 /con gs c Songset
 
-its do all ja first then do u  songset
 
 ]]
 

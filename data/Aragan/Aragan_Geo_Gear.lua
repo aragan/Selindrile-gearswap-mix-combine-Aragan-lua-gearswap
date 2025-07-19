@@ -75,7 +75,7 @@ Geo VIT  Indi VIT
 ]]
 
 function user_job_setup()
-
+	send_command('amb t 5')--;automb addon set tier spell
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Melee', 'Shield')
 	state.CastingMode:options('Normal','SIRD', 'ConserveMP','OccultAcumen')

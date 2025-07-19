@@ -1207,9 +1207,9 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     })
 
     sets.engaged.CRIT = set_combine(sets.engaged, {
-        ammo="Yetshila +1",
-        head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        body="Hjarrandi Breast.",
+    ammo="Yetshila +1",
+    head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    body="Hjarrandi Breast.",
     hands="Flam. Manopolas +2",
     legs={ name="Zoar Subligar +1", augments={'Path: A',}},
     feet="Boii Calligae +2",

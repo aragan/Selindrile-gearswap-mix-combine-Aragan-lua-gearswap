@@ -21,6 +21,8 @@ u can use addon automb
 
 
 function user_job_setup()
+    send_command('amb t 6')--;automb addon set tier spell
+
 	-- Options: Override default values
 	state.CastingMode:options('Normal', 'SIRD', 'Spaekona', 'ConserveMP', 'Proc','OccultAcumen')
 	state.OffenseMode:options('Normal','TP', 'CRIT', 'Locked')

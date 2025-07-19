@@ -33,6 +33,7 @@ function user_job_setup()
 	state.AutoBuffMode:options('Off','Auto') --,,'Melee','Fullbuff''Off','Off','Off','Off','Off',
     state.ShieldMode:options('Normal','Genmei','Ammurapi')
 	state.Weapons:options('None','Maxentius','Queller','Daybreak','Staff','Xoanon','DualDaybreak','DualMaxentius')
+	-- state.AutoTrustMode:options('Off','Auto','Cleave','Buff','Defend') --,'Vagary','Off','Off','Off','Off',
 
 	gear.obi_cure_waist = "Austerity Belt +1"
 	gear.obi_cure_back = "Alaunus's Cape"

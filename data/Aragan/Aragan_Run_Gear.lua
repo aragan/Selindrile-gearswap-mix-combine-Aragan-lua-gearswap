@@ -23,11 +23,11 @@ u can use addon automb
 function user_job_setup()
 
 	state.OffenseMode:options('Normal','Acc', 'STP','DA100','CRIT')
-	state.HybridMode:options('Tank','Normal', 'DT','DTLite')
+	state.HybridMode:options('Tank','Normal', 'DT')
 	state.WeaponskillMode:options('Match', 'SubtleBlow','Acc','PDL')
 	state.CastingMode:options('Normal','SIRD')
-	state.PhysicalDefenseMode:options('PDT_HP','PDT','PDH', 'HP', 'Evasion', 'Enmity')
-	state.MagicalDefenseMode:options('MDT','MDT_HP','Resist','MEVA')
+	state.PhysicalDefenseMode:options('PDT','PDH', 'HP', 'Evasion', 'Enmity')
+	state.MagicalDefenseMode:options('MDT','Resist','MEVA')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
 	state.Passive:options('None','Parry','AbsorbMP','EnemyCritRate','Regen','Refresh','Resist')
 	state.IdleMode:options('Tank','Normal','KiteTank', 'HP','PDH', 'PDT','Evasion', 'Resist','MEVA', 'Regen', 'Enmity') --,'Normal','Sphere'

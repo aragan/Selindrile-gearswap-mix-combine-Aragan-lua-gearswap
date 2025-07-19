@@ -57,7 +57,8 @@ latency = .75
 
 --If this is set to true it will prevent you from casting shadows when you have more up than that spell would generate.
 conserveshadows = false
-
+nexttime = os.clock()
+delay = 0
 --Display related settings.
 state.DisplayMode = M(true, 'Display Mode') --Set this to false if you don't want to display modes at the bottom of your screen.
 --Uncomment the settings below and change the values to edit the display's look.
@@ -129,6 +130,9 @@ state.AutoJumpMode 		  = M(false, 'Auto Jump Mode')
 state.AutoAPMode = M(true, 'AutoAPMode')
 state.AutoinfoNMMode = M(true, 'Auto info NM Mode')
 state.AutoShadowMode 	  = M(false, 'Auto Shadow Mode')
+state.RefineWaltz		  = M(true, 'RefineWaltz')
+state.Stance = M{['description']='Stance','None'}
+
 state.DefenseDownMode = M{['description']='Defense Down Mode'}
 state.DefenseDownMode:options('None','Tag')
 already_announced_by_name = already_announced_by_name or {}
@@ -140,16 +144,18 @@ attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack valu
 --state.ShieldMode = M{['description']='Shield Mode', 'Normal', 'Srivatsa','Ochain','Duban', 'Aegis', 'Priwen','Genmei','Ammurapi'} -- , 'Priwen' }
 state.ShieldMode = M{['description'] = 'Shield Mode', 'Normal','Aegis','Ochain','Duban','Genmei','Ammurapi'}
 state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
--- TOOGLE WS OPEN ON AUTOSC ADDON
+-- TOOGLE WS OPEN ON AUTOSC ADDON --auto set ws
 state.Ascws = M{['description']='Ascws','Exudation','Realmrazer','Black Halo','Blade: Teki','Blade: Chi','Blade: To','Blade: Shun','Tachi: Kagero','Tachi: Goten','Tachi: Koki','Tachi: Fudo','Torcleaver','Savage Blade','Requiescat','Victory Smite','Shijin Spiral','Evisceration','Rudra\'s Storm','Cross Reaper','Spiral Hell','Insurgency','Vorpal Scythe',}
+-- TOOGLE WS ON Skillchainer ADDON --auto set ws
+state.Skillchainerws = M{['description']='Skillchainerws','Fell Cleave','Exudation','Realmrazer','Black Halo','Blade: Teki','Blade: Chi','Blade: To','Blade: Shun','Tachi: Kagero','Tachi: Goten','Tachi: Koki','Tachi: Fudo','Torcleaver','Savage Blade','Requiescat','Victory Smite','Shijin Spiral','Evisceration','Rudra\'s Storm','Cross Reaper','Spiral Hell','Insurgency','Vorpal Scythe',}
 
 NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
 
 gear.TVRring = "Cornelia's Ring"
 
-state.AutoBarStatus           = M{['description'] = 'Auto BarStatus','Off','Barparalyze','Barsilence','Barpoison','Barvirus','Barpetrify','Barblind','Baramnesia','Barsleep'}
-state.AutoBoostStat           = M{['description'] = 'Auto BoostStat','Off', 'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
-
+state.AutoBarStatus = M{['description'] = 'Auto BarStatus','Off','Barparalyze','Barsilence','Barpoison','Barvirus','Barpetrify','Barblind','Baramnesia','Barsleep'}
+state.AutoBoostStat = M{['description'] = 'Auto BoostStat','Off', 'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
+-- state.AutoTrustMode = M{['description'] = 'Auto Trust Mode', 'Off','Auto', 'Cleave', 'Defend', 'Buff'}
 --[[Binds you may want to change.
 	Bind special characters.
 	@ = Windows Key
@@ -198,7 +204,11 @@ lua r gearswap
 AutoCleanupMode add more items
 handle_killstatue
 //get *crystal all
-
+//put *crystal satchel all
+//tradenpc 80 "earth crystal"
+//tradenpc 80 "Wind crystal"
+//tradenpc 80 "Fire Crystal"
+//tradenpc 96 "Lightning Crystal"
 //gs c useitem head Reraise Hairpin +1
 //gs c useitem ring2 warp ring
 (Aragan) Treasure Hunter set Equip
@@ -242,6 +252,7 @@ function global_on_load()
 	--send_command('bind ^4 input //autoNukes on') --Turns addon on.addon use for spamm aspir on sortie aminon
 	-- send_command('bind ^5 input //autoNukes off') --Turns addon off.addon use for spamm aspir on sortie aminon
 	send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  --use for spam absort tp and aspir on sortie aminon
+	send_command('bind ^7 gs c toggle AutoWSRestore ')  -- USE WS HP STEAL IF HP LOW
 
 	-- send_command('bind ^backspace input //automb toggle') --Turns addon on.addon automb
 	send_command('bind !backspace input //automb toggle') --Turns addon toggle on off.addon automb
@@ -289,27 +300,26 @@ function global_on_load()
 	send_command('bind !f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind !7 gs c toggle AutoAcceptRaiseMode')
 	send_command('bind !8 gs c toggle SkipProcWeapons')
-
-	-- gs c set SkipProcWeapons false
-	send_command('bind ^- gs c toggle selectnpctargets')
+	
+	send_command('bind ^- gs c toggle selectnpctargets') 
 	send_command('bind !- gs c cycle pctargetmode')
-    send_command('lua r runewidget;rw show')--Turns addon off if job non /run.
-	send_command('input //lua u invspace;input //lua u invtracker')--Turns addon off if job non /run.
+    send_command('lua r runewidget;rw show')--Turns addon off if job non /run. just used on screen left side to check elemtels cycle for used anythung like ws spell sc mb  and other idea
+	send_command('lua u invspace;lua u invtracker')--Turns load addon invspace and invtracker 
 
 	--send_command('bind ^] input //put storage slip* case all')
 	--send_command('bind ^[ input //get storage slip* all') --PorterPacker Porter find
-	send_command('bind ^[ input //put storage slip* case all') --PorterPacker Porter find
+	send_command('bind ~p input //put storage slip* case all') --shift+p put all storage slip* all to case  -- all command put or get from itemizer addon 
 
-	send_command('bind !, input //put * sack all;input //put * Satchel all') -- gs validate  --to check 	lua r gearswap
-	send_command('bind !. input //put * Wardrobe4 all') -- gs validate  --to check  -- lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
+	send_command('bind !, input //put * sack all;input //put * Satchel all') -- put everything to Satchel sack used if inventory full / --gs validate  --to check 	lua r gearswap
+	send_command('bind !. input //put * Wardrobe4 all') -- put all equip to wardobe 4 / -- gs validate  --to check  -- lua r gearswap --;input //put * Wardrobe4 all;input //put * Wardrobe5 all;input //put * Wardrobe6 all;input //put * Wardrobe7 all;input //put * Wardrobe8 all
 
-	send_command('bind ^. input //get storage slip* all;wait 1;input //po r') -- lua r PorterPacker addon
-	send_command('bind ^, lua r PorterPacker;wait 1;input //get storage slip* all;wait 1;input //po r a') -- PorterPacker addon
-	send_command('bind ^] input //get storage slip* all;wait 1;input //po pack')
-	send_command('bind ^[ input //get storage slip* all;wait 1;input //lua r PorterPacker;wait 1;input //po p a ') --PorterPacker Porter find
+	send_command('bind ^. input //get storage slip* all;wait 1;input //po r') -- old version PorterPacker Porter used get storage slip* all equips from porter -- lua r PorterPacker addon
+	send_command('bind ^, lua r PorterPacker;wait 1;input //get storage slip* all;wait 1;input //po r a') -- new version PorterPacker Porter used get storage slip* all equips from porter
+	send_command('bind ^] input //get storage slip* all;wait 1;input //po pack')--  old version PorterPacker trade storage slip* all to porter
+	send_command('bind ^[ input //get storage slip* all;wait 1;input //lua r PorterPacker;wait 1;input //po p a ') -- new version PorterPacker Porter used trade storage slip* all to porter
 
-	send_command('bind !m gs c toggle AutoMedicineMode')
-	send_command('bind !n gs c toggle AutoReraiseeMode')
+	send_command('bind !m gs c toggle AutoMedicineMode') --use medicine if i have debuff
+	send_command('bind !n gs c toggle AutoReraiseeMode') -- equip zombie set autoreraise if u in jobs sam pld war bst drk drg
 
 	--send_command('bind @m gs c mount Raptor')
 
@@ -351,12 +361,12 @@ function global_unload()
 	send_command('lua u PLD-HUD')--Turns addon off if job non pld.
 	send_command('lua u DNC-hud')--Turns addon off if job non dnc.
 	send_command('lua u sch-hud')--Turns addon off if job non sch.
-	send_command('lua u BST-HUD')
+	send_command('lua u BST-HUD')--Turns addon off if job non bst.
 
 	send_command('input //parse reset')-- reset parse addon every change job
 
 end
-send_command('bind ~s gs c toggle AutoLoggerMode;gs c toggle NotifyBuffs') --
+send_command('bind ~s gs c toggle AutoLoggerMode;gs c toggle NotifyBuffs') --AutoLoggerMode and NotifyBuffs mode text in chat all u doing ja ws spell debuff buff in on 
 
 --addon ascs autosc
 send_command('bind ~f1 asc') --Turns addon on off.
@@ -377,9 +387,12 @@ send_command('bind ~e #') --
 send_command('bind ~r $') --
 ----
 
---addon ascs autosc
-send_command('bind ~insert lua l Skillchainer;') --;Skillchainer on --Turns addon on off.
+--addon Skillchainer
+send_command('bind ~insert lua l Skillchainer;Skillchainer pause') --;Skillchainer on --Turns addon on off.
 send_command('bind ~delete lua u Skillchainer') --Turns addon on off.
+send_command('bind ~home Skillchainer pause;') --;Skillchainer on --Turns addon on off.
+send_command('bind ~pageup gs c cycle Skillchainerws;gs c Skillchainerws') --wait 1;
+send_command('bind ~pagedown gs c cycleback Skillchainerws;gs c Skillchainerws') --wait 1;
 
 
 
@@ -393,7 +406,7 @@ send_command('bind ^home input //trust toggle') --Turns addon trust start.
 send_command('bind home lua l autobuff') --Turns addon  on.
 send_command('bind end lua u autobuff') --Turns addon off.
 
-send_command('bind ^@!f12 gs reload;lua r Gaze_check') --Reloads gearswap.
+send_command('bind ^@!f12 gs reload;lua r Gaze_check') --Reloads gearswap.and addon Gaze_check
 
 -- send_command('bind pageup input //ata on;input //lua load Gaze_check;input /p ((Attack is ON.)) >> killer machine ready <<')--Turns addon  auto attack target on. to be killer machine in Odyssey or Dynamis.
 -- send_command('bind pagedown input //ata off;input //lua unload Gaze_check')--Turns addon  auto attack target off.
@@ -446,43 +459,70 @@ send_command('alias ambuseal input /item "Abdhaljs Seal" <me>')
 send_command('alias rads temps buy Radialens')
 send_command('alias molli temps buy Mollifier')
 send_command('alias temps temps buy')
+send_command('alias tonic tonic buffup')
+
 
 local last_check = 0
 local was_chat_open = false
 windower.register_event('prerender', function()
-    local chat_open = windower.ffxi.get_info().chat_open
-
-    if chat_open and not was_chat_open then
-        send_command('unbind ~1')
-        send_command('unbind ~2')
-        send_command('unbind ~3')
-        send_command('unbind ~4')
-		-- send_command('unbind `')
-		-- send_command('unbind tab')
-
-        was_chat_open = true
-
-    elseif not chat_open and was_chat_open then
-        send_command('bind ~1 asc c 1')
-        send_command('bind ~2 asc c 2')
-        send_command('bind ~3 asc c 3')
-        send_command('bind ~4 asc c 4')
-        was_chat_open = false
+	local curtime = os.clock()
+	if nexttime + delay <= curtime then
+		nexttime = curtime
+		delay = 0.2
+	    -- if os.clock() - last_check < 0.5 then return end
+        -- last_check = os.clock()	
+        local chat_open = windower.ffxi.get_info().chat_open
+		if chat_open and not was_chat_open then
+			send_command('unbind ~1')
+			send_command('unbind ~2')
+			send_command('unbind ~3')
+			send_command('unbind ~4')
+			-- send_command('unbind `')
+			-- send_command('unbind tab')
+	
+			was_chat_open = true
+	
+		elseif not chat_open and was_chat_open then
+			send_command('bind ~1 asc c 1')
+			send_command('bind ~2 asc c 2')
+			send_command('bind ~3 asc c 3')
+			send_command('bind ~4 asc c 4')
+			was_chat_open = false
+		end
+	
+		if os.clock() - last_check < 8 then return end
+		last_check = os.clock()	
+		if player.equipment.ring2 == "Warp Ring" or player.equipment.feet == "Hippo. Socks +1" then
+			Warping()
+			tickdelay = os.clock() + 1
+		end
+		if state.AutoBuffMode.Value == 'Shinryu' then
+			if target and target.is_npc and target.hpp <= 1 and not low_hp_nm_triggered then
+				low_hp_nm_triggered = true
+				state.TreasureMode:set('Fulltime')
+				add_to_chat(123, 'NM HP ≤ 1% - Equipped low HP set.')
+			end
+		end
     end
-
-    if os.clock() - last_check < 8 then return end
-    last_check = os.clock()	
-	if player.equipment.ring2 == "Warp Ring" then
-		Warping()
-		tickdelay = os.clock() + 1
-	end
 end)
 
+notified_hippo = false  
+
 function Warping()
+	local party = windower.ffxi.get_party()
+	local current_zone = windower.ffxi.get_info().zone
+
 	if being_attacked and player.equipment.ring2 == "Warp Ring" then
 	    windower.send_command('input /p Never Die Again >> Warping Hollaaaa ;')
 	-- tickdelay = os.clock() + 1
     end   
+
+	if party.count ~= 0 and player.equipment.feet == "Hippo. Socks +1" and not data.areas.cities:contains(world.area) and not notified_hippo then
+        windower.send_command('input /p >> Hippo feet equiped for pull mobs << ;')
+        notified_hippo = true
+    -- elseif player.equipment.feet ~= "Hippo. Socks +1" then
+    --     notified_hippo = false  -- يعيد السماح إذا قمت بنزعها، يمكن إزالة هذا السطر إذا تريدها مرة فقط حتى تغيير الزون
+    end
 end
 
 -- local last_check = 0
@@ -593,12 +633,218 @@ function user_precast(spell, action, spellMap, eventArgs)
     refine_waltz(spell, action, spellMap, eventArgs)
 end
 
+waltz_tp_cost = {['Curing Waltz'] = 200, ['Curing Waltz II'] = 350, ['Curing Waltz III'] = 500, ['Curing Waltz IV'] = 650, ['Curing Waltz V'] = 800}
+
+-- Utility function for automatically adjusting the waltz spell being used to match HP needs and TP limits.
+-- Handle spell changes before attempting any precast stuff.
+function refine_waltz(spell, spellMap, eventArgs)
+	if not state.RefineWaltz.value or spell.type ~= 'Waltz' then return false end
+
+	local effective_tp = player.tp
+	if state.DefenseMode.value == 'None' and uses_waltz_legs then
+		effective_tp = player.tp + 50
+	end
+
+	if effective_tp < 200 then
+		add_to_chat(123, 'Abort: Insufficient TP ['..tostring(player.tp)..'] to waltz.')
+		eventArgs.cancel = true
+		return true
+	end
+
+	-- Don't modify anything for Healing Waltz or Divine Waltzes
+	if spell.english == "Healing Waltz" or spell.english == "Divine Waltz" or spell.english == "Divine Waltz II" then
+		return false
+	end
+
+	local newWaltz = spell.english
+	local waltzID
+
+	local missingHP
+
+	-- If curing ourself, get our exact missing HP
+	if spell.target.type == "SELF" then
+		missingHP = player.max_hp - player.hp
+	-- If curing someone in our alliance, we can estimate their missing HP
+	elseif spell.target.isallymember then
+		local target = find_player_in_alliance(spell.target.name)
+		local est_max_hp = target.hp / (target.hpp/100)
+		missingHP = math.floor(est_max_hp - target.hp)
+
+		if player.main_job == 'DNC' and state.Buff['Contradance'] then
+			missingHP = missingHP / 2
+		end
+	end
+
+	-- If we have an estimated missing HP value, we can adjust the preferred tier used.
+	if missingHP == nil then return end
+
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	if player.main_job == 'DNC' then
+		if missingHP < 40 and spell.target.name == player.name then
+			-- Not worth curing yourself for so little.
+			-- Don't block when curing others to allow for waking them up.
+			add_to_chat(123,'Abort: You have full HP!')
+			eventArgs.cancel = true
+			return true
+		elseif missingHP < 200 then
+			if abil_recasts[217] < latency then
+				newWaltz = 'Curing Waltz'
+				waltzID = 190
+			elseif abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+				waltzID = 191
+			end
+		elseif missingHP < 600 then
+			if abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+				waltzID = 191
+			elseif abil_recasts[187] < latency then
+				newWaltz = 'Curing Waltz III'
+				waltzID = 192
+			elseif abil_recasts[217] < latency then
+				newWaltz = 'Curing Waltz'
+				waltzID = 190
+			end
+		elseif missingHP < 1100 then
+			if abil_recasts[187] < latency then
+				newWaltz = 'Curing Waltz III'
+				waltzID = 192
+			elseif abil_recasts[188] < latency then
+				newWaltz = 'Curing Waltz IV'
+				waltzID = 193
+			elseif abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+				waltzID = 191
+			end
+		elseif state.AutoContradanceMode.value and abil_recasts[229] < latency then
+			eventArgs.cancel = true
+			windower.chat.input('/ja "Contradance" <me>')
+			windower.chat.input:schedule(.5,'/ja "Curing Waltz III" '..spell.target.raw..'')
+			return true
+		elseif missingHP < 1500 then
+			if abil_recasts[188] < latency then
+				newWaltz = 'Curing Waltz IV'
+				waltzID = 193
+			elseif abil_recasts[189] < latency then
+				newWaltz = 'Curing Waltz V'
+				waltzID = 311
+			elseif abil_recasts[187] < latency then
+				newWaltz = 'Curing Waltz III'
+				waltzID = 192
+			end
+		else
+			if abil_recasts[189] < latency then
+				newWaltz = 'Curing Waltz V'
+				waltzID = 311
+			elseif abil_recasts[188] < latency then
+				newWaltz = 'Curing Waltz IV'
+				waltzID = 193
+			elseif abil_recasts[187] < latency then
+				newWaltz = 'Curing Waltz III'
+				waltzID = 192
+			end
+		end
+	elseif player.sub_job == 'DNC' then
+		if missingHP < 40 and spell.target.name == player.name then
+			-- Not worth curing yourself for so little.
+			-- Don't block when curing others to allow for waking them up.
+			add_to_chat(123,'Abort: You have full HP!')
+			eventArgs.cancel = true
+			return true
+		elseif missingHP < 150 then
+			if abil_recasts[217] < latency then
+				newWaltz = 'Curing Waltz'
+				waltzID = 190
+			elseif abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+				waltzID = 191
+			end
+		elseif missingHP < 300 then
+			if abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+				waltzID = 191
+			elseif abil_recasts[187] < latency then
+				newWaltz = 'Curing Waltz III'
+				waltzID = 192
+			end
+		else
+			if abil_recasts[187] < latency then
+				newWaltz = 'Curing Waltz III'
+				waltzID = 192
+			elseif abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+				waltzID = 191
+			end
+		end
+	else
+		-- Not dnc main or sub; bail out
+		return false
+	end
+
+	local tpCost = waltz_tp_cost[newWaltz]
+	local downgrade
+
+	-- Downgrade the spell to what we can afford
+	if effective_tp < tpCost and not buffactive.trance then
+		--[[ Costs:
+			Curing Waltz:     200 TP
+			Curing Waltz II:  350 TP
+			Curing Waltz III: 500 TP
+			Curing Waltz IV:  650 TP
+			Curing Waltz V:   800 TP
+			Divine Waltz:     400 TP
+			Divine Waltz II:  800 TP
+		--]]
+		if effective_tp < 350 and abil_recasts[217] < latency then
+			newWaltz = 'Curing Waltz'
+		elseif effective_tp < 500 then
+			if abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+			elseif abil_recasts[217] < latency then
+				newWaltz = 'Curing Waltz'
+			end
+		elseif effective_tp < 650 then
+			if abil_recasts[187] < latency then
+				newWaltz = 'Curing Waltz III'
+			elseif abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+			elseif abil_recasts[217] < latency then
+				newWaltz = 'Curing Waltz'
+			end
+		elseif effective_tp < 800 then
+			if abil_recasts[188] < latency then
+				newWaltz = 'Curing Waltz IV'
+			elseif abil_recasts[187] < latency then
+				newWaltz = 'Curing Waltz III'
+			elseif abil_recasts[186] < latency then
+				newWaltz = 'Curing Waltz II'
+			elseif abil_recasts[217] < latency then
+				newWaltz = 'Curing Waltz'
+			end
+		end
+
+		downgrade = 'Insufficient TP ['..tostring(player.tp)..']. Downgrading to '..newWaltz..'.'
+	end
+
+
+	if newWaltz ~= spell.english then
+		windower.chat.input('/ja "'..newWaltz..'" '..tostring(spell.target.raw))
+		if downgrade then
+			add_to_chat(122, downgrade)
+		end
+		eventArgs.cancel = true
+		add_to_chat(122,'Trying to cure '..tostring(missingHP)..' HP using '..newWaltz..'.')
+		return true
+	end
+end
+
+
 
 function user_post_precast(spell)
 	if spell.name == "Holy Water" then
 		equip(sets.precast.Item['Holy Water'])
-		if  buffactive['doom'] then
-			equip(sets.Reraise,sets.precast.Item['Holy Water'])
+		if buffactive['doom'] then
+			equip(sets.precast.Item['Holy Water'],sets.Reraise)
 		end
     end
     --[[if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
@@ -685,6 +931,7 @@ function user_aftercast(spell, spellMap, eventArgs)
 	 ]]
 
 end
+
 -- Handle notifications of general user state change.
 function user_state_change(stateField, newValue, oldValue)
     if state.WeaponLock.value == true then
@@ -718,17 +965,18 @@ function user_state_change(stateField, newValue, oldValue)
 		--[[if player.tp > 350 and player.max_hp - player.hp > 600 and abil_recasts[186] < latency then
 			windower.send_command('input /ja Curing Waltz II <me>')
 			]]
-	    if player.sub_job == 'DNC' and not state.Buff['SJ Restriction'] and player.tp > 500 and player.max_hp - player.hp > 1000 and abil_recasts[187] < latency then
-			windower.send_command('input /ja Curing Waltz III <me>')
+	    if player.sub_job == 'DNC' and not state.Buff['SJ Restriction'] and player.tp > 500 and player.max_hp - player.hp > 1000 and abil_recasts[187] < latency then			
+			windower.chat.input('/ja Curing Waltz II <me>')
 			tickdelay = os.clock() + 1.1
 		elseif player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Defender and abil_recasts[3] < latency and (player.in_combat or being_attacked) and player.hpp < 25 then
 			windower.chat.input('/ja "Defender" <me>')
 			tickdelay = os.clock() + 1.1
 		elseif (player.sub_job == 'SCH' or player.sub_job == 'RDM' or player.sub_job == 'pld' or player.sub_job == 'WHM')
 		    and not state.Buff['SJ Restriction'] and player.hpp < 25 and being_attacked and spell_recasts[4] < spell_latency then 
-			windower.chat.input('/ma "Cure IV" <me>')
+				windower.send_command('gs c smartcure')
+			-- windower.chat.input('/ma "Cure IV" <me>')
 			tickdelay = os.clock() + 1.1
-		elseif player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 25 then
+		elseif player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 10 then
 			state.AutoShadowMode:set('true')
 			tickdelay = os.clock() + 1.1
 		elseif player.inventory['Vile Elixir +1'] and (player.in_combat or being_attacked) and player.hpp < 10 then
@@ -744,6 +992,19 @@ function user_state_change(stateField, newValue, oldValue)
 
 end
 
+function user_tick()
+	--if check_arts() then return true end
+	if user_state_change() then return true end
+	if user_buff_change() then return end
+	if check_steps_subjob() then return true end
+	-- if refine_waltz(spell, action, spellMap, eventArgs) then return true end
+	-- if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
+	-- 	if check_tp_mp_lower() then return true end
+	-- 		tickdelay = os.clock() + 1.5
+	-- 	return true
+	-- end
+	return false
+end
 
 function gearinfo(commandArgs, eventArgs)
     if commandArgs[1] == 'gearinfo' then
@@ -778,20 +1039,9 @@ function user_self_command(commandArgs, eventArgs)
 		send_command('@input //ept track "'..state.Abyssea.value..'"')
 	end
 	if commandArgs[1]:lower() == 'ascws' then
-		send_command('@asc ws "'..state.Ascws.value..'"')
-	elseif commandArgs[1]:lower() == 'carol' then
-		send_command('@input /ma "'..state.Carol.value..'" <stpc>')
-	elseif commandArgs[1]:lower() == 'threnody1' then
-		send_command('@input /ma "'..state.Threnody.value..'" <stnpc>')
-	end
-	if commandArgs[1]:lower() == 'songsetnoph' then
-		send_command('@input //abb "'..state.Songset.value..'" noph')
-	elseif commandArgs[1]:lower() == 'songsetph' then
-		send_command('@input //abb "'..state.Songset.value..'" ph')
-	elseif commandArgs[1]:lower() == 'songsetphccsv' then
-		send_command('@input //abb "'..state.Songset.value..'" ph ccsv')
-	elseif commandArgs[1]:lower() == 'songset' then
-		send_command('@input //abb "'..state.Songset.value..'" ccsv') 
+		send_command('@asc ws "'..state.Ascws.value..'"') --asc ws Decimation
+	elseif commandArgs[1]:lower() == 'skillchainerws' then --Skillchainer mainws Decimation
+		send_command('@Skillchainer mainws "'..state.Skillchainerws.value..'"')
 	end
 end
 	
@@ -851,28 +1101,20 @@ function user_buff_change(buff, gain, eventArgs)
 	    or buffactive['Evasion Down'] or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
 	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
 	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
-	        windower.send_command('input /ja Healing Waltz <me>')
+	        windower.chat.input('/ja Healing Waltz <me>')
 	        tickdelay = os.clock() + 1.1
 			return
 		end
 	end
 
-	if state.AutoReraiseeMode.value == true then
-		if buffactive['weakness'] then
-			equip(sets.Reraise)
-			disable('body','head')
-		else
-			enable('body','head')
-		end
-	end
 
-	-- Create a timer when we gain weakness.  Remove it when weakness is gone.
-	if buff:lower() == 'weakness' then
-			send_command('timers create "Weakness" 300 up abilities/00255.png')
-	else
-			send_command('timers delete "Weakness"')
+	-- -- Create a timer when we gain weakness.  Remove it when weakness is gone.
+	-- if buff:lower() == 'weakness' then
+	-- 		send_command('timers create "Weakness" 300 up abilities/00255.png')
+	-- else
+	-- 		send_command('timers delete "Weakness"')
 		
-	end
+	-- end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
 			windower.chat.input('/ma "Poisona" <me>')
@@ -1076,12 +1318,14 @@ end
         end
     end]]
 
-function default_zone_change(new_id,old_id)
+function user_zone_change(new_id,old_id)
 	--tickdelay = os.clock() + 10	
+	current_zone = windower.ffxi.get_info().zone
+	notified_hippo = false
 	if data.areas.cities:contains(world.area)  then
-		send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock;input //tr autodrop off;input //gs c set AutoCleanupMode false') --Turns addon on.
+		send_command('input //lua l invspace;input //lua l invtracker;input //lua l Clock;input //tr autodrop off;input //gs c set AutoCleanupMode false;lua u Skillchainer;asc hide;sing active') --Turns addon on hide show off some no need in city on screen.
 	else
-		send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock;input //tr autodrop on;input //gs c set AutoCleanupMode true') --Turns addon off. stats=craftstats addon
+		send_command('input //lua u invspace;input //lua u invtracker;input //stats hide;input //lua U Clock;input //tr autodrop on;input //gs c set AutoCleanupMode true') --Turns addon off on show hide. stats=craftstats addon
 	end
 	
 	if data.areas.laggy:contains(world.area)  then
@@ -1110,7 +1354,7 @@ function default_zone_change(new_id,old_id)
 end
 
 
-function sub_job_change(new,old) -- style on auto with change sub job
+function user_sub_job_change(newSubjob, oldSubjob)	-- sub_job_change(new,old) -- style on auto with change sub job
 	-- user_job_lockstyle()
 	-- tickdelay = os.clock() + 6.5
 
@@ -1129,14 +1373,14 @@ end
 -- end)
 
 
-function user_job_target_change(target)  
+function user_target_change(target)  
 	local already_announced_by_name = already_announced_by_name or {}
 	local target = windower.ffxi.get_mob_by_target('t')
 	local sub = windower.ffxi.get_mob_by_target('st')
 
     if state.AutoinfoNMMode.value and target ~= nil and sub == nil then
 
-        if target.name == "Dhartok" and not already_announced_by_name[target.name] then
+        if target.name == "Ironshell" and not already_announced_by_name[target.name] then
 			already_announced_by_name[target.name] = true
 
 			-- windower.chat.input('/p >>> '..auto_translate('Rayke')..''..auto_translate(target.name)..' ['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% Earth. Only Ice damage effective.')

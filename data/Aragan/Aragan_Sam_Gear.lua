@@ -28,7 +28,7 @@ jinpu spam
 -- Setup vars that are user-dependent.
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'triple', 'SubtleBlow', 'Range' )
-    state.HybridMode:options('PDT','Normal','DTLite')
+    state.HybridMode:options('PDT','Normal')
     state.WeaponskillMode:options('Match', 'SubtleBlow','SC', 'Acc', 'PDL','Proc')
     state.Passive = M{['description'] = 'Passive Mode','None','SubtleBlow','SubtleBlowII','SphereRegain','Death Spikes'}
     state.RangedMode:options('Normal', 'Acc')

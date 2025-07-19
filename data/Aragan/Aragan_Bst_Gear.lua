@@ -24,7 +24,9 @@ function user_job_setup()
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','SubtleBlow','Knockback','Suppa','DWEarrings'}
 	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular', 'EnemyCritRate','EnemyTPaccumulation','Resist', 'Regen','SphereRegain' , 'Death Spikes'}
 
-	autows_list = {['PetPDTAxe']='Ruinator',['DualWeapons']='Ruinator'}
+	autows_list = {['Agwu']='Calamity',['SWORDS']='Savage Blade',['AXE']='Decimation',['SCYTHE']='Spiral Hell',['DAGGERS']='Aeolian Edge',
+	['CLUB']='Judgment',['Staff']='Cataclysm'}
+
 
 	gear.PHYKumbha1 = {name="Kumbhakarna", augments={'Pet: "Mag.Atk.Bns."+18','Pet: Haste+3','Pet: TP Bonus+160',}}
 	gear.PHYKumbha2 = {name="Kumbhakarna", augments={'Pet: "Mag.Atk.Bns."+16','Pet: Phys. dmg. taken -1%','Pet: TP Bonus+160',}}
@@ -42,6 +44,7 @@ function user_job_setup()
 	-- Set up Monster Correlation Modes and keybind Alt+F7
 	state.CorrelationMode = M{['description']='Correlation Mode', 'Neutral', 'Favorable'}
 	send_command('bind !f7 gs c cycle CorrelationMode')
+	send_command('bind !f7 gs c cycle CorrelationMode')
 
 	-- Set up Pet Modes for Hybrid sets and keybind 'Windows Key'+F7
 	state.PetMode = M{['description']='Pet Mode','Tank','DD'}
@@ -55,7 +58,7 @@ function user_job_setup()
 	send_command('bind !` gs c ready default')
 	--Example of how to change default ready moves.
 	--ready_moves.default.WarlikePatrick = 'Tail Blow'
-	send_command('bind !f3 gs c toggle AutoCallPet')
+	send_command('bind f3 gs c toggle AutoCallPet')
 	send_command('bind !` gs c toggle ready')
 
 
