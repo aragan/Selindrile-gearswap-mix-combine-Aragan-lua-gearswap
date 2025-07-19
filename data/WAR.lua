@@ -381,17 +381,16 @@ function job_buff_change(buff, gain)
     if buff == "petrification" then
         if gain then    
             equip(sets.defense.PDT)
-            send_command('input /p Petrification, please Stona.')		
+            -- send_command('input /p Petrification, please Stona.')		
         else
-            send_command('input /p '..player.name..' is no longer Petrify!')
             handle_equipping_gear(player.status)
         end
     end
     if buff == "Charm" then
         if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
+        --    send_command('input /p Charmd, please Sleep me.')		
         else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
         end
     end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 

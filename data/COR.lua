@@ -216,7 +216,7 @@ end
 
 function job_precast(spell, spellMap, eventArgs)
     if spell.type == 'CorsairRoll' and not has_any_roll_buff() and not already_announced_roll then
-        send_command('@input /p Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
+        send_command('@input /p ROLL starting Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
         already_announced_roll = true
     end
 	if spell.action_type == 'Ranged Attack' then
@@ -463,25 +463,25 @@ function job_buff_change(buff, gain)
     end
     if buff == "Charm" then
         if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
+        --    send_command('input /p Charmd, please Sleep me.')		
         else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
         end
     end
     if buff == "petrification" then
         if gain then    
             equip(sets.defense.PDT)
-            send_command('input /p Petrification, please Stona.')		
+            -- send_command('input /p Petrification, please Stona.')		
         else
-        send_command('input /p '..player.name..' is no longer Petrify!')
+        -- send_command('input /p '..player.name..' is no longer Petrify!')
         handle_equipping_gear(player.status)
         end
     end
 	if buff == "sleep" then
         if gain then    
-            send_command('input /p ZZZzzz, please cure.')		
+            -- send_command('input /p ZZZzzz, please cure.')		
         else
-            send_command('input /p '..player.name..' is no longer Sleep!')
+            -- send_command('input /p '..player.name..' is no longer Sleep!')
         end
     end	if state.NeverDieMode.value or state.AutoCureMode.value then 
 

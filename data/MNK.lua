@@ -184,25 +184,25 @@ function job_buff_change(buff, gain)
 	update_melee_groups()
 	if buff == "Sleep" then
         if gain then    
-            send_command('input /p ZZZzzz, please cure.')		
+            -- send_command('input /p ZZZzzz, please cure.')		
         else
-            send_command('input /p '..player.name..' is no longer Sleep!')
+            -- send_command('input /p '..player.name..' is no longer Sleep!')
         end
     end
 	if buff == "petrification" then
         if gain then    
             equip(sets.defense.DT)
-            send_command('input /p Petrification, please Stona.')		
+            -- send_command('input /p Petrification, please Stona.')		
         else
-        send_command('input /p '..player.name..' is no longer Petrify!')
+        -- send_command('input /p '..player.name..' is no longer Petrify!')
         handle_equipping_gear(player.status)
         end
     end
     if buff == "Charm" then
         if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
+        --    send_command('input /p Charmd, please Sleep me.')		
         else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
            handle_equipping_gear(player.status)
         end
     end

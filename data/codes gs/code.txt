@@ -1,0 +1,242 @@
+react cose for ou
+        ["Unfaltering Bravado"]={
+            ["complete_reaction"]="", 
+            ["ready_reaction"]="input /p RUN FROM CONAL TO RIGHT OR LEFT FAST <call7>"
+        },
+
+--code rp neck jSE
+
+function user_setup()
+
+    state.RP = M(false, "Reinforcement Points Mode")    
+--command ctrl+-
+    send_command('bind !- gs c toggle RP')  
+
+end
+
+    sets.RP = {neck="Abyssal Beads +2"}
+
+
+-- Modify the default idle set after it was constructed.
+function customize_idle_set(idleSet)
+
+    if state.RP.current == 'on' then
+        equip(sets.RP)
+        disable('neck')
+    else
+        enable('neck')
+    end         
+end
+
+
+
+
+
+
+
+
+Code
+1
+	
+state.Sacro = M(false, 'Sacro Mantle')
+
+
+Create a post precast check to equip mantle if toggle is true:
+Code
+1
+2
+3
+4
+5
+6
+7
+8
+	
+function job_post_precast(spell, action, spellMap, eventArgs)
+    if spell.type == "WeaponSkill" then
+        if state.Sacro.value == true then
+            equip({back="Sacro Mantle"})
+            state.Sacro:reset()
+        end
+    end
+end
+
+
+Then set up your macro like this:
+Code
+1
+2
+	
+/console gs c set Sacro true
+/ws "Rudra's Storm" <t>
+
+
+Or you can use a keybind:
+Code
+1
+	
+send_command('bind ^YOURK
+
+
+
+
+
+
+
+
+
+
+
+
+------------
+
+                send_command('gs c update')
+-----------------
+
+    if buff == 'Copy Image' or 'Copy Image (1)' or 'Copy Image (2)' or 'Copy Image (3)' or 'Copy Image (4+)' then
+        if lose then
+            send_command('@input /ma "Utsusemi: Ni" <me>')
+        else
+            send_command('@input /ma "Utsusemi: Ichi" <me>')
+            send_command('@input /ma "Utsusemi: Ni" <me>')
+            handle_equipping_gear(player.status)
+        end
+    end
+============
+
+test 
+
+        send_command('cancel Copy Image|Copy Image (2)|Copy Image (3)')
+===========
+
+    if player.sub_job == 'WAR' then
+==========
+    if buff == 'Copy Image' or 'Copy Image (1)' or 'Copy Image (2)' or 'Copy Image (3)' or 'Copy Image (4+)' then
+        if false then
+            send_command('@input /ma "Utsusemi: Ni" <me>')
+        else
+            send_command('@input /ma "Utsusemi: Ichi" <me>')
+            send_command('@input /ma "Utsusemi: Ni" <me>')
+            handle_equipping_gear(player.status)
+        end
+    end
+
+=============
+
+-- CODE AUTO RERAISE --Aragan (Asura)  [Author Primary] THIS CODE
+sets.Reraise = {head="Twilight Helm", body="Twilight Mail"}
+ 
+windower.register_event('hpp change',function(new_hpp,old_hpp)
+    if new_hpp < 8 then
+        equip(sets.Reraise)
+    end
+)
+
+unction define_rune_info()
+    rune_info = {
+        ["Ignis"]   = {damage="Fire", resistance="Ice"},
+        ["Gelus"]   = {damage="Ice", resistance="Wind"},
+        ["Flabra"]  = {damage="Wind", resistance="Earth"},
+        ["Tellus"]  = {damage="Earth", resistance="Lightning"},
+        ["Sulpor"]  = {damage="Lightning", resistance="Water"},
+        ["Unda"]    = {damage="Water", resistance="Fire"},
+        ["Lux"]     = {damage="Light", resistance="Darkness"},
+        ["Tenebrae"]= {damage="Darkness", resistance="Light"},
+    }
+end
+
+
+
+--code lockstyle engage
+
+--------------------
+code auto sc for gs
+automatically detect a skillchain
+
+target_id = target_the_action_was_performed_on
+skillchain_element = determine_skillchain_element_from_action_message
+skillchains[target_id] = skillchain_element
+
+With this in midcast:
+
+if (spell.element == skillchains[ffxi.windower.get_mob_by_target("<t>").id]) then
+   equip(sets.MB)
+
+------------------
+
+if spell.target.distance > 8 and player.status == 'Engaged' then
+    eventArgs.cancel = true
+    add_to_chat(122,"Outside WS Range! /Canceling")
+end
+
+--------------------
+
+--weaponset change 
+
+function user_setup()
+
+	state.CombatWeapon= M('Tizona','TizonaAcc','Savage','Chant','Nuke')
+end
+
+	send_command('bind f6 gs c cycle CombatWeapon')
+
+function init_gear_sets()
+
+---weapon sets---
+sets.weapons = {}
+sets.weapons.Tizona = {main= "Tizona", sub ='Thibron'}
+sets.weapons.TizonaAcc = {main="Tizona", sub='Tanmogayi +1'}
+sets.weapons.Savage = {main= "Naegling", sub ='Thibron'}
+sets.weapons.Chant  = {main= "Tanmogayi +1", sub ='Tizona'}
+sets.weapons.Nuke =   {main = "Maxentius", sub = 'Kaja rod'}
+
+
+function customize_melee_set(meleeSet)
+    if state.TreasureMode.value == 'Fulltime' then
+        meleeSet = set_combine(meleeSet, sets.TreasureHunter)
+    end
+	if state.CombatWeapon.value == 'Tizona' then
+	meleeSet = set_combine(meleeSet, sets.weapons.Tizona)
+	end
+	if state.CombatWeapon.value == 'TizonaAcc' then
+	meleeSet = set_combine(meleeSet, sets.weapons.TizonaAcc)
+	end
+	if state.CombatWeapon.value == 'Savage' then
+	meleeSet = set_combine(meleeSet, sets.weapons.Savage)
+	end
+	if state.CombatWeapon.value == 'Chant' then
+	meleeSet = set_combine(meleeSet, sets.weapons.Chant)
+	end
+	if state.CombatWeapon.value == 'Nuke' then
+	meleeSet = set_combine(meleeSet, sets.weapons.Nuke)
+	end
+    return meleeSet
+end
+
+function customize_idle_set(idleSet)
+    if player.mpp < 51 then
+        idleSet = set_combine(idleSet, sets.latent_refresh)
+    end
+    if state.CP.current == 'on' then
+         equip(sets.CP)
+         disable('back')
+     else
+         enable('back')
+     end
+	if state.CombatWeapon.value == 'Tizona' then
+	idleSet = set_combine(idleSet, sets.weapons.Tizona)
+	end
+	if state.CombatWeapon.value == 'TizonaAcc' then
+	idleSet = set_combine(idleSet, sets.weapons.TizonaAcc)
+	end
+	if state.CombatWeapon.value == 'Savage' then
+	idleSet = set_combine(idleSet, sets.weapons.Savage)
+	end
+	if state.CombatWeapon.value == 'Chant' then
+	idleSet = set_combine(idleSet, sets.weapons.Chant)
+	end
+	if state.CombatWeapon.value == 'Nuke' then
+	idleSet = set_combine(idleSet, sets.weapons.Nuke)
+	end
+    return idleSet
+end

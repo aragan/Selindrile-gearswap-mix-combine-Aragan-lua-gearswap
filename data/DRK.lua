@@ -271,13 +271,13 @@ function job_aftercast(spell, spellMap, eventArgs)
 
 end
 
--- windower.register_event('hpp change', -- code add from Aragan Asura
--- function(new_hpp,old_hpp)
---     if new_hpp < 5 then
---         equip(sets.Reraise)
---     end
--- end
--- )
+windower.register_event('hpp change', -- code add from Aragan Asura
+function(new_hpp,old_hpp)
+    if state.AutoReraiseeMode.value and not buffactive['Reraise'] and new_hpp < 5 then
+        equip(sets.Reraise)
+    end
+end
+)
 -- Modify the default idle set after it was constructed.
 function job_customize_idle_set(idleSet)
     if player.mpp < 51 and (state.IdleMode.value == 'Normal' or state.IdleMode.value:contains('Sphere')) then
@@ -1080,18 +1080,19 @@ buff_spell_lists = {
 	},
 }
 
-zombie_last_check = 0
+-- zombie_last_check = 0
 
-windower.register_event('prerender', function()
-    local now = os.clock()
-    if now - zombie_last_check > 1 then -- كل 1 ثانية
-        zombie_last_check = now
+-- windower.register_event('prerender', function()
+--     local now = os.clock()
+--     if now - zombie_last_check > 1 then -- كل 1 ثانية
+--         zombie_last_check = now
 
-		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
-        end
-    end
-end)
+-- 		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+-- 			equip(sets.Reraise)
+-- 			send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+--         end
+--     end
+-- end)
 
 
 -- function user_job_target_change(target)  

@@ -697,7 +697,7 @@ function job_aftercast(spell, action, spellMap, eventArgs)
             resetWeaponSkillPetTimer()
             --Begin the count down until we may lock out the pet weapon skill set
             startWeaponSkillPetTimer()
-            eventArgs.handled = true
+            -- eventArgs.handled = true
         else
             handle_equipping_gear(player.status, Pet_State)
         end

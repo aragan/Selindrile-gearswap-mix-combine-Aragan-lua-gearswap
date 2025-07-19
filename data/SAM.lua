@@ -311,16 +311,14 @@ windower.raw_register_event('prerender',function()
 
 end)
 function job_buff_change(id, data,buff, gain, eventArgs)
-
-
     if buff == 'Meikyo Shisui' and not gain then
 		enable('feet')
     end
     if buff == "Charm" then
         if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
+        --    send_command('input /p Charmd, please Sleep me.')		
         else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
         end
     end
 	if buff == "Yaegasumi" then
@@ -348,22 +346,22 @@ function job_buff_change(id, data,buff, gain, eventArgs)
 		
 	end
     if buffactive['Charm'] then		
-           send_command('input /p Charmd, please Sleep me.')		
+        --    send_command('input /p Charmd, please Sleep me.')		
     else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
         
     end
     if buffactive['petrification'] then
             equip(sets.defense.PDT)
-            send_command('input /p Petrification, please Stona.')		
+            -- send_command('input /p Petrification, please Stona.')		
     else
-            send_command('input /p '..player.name..' is no longer Petrify!')
+            -- send_command('input /p '..player.name..' is no longer Petrify!')
             handle_equipping_gear(player.status)
     end
     if buffactive['Sleep'] then
-            send_command('input /p ZZZzzz, please cure.')		
+            -- send_command('input /p ZZZzzz, please cure.')		
     else
-            send_command('input /p '..player.name..' is no longer Sleep!')
+            -- send_command('input /p '..player.name..' is no longer Sleep!')
         
     end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 

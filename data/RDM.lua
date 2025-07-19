@@ -94,12 +94,15 @@ function job_setup()
 	state.Buff.Composure = buffactive.Composure or false
     state.HippoMode = M(false, "hippoMode")
     state.EnSpell = M{['description']='EnSpell', 'Enfire', 'Enblizzard', 'Enaero', 'Enstone', 'Enthunder', 'Enwater'}
-    state.BarElement = M{['description']='BarElement', 'Barfire', 'Barblizzard', 'Baraero', 'Barstone', 'Barthunder', 'Barwater'}
+	state.EnSpell2 = M{['description']='EnSpell II', 'Enfire II', 'Enblizzard II', 'Enaero II', 'Enstone II', 'Enthunder II', 'Enwater II'}
+	state.BarElement = M{['description']='BarElement', 'Barfire', 'Barblizzard', 'Baraero', 'Barstone', 'Barthunder', 'Barwater'}
     state.BarStatus = M{['description']='BarStatus', 'Baramnesia', 'Barvirus', 'Barparalyze', 'Barsilence', 'Barpetrify', 'Barpoison', 'Barblind', 'Barsleep'}
     state.GainSpell = M{['description']='GainSpell', 'Gain-STR', 'Gain-INT', 'Gain-AGI', 'Gain-VIT', 'Gain-DEX', 'Gain-MND', 'Gain-CHR'}
-    state.SleepMode = M(false, 'MaxDuration')
+	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Light','Dark','Ice','Wind','Earth','Lightning','Water',}
 
-    state.EnspellMode = M(false, 'Enspell Melee Mode')
+	state.SleepMode = M(false, 'MaxDuration')
+
+    state.EnspellMode = M(true, 'Enspell Melee Mode')
 	state.NM = M(true, 'NM')
     state.SrodaNecklace = M(false, 'SrodaNecklace')
     state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
@@ -124,7 +127,8 @@ function job_setup()
 
 	state.RecoverMode = M('Never','35%', '60%', 'Always')
 	
-	autows = "Savage Blade"
+	autows = "Red Lotus Blade"
+	-- autowstp = 1000
 	autofood = 'Tropical Crep'
 	enspell = ''
 	autonuke = 'Absorb-TP'
@@ -429,16 +433,17 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
         send_command('@timers c "Bind ' ..tostring(spell.target.name).. ' ' ..(spell.target.index).. ' " ' ..totalDuration.. ' down spells/00258.png')
     end
     --add_to_chat(1, 'Base: ' ..base.. ' Merits: ' ..self.merits.enfeebling_magic_duration.. ' Job Points: ' ..self.job_points.rdm.stymie_effect.. ' Set Bonus: ' ..empy_mult)
-	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or blue_magic_maps.Healing:contains(spell.english) or spell.skill == 'Enhancing Magic') and spell.interrupted then
-		state.CastingMode:set('SIRD')
-		--send_command('gs c set state.CastingMode.value SIRD')
-		send_command('gs c update')
-		tickdelay = os.clock() + 1.1
-	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
-		state.CastingMode:set('Duration')
-		send_command('gs c update')
-		tickdelay = os.clock() + 1.1
-    end
+
+	-- if not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+	-- 	state.CastingMode:set('Duration')
+	-- 	send_command('gs c update')
+	-- 	tickdelay = os.clock() + 1.1
+	-- -- elseif (player.in_combat or being_attacked) and (spellMap == 'Cure' or spell.skill == 'Enhancing Magic') and spell.interrupted then
+	-- -- 	state.CastingMode:set('SIRD')
+	-- -- 	--send_command('gs c set state.CastingMode.value SIRD')
+	-- -- 	send_command('gs c update')
+	-- -- 	tickdelay = os.clock() + 1.1
+    -- end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
@@ -481,36 +486,30 @@ function job_buff_change(buff, gain)
 	if buff == "doom" then
         if gain then
             equip(sets.buff.Doom)
-            send_command('@input /p Doomed, please Cursna.')
+            -- send_command('@input /p Doomed, please Cursna.')
             send_command('@input /item "Holy Water" <me>')	
              disable('ring1','ring2','waist','neck')
         else
             enable('ring1','ring2','waist','neck')
-            send_command('input /p Doom removed.')
             handle_equipping_gear(player.status)
         end
     end
 	if buff == "Charm" then
         if gain then  			
-           send_command('input /p Charmd, please Sleep me.')		
-        else	
-           send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        --    send_command('input /p Charmd, please Sleep me.')		
         end
     end
     if buff == "petrification" then
         if gain then    
             equip(sets.defense.PDT)
-            send_command('input /p Petrification, please Stona.')		
+            -- send_command('input /p Petrification, please Stona.')		
         else
-            send_command('input /p '..player.name..' is no longer Petrify!')
             handle_equipping_gear(player.status)
         end
     end
     if buff == "sleep" then
         if gain then    
-            send_command('input /p ZZZzzz, please cure.')		
-        else
-            send_command('input /p '..player.name..' is no longer Sleep!')
+            -- send_command('input /p ZZZzzz, please cure.')		
         end
     end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
@@ -615,15 +614,29 @@ function job_state_change(stateField, newValue, oldValue)
     else
         enable('main','sub')
     end
+
 	check_weaponset()
 end
 
 function job_status_change(newStatus, oldStatus, eventArgs)
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+	local abil_recasts = windower.ffxi.get_ability_recasts()	
+
+	if state.AutoBuffMode.Value == 'Shinryu' and player.in_combat then
+        -- state.WeaponLock:set(true)
+		windower.send_command('gs c set WeaponLock true')
+
+    end
 	if state.NeverDieMode.value then 
-		if player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 25 then
+		if player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 10 then
 			state.AutoShadowMode:set('true')
 			tickdelay = os.clock() + 1.1
 		end
+	end
+	if state.AutoBuffMode.value == 'Shiniryu' and player.hpp < 60 and (player.in_combat or being_attacked) then 
+	    windower.send_command('gs c smartcure')
+	-- handle_smartcure()
+	    tickdelay = os.clock() + 1.1
 	end
 end
 function update_combat_form()
@@ -667,7 +680,7 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
 end
 function job_update(cmdParams, eventArgs)
 	update_melee_groups()
-	handle_equipping_gear(player.status)
+	-- handle_equipping_gear(player.status)
 
 end
 
@@ -1150,6 +1163,54 @@ function check_buff()
 				return true
 			end
 		end
+		local buff_name = string.sub(state.GainSpell.value, -3).." Boost"
+
+		if not buffactive[buff_name] then
+		  windower.chat.input("/ma "..state.GainSpell.value.." <me>")
+		  tickdelay = os.clock() + 1.1
+		  return true
+	    end
+		if not buffactive[state.BarStatus.value] then
+			windower.chat.input("/ma "..state.BarStatus.value.." <me>")
+			tickdelay = os.clock() + 1.1
+			return true
+
+		end
+
+		if not buffactive[state.EnSpell.value] and (state.ElementalMode.value ~= 'Light' or state.ElementalMode.value ~= 'Dark') then
+			-- windower.chat.input('/ma "En'..data.elements.enspell_of[state.ElementalMode.value]..'" <me>')
+
+			windower.send_command('gs c enSpell')
+			tickdelay = os.clock() + 1.1
+			return true
+
+		end
+		if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] and (state.ElementalMode.value ~= 'Light' or state.ElementalMode.value ~= 'Dark') then
+			windower.chat.input('/ma "'..data.elements.BarElement_of[state.ElementalMode.value]..'" <me>')
+			tickdelay = os.clock() + 1.1
+			return true
+		else
+			return false
+		end
+
+
+		-- if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] and (state.ElementalMode.value ~= 'Light' or state.ElementalMode.value ~= 'Dark') then
+		-- 	windower.chat.input('/ma "'..data.elements.BarElement_of[state.ElementalMode.value]..'" <me>')
+		-- 	tickdelay = os.clock() + 1.1
+		-- 	return true
+		-- else
+		-- 	return false
+		-- end
+		if player.sub_job == 'SCH' and not state.Buff['SJ Restriction'] then
+			--not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] or buffactive[data.elements.BarElement_of[state.ElementalMode.value]]
+			if not buffactive[data.elements.storm_of[state.ElementalMode.value]] and actual_cost(get_spell_table_by_name(data.elements.storm_of[state.ElementalMode.value])) < player.mp then
+				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
+				tickdelay = os.clock() + 1.1
+				return true
+			else
+				return false
+			end
+		end
 	else
 		return false
 	end
@@ -1203,27 +1264,77 @@ function update_melee_groups()
 	end	
 end
 
-windower.register_event('incoming text',function(org)     
+windower.register_event('incoming text',function(org)    
+	
+	if state.AutoBuffMode.Value == 'Shinryu' then
+		if string.find(org, "Shinryu is no longer silenced") then
+			windower.chat.input('/ma "Silence" <t>')
+		elseif string.find(org, "Shinryu's slow effect wears off") then
+			windower.chat.input('/ma "Slow" <t>')
+		elseif string.find(org, "Shinryu is no longer paralyzed") then
+			windower.chat.input('/ma "Paralyze II" <t>')
+		elseif string.find(org, "Shinryu's addle effect wears off") then
+			windower.chat.input('/ma "Addle II" <t>')
+		elseif string.find(org, "Shinryu's Evasion Down effect wears off") then
+			windower.chat.input('/ma "Distract III" <t>')
+		elseif string.find(org, "Shinryu's Magic Evasion Down effect wears off") then
+			windower.chat.input('/ma "Frazzle III" <t>')
+		end
+	end
 	--Sortie 	--Vagary
 	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
-		windower.send_command('input //gs c set ElementalMode water')
+		windower.send_command('gs c set ElementalMode water')
 	end
 	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
-		windower.send_command('input //gs c set ElementalMode Lightning')
+		windower.send_command('gs c set ElementalMode Lightning')
 	end
 	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
-		windower.send_command('input //gs c set ElementalMode Fire')
+		windower.send_command('gs c set ElementalMode Fire')
 	end
 	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
-		windower.send_command('input //gs c set ElementalMode Wind')
+		windower.send_command('gs c set ElementalMode Wind')
 	end
 	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
-		windower.send_command('input //gs c set ElementalMode Earth')
+		windower.send_command('gs c set ElementalMode Earth')
 	end
 	if string.find(org, "Blast of Reticence") then
-		windower.send_command('input //gs c set ElementalMode Ice')
+		windower.send_command('gs c set ElementalMode Ice')
 	end
 end)
+
+function user_job_target_change(target)  
+	local already_announced_by_name = already_announced_by_name or {}
+	local target = windower.ffxi.get_mob_by_target('t')
+	local sub= windower.ffxi.get_mob_by_target('st')
+	if  (target ~= nil) and (sub == nil) then --(state.AutoBuffMode.Value == 'Sortie' or state.AutoBuffMode.Value == 'Aminon') and
+		if target.name == 'Shinryu' and not already_announced_by_name[target.name] and (target ~= nil) and (sub == nil) then
+			already_announced_by_name[target.name] = true  --test Ironshell Ghast Shinryu
+		windower.send_command('input /macro book 22; input /macro set 1;gs c set ElementalMode Lightning;gs c set AutoWSRestore true;gs c set AutoWSMode true;gs c set OffenseMode STP;gs c set Passive Shiniryu1;gs c Weapons DualRedLotus;gs c set TreasureMode Tag;gs c set BarStatus Barpetrify;gs c set GainSpell Gain-INT;exec trustshinryu.txt;')
+		-- set_macro_page(22, 1)
+	    end
+	end
+end
+
+	
+
+local last_check = 0
+local was_chat_open = false
+windower.register_event('prerender', function()
+	local curtime = os.clock()
+	if nexttime + delay <= curtime then
+		nexttime = curtime
+		delay = 0.2
+	
+		if state.AutoBuffMode.Value == 'Shinryu' then
+			if target and target.is_npc and target.hpp <= 1 and not low_hp_nm_triggered then
+				low_hp_nm_triggered = true
+				state.TreasureMode:set('Fulltime')
+				add_to_chat(123, 'NM HP ≤ 1% - Equipped low HP set.')
+			end
+		end
+    end
+end)
+
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
@@ -1269,6 +1380,23 @@ buff_spell_lists = {
 		{Name='Enthunder',		Buff='Enthunder',		SpellID=104,	When='Idle'},
 		{Name='Barblizzard',	Buff='Barblizzard',		SpellID=61,		When='Idle'},
 		{Name='Barparalyze',	Buff='Barparalyze',		SpellID=74,		When='Idle'},
+	},
+	Shiniryu = {
+		{Name='Refresh III',	Buff='Refresh',			SpellID=894,	When='Always'},
+		{Name='Haste II',		Buff='Haste',			SpellID=511,	When='Always'},
+		{Name='Temper II',		Buff='Multi Strikes',	SpellID=895,	When='Always'},
+		-- {Name='Gain-MND',		Buff='MND Boost',		SpellID=491,	When='Idle'},
+		{Name='Phalanx',		Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Shell V',		Buff='Shell',			SpellID=52,		When='Always'},
+		{Name='Protect V',		Buff='Protect',			SpellID=47,		When='Always'},
+		{Name='Stoneskin',		Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Regen II',		Buff='Regen',			SpellID=110,	When='Always'},
+		{Name='Aquaveil',		Buff='Aquaveil',		SpellID=55,		When='Always'},
+		-- {Name='Gain-INT',		Buff='INT Boost',		SpellID=490,	When='Idle'},
+		-- {Name='Shock Spikes',	Buff='Shock Spikes',	SpellID=251,	When='Idle'},
+		-- {Name='Enthunder',		Buff='Enthunder',		SpellID=104,	When='Idle'},
+		-- {Name='Barblizzard',	Buff='Barblizzard',		SpellID=61,		When='Idle'},
+		-- {Name='Barparalyze',	Buff='Barparalyze',		SpellID=74,		When='Idle'},
 	},
 	Default = {
 		{Name='Refresh III',	Buff='Refresh',		SpellID=894,	Reapply=false},

@@ -127,7 +127,7 @@ function job_setup()
 
 	state.AutoPrestoMode = M(true, 'Auto Presto Mode')
 	state.DanceStance = M{['description']='Dance Stance','None','Saber Dance','Fan Dance'}
-	state.RefineWaltz		  = M(false, 'RefineWaltz')
+	state.RefineWaltz		  = M(true, 'RefineWaltz')
 	state.AutoCureMode = M(true, 'Auto Cure Mode')
 	state.AutoBuilding = M(false, 'Auto Building Flourish Mode')
 
@@ -209,7 +209,6 @@ function job_precast(spell, spellMap, eventArgs)
 			windower.chat.input:schedule(1.6,'/ws "'..spell.english..'" '..spell.target.raw..'')
 			tickdelay = os.clock() + 2.8
 			return
-		end
 		elseif not under3FMs() and not state.Buff['Climactic Flourish'] and abil_recasts[222] < latency then
 			eventArgs.cancel = true
 			windower.chat.input('/ja "Building Flourish" <me>')

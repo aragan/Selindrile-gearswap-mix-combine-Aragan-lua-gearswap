@@ -300,6 +300,7 @@ function job_setup()
 
 	ready_moves.default.FatsoFargann = 'TP Drainkiss'
     ready_moves.default.GenerousArthur = 'Purulent Ooze'
+	ready_moves.default.WarlikePatrick = 'Brain Crush'
     --ready_moves.default.GenerousArthur = 'Corrosive Ooze'
 
 	UnleashLock = true
@@ -326,6 +327,25 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
+
+windower.register_event('action', function(act)
+    -- 7 = pet uses ready/ws
+    if act.category == 7 then
+        local actor = windower.ffxi.get_mob_by_id(act.actor_id)
+        if actor and actor.is_npc and actor.spawn_type == 16 then -- check if actor is a pet
+            for _, target in ipairs(act.targets) do
+                for _, action in ipairs(target.actions) do
+                    -- 603 = Additional Effect Landed
+                    if action.add_effect_message == 603 then
+                        local mob = windower.ffxi.get_mob_by_id(target.id)
+                        local mobname = mob and mob.name or 'Unknown'
+                        add_to_chat(200, '[Pet Effect] Additional Effect landed on: '..mobname)
+                    end
+                end
+            end
+        end
+    end
+end)
 
 function job_filtered_action(spell, eventArgs)
 

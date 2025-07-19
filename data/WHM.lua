@@ -730,6 +730,11 @@ function check_buff()
 			  windower.chat.input("/ma "..state.AutoBoostStat.value.." <me>")
 			end
 		end
+		local buff_name = string.sub(state.AutoBoostStat.value, -3).." Boost"
+
+		if not buffactive[buff_name] then
+		  windower.chat.input("/ma "..state.AutoBoostStat.value.." <me>")
+		end
 		if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] then
 			windower.chat.input('gs c barstatus')
 		end
@@ -750,11 +755,7 @@ function check_buff()
 		else
 			return false
 		end
-		local buff_name = string.sub(state.AutoBoostStat.value, -3).." Boost"
 
-		if not buffactive[buff_name] then
-		  windower.chat.input("/ma "..state.AutoBoostStat.value.." <me>")
-		end
 		
 
 		if player.sub_job == 'SCH' and not state.Buff['SJ Restriction'] then
@@ -889,3 +890,71 @@ buff_spell_lists = {
 		{Name='Auspice',		Buff='Auspice',		SpellID=96,		Reapply=false},
 	},
 }
+
+-- function check_trust()
+--     if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area)
+--         and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
+        
+--         local party = windower.ffxi.get_party()
+--         if party.p5 ~= nil then return false end
+        
+--         local spell_recasts = windower.ffxi.get_spell_recasts()
+--         local trust_list = get_trust_list_by_mode(state.AutoTrustMode.value)
+
+--         for _, trust in ipairs(trust_list) do
+--             local spell_id = res.spells:with('en', trust.name).id
+--             if spell_recasts[spell_id] < spell_latency and not have_trust(trust.name_in_party or trust.name) then
+--                 windower.chat.input('/ma "'..trust.name..'" <me>')
+--                 tickdelay = os.clock() + 4.5
+--                 return true
+--             end
+--         end
+--     end
+--     return false
+-- end
+
+-- function have_trust(name)
+--     for _, member in pairs(windower.ffxi.get_party()) do
+--         if type(member) == 'table' and member.name == name then
+--             return true
+--         end
+--     end
+--     return false
+-- end
+
+-- function get_trust_list_by_mode(mode)
+--     if mode == 'Cleave' then
+--         return {
+--             {name="Sylvie (UC)"},
+--             {name="Qultada"},
+--             {name="Koru-Moru"},
+--             {name="Joachim"},
+--             {name="Arciela II"},
+--         }
+--     elseif mode == 'Defend' then
+--         return {
+--             {name="August"},
+--             {name="Amchuchu"},
+--             {name="Ulmia"},
+--             {name="Sylvie (UC)"},
+--             {name="Yoran-Oran (UC)"},
+--         }
+--     elseif mode == 'Buff' then
+--         return {
+--             {name="Kupipi"},
+--             {name="Apururu (UC)"},
+--             {name="Sylvie (UC)"},
+--             {name="Ulmia"},
+--             {name="Koru-Moru"},
+--         }
+--     else -- Default
+--         return {
+--             {name="Monberaux"},
+--             {name="Sylvie (UC)"},
+--             {name="Koru-Moru"},
+--             {name="Joachim"},
+--             {name="Qultada"},
+--             {name="Lilisette II", name_in_party="Lilisette"},
+--         }
+--     end
+-- end

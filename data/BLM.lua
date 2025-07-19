@@ -453,7 +453,27 @@ end
 -- buff == buff gained or lost
 -- gain == true if the buff was gained, false if it was lost.
 function job_buff_change(buff, gain)
-
+	if buff == "Manafont" then
+        if gain then  			
+            send_command('input /p "Manafont" [ON]')		
+        else	
+            send_command('input /p "Manafont" [OFF]')
+        end
+    end
+	if buff == "Subtle Sorcery" then
+        if gain then  			
+            send_command('input /p "Subtle Sorcery" [ON]')		
+        else	
+            send_command('input /p "Subtle Sorcery" [OFF]')
+        end
+    end
+	if buff == "Mana Wall" then
+        if gain then  			
+            send_command('input /p "Mana Wall" [ON]')		
+        else	
+            send_command('input /p "Mana Wall" [OFF]')
+        end
+    end
 end
 -- Handle notifications of general user state change.
 function job_state_change(stateField, newValue, oldValue)
@@ -464,7 +484,6 @@ function job_state_change(stateField, newValue, oldValue)
     end
 	if state.ManaWallMode.value == true and (player.in_combat or being_attacked) and player.hpp < 75 then 
 		windower.chat.input('/ja "Mana Wall" <me>')
-
 	end
 end
 -------------------------------------------------------------------------------------------------------------------

@@ -432,7 +432,12 @@ end
 
 function job_buff_change(buff, gain)
 	update_melee_groups()
-
+	local party = windower.ffxi.get_party()
+	local in_party = (party.party1_count or 0) > 1
+	if in_party and (buffactive['Clarion Call'] or buffactive['Soul Voice '] or buffactive['Troubadour'] or buffactive['Nightingale']) then
+		send_command('@input /p -- SINGING starting not go far --')
+	end
+    
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 
 		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
