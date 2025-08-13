@@ -296,7 +296,7 @@ function job_setup()
     state.JugMode = M{['description']='Jug Mode', 'GenerousArthur','ScissorlegXerin', 'BlackbeardRandy', 'AttentiveIbuki', 'AgedAngus',
                 'RedolentCandi','DroopyDortwin','WarlikePatrick','HeraldHenry','AlluringHoney','SwoopingZhivago','AcuexFamiliar'}
 	
-	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
+	state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
 
 	ready_moves.default.FatsoFargann = 'TP Drainkiss'
     ready_moves.default.GenerousArthur = 'Purulent Ooze'
@@ -319,7 +319,7 @@ function job_setup()
 
 	update_pet_groups()
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoReadyMode","AutoMedicineMode","AutoReraiseeMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","PetMode","IdleMode","Passive","RuneElement","JugMode","RewardMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoReadyMode","AutoMedicineMode","AutoReraiseMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","PetMode","IdleMode","Passive","RuneElement","JugMode","RewardMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -565,15 +565,7 @@ end
 -- Customization hook for idle sets.
 -------------------------------------------------------------------------------------------------------------------
 
-function job_customize_idle_set(idleSet)
-	if pet.isvalid and pet.status == 'Engaged' and can_dual_wield and sets.idle.Pet.Engaged.DW then
-		equip(sets.idle.Pet.Engaged.DW)
-	end
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-	    idleSet = set_combine(idleSet, sets.Reraise)
-    end
-    return idleSet
-end
+
 
 function job_state_change(stateField, newValue, oldValue)
 	if stateField == 'PetMode' then
@@ -596,13 +588,34 @@ function update_pet_groups()
         classes.CustomIdleGroups:append(state.PetMode.value)
     end
 end
-
+function job_customize_idle_set(idleSet)
+	if pet.isvalid and pet.status == 'Engaged' and can_dual_wield and sets.idle.Pet.Engaged.DW then
+		equip(sets.idle.Pet.Engaged.DW)
+	end
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+	    idleSet = set_combine(idleSet, sets.Reraise)
+    end
+    return idleSet
+end
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
 	    meleeSet = set_combine(meleeSet, sets.Reraise)
     end
     return meleeSet
+end
+
+function job_customize_defense_set(defenseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		defenseSet = set_combine(defenseSet, sets.Reraise)
+	end
+    return defenseSet
+end
+function job_customize_passive_set(baseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		baseSet = set_combine(baseSet, sets.Reraise)
+	end
+    return baseSet
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -956,15 +969,15 @@ function get_ready_charge_timer()
 end
 
 
-zombie_last_check = 0
+-- zombie_last_check = 0
 
-windower.register_event('prerender', function()
-    local now = os.clock()
-    if now - zombie_last_check > 1 then -- كل 1 ثانية
-        zombie_last_check = now
+-- windower.register_event('prerender', function()
+--     local now = os.clock()
+--     if now - zombie_last_check > 1 then -- كل 1 ثانية
+--         zombie_last_check = now
 
-		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
-        end
-    end
-end)
+-- 		if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+--             send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+--         end
+--     end
+-- end)

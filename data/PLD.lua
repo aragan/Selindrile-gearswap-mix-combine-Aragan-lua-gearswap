@@ -113,7 +113,7 @@ function job_setup()
     state.MagicBurst = M(false, 'Magic Burst')
     state.AutoEquipBurst = M(true)
     state.AutoCureMode = M(true, 'Auto Cure Mode')
-    state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
+    state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
 
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 
@@ -135,7 +135,7 @@ function job_setup()
 	update_combat_form()  
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode","AutoReraiseeMode"},{"AutoBuffMode","AutoSambaMode","Weapons","ShieldMode","OffenseMode","ElementalMode","CastingMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","ResistDefenseMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode","AutoReraiseMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","ShieldMode","OffenseMode","ElementalMode","CastingMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","PhysicalDefenseMode","MagicalDefenseMode","ResistDefenseMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -582,10 +582,10 @@ function job_status_change(newStatus, oldStatus, eventArgs)
 		tickdelay = os.clock() + 1.1
 		return true
 
-	elseif (player.in_combat or being_attacked) and not buffactive.Palisade and player.hpp < 42 and abil_recasts[42] < latency then
-		windower.chat.input('/ja "Palisade" <me>')
-		tickdelay = os.clock() + 1.1
-		return true
+	-- elseif (player.in_combat or being_attacked) and not buffactive.Palisade and player.hpp < 42 and abil_recasts[42] < latency then
+	-- 	windower.chat.input('/ja "Palisade" <me>')
+	-- 	tickdelay = os.clock() + 1.1
+	-- 	return true
 
 	end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
@@ -825,9 +825,9 @@ function job_customize_idle_set(idleSet)
 		if player.hpp < 71 then
 			idleSet = set_combine(idleSet, sets.latent_regen)
 		end
-	elseif state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-		idleSet = set_combine(idleSet, sets.Reraise)
-    end
+	elseif state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		defenseSet = set_combine(defenseSet, sets.Reraise)
+	end
 
 	if state.RP.current == 'on' then
         equip(sets.RP)
@@ -849,9 +849,9 @@ function job_customize_melee_set(meleeSet)
     if state.ExtraDefenseMode.value ~= 'None' then
         meleeSet = set_combine(meleeSet, sets[state.ExtraDefenseMode.value])
     
-	elseif state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-		meleeSet = set_combine(meleeSet, sets.Reraise)
-    end
+	elseif state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		defenseSet = set_combine(defenseSet, sets.Reraise)
+	end
 	check_weaponset()
 
     return meleeSet
@@ -861,12 +861,19 @@ end
 function job_customize_defense_set(defenseSet)
     if state.ExtraDefenseMode.value ~= 'None' then
         defenseSet = set_combine(defenseSet, sets[state.ExtraDefenseMode.value])
-	elseif state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-        defenseSet = set_combine(defenseSet, sets.Reraise)
-    end
+	elseif state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		defenseSet = set_combine(defenseSet, sets.Reraise)
+	end
 	check_weaponset()
 
     return defenseSet
+end
+
+function job_customize_passive_set(baseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		baseSet = set_combine(baseSet, sets.Reraise)
+	end
+    return baseSet
 end
 
 function check_weaponset()
@@ -1060,7 +1067,21 @@ if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.
 	return false
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -1093,7 +1114,7 @@ function check_buff()
 			send_command('input /ja "Palisade" <me>')
 			tickdelay = os.clock() + 2.5
 			return true
-		elseif state.AutoWSMode.value and player.tp > 1001 and not (player.mpp < 35 and abil_recasts[79] < latency) and player.in_combat and player.target.type == "MONSTER" and not silent_check_amnesia() then
+		elseif state.AutoBuffMode.value == 'Aminon' and player.tp > 1001 and not (player.mpp < 35 and abil_recasts[79] < latency) and player.in_combat and player.target.type == "MONSTER" and not silent_check_amnesia() then
 			--send_command('input /attack on;wait 1;input /ws "' .. autows .. '" <t>;wait 2;input /attack off')
 
 			send_command('input /ws "' .. autows .. '" <t>')
@@ -1118,8 +1139,29 @@ function check_buff()
 				return false
 			end
 		end
-
-
+		if state.AutoBuffMode.value == 'Melee' and player.in_combat then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+			
+			if player.sub_job == 'DRK' and not buffactive['Last Resort'] and abil_recasts[87] < latency then
+				windower.chat.input('/ja "Last Resort" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Berserk and abil_recasts[1] < latency then
+				windower.chat.input('/ja "Berserk" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Aggressor and abil_recasts[4] < latency then
+				windower.chat.input('/ja "Aggressor" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			else
+				return false
+			end
+		end
 		if not buffactive['Majesty'] and abil_recasts[150] < latency then
 			windower.chat.input('/ja "Majesty" <me>')
 			tickdelay = os.clock() + 1.1
@@ -1191,6 +1233,13 @@ buff_spell_lists = {
 		{Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
 		{Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
 	},
+	Melee = {	
+		-- {Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
+		-- {Name='Crusade',Buff='Enmity Boost',SpellID=476,When='Always'},
+		-- --{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
+		-- {Name='Phalanx',Buff='Phalanx',SpellID=106,When='Always'},
+		-- {Name='Cocoon',Buff='Cocoon',SpellID=547,When='Always'},
+	},
 	Reprisal = {	
 		{Name='Protect V',	Buff='Protect',		SpellID=47,	When='Always'},
 		{Name='Reprisal',Buff='Reprisal',SpellID=97,When='Always'},
@@ -1242,15 +1291,122 @@ buff_spell_lists = {
 }
 
 
-zombie_last_check = 0
+-- zombie_last_check = 0
 
-windower.register_event('prerender', function()
-    local now = os.clock()
-    if now - zombie_last_check > 1 then -- كل 1 ثانية
-        zombie_last_check = now
+-- windower.register_event('prerender', function()
+--     local now = os.clock()
+--     if now - zombie_last_check > 1 then -- كل 1 ثانية
+--         zombie_last_check = now
 
-		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
-        end
-    end
+-- 		if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+--             send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+--         end
+--     end
+-- end)
+
+
+
+windower.register_event('incoming text',function(org)     
+
+	--[[
+tel what proc need
+The fiend appears vulnerable to ice elemental magic!
+proc done
+attack staggers the fiend!
+]]
+	if string.find(org, "Aita readies Vivisection") then
+		windower.send_command('/ja "Elemental Sforzo" <me>')
+		state.MagicalDefenseMode:set('MDT')
+		windower.chat.input('/p Aita uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/ja "Liement" <me>')
+	end
+	if string.find(org, "Degei readies Vivisection") then
+		windower.send_command('/ja "Elemental Sforzo" <me>')
+		state.MagicalDefenseMode:set('MDT')
+		windower.chat.input('/p Degei uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/ja "Liement" <me>')
+	end
+	if string.find(org, "Triboulex readies Setting the Stage") then
+		windower.send_command('/ja "Elemental Sforzo" <me>')
+		state.MagicalDefenseMode:set('MDT')
+		windower.chat.input('/p Triboulex uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/ja "Liement" <me>')
+	end
+	if string.find(org, "Skomora readies Setting the Stage") then
+		windower.send_command('/ja "Elemental Sforzo" <me>')
+		state.MagicalDefenseMode:set('MDT')
+		windower.chat.input('/p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
+		windower.send_command('/ja "Liement" <me>')
+	end
+	-- if string.find(org, "Chokehold") then
+	if string.find(org, "Undulating Shockwave") then
+		windower.send_command('gs c set ElementalMode Ice;gs c set RuneElement Gelus')
+			--windower.send_command('gs c set ElementalMode Ice')
+			--windower.send_command('input /ma Blizzard <bt>')
+			windower.chat.input('/p its Changes hands to Wind >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
+			--windower.chat.input('input /p Chokehold >> ITS WEAK ICE PROC <call14>!')
+	end
+	--[[if string.find(org, "Leshonn uses Tearing Gust ") then
+		windower.chat.input('/ja "Elemental Sforzo" <me>')
+		windower.send_command('input /p Leshonn uses Tearing Gust  <call14>!')  -- code add by (Aragan@Asura)
+		windower.chat.input('/ja "Liement" <me>')
+	end
+	if string.find(org, "Gartell uses Tearing Gust ") then
+		windower.chat.input('/ja "Elemental Sforzo" <me>')
+		windower.send_command('input /p Gartell uses Tearing Gust  <call14>!')  -- code add by (Aragan@Asura)
+		windower.chat.input('/ja "Liement" <me>')
+	end]]
+		--Sortie 	--Vagary
+
+	
+	if (player.sub_job == 'SCH' or player.sub_job == 'RDM') and not state.Buff['SJ Restriction'] then
+		if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
+			windower.send_command('gs c set ElementalMode water')
+			windower.send_command('input /ma water <bt>')
+			windower.chat.input('/p  >> ITS WEAK WATER PROC <call14>!')  -- code add by (Aragan@Asura)
+			tickdelay = os.clock() + 1.1
+			return true
+	
+	
+		end
+		if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
+			windower.send_command('gs c set ElementalMode Lightning')
+			windower.send_command('input /ma thunder <bt>')
+			windower.chat.input('/p  >> ITS WEAK THUNDER PROC <call14>!')  -- code add by (Aragan@Asura)
+			tickdelay = os.clock() + 1.1
+			return true
+	
+		end
+		if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
+			windower.send_command('gs c set ElementalMode Fire')
+			windower.send_command('input /ma fire <bt>')
+			windower.chat.input('/p >> ITS WEAK FIRE PROC <call14>!')  -- code add by (Aragan@Asura)
+			tickdelay = os.clock() + 1.1
+			return true
+	
+		end
+		if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
+			windower.send_command('gs c set ElementalMode Wind')
+			windower.send_command('input /ma wind <bt>')
+			windower.chat.input('/p >> ITS WEAK WIND PROC <call14>!')  -- code add by (Aragan@Asura)
+			tickdelay = os.clock() + 1.1
+			return true
+	
+		end
+		if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
+			windower.send_command('gs c set ElementalMode Earth')
+			windower.send_command('input /ma Stone <bt>')
+			windower.chat.input('/p >> ITS WEAK STONE PROC <call14>!')  -- code add by (Aragan@Asura)
+			tickdelay = os.clock() + 1.1
+			return true
+	
+		end
+		if string.find(org, "Blast of Reticence") then
+			windower.send_command('gs c set ElementalMode Ice')
+			windower.send_command('input /ma Blizzard <bt>')
+			windower.chat.input('/p Blast of Reticence >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
+			tickdelay = os.clock() + 1.1
+			return true
+		end
+	end
 end)

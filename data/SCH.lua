@@ -128,9 +128,11 @@ function job_setup()
     state.StormSurge = M(false, 'Stormsurge')
     state.Moving  = M(false, "moving")
     state.HippoMode = M(false, "hippoMode")
-    state.TabulaRasaMode = M(true, "Tabula Rasa Mode")
+    state.TabulaRasaMode = M(false, "Tabula Rasa Mode")
     state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
-    state.AutoAPMode = M(true, 'AutoAPMode')
+    state.AutoAPMode = M(false, 'AutoAPMode')
+	state.AutoBuffAOEMode = M(true, 'AutoBuffAOEMode')
+
     state.AutoAOE = M(false, 'AutoAOE')
 	-- Mote has capitalization errors in the default Absorb mappings, so we use our own
     absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
@@ -148,7 +150,7 @@ function job_setup()
 	autofood = 'Tropical Crep'
 	autonuke = 'Absorb-TP'
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","StormSurge",},{"AutoBuffMode","Weapons","OffenseMode","CastingMode","WeaponskillMode","IdleMode","Passive","ElementalMode","RuneElement","HelixMode","RecoverMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","StormSurge",},{"AutoTrustMode","AutoBuffMode","Weapons","OffenseMode","CastingMode","WeaponskillMode","IdleMode","Passive","ElementalMode","RuneElement","HelixMode","RecoverMode","TreasureMode",})
     
 
 end
@@ -165,51 +167,54 @@ end
 function job_filter_pretarget(spell, spellMap, eventArgs)
 
 	local abil_recasts = windower.ffxi.get_ability_recasts()
+	local party = windower.ffxi.get_party()
+	local in_party = (party.count or 0) > 1
 
-	if not buffactive["Dark Arts"] and party.count ~= 1 and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and (spell.english == 'Regen V' or spell.english == 'Phalanx'or spell.english == 'Stoneskin') and  get_current_stratagem_count() > 1 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+	if (spell.english == 'Regen V' or spell.english == 'Phalanx' or spell.english == 'Stoneskin' or spell.english == 'Embrava') and state.AutoBuffAOEMode.value and in_party and not buffactive["Dark Arts"] and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and get_current_stratagem_count() > 1 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
 		cast_delay(2.1)
 		windower.chat.input('/ja "Accession" <me>')
 		windower.chat.input:schedule(1.1,'/ja "Perpetuance" <me>')
-		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+		windower.send_command:schedule((next_cast - os.clock() + 1.1),'gs c delayedcast')
 		tickdelay = os.clock() + 1.1
-	elseif not buffactive["Dark Arts"] and party.count ~= 1 and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and (spell.english == 'Shell V' or spell.english == 'Protect V') and  get_current_stratagem_count() > 1 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+		return true
+
+	elseif state.AutoBuffAOEMode.value and in_party and not buffactive["Dark Arts"] and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and (spell.english == 'Shell V' or spell.english == 'Protect V' or spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
 			cast_delay(2.1)
 			windower.chat.input('/ja "Accession" <me>')
-			windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
-			tickdelay = os.clock() + 1.1
-	
-	elseif not buffactive["Dark Arts"] and party.count ~= 1 and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and spell.english == 'Haste' and not buffactive['Perpetuance'] and get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+			windower.send_command:schedule((next_cast - os.clock() + 1.1),'gs c delayedcast')
+			tickdelay = os.clock() + 1.5
+			return true
+
+	elseif state.AutoBuffAOEMode.value and in_party and not buffactive["Dark Arts"] and (data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and spell.english == 'Haste' and not buffactive['Perpetuance'] and get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
 		cast_delay(1.1)
 		windower.chat.input('/ja "Perpetuance" <me>')
 		tickdelay = os.clock() + 1.1
+		return true
+	-- elseif state.TabulaRasaMode.value and spell.skill == 'Elemental Magic' and buffactive['Tabula Rasa'] and not (buffactive['Immanence'] and buffactive['Ebullience']) then
+    --     cast_delay(1.1)
+    --     windower.chat.input('/ja "Ebullience" <me>')
+    --     tickdelay = os.clock() + 1.1
+    
+	-- if spell.skill == 'Elemental Magic' and not buffactive['Immanence'] then
+	-- 	eventArgs.cancel = true
+	-- 	windower.chat.input('/ja "Ebullience" <me>')
+	-- 	windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
+	-- 	windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+	-- 	tickdelay = os.clock() + 1.1
+	-- end
+	-- elseif party.count ~= 1 and spell.english == 'Haste' and  get_current_stratagem_count() < 2 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+	-- 	eventArgs.cancel = true
+	-- 	windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+	-- 	tickdelay = os.clock() + 1.1
+
+	-- elseif party.count ~= 1 and spell.english == 'Haste' and  get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
+	-- 	cast_delay(1.1)
+	-- 	windower.chat.input('/ja "Perpetuance" <me>')
+	-- 	windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
+	-- 	tickdelay = os.clock() + 1.1
 
 	else
-		--[[
-		if state.TabulaRasaMode.value and spell.skill == 'Elemental Magic' and buffactive['Tabula Rasa'] and not buffactive['Immanence'] and buffactive['Ebullience'] then
-    cast_delay(1.1)
-    windower.chat.input('/ja "Ebullience" <me>')
-    tickdelay = os.clock() + 1.1
-    end
-		    if spell.skill == 'Elemental Magic' and not buffactive['Immanence'] then
-		eventArgs.cancel = true
-		windower.chat.input('/ja "Ebullience" <me>')
-		windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
-		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
-		tickdelay = os.clock() + 1.1
-	end
-	elseif party.count ~= 1 and spell.english == 'Haste' and  get_current_stratagem_count() < 2 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
-		eventArgs.cancel = true
-		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
-		tickdelay = os.clock() + 1.1
 
-			elseif party.count ~= 1 and spell.english == 'Haste' and  get_current_stratagem_count() > 0 then --(data.areas.cities:contains(world.area) or data.areas.adoulin:contains(world.area)) and
-		cast_delay(1.1)
-		windower.chat.input('/ja "Perpetuance" <me>')
-		windower.send_command:schedule((next_cast - os.clock()),'gs c delayedcast')
-		tickdelay = os.clock() + 1.1
-
-	else
-		]]
 		return false
 	end
 
@@ -223,16 +228,18 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 		windower.chat.input:schedule(1.1,'/ws "'..spell.english..'" '..spell.target.raw..'')
 		add_tick_delay(1.1)
 	end]]
-	--[[ 
-		if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
-		cast_delay(1.1)
-		windower.chat.input('/ja "Accession" <me>')
-		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
-		send_command('@input /echo <recast=Stratagems>')
-		send_command('@input /p <recast=Stratagems>')
+	-- local abil_recasts = windower.ffxi.get_ability_recasts()
+	-- local party = windower.ffxi.get_party()
 
-	end
-	]]
+	-- if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
+	-- 	cast_delay(1.1)
+	-- 	windower.chat.input('/ja "Accession" <me>')
+	-- 	-- add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
+	-- 	-- send_command('@input /echo <recast=Stratagems>')
+	-- 	-- send_command('@input /p <recast=Stratagems>')
+
+	-- end
+
 
 end
 function job_pretarget(spell, spellMap, eventArgs)
@@ -243,44 +250,45 @@ function job_pretarget(spell, spellMap, eventArgs)
 end
 
 function job_precast(spell, spellMap, eventArgs)
-	local AP_spells = S{'Regen V','Animus Minuo','Embrava','Barblizzard','Barparalyze'}
-    local Accession_spells = S{'Protect V','Shell V','Sneak','Invisible','Adloquium','Aquaveil'}
+	local AP_spells = S{'Regen V','Stoneskin','Phalanx','Aquaveil','Animus Minuo','Embrava','Barblizzard','Barparalyze'}
+    local Accession_spells = S{'Protect V','Shell V','Sneak','Invisible','Adloquium'}
     local Perpetuance_spells = S{'Refresh'}
     local AOE_na_spells = S{'Blindna','Cursna','Paralyna','Poisona','Silena','Stona','Viruna','Erase'}
+	local party = windower.ffxi.get_party()
 
 	if spell.action_type == 'Magic' then
         if ((spell.id == 478 or spell.id == 502) and not buffactive['Tabula Rasa']) then
             add_to_chat(123,"Abort: Tabula Rasa not active - You don't have access to ["..(spell[language] or spell.id).."]")
             eventArgs.cancel = true
             return false
-		elseif spell.skill == 'Elemental Magic' and default_spell_map ~= 'ElementalEnfeeble' then
-			if spell.english:contains('helix') then
-				local abil_recasts = windower.ffxi.get_ability_recasts()
-				if get_current_stratagem_count() > 0 and abil_recasts[233] < latency and player.target.type == "MONSTER" and not (buffactive['Ebullience'] or silent_check_amnesia()) and not (buffactive['Enlightenment'] or silent_check_amnesia()) then
-					if buffactive['Dark Arts'] or buffactive['Addendum: Black'] then
-						windower.chat.input('/ja "Ebullience" <me>')
-						windower.chat.input:schedule(1.6,'/ma "'..spell.english..'" '..spell.target.raw..'')
-						add_to_chat(122,'Ebullience - "'..spell.english..'" !')
-						eventArgs.cancel = true
-						tickdelay = os.clock() + 4.6
-					elseif buffactive['Light Arts'] or buffactive['Addendum: White'] then
-						windower.chat.input('/ja "Enlightenment" <me>')
-						windower.chat.input:schedule(1.6,'/ma "'..spell.english..'" '..spell.target.raw..'')
-						add_to_chat(122,'Enlightenment/Ebullience - "'..spell.english..'" !')
-						eventArgs.cancel = true
-						tickdelay = os.clock() + 6.2
-					else 
-						if abil_recasts[232] < latency and abil_recasts[233] < latency then
-							windower.chat.input('/ja "Dark Arts" <me>')
-							windower.chat.input:schedule(1.6,'/ja "Ebullience" <me>')
-							windower.chat.input:schedule(3.2,'/ma "'..spell.english..'" '..spell.target.raw..'')
-							add_to_chat(122,'Ebullience - "'..spell.english..'" !')
-							eventArgs.cancel = true
-							tickdelay = os.clock() + 6.2
-						end
-					end
-				end
-			end
+		-- elseif buffactive['Tabula Rasa'] and spell.skill == 'Elemental Magic' and default_spell_map ~= 'ElementalEnfeeble' then
+		-- 	if spell.english:contains('helix') then
+		-- 		local abil_recasts = windower.ffxi.get_ability_recasts()
+		-- 		if get_current_stratagem_count() > 0 and abil_recasts[233] < latency and player.target.type == "MONSTER" and not (buffactive['Ebullience'] or silent_check_amnesia()) and not (buffactive['Enlightenment'] or silent_check_amnesia()) then
+		-- 			if buffactive['Dark Arts'] or buffactive['Addendum: Black'] then
+		-- 				windower.chat.input('/ja "Ebullience" <me>')
+		-- 				windower.chat.input:schedule(1.6,'/ma "'..spell.english..'" '..spell.target.raw..'')
+		-- 				add_to_chat(122,'Ebullience - "'..spell.english..'" !')
+		-- 				eventArgs.cancel = true
+		-- 				tickdelay = os.clock() + 4.6
+		-- 			elseif buffactive['Light Arts'] or buffactive['Addendum: White'] then
+		-- 				windower.chat.input('/ja "Enlightenment" <me>')
+		-- 				windower.chat.input:schedule(1.6,'/ma "'..spell.english..'" '..spell.target.raw..'')
+		-- 				add_to_chat(122,'Enlightenment/Ebullience - "'..spell.english..'" !')
+		-- 				eventArgs.cancel = true
+		-- 				tickdelay = os.clock() + 6.2
+		-- 			else 
+		-- 				if abil_recasts[232] < latency and abil_recasts[233] < latency then
+		-- 					windower.chat.input('/ja "Dark Arts" <me>')
+		-- 					windower.chat.input:schedule(1.6,'/ja "Ebullience" <me>')
+		-- 					windower.chat.input:schedule(3.2,'/ma "'..spell.english..'" '..spell.target.raw..'')
+		-- 					add_to_chat(122,'Ebullience - "'..spell.english..'" !')
+		-- 					eventArgs.cancel = true
+		-- 					tickdelay = os.clock() + 6.2
+		-- 				end
+		-- 			end
+		-- 		end
+		-- 	end
 		-- Accession + Perpetuance
 		elseif (AP_spells:contains(spell.english)) and state.AutoAPMode.value then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
@@ -591,50 +599,50 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
     end
 end
 function job_aftercast(spell, spellMap, eventArgs)
-    if not spell.interrupted then
-		if spell.type == 'Scholar' then
-			windower.send_command:schedule(1,'gs c showcharge')
-		elseif spell.action_type == 'Magic' then
-			if state.UseCustomTimers.value and spell.english == 'Sleep' or spell.english == 'Sleepga' then
-				windower.send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
-			elseif state.UseCustomTimers.value and spell.english == 'Sleep II' then
-				windower.send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
-			elseif spell.english == "Break" then
-				send_command('@timers c "Break ['..spell.target.name..']" 30 down spells/00255.png')
-			elseif spell.english == 'Impact' then
-				send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
-			elseif spell.english == "Bind" then
-				send_command('timers create "Bind" 60 down spells/00258.png')
-			elseif spell.english == "Break" then
-				send_command('timers create "Break Petrification" 33 down spells/00255.png')
-			elseif spell.english == "Breakga" then
-				send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
-			elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
-				state.MagicBurstMode:reset()
-				if state.DisplayMode.value then update_job_states()	end
-			end
-		end
-		if spell.english == "Sleep II" then
-            send_command('@timers c "Sleep II ['..spell.target.name..']" 90 down spells/00259.png')
-        elseif spell.english == "Sleep" or spell.english == "Sleepga" then -- Sleep & Sleepga Countdown --
-            send_command('@timers c "Sleep ['..spell.target.name..']" 60 down spells/00253.png')
-        elseif spell.english == "Break" then
-            send_command('@timers c "Break ['..spell.target.name..']" 30 down spells/00255.png')
-        elseif spell.english == 'Impact' then
-            send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
-        elseif spell.english == "Bind" then
-            send_command('timers create "Bind" 60 down spells/00258.png')
-        elseif spell.english == "Break" then
-            send_command('timers create "Break Petrification" 33 down spells/00255.png')
-        elseif spell.english == "Breakga" then
-            send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
-        end
-    end
-	if spell.name == 'Tabula Rasa' then
-        send_command('@timers c "Tabula Rasa" 210 down spells/00136.png')
-        send_command('wait 210;input /p <t> [Tabula Rasa just wore off!];')
-        send_command('@wait 1;@input /p  >>> Tabula Rasa  minute left: 3.30')
-	end
+    -- if not spell.interrupted then
+	-- 	if spell.type == 'Scholar' then
+	-- 		windower.send_command:schedule(1,'gs c showcharge')
+	-- 	elseif spell.action_type == 'Magic' then
+	-- 		if state.UseCustomTimers.value and spell.english == 'Sleep' or spell.english == 'Sleepga' then
+	-- 			windower.send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+	-- 		elseif state.UseCustomTimers.value and spell.english == 'Sleep II' then
+	-- 			windower.send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 90 down spells/00220.png')
+	-- 		elseif spell.english == "Break" then
+	-- 			send_command('@timers c "Break ['..spell.target.name..']" 30 down spells/00255.png')
+	-- 		elseif spell.english == 'Impact' then
+	-- 			send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+	-- 		elseif spell.english == "Bind" then
+	-- 			send_command('timers create "Bind" 60 down spells/00258.png')
+	-- 		elseif spell.english == "Break" then
+	-- 			send_command('timers create "Break Petrification" 33 down spells/00255.png')
+	-- 		elseif spell.english == "Breakga" then
+	-- 			send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
+	-- 		elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
+	-- 			state.MagicBurstMode:reset()
+	-- 			if state.DisplayMode.value then update_job_states()	end
+	-- 		end
+	-- 	end
+	-- 	if spell.english == "Sleep II" then
+    --         send_command('@timers c "Sleep II ['..spell.target.name..']" 90 down spells/00259.png')
+    --     elseif spell.english == "Sleep" or spell.english == "Sleepga" then -- Sleep & Sleepga Countdown --
+    --         send_command('@timers c "Sleep ['..spell.target.name..']" 60 down spells/00253.png')
+    --     elseif spell.english == "Break" then
+    --         send_command('@timers c "Break ['..spell.target.name..']" 30 down spells/00255.png')
+    --     elseif spell.english == 'Impact' then
+    --         send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+    --     elseif spell.english == "Bind" then
+    --         send_command('timers create "Bind" 60 down spells/00258.png')
+    --     elseif spell.english == "Break" then
+    --         send_command('timers create "Break Petrification" 33 down spells/00255.png')
+    --     elseif spell.english == "Breakga" then
+    --         send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
+    --     end
+    -- end
+	-- if spell.name == 'Tabula Rasa' then
+    --     send_command('@timers c "Tabula Rasa" 210 down spells/00136.png')
+    --     send_command('wait 210;input /p <t> [Tabula Rasa just wore off!];')
+    --     send_command('@wait 1;@input /p  >>> Tabula Rasa  minute left: 3.30')
+	-- end
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -1003,16 +1011,16 @@ function apply_grimoire_bonuses(spell, action, spellMap)
         end
 		if state.Buff.Immanence then
 		    equip(sets.buff['Immanence'])
-		    send_command('@input /p <recast=Stratagems>')
+		    -- send_command('@input /p <recast=Stratagems>')
 	    elseif state.Buff.Immanence and state.CastingMode.value == "Proc" then
 		    equip(sets.buff['Immanence'].Proc)
-            send_command('@input /p <recast=Stratagems>')
+            -- send_command('@input /p <recast=Stratagems>')
         elseif state.Buff.Immanence and state.CastingMode.value == "SubtleBlow" then
             equip(sets.buff['Immanence'].SubtleBlow)
-            send_command('@input /p <recast=Stratagems>')
+            -- send_command('@input /p <recast=Stratagems>')
         elseif state.Buff.Immanence and state.CastingMode.value == "Enmity" then
             equip(sets.buff['Immanence'].Enmity)
-            send_command('@input /p <recast=Stratagems>')
+            -- send_command('@input /p <recast=Stratagems>')
 
         end
         if state.Buff.Klimaform and spell.element == world.weather_element then
@@ -1245,21 +1253,21 @@ function handle_elemental(cmdParams)
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
 			
 			if state.ElementalMode.value == 'Fire' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Liquefaction true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Liquefaction true')
 			elseif state.ElementalMode.value == 'Wind' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Detonation true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Detonation true')
 			elseif state.ElementalMode.value == 'Lightning' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Impaction true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Impaction true')
 			elseif state.ElementalMode.value == 'Light' then
-					windower.chat.input:schedule(1.3,'//gs c soloSC 1 Transfixion true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Transfixion true')
 			elseif state.ElementalMode.value == 'Earth' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Scission true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Scission true')
 			elseif state.ElementalMode.value == 'Ice' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Induration true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Induration true')
 			elseif state.ElementalMode.value == 'Water' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Reverberation true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Reverberation true')
 			elseif state.ElementalMode.value == 'Dark' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Compression true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Compression true')
 			else
 				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
 			end
@@ -1279,30 +1287,30 @@ function handle_elemental(cmdParams)
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
 			
 			if state.ElementalMode.value == 'Fire' then
-				windower.chat.input:schedule(1.3,'//ssc f a h')
+				windower.send_command:schedule(1.3,'ssc f a h')
 				windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
 				windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
 
 			elseif state.ElementalMode.value == 'Wind' then
-				windower.chat.input:schedule(1.3,'//ssc a a h')
+				windower.send_command:schedule(1.3,'ssc a a h')
 				windower.chat.input('/p '..auto_translate('Detonation')..' -<t>- MB: '..auto_translate('wind')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Lightning' then
-				windower.chat.input:schedule(1.3,'//ssc t a h')
+				windower.send_command:schedule(1.3,'ssc t a h')
 				windower.chat.input('/p '..auto_translate('Impaction')..' -<t>- MB: '..auto_translate('Thunder')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Light' then
-				windower.chat.input:schedule(1.3,'//ssc l a h')
+				windower.send_command:schedule(1.3,'ssc l a h')
 				windower.chat.input('/p '..auto_translate('Transfixion')..' -<t>- MB: '..auto_translate('Light')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Earth' then
-				windower.chat.input:schedule(1.3,'//ssc s a h')
+				windower.send_command:schedule(1.3,'ssc s a h')
 				windower.chat.input('/p '..auto_translate('Scission')..' -<t>- MB: '..auto_translate('earth')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Ice' then
-				windower.chat.input:schedule(1.3,'//ssc b a h')
+				windower.send_command:schedule(1.3,'ssc b a h')
 				windower.chat.input('/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Water' then
-				windower.chat.input:schedule(1.3,'//ssc w a h')
+				windower.send_command:schedule(1.3,'ssc w a h')
 				windower.chat.input('/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Dark' then
-				windower.chat.input:schedule(1.3,'//ssc d a h')
+				windower.send_command:schedule(1.3,'ssc d a h')
 				windower.chat.input('/p '..auto_translate('Compression')..' -<t>- MB: '..auto_translate('Darkness')..' <scall21> OPEN!')
 			else
 				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
@@ -1323,30 +1331,30 @@ function handle_elemental(cmdParams)
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
 			
 			if state.ElementalMode.value == 'Fire' then
-				windower.chat.input:schedule(1.3,'//ssc f a h mb 5')
+				windower.send_command:schedule(1.3,'ssc f a h mb 5')
 				windower.chat.input('/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> OPEN!')
 				windower.chat.input:schedule(6.9,'/p '..auto_translate('Liquefaction')..' -<t>- MB: '..auto_translate('Fire')..' <scall21> CLOSE!')
 
 			elseif state.ElementalMode.value == 'Wind' then
-				windower.chat.input:schedule(1.3,'//ssc a a h mb 5')
+				windower.send_command:schedule(1.3,'ssc a a h mb 5')
 				windower.chat.input('/p '..auto_translate('Detonation')..' -<t>- MB: '..auto_translate('wind')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Lightning' then
-				windower.chat.input:schedule(1.3,'//ssc t a h mb 5')
+				windower.send_command:schedule(1.3,'ssc t a h mb 5')
 				windower.chat.input('/p '..auto_translate('Impaction')..' -<t>- MB: '..auto_translate('Thunder')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Light' then
-				windower.chat.input:schedule(1.3,'//ssc l a h mb 5')
+				windower.send_command:schedule(1.3,'ssc l a h mb 5')
 				windower.chat.input('/p '..auto_translate('Transfixion')..' -<t>- MB: '..auto_translate('Light')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Earth' then
-				windower.chat.input:schedule(1.3,'//ssc s a h mb 5')
+				windower.send_command:schedule(1.3,'ssc s a h mb 5')
 				windower.chat.input('/p '..auto_translate('Scission')..' -<t>- MB: '..auto_translate('earth')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Ice' then
-				windower.chat.input:schedule(1.3,'//ssc b a h mb 5')
+				windower.send_command:schedule(1.3,'ssc b a h mb 5')
 				windower.chat.input('/p '..auto_translate('Induration')..' -<t>- MB: '..auto_translate('ice')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Water' then
-				windower.chat.input:schedule(1.3,'//ssc w a h mb 5')
+				windower.send_command:schedule(1.3,'ssc w a h mb 5')
 				windower.chat.input('/p '..auto_translate('Reverberation')..' -<t>- MB: '..auto_translate('Water')..' <scall21> OPEN!')
 			elseif state.ElementalMode.value == 'Dark' then
-				windower.chat.input:schedule(1.3,'//ssc d a h mb h2')
+				windower.send_command:schedule(1.3,'ssc d a h mb h2')
 				windower.chat.input('/p '..auto_translate('Compression')..' -<t>- MB: '..auto_translate('Darkness')..' <scall21> OPEN!')
 			else
 				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
@@ -1435,13 +1443,13 @@ function handle_elemental(cmdParams)
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
 			
 			if state.ElementalMode.value == 'Fire' or state.ElementalMode.value == 'Light' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Fusion true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Fusion true')
 			elseif state.ElementalMode.value == 'Lightning' or state.ElementalMode.value == 'Lightning' then
-				windower.chat.input:schedule(1.3,'//gs c soloSC 1 Fragmentation true')
+				windower.send_command:schedule(1.3,'gs c soloSC 1 Fragmentation true')
 			elseif state.ElementalMode.value == 'Earth' or state.ElementalMode.value == 'Dark' then
-					windower.chat.input:schedule(1.3,'//gs c soloSC 1 Gravitation')
+					windower.send_command:schedule(1.3,'gs c soloSC 1 Gravitation')
 			elseif state.ElementalMode.value == 'Ice' or state.ElementalMode.value == 'Water' then
-					windower.chat.input:schedule(1.3,'//gs c soloSC 1 Distortion true')
+					windower.send_command:schedule(1.3,'gs c soloSC 1 Distortion true')
 			else
 				add_to_chat(123,'Abort: '..state.ElementalMode.value..' is not an Elemental Mode with a skillchain1 command!')
 			end
@@ -1491,7 +1499,7 @@ function handle_elemental(cmdParams)
 			windower.chat.input('/ja "Dark Arts" <me>')
 		elseif state.ElementalMode.value == 'Fire' then
 			if not state.Buff['Immanence'] then windower.chat.input('/ja "Immanence" <me>') end
-			windower.chat.input:schedule(1.3,'//gs c soloSC 2 Fusion true')
+			windower.send_command:schedule(1.3,'gs c soloSC 2 Fusion true')
 		else
 			add_to_chat(123,'Abort: Fire is the only element with a consecutive 3-step skillchain.')
 		end
@@ -1800,7 +1808,23 @@ function check_arts()
 	return false
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
+	local party = windower.ffxi.get_party()
+
 	if state.AutoBuffMode.value ~= 'Off' then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -1810,13 +1834,22 @@ function check_buff()
 				return true
 			end
 		end
-		if not buffactive[data.elements.storm_of[state.ElementalMode.value]] then
-			windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
-			tickdelay = os.clock() + 1.1
-			return true
+		local party = windower.ffxi.get_party()
 
-		
-	    elseif player.sub_job == 'RDM' and not state.Buff['SJ Restriction'] then
+		if party.count ~= 1 and get_current_stratagem_count() > 0 and not(buffactive.Perpetuance or silent_check_amnesia()) and not buffactive[data.elements.storm_of[state.ElementalMode.value]] then
+			windower.chat.input('/ja "Accession" <me>')
+			windower.chat.input:schedule(1.1,'/ja "Perpetuance" <me>')
+			windower.chat.input:schedule(3.2,'/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
+			tickdelay = os.clock() + 5.1
+			return true
+		-- else 
+		-- 	if not silent_check_amnesia() and not buffactive[data.elements.storm_of[state.ElementalMode.value]] then
+		-- 	windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
+		-- 	tickdelay = os.clock() + 1.1
+		-- 	return true
+		--     end
+		end
+	    if player.sub_job == 'RDM' and not state.Buff['SJ Restriction'] then
 			if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] then
 				windower.chat.input('/ma "'..data.elements.BarElement_of[state.ElementalMode.value]..'" <me>')
 				tickdelay = os.clock() + 1.1
@@ -1945,23 +1978,26 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.z = windower.ffxi.get_mob_by_index(player.index).z
 end
 
+local last_check = 0
 moving = false
 windower.raw_register_event('prerender',function()
+    if os.clock() - last_check < 5 then return end
+    last_check = os.clock()	
     mov.counter = mov.counter + 1;
     if state.HippoMode.value == true then 
         moving = false
 	end
 end)
 
-function getNbStratagems()
-    -- returns recast in seconds.
-    local allRecasts = windower.ffxi.get_ability_recasts()
-    local stratsRecast = allRecasts[231]
-    local maxStrategems = math.floor((player.main_job_level + 10) / 20)
-    local fullRechargeTime = 4*60 -- change 60 with 45 if you have unlocked the job point gift on stratagem recast
-    local currentCharges = math.floor(maxStrategems - maxStrategems * stratsRecast / fullRechargeTime)
-    return currentCharges
-end
+-- function getNbStratagems()
+--     -- returns recast in seconds.
+--     local allRecasts = windower.ffxi.get_ability_recasts()
+--     local stratsRecast = allRecasts[231]
+--     local maxStrategems = math.floor((player.main_job_level + 10) / 20)
+--     local fullRechargeTime = 4*60 -- change 60 with 45 if you have unlocked the job point gift on stratagem recast
+--     local currentCharges = math.floor(maxStrategems - maxStrategems * stratsRecast / fullRechargeTime)
+--     return currentCharges
+-- end
 
 function set_lockstyle()
     send_command('wait 2;input /lockstyleset 173')
@@ -1971,22 +2007,22 @@ windower.register_event('incoming text',function(org)
 
 	--Sortie 	--Vagary
 	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
-		windower.send_command('input //gs c set ElementalMode water')
+		windower.send_command('gs c set ElementalMode water')
 	end
 	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
-		windower.send_command('input //gs c set ElementalMode Lightning')
+		windower.send_command('gs c set ElementalMode Lightning')
 	end
 	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
-		windower.send_command('input //gs c set ElementalMode Fire')
+		windower.send_command('gs c set ElementalMode Fire')
 	end
 	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
-		windower.send_command('input //gs c set ElementalMode Wind')
+		windower.send_command('gs c set ElementalMode Wind')
 	end
 	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
-		windower.send_command('input //gs c set ElementalMode Earth')
+		windower.send_command('gs c set ElementalMode Earth')
 	end
 	if string.find(org, "Blast of Reticence") then
-		windower.send_command('input //gs c set ElementalMode Ice')
+		windower.send_command('gs c set ElementalMode Ice')
 	end
 end)
 

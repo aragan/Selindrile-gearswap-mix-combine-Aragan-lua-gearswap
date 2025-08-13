@@ -86,7 +86,7 @@ function job_setup()
 	update_combat_form()  
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaBelt","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","PhysicalDefenseMode","MagicalDefenseMode","ResistDefenseMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoTankMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaBelt","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","PhysicalDefenseMode","MagicalDefenseMode","ResistDefenseMode","TreasureMode",})
 end
 
 buff_spell_lists = {
@@ -530,15 +530,15 @@ function job_status_change(newStatus, oldStatus, eventArgs)
 		 tickdelay = os.clock() + 1.1
 		 return true
  
-	elseif player.sub_job == 'WAR' and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
+	elseif player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Defender and (player.in_combat or being_attacked) and player.hpp < 25 and abil_recasts[3] < latency then
 		 windower.chat.input('/ja "Defender" <me>')
 		 tickdelay = os.clock() + 1.1
 		 return true
-	elseif player.sub_job == 'PLD' and (player.in_combat or being_attacked) and not buffactive.Sentinel and player.hpp < 25 and abil_recasts[75] < latency then
+	elseif player.sub_job == 'PLD' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and not buffactive.Sentinel and player.hpp < 25 and abil_recasts[75] < latency then
 		windower.chat.input('/ja "Sentinel" <me>')
 		tickdelay = os.clock() + 1.1
 		return true
-	elseif player.sub_job == 'PLD' and (player.in_combat or being_attacked) and not buffactive['Holy Circle'] and player.hpp < 42 and abil_recasts[74] < latency then
+	elseif player.sub_job == 'PLD' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and not buffactive['Holy Circle'] and player.hpp < 42 and abil_recasts[74] < latency then
 		 windower.chat.input('/ja "Holy Circle" <me>')
 		 tickdelay = os.clock() + 1.1
 		 return true
@@ -548,7 +548,7 @@ function job_status_change(newStatus, oldStatus, eventArgs)
 		if being_attacked and player.hpp < 85 and abil_recasts[242] < latency then 
 			windower.chat.input('/ja "Vivacious Pulse" <me>')
 			tickdelay = os.clock() + 1.1
-	    elseif player.sub_job == 'SCH' and player.hpp < 85  and being_attacked and spell_recasts[4] < spell_latency then 
+	    elseif player.sub_job == 'SCH' and not state.Buff['SJ Restriction'] and player.hpp < 85  and being_attacked and spell_recasts[4] < spell_latency then 
 			windower.chat.input('/ma "Cure IV" <me>')
 			tickdelay = os.clock() + 1.1
 		end
@@ -923,7 +923,21 @@ function handle_elemental(cmdParams)
     end
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -989,11 +1003,11 @@ function check_buff()
 				tickdelay = os.clock() + 1.1
 				return true
 			elseif state.AutoRuneMode.Value == false then
-				windower.chat.input('//gs c set AutoRuneMode true')
+				send_command('gs c set AutoRuneMode true')
 				return true
 
 			--[[elseif state.AutoRuneMode.Value == false then
-				windower.chat.input('//gs c elemental barelement')
+				send_command('gs c elemental barelement')
 				return true
             ]]
 			else
@@ -1094,7 +1108,7 @@ attack staggers the fiend!
 	-- if string.find(org, "Chokehold") then
 	if string.find(org, "Undulating Shockwave") then
 		windower.send_command('gs c set ElementalMode Ice;gs c set RuneElement Gelus')
-			--windower.send_command('input //gs c set ElementalMode Ice')
+			--windower.send_command('gs c set ElementalMode Ice')
 			--windower.send_command('input /ma Blizzard <bt>')
 			windower.chat.input('/p its Changes hands to Wind >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
 			--windower.chat.input('input /p Chokehold >> ITS WEAK ICE PROC <call14>!')
@@ -1114,7 +1128,7 @@ attack staggers the fiend!
 	
 	if (player.sub_job == 'SCH' or player.sub_job == 'RDM') and not state.Buff['SJ Restriction'] then
 		if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
-			windower.send_command('input //gs c set ElementalMode water')
+			windower.send_command('gs c set ElementalMode water')
 			windower.send_command('input /ma water <bt>')
 			windower.chat.input('/p Flaming Kick >> ITS WEAK WATER PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
@@ -1123,7 +1137,7 @@ attack staggers the fiend!
 	
 		end
 		if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
-			windower.send_command('input //gs c set ElementalMode Lightning')
+			windower.send_command('gs c set ElementalMode Lightning')
 			windower.send_command('input /ma thunder <bt>')
 			windower.chat.input('/p Flashflood >> ITS WEAK THUNDER PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
@@ -1131,7 +1145,7 @@ attack staggers the fiend!
 	
 		end
 		if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
-			windower.send_command('input //gs c set ElementalMode Fire')
+			windower.send_command('gs c set ElementalMode Fire')
 			windower.send_command('input /ma fire <bt>')
 			windower.chat.input('/p Flashflood >> ITS WEAK FIRE PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
@@ -1139,7 +1153,7 @@ attack staggers the fiend!
 	
 		end
 		if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
-			windower.send_command('input //gs c set ElementalMode Wind')
+			windower.send_command('gs c set ElementalMode Wind')
 			windower.send_command('input /ma wind <bt>')
 			windower.chat.input('/p Flashflood >> ITS WEAK WIND PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
@@ -1147,7 +1161,7 @@ attack staggers the fiend!
 	
 		end
 		if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
-			windower.send_command('input //gs c set ElementalMode Earth')
+			windower.send_command('gs c set ElementalMode Earth')
 			windower.send_command('input /ma Stone <bt>')
 			windower.chat.input('/p Flashflood >> ITS WEAK STONE PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
@@ -1155,7 +1169,7 @@ attack staggers the fiend!
 	
 		end
 		if string.find(org, "Blast of Reticence") then
-			windower.send_command('input //gs c set ElementalMode Ice')
+			windower.send_command('gs c set ElementalMode Ice')
 			windower.send_command('input /ma Blizzard <bt>')
 			windower.chat.input('/p Flashflood >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1

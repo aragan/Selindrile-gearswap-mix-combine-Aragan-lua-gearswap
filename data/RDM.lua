@@ -134,7 +134,7 @@ function job_setup()
 	autonuke = 'Absorb-TP'
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","NM","SleepMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","NM","SleepMode","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -622,11 +622,11 @@ function job_status_change(newStatus, oldStatus, eventArgs)
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 	local abil_recasts = windower.ffxi.get_ability_recasts()	
 
-	if state.AutoBuffMode.Value == 'Shinryu' and player.in_combat then
-        -- state.WeaponLock:set(true)
-		windower.send_command('gs c set WeaponLock true')
+	-- if state.AutoBuffMode.Value == 'Shinryu' and player.in_combat then
+    --     -- state.WeaponLock:set(true)
+	-- 	windower.send_command('gs c set WeaponLock true')
 
-    end
+    -- end
 	if state.NeverDieMode.value then 
 		if player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 10 then
 			state.AutoShadowMode:set('true')
@@ -1153,7 +1153,21 @@ function check_arts()
  	return false	
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -1301,7 +1315,7 @@ windower.register_event('incoming text',function(org)
 		windower.send_command('gs c set ElementalMode Ice')
 	end
 end)
-
+local already_announced_by_name = {}
 function user_job_target_change(target)  
 	local already_announced_by_name = already_announced_by_name or {}
 	local target = windower.ffxi.get_mob_by_target('t')
@@ -1309,7 +1323,7 @@ function user_job_target_change(target)
 	if  (target ~= nil) and (sub == nil) then --(state.AutoBuffMode.Value == 'Sortie' or state.AutoBuffMode.Value == 'Aminon') and
 		if target.name == 'Shinryu' and not already_announced_by_name[target.name] and (target ~= nil) and (sub == nil) then
 			already_announced_by_name[target.name] = true  --test Ironshell Ghast Shinryu
-		windower.send_command('input /macro book 22; input /macro set 1;gs c set ElementalMode Lightning;gs c set AutoWSRestore true;gs c set AutoWSMode true;gs c set OffenseMode STP;gs c set Passive Shiniryu1;gs c Weapons DualRedLotus;gs c set TreasureMode Tag;gs c set BarStatus Barpetrify;gs c set GainSpell Gain-INT;exec trustshinryu.txt;')
+		windower.send_command('input /macro book 22; input /macro set 1;gs c set ElementalMode Lightning;gs c set AutoWSRestore true;gs c set AutoWSMode true;gs c set OffenseMode STP;gs c set Passive Enspellhand;gs c Weapons DualRedLotus;gs c set TreasureMode Tag;gs c set BarStatus Barpetrify;gs c set GainSpell Gain-INT;exec trustshinryu.txt;')
 		-- set_macro_page(22, 1)
 	    end
 	end

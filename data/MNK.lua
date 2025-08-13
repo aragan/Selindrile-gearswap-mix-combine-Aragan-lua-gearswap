@@ -101,7 +101,7 @@ function job_setup()
     info.impetus_hit_count = 0
     --windower.raw_register_event('action', on_action_for_impetus)
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -352,8 +352,11 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.z = windower.ffxi.get_mob_by_index(player.index).z
 end
 
+local last_check = 0
 moving = false
 windower.raw_register_event('prerender',function()
+    if os.clock() - last_check < 5 then return end
+    last_check = os.clock()	
     mov.counter = mov.counter + 1;
     if state.HippoMode.value == true then 
         moving = false
@@ -481,7 +484,21 @@ function user_status_change(newStatus, oldStatus, eventArgs)
 	end
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value == 'Auto' and player.in_combat then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 

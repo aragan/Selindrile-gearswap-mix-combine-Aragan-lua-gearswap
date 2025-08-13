@@ -119,7 +119,8 @@ function job_setup()
     set_dual_wield()
 
 	send_command('lua l Singer')--;sing off;sing active off
-
+	songset_modes = {'songsetphnonitro','songsetnophnonitro','songsetnoph', 'songsetph', 'songsetphccsv'}
+	current_songset_mode = 1
     state.ExtraSongsMode = M{['description']='Extra Songs','Cheer','FullLength','None','Dummy','Marsyas'}
 	-- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Always','300','1000','Never'}
@@ -134,10 +135,11 @@ function job_setup()
 	autows = "Rudra's Storm"
 	autofood = 'Pear Crepe'
 	autonuke = 'Absorb-TP'
-
+    -- Set this to false if you don't want to use custom timers.
+    state.UseCustomTimers = M(true, 'Use Custom Timers')
 	state.AutoSongMode = M(false, 'Auto Song Mode')
     state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
-
+	state.BarfawcMode = M(false, 'BarfawcMode')
     state.Carol = M{['description']='Carol',
         'Fire Carol', 'Fire Carol II', 'Ice Carol', 'Ice Carol II', 'Wind Carol', 'Wind Carol II',
         'Earth Carol', 'Earth Carol II', 'Lightning Carol', 'Lightning Carol II', 'Water Carol', 'Water Carol II',
@@ -162,6 +164,8 @@ function job_setup()
 		
 	state.Singer = M{['description']='Singer','seg','Cuijatender','haste4','seg','seg4','shinryu','shinryu4','mboze','mboze2', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
 		'haste','haste4', 'magic', 'ph','sortie4', 'ody4', 'ody','sortie',} --'aria',
+		
+		
 
 
 	Haste = 0
@@ -172,7 +176,7 @@ function job_setup()
 	determine_haste_group()
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Songset","Passive","RuneElement","ExtraSongsMode","ElementalMode","CastingMode","IdleMode","CarnMode","Etude","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Songset","Passive","RuneElement","ExtraSongsMode","ElementalMode","CastingMode","IdleMode","CarnMode","Etude","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -222,6 +226,10 @@ function job_precast(spell, spellMap, eventArgs)
 		if not sets.precast.FC[spell.english] and (spell.type == 'BardSong' and spell.targets.Enemy) then
 			classes.CustomClass = 'SongDebuff'
 		end
+		if (state.ExtraSongsMode.value == 'Cheer' or state.BarfawcMode.value) then
+			equip(sets.precast.FC.BardSong.Barfawc)
+		end
+		-- end
 	end
 
 end
@@ -241,33 +249,7 @@ function job_filter_precast(spell, spellMap, eventArgs)
 
 end
 
--- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
-function job_midcast(spell, spellMap, eventArgs)
-    if spell.action_type == 'Magic' then
-        if spell.type == 'BardSong' then
-            -- layer general gear on first, then let default handler add song-specific gear.
-            local generalClass = get_song_class(spell)
-			if generalClass and sets.midcast[generalClass] then
-				if sets.midcast[generalClass][state.CastingMode.value] then
-					equip(sets.midcast[generalClass][state.CastingMode.value])
-				else
-					equip(sets.midcast[generalClass])
-				end
-            end
-			if state.CarnMode.value ~= 'Never' and (state.CarnMode.value == 'Always' or tonumber(state.CarnMode.value) > player.tp) then
-				if sets.midcast[generalClass].main and sets.midcast[generalClass].main ~= player.equipment.main then
-					enable('main')
-					equip({main=sets.midcast[generalClass].main})
-				end
-				if sets.midcast[generalClass].sub and sets.midcast[generalClass].sub ~= player.equipment.sub then
-					enable('sub')
-					equip({sub=sets.midcast[generalClass].sub})
-				end
-			end
-        end
-    end
 
-end
 --send_command('@input /ja "Pianissimo" <me>; wait 1.1; input /ma "'..spell.name..'" '..spell.target.name)
 function job_post_precast(spell, spellMap, eventArgs)
 	if spell.type == 'BardSong' then
@@ -310,7 +292,6 @@ function job_post_precast(spell, spellMap, eventArgs)
 				equip({sub=sets.precast.FC.BardSong.sub})
 			end
 		end
-
 	elseif spell.type == 'WeaponSkill' then
 		local WSset = standardize_set(get_precast_set(spell, spellMap))
 		local wsacc = check_ws_acc()
@@ -329,7 +310,33 @@ function job_post_precast(spell, spellMap, eventArgs)
 	end
 
 end
+-- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
+function job_midcast(spell, spellMap, eventArgs)
+    if spell.action_type == 'Magic' then
+        if spell.type == 'BardSong' then
+            -- layer general gear on first, then let default handler add song-specific gear.
+            local generalClass = get_song_class(spell)
+			if generalClass and sets.midcast[generalClass] then
+				if sets.midcast[generalClass][state.CastingMode.value] then
+					equip(sets.midcast[generalClass][state.CastingMode.value])
+				else
+					equip(sets.midcast[generalClass])
+				end
+            end
+			if state.CarnMode.value ~= 'Never' and (state.CarnMode.value == 'Always' or tonumber(state.CarnMode.value) > player.tp) then
+				if sets.midcast[generalClass].main and sets.midcast[generalClass].main ~= player.equipment.main then
+					enable('main')
+					equip({main=sets.midcast[generalClass].main})
+				end
+				if sets.midcast[generalClass].sub and sets.midcast[generalClass].sub ~= player.equipment.sub then
+					enable('sub')
+					equip({sub=sets.midcast[generalClass].sub})
+				end
+			end
+        end
+    end
 
+end
 function job_post_midcast(spell, spellMap, eventArgs)
     if spell.type == 'BardSong' then
 		if spell.targets.Enemy then
@@ -351,11 +358,26 @@ function job_post_midcast(spell, spellMap, eventArgs)
 				equip(sets.midcast.SongDebuff.DW)
 			end
 		else
-			if can_dual_wield and sets.midcast.SongEffect.DW then
+			if (state.ExtraSongsMode.value ~= 'Cheer' or state.BarfawcMode.value)  and can_dual_wield and sets.midcast.SongEffect.DW then
 				equip(sets.midcast.SongEffect.DW)
+
+			elseif (state.ExtraSongsMode.value == 'Cheer' or state.BarfawcMode.value)  and can_dual_wield and sets.midcast.SongEffect.Barfawc.DW   then
+				equip(sets.midcast.SongEffect.Barfawc.DW)
+			
+		    elseif  (state.ExtraSongsMode.value == 'Cheer' or state.BarfawcMode.value) and not can_dual_wield and sets.midcast.SongEffect.Barfawc   then
+				equip(sets.midcast.SongEffect.Barfawc)
+			
+			-- elseif state.ExtraSongsMode.value == 'Cheer' and can_dual_wield and sets.midcast.SongEffect.Barfawc.DW   then
+			-- 		-- if item_owned("Tauret") then 
+			-- 	        equip(sets.midcast.SongEffect.Barfawc.DW)
+	
+			-- 		-- end
+			-- elseif state.ExtraSongsMode.value == 'Cheer' and not can_dual_wield and sets.midcast.SongEffect.Barfawc   then
+			-- 		-- if item_owned("Tauret") then 
+			-- 	        equip(sets.midcast.SongEffect.Barfawc)
+			-- 		-- end
 			end
 		end
-		
 
 
         --[[if not state.ExtraSongsMode.value:contains('Lock') then
@@ -395,7 +417,18 @@ function job_post_midcast(spell, spellMap, eventArgs)
     end
 end
 function job_filter_aftercast(spell, spellMap, eventArgs)
+	local party = windower.ffxi.get_party()
+	local duration = calculate_duration()
+	local warn_time = duration - 180  -- قبل 3 دقائق
+	-- local warn_time_Miracle = duration - 890  -- قبل 3 دقائق
 
+	if player.equipment.range ~= 'Miracle Cheer' and spell.type == 'BardSong' and not spell.interrupted then
+		send_command('@wait '..warn_time..';input /echo All song durations have expired 3min')
+	end
+
+	if player.equipment.range == 'Miracle Cheer' and  party.count ~= 1 and not data.npcs.trusts:contains(party.name) and spell.type == 'BardSong' and not spell.interrupted then
+        send_command('@wait '..warn_time..';input /echo <----- All Miracle Cheer song durations have expired 3min----->')
+	end
 end
 -- Set eventArgs.handled to true if we don't want automatic gear equipping to be done.
 function job_aftercast(spell, spellMap, eventArgs)
@@ -432,12 +465,23 @@ end
 
 function job_buff_change(buff, gain)
 	update_melee_groups()
-	local party = windower.ffxi.get_party()
-	local in_party = (party.party1_count or 0) > 1
-	if in_party and (buffactive['Clarion Call'] or buffactive['Soul Voice '] or buffactive['Troubadour'] or buffactive['Nightingale']) then
-		send_command('@input /p -- SINGING starting not go far --')
-	end
-    
+
+    local party = windower.ffxi.get_party()
+    local in_party = (party.party1_count or 0) > 1
+    local has_singing_buff = buffactive['Clarion Call'] or buffactive['Soul Voice'] or buffactive['Troubadour'] or buffactive['Nightingale']
+
+    if in_party and has_singing_buff and not singing_announcement_sent then
+        send_command('@input /p >> SINGING started, dont go far!')
+        singing_announcement_sent = true
+    elseif not has_singing_buff then
+        -- إعادة السماح بالإعلان مرة أخرى عند زوال كل البوفات
+        singing_announcement_sent = false
+    end
+	if buffactive['Scherzo'] and state.HybridMode.value ~= 'Normal' then
+		state.HybridMode:set('Normal') 
+    else
+        state.HybridMode:set('DT') 
+    end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 
 		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
@@ -687,6 +731,7 @@ function update_melee_groups()
 	end
 end
 
+
     -- Allow jobs to override this code
 function job_self_command(commandArgs, eventArgs)
 	gearinfo(commandArgs, eventArgs)
@@ -695,8 +740,27 @@ function job_self_command(commandArgs, eventArgs)
 		handle_elemental(commandArgs)
 		eventArgs.handled = true			
 	end
+	if not commandArgs or not commandArgs[1] then return end
 
+    local cmd = commandArgs[1]:lower()
 
+    if cmd == 'toggle_songset' then
+        current_songset_mode = current_songset_mode + 1
+        if current_songset_mode > #songset_modes then
+            current_songset_mode = 1
+        end
+        local selected = songset_modes[current_songset_mode]
+        add_to_chat(200, ' [Songset Mode] selected: ' .. selected)
+        eventArgs.handled = true
+        return
+
+    elseif cmd == 'apply_songset' then
+        local selected = songset_modes[current_songset_mode]
+        add_to_chat(121, ' [Applying Songset]: ' .. selected)
+        send_command('gs c ' .. selected)
+        eventArgs.handled = true
+        return
+	end
     if commandArgs[1]:lower() == 'etude' then
         send_command('@input /ma "'..state.Etude.value..'" <stpc>')
     elseif commandArgs[1]:lower() == 'carol' then
@@ -705,15 +769,19 @@ function job_self_command(commandArgs, eventArgs)
         send_command('@input /ma "'..state.Threnody.value..'" <stnpc>')
     end
 	if commandArgs[1]:lower() == 'songsetnoph' then
-		send_command('@input //abb "'..state.Songset.value..'" noph')
+		send_command('@abb "'..state.Songset.value..'" noph')
+	elseif commandArgs[1]:lower() == 'songsetnophnonitro' then
+		send_command('@abb "'..state.Songset.value..'" noph nonitro')
+	elseif commandArgs[1]:lower() == 'songsetphnonitro' then
+		send_command('@abb "'..state.Songset.value..'" ph nonitro')
 	elseif commandArgs[1]:lower() == 'songsetph' then
-		send_command('@input //abb "'..state.Songset.value..'" ph')
+		send_command('@abb "'..state.Songset.value..'" ph')
 	elseif commandArgs[1]:lower() == 'songsetphccsv' then
-		send_command('@input //abb "'..state.Songset.value..'" ph ccsv')
+		send_command('@abb "'..state.Songset.value..'" ph ccsv')
 	elseif commandArgs[1]:lower() == 'songset' then
-		send_command('@input //abb "'..state.Songset.value..'" ccsv') 
+		send_command('@abb "'..state.Songset.value..'" ccsv') 
 	elseif commandArgs[1]:lower() == 'singer' then
-		send_command('@input //sing playlist "'..state.Singer.value..'"') 
+		send_command('@sing playlist "'..state.Singer.value..'"') 
 	end
 end
 
@@ -842,7 +910,33 @@ function handle_elemental(cmdParams)
 				add_to_chat(123,'Abort: All '..data.elements.nuke_of[state.ElementalMode.value]..' nukes on cooldown or or not enough MP.')
 			end
 		end
+		
+	-- last_ballad3_time = last_ballad3_time or 0  
 
+	elseif command == 'ballad' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		local now = os.clock() -- وقت حالي بالثواني منذ بدء التشغيل
+		last_ballad3_time = last_ballad3_time or 0  
+
+		if spell_recasts[388] < spell_latency and (now - last_ballad3_time) >= 12 then
+			windower.chat.input('/ma "Mage\'s Ballad III" '..target..'')
+			last_ballad3_time = now -- حدّث وقت آخر Cast
+		elseif spell_recasts[387] < spell_latency then
+			windower.chat.input('/ma "Mage\'s Ballad II" '..target..'')
+		end
+		-- last_minne_time = last_minne_time or 0  
+
+	elseif command == 'minne' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		local now = os.clock() 
+		last_minne_time = last_minne_time or 0  
+
+		if spell_recasts[393] < spell_latency and (now - last_minne_time) >= 12 then
+			windower.chat.input('/ma "Knight\'s Minne V" '..target..'')
+			last_minne_time = now 
+		elseif spell_recasts[392] < spell_latency then
+			windower.chat.input('/ma "Knight\'s Minne IV" '..target..'')
+		end
 	elseif command == 'ninjutsu' then
 		windower.chat.input('/ma "'..data.elements.ninjutsu_nuke_of[state.ElementalMode.value]..': Ni" '..target..'')
 
@@ -914,6 +1008,189 @@ function job_tick()
 	return false
 end
 
+
+-- Function to create custom buff-remaining timers with the Timers plugin,
+-- keeping only the actual valid songs rather than spamming the default
+-- buff remaining timers.
+function adjust_timers(spell, spellMap)
+    if state.UseCustomTimers.value == false then
+        return
+    end
+    
+    local current_time = os.time()
+    
+    -- custom_timers contains a table of song names, with the os time when they
+    -- will expire.
+    
+    -- Eliminate songs that have already expired from our local list.
+    local temp_timer_list = {}
+    for song_name,expires in pairs(custom_timers) do
+        if expires < current_time then
+            temp_timer_list[song_name] = true
+        end
+    end
+    for song_name,expires in pairs(temp_timer_list) do
+        custom_timers[song_name] = nil
+    end
+    
+    local dur = calculate_duration(spell.name, spellMap)
+    if custom_timers[spell.name] then
+        -- Songs always overwrite themselves now, unless the new song has
+        -- less duration than the old one (ie: old one was NT version, new
+        -- one has less duration than what's remaining).
+        
+        -- If new song will outlast the one in our list, replace it.
+        if custom_timers[spell.name] < (current_time + dur) then
+            send_command('timers delete "'..spell.name..'"')
+            custom_timers[spell.name] = current_time + dur
+            send_command('timers create "'..spell.name..'" '..dur..' down')
+        end
+    else
+        -- Figure out how many songs we can maintain.
+        local maxsongs = 2
+        if player.equipment.range == info.ExtraSongInstrument then
+            maxsongs = maxsongs + info.ExtraSongs
+        end
+        if buffactive['Clarion Call'] then
+            maxsongs = maxsongs + 1
+        end
+        -- If we have more songs active than is currently apparent, we can still overwrite
+        -- them while they're active, even if not using appropriate gear bonuses (ie: Daur).
+        if maxsongs < table.length(custom_timers) then
+            maxsongs = table.length(custom_timers)
+        end
+        
+        -- Create or update new song timers.
+        if table.length(custom_timers) < maxsongs then
+            custom_timers[spell.name] = current_time + dur
+            send_command('timers create "'..spell.name..'" '..dur..' down')
+        else
+            local rep,repsong
+            for song_name,expires in pairs(custom_timers) do
+                if current_time + dur > expires then
+                    if not rep or rep > expires then
+                        rep = expires
+                        repsong = song_name
+                    end
+                end
+            end
+            if repsong then
+                custom_timers[repsong] = nil
+                send_command('timers delete "'..repsong..'"')
+                custom_timers[spell.name] = current_time + dur
+                send_command('timers create "'..spell.name..'" '..dur..' down')
+            end
+        end
+    end
+end
+
+-- Function to calculate the duration of a song based on the equipment used to cast it.
+-- Called from adjust_timers(), which is only called on aftercast().
+function calculate_duration(spellName, spellMap)
+    local mult = 1
+	if player.equipment.range == 'Miracle Cheer' then
+        return 900 -- 15 دقيقة
+    end
+    if player.equipment.range == 'Daurdabla' then mult = mult + 0.3 end -- change to 0.25 with 90 Daur
+    if player.equipment.range == "Gjallarhorn" then mult = mult + 0.4 end -- change to 0.3 with 95 Gjall
+    if player.equipment.range == "Marsyas" then mult = mult + 0.5 end
+
+    if player.equipment.main == "Carnwenhan" then mult = mult + 0.5 end -- 0.1 for 75, 0.4 for 95, 0.5 for 99/119
+    if player.equipment.main == "Legato Dagger" then mult = mult + 0.05 end
+    if player.equipment.main == "Kali" then mult = mult + 0.05 end
+    if player.equipment.sub == "Kali" then mult = mult + 0.05 end
+    if player.equipment.sub == "Legato Dagger" then mult = mult + 0.05 end
+    if player.equipment.neck == "Aoidos' Matinee" then mult = mult + 0.1 end
+    if player.equipment.neck == "Mnbw. Whistle" then mult = mult + 0.2 end
+    if player.equipment.neck == "Mnbw. Whistle +1" then mult = mult + 0.3 end
+    if player.equipment.body == "Fili Hongreline +1" then mult = mult + 0.12 end
+    if player.equipment.body == "Fili Hongreline +2" then mult = mult + 0.12 end
+    if player.equipment.body == "Fili Hongreline +3" then mult = mult + 0.12 end
+    if player.equipment.legs == "Inyanga Shalwar +1" then mult = mult + 0.15 end
+    if player.equipment.legs == "Inyanga Shalwar +2" then mult = mult + 0.17 end
+    if player.equipment.feet == "Brioso Slippers" then mult = mult + 0.1 end
+    if player.equipment.feet == "Brioso Slippers +1" then mult = mult + 0.11 end
+    if player.equipment.feet == "Brioso Slippers +2" then mult = mult + 0.13 end
+    if player.equipment.feet == "Brioso Slippers +3" then mult = mult + 0.15 end
+	if player.equipment.feet == "Brioso Slippers +4" then mult = mult + 0.15 end
+    if player.equipment.hands == 'Brioso Cuffs +1' then mult = mult + 0.1 end
+    if player.equipment.hands == 'Brioso Cuffs +2' then mult = mult + 0.1 end
+    if player.equipment.hands == 'Brioso Cuffs +3' then mult = mult + 0.2 end
+	if player.equipment.hands == 'Brioso Cuffs +4' then mult = mult + 0.2 end
+
+    if spellMap == 'Paeon' and player.equipment.head == "Brioso Roundlet" then mult = mult + 0.1 end
+    if spellMap == 'Paeon' and player.equipment.head == "Brioso Roundlet +1" then mult = mult + 0.1 end
+	if spellMap == 'Paeon' and player.equipment.head == "Brioso Roundlet +2" then mult = mult + 0.1 end
+    if spellMap == 'Paeon' and player.equipment.head == "Brioso Roundlet +3" then mult = mult + 0.2 end
+    if spellMap == 'Paeon' and player.equipment.head == "Brioso Roundlet +4" then mult = mult + 0.2 end
+
+    if spellMap == 'Madrigal' and player.equipment.head == "Aoidos' Calot +2" then mult = mult + 0.1 end
+	if spellMap == 'Madrigal' and player.equipment.head == "Fili Calot" then mult = mult + 0.1 end
+	if spellMap == 'Madrigal' and player.equipment.head == "Fili Calot +1" then mult = mult + 0.1 end
+    if spellMap == 'Madrigal' and player.equipment.head == "Fili Calot +2" then mult = mult + 0.1 end
+    if spellMap == 'Madrigal' and player.equipment.head == "Fili Calot +3" then mult = mult + 0.1 end
+
+    if spellMap == 'Minuet' and player.equipment.body == "Aoidos' Hngrln. +2" then mult = mult + 0.1 end
+	if spellMap == 'Minuet' and player.equipment.body == "Fili Hongreline" then mult = mult + 0.1 end
+    if spellMap == 'Minuet' and player.equipment.body == "Fili Hongreline +1" then mult = mult + 0.1 end
+    if spellMap == 'Minuet' and player.equipment.body == "Fili Hongreline +2" then mult = mult + 0.1 end
+    if spellMap == 'Minuet' and player.equipment.body == "Fili Hongreline +3" then mult = mult + 0.1 end
+
+	if spellMap == 'March' and player.equipment.hands == 'Ad. Mnchtte. +2' then mult = mult + 0.1 end
+	if spellMap == 'March' and player.equipment.hands == 'Fili Manchettes' then mult = mult + 0.1 end
+	if spellMap == 'March' and player.equipment.hands == 'Fili Manchettes +1' then mult = mult + 0.1 end
+	if spellMap == 'March' and player.equipment.hands == 'Fili Manchettes +2' then mult = mult + 0.1 end
+	if spellMap == 'March' and player.equipment.hands == 'Fili Manchettes +3' then mult = mult + 0.1 end
+
+    if spellMap == 'Ballad' and player.equipment.legs == "Aoidos' Rhing. +2" then mult = mult + 0.1 end
+	if spellMap == 'Ballad' and player.equipment.legs == "Fili Rhingrave" then mult = mult + 0.1 end
+    if spellMap == 'Ballad' and player.equipment.legs == "Fili Rhingrave +1" then mult = mult + 0.1 end
+    if spellMap == 'Ballad' and player.equipment.legs == "Fili Rhingrave +2" then mult = mult + 0.1 end
+    if spellMap == 'Ballad' and player.equipment.legs == "Fili Rhingrave +3" then mult = mult + 0.1 end
+
+	if spellName == "Sentinel's Scherzo" and player.equipment.feet == "Aoidos' Cothrn. +2" then mult = mult + 0.1 end
+	if spellName == "Sentinel's Scherzo" and player.equipment.feet == "Fili Cothurnes" then mult = mult + 0.1 end
+	if spellName == "Sentinel's Scherzo" and player.equipment.feet == "Fili Cothurnes +1" then mult = mult + 0.1 end
+	if spellName == "Sentinel's Scherzo" and player.equipment.feet == "Fili Cothurnes +2" then mult = mult + 0.1 end
+	if spellName == "Sentinel's Scherzo" and player.equipment.feet == "Fili Cothurnes +3" then mult = mult + 0.1 end
+
+    if buffactive.Troubadour then
+        mult = mult*2
+    end
+    if spellName == "Sentinel's Scherzo" then
+        if buffactive['Soul Voice'] then
+            mult = mult*2
+        elseif buffactive['Marcato'] then
+            mult = mult*1.5
+        end
+    end
+    
+    local totalDuration = math.floor(mult*120)
+	-- local party = windower.ffxi.get_party()
+	-- local warn_time = totalDuration - 10  -- قبل 3 دقائق
+
+	-- if player.equipment.range ~= 'Miracle Cheer' and spell.type == 'BardSong' and not spell.interrupted then
+    --     -- تحقق إذا كان السلاح هو Miracle Cheer Horn
+    --     -- if player.equipment.range == 'Miracle Cheer' then
+    --         -- تحقق أنها أغنية تستهدف اللاعبين
+    --         -- if spell.targets and spell.targets.Players then
+    --             -- حذف التايمر القديم إذا موجود
+    --             -- send_command('timers delete "'.. spell.english .. '"')
+
+    --             -- إنشاء تايمر جديد لمدة 15 دقيقة (900 ثانية)
+    --             -- send_command('timers create "'.. spell.english .. '" 60 down spells/01015.png')
+
+    --             -- إرسال تنبيه بعد انتهاء الوقت
+    --             -- send_command('@wait 720;input /echo <----- All Miracle Cheer song durations have expired 3min----->')
+	-- 			send_command('@wait '..warn_time..';input /echo All Miracle Cheer song durations have expired 3min')
+
+	-- end
+
+
+    return totalDuration
+end
+
+
 mov = {counter=0}
 if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.x = windower.ffxi.get_mob_by_index(player.index).x
@@ -921,8 +1198,11 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.z = windower.ffxi.get_mob_by_index(player.index).z
 end
 
+local last_check = 0
 moving = false
 windower.raw_register_event('prerender',function()
+	if os.clock() - last_check < 5 then return end
+    last_check = os.clock()	
     mov.counter = mov.counter + 1;
     if state.HippoMode.value == true then 
         moving = false
@@ -940,7 +1220,7 @@ function check_song()
 			tickdelay = os.clock() + 2
 			return true
 		--[[elseif not buffactive.madrigal then
-			windower.send_command('//gs c set ExtraSongsMode Dummy;input /ma "Blade Madrigal" <me>') --gs c set ExtraSongsMode FullLength;input 
+			windower.send_command('gs c set ExtraSongsMode Dummy;input /ma "Blade Madrigal" <me>') --gs c set ExtraSongsMode FullLength;input 
 			tickdelay = os.clock() + 2
 			return true]]
 		else
@@ -951,14 +1231,28 @@ function check_song()
 	end
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
-	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
+    if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
 			if not buffactive[buff_spell_lists[state.AutoBuffMode.Value][i].Buff] and (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Always' or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Combat' and (player.in_combat or being_attacked)) or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Engaged' and player.status == 'Engaged') or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'Idle' and player.status == 'Idle') or (buff_spell_lists[state.AutoBuffMode.Value][i].When == 'OutOfCombat' and not (player.in_combat or being_attacked))) and spell_recasts[buff_spell_lists[state.AutoBuffMode.Value][i].SpellID] < spell_latency and silent_can_use(buff_spell_lists[state.AutoBuffMode.Value][i].SpellID) then
 
-				windower.chat.input:schedule(3,'//input /ma "'..buff_spell_lists[state.AutoBuffMode.Value][i].Name..'" <me>')
-				windower.chat.input('//gs c set ExtraSongsMode Dummy')
+				windower.chat.input:schedule(3,'/ma "'..buff_spell_lists[state.AutoBuffMode.Value][i].Name..'" <me>')
+				windower.send_command('gs c set ExtraSongsMode Dummy')
 
 				tickdelay = os.clock() + 2
 				return true
@@ -990,7 +1284,7 @@ function check_buffup()
 		for i in pairs(buff_spell_lists[buffup]) do
 			if not buffactive[buff_spell_lists[buffup][i].Buff] and silent_can_use(buff_spell_lists[buffup][i].SpellID) and spell_recasts[buff_spell_lists[buffup][i].SpellID] < spell_latency then
 				windower.chat.input('/ma "'..buff_spell_lists[buffup][i].Name..'" <me>')
-				windower.chat.input('//gs c set ExtraSongsMode Dummy')
+				windower.send_command('gs c set ExtraSongsMode Dummy')
 				tickdelay = os.clock() + 2
 				return true
 			end

@@ -106,14 +106,15 @@ function job_setup()
     state.Buff.Seigan = buffactive.Seigan or false
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 	state.SubtleBlowMode = M(false, 'SubtleBlow Mode') 
-	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
+	state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
+	state.Absorbs = M{['description']='Absorbs', 'Absorb-TP', 'Absorb-VIT','Absorb-Attri', 'Absorb-MaxAcc','Absorb-STR', 'Absorb-DEX', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR',}
 
 	autows = 'Tachi: Fudo'
 	rangedautows = "Apex Arrow"
 	autofood = 'Soy Ramen'
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","ElementalMode","Absorbs","RuneElement","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -249,15 +250,19 @@ function job_customize_melee_set(meleeSet)
 	elseif state.Buff.Seigan and state.Buff['Third Eye'] and not state.OffenseMode.value:contains('Acc') then
 		meleeSet = set_combine(meleeSet, sets.buff['Third Eye'])
     end
-
 	if state.SubtleBlowMode.value then
 		if buffactive['Auspice'] then
-			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlow)
+			state.Passive:set('SubtleBlow')
 		else
-			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlowII)
+			state.Passive:set('SubtleBlowII')
 		end
+		send_command('gs c update') 
+
+		handle_equipping_gear(player.status)
+
+		if state.DisplayMode.value then update_job_states()	end
 	end
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
 	    meleeSet = set_combine(meleeSet, sets.Reraise)
     end
     return meleeSet
@@ -268,11 +273,24 @@ function job_customize_idle_set(idleSet)
 	if buffactive['Tactician\'s Roll'] then 
 		idleSet = set_combine(idleSet, sets.rollerRing)
 	end
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
 	    idleSet = set_combine(idleSet, sets.Reraise)
     end
 	return idleSet
 end
+function job_customize_defense_set(defenseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		defenseSet = set_combine(defenseSet, sets.Reraise)
+	end
+    return defenseSet
+end
+function job_customize_passive_set(baseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		baseSet = set_combine(baseSet, sets.Reraise)
+	end
+    return baseSet
+end
+
 -- Run after the default midcast() is done.
 -- eventArgs is the same one used in job_midcast, in case information needs to be persisted.
 function job_post_midcast(spell, spellMap, eventArgs)
@@ -294,9 +312,168 @@ function job_aftercast(spell, spellMap, eventArgs)
 		disable('feet')
 	end
 end
+-- Handling Elemental spells within Gearswap.
+-- Format: gs c elemental <nuke, helix, skillchain1, skillchain2, weather>
+function handle_elemental(cmdParams)
+    -- cmdParams[1] == 'elemental'
+    -- cmdParams[2] == ability to use
+
+    if not cmdParams[2] then
+        add_to_chat(123,'Error: No elemental command given.')
+        return
+    end
+    local command = cmdParams[2]:lower()
+	
+	if command == 'spikes' then
+		windower.chat.input('/ma "'..data.elements.spikes_of[state.ElementalMode.value]..' Spikes" <me>')
+		return
+	elseif command == 'enspell' then
+		windower.chat.input('/ma "En'..data.elements.enspell_of[state.ElementalMode.value]..'" <me>')
+		return
+	--Leave out target, let shortcuts auto-determine it.
+	elseif command == 'weather' then
+		if player.sub_job == 'RDM' then
+			windower.chat.input('/ma "Phalanx" <me>')
+		else
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			if (player.target.type == 'SELF' or not player.target.in_party) and buffactive[data.elements.storm_of[state.ElementalMode.value]] and not buffactive['Klimaform'] and spell_recasts[287] < spell_latency then
+				windower.chat.input('/ma "Klimaform" <me>')
+			else
+				windower.chat.input('/ma "'..data.elements.storm_of[state.ElementalMode.value]..'"')
+			end
+		end
+		return
+	end
+
+	local target = '<t>'
+	if cmdParams[3] then
+		if tonumber(cmdParams[3]) then
+			target = tonumber(cmdParams[3])
+		else
+			target = table.concat(cmdParams, ' ', 3)
+			target = get_closest_mob_id_by_name(target) or '<t>'
+		end
+	end
+
+    if command == 'nuke' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		
+		if state.ElementalMode.value == 'Light' then
+			if spell_recasts[29] < spell_latency and actual_cost(get_spell_table_by_name('Banish II')) < player.mp then
+				windower.chat.input('/ma "Banish II" '..target..'')
+			elseif spell_recasts[28] < spell_latency and actual_cost(get_spell_table_by_name('Banish')) < player.mp then
+				windower.chat.input('/ma "Banish" '..target..'')
+			else
+				add_to_chat(123,'Abort: Banishes on cooldown or not enough MP.')
+			end
+
+		else
+			if player.job_points[(res.jobs[player.main_job_id].ens):lower()].jp_spent > 99 and spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..' III').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..' III')) < player.mp then
+				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..'" '..target..'')
+			else
+				local tiers = {''}
+				for k in ipairs(tiers) do
+					if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
+						windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
+						return
+					end
+				end
+				add_to_chat(123,'Abort: All '..data.elements.nuke_of[state.ElementalMode.value]..' nukes on cooldown or or not enough MP.')
+			end
+		end
+			
+	elseif command == 'ninjutsu' then
+		windower.chat.input('/ma "'..data.elements.ninjutsu_nuke_of[state.ElementalMode.value]..': Ni" '..target..'')
+			
+	elseif command == 'smallnuke' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+	
+		local tiers = {''}
+		for k in ipairs(tiers) do
+			if spell_recasts[get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'')) < player.mp then
+				windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..''..tiers[k]..'" '..target..'')
+				return
+			end
+		end
+		add_to_chat(123,'Abort: All '..data.elements.nuke_of[state.ElementalMode.value]..' nukes on cooldown or or not enough MP.')
+		
+	elseif command:contains('tier') then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		local tierlist = {['tier1']='',['tier2']=' II',['tier3']=' III'}
+		
+		windower.chat.input('/ma "'..data.elements.nuke_of[state.ElementalMode.value]..tierlist[command]..'" '..target..'')
+		
+	elseif command:contains('aga') or command == 'aja' then
+		local spell_recasts = windower.ffxi.get_spell_recasts()
+		local tierkey = {'aga2','aga1'}
+		local tierlist = {['aga2']='ga II',['aga1']='ga',}
+		if command == 'aga' then
+			for i in ipairs(tierkey) do
+				if spell_recasts[get_spell_table_by_name(data.elements.nukega_of[state.ElementalMode.value]..''..tierlist[tierkey[i]]..'').id] < spell_latency and actual_cost(get_spell_table_by_name(data.elements.nukega_of[state.ElementalMode.value]..''..tierlist[tierkey[i]]..'')) < player.mp then
+					windower.chat.input('/ma "'..data.elements.nukega_of[state.ElementalMode.value]..''..tierlist[tierkey[i]]..'" '..target..'')
+					return
+				end
+			end
+		else
+			windower.chat.input('/ma "'..data.elements.nukega_of[state.ElementalMode.value]..tierlist[command]..'" '..target..'')
+		end
+
+	elseif command == 'ara' then
+		windower.chat.input('/ma "'..data.elements.nukera_of[state.ElementalMode.value]..'ra" '..target..'')
+		
+	elseif command == 'helix' then
+		windower.chat.input('/ma "'..data.elements.helix_of[state.ElementalMode.value]..'helix" '..target..'')
+	
+	elseif command == 'ancientmagic' then
+		windower.chat.input('/ma "'..data.elements.ancient_nuke_of[state.ElementalMode.value]..'" '..target..'')
+		
+	elseif command == 'ancientmagic2' then
+		windower.chat.input('/ma "'..data.elements.ancient_nuke_of[state.ElementalMode.value]..' II" '..target..'')
+		
+	elseif command == 'enfeeble' then
+		windower.chat.input('/ma "'..data.elements.elemental_enfeeble_of[state.ElementalMode.value]..'" '..target..'')
+	
+	elseif command == 'bardsong' then
+		windower.chat.input('/ma "'..data.elements.threnody_of[state.ElementalMode.value]..' Threnody" '..target..'')
+	else
+        add_to_chat(123,'Unrecognized elemental command.')
+    end
+end
+
+function gearinfo(commandArgs, eventArgs)
+    if commandArgs[1] == 'gearinfo' then
+        if type(tonumber(commandArgs[2])) == 'number' then
+            if tonumber(commandArgs[2]) ~= DW_needed then
+            DW_needed = tonumber(commandArgs[2])
+            DW = true
+            end
+        elseif type(commandArgs[2]) == 'string' then
+            if commandArgs[2] == 'false' then
+                DW_needed = 0
+                DW = false
+            end
+        end
+        if type(tonumber(commandArgs[3])) == 'number' then
+            if tonumber(commandArgs[3]) ~= Haste then
+                Haste = tonumber(commandArgs[3])
+            end
+        end
+        if not midaction() then
+            job_update()
+        end
+    end
+end
 
 function job_self_command(commandArgs, eventArgs)
+	gearinfo(commandArgs, eventArgs)
 
+	if commandArgs[1]:lower() == 'elemental' then
+		handle_elemental(commandArgs)
+		eventArgs.handled = true			
+	end
+	if commandArgs[1]:lower() == 'absorbs' then
+        send_command('@input /ma "'..state.Absorbs.value..'" <t>')
+    end
 end
 
 function job_tick()
@@ -307,13 +484,19 @@ function job_tick()
 	return false
 end
 
-windower.raw_register_event('prerender',function()
 
-end)
 function job_buff_change(id, data,buff, gain, eventArgs)
+	if buff:lower() == 'auspice' then
+		send_command('gs c update')
+        handle_equipping_gear(player.status)
+    end
     if buff == 'Meikyo Shisui' and not gain then
 		enable('feet')
     end
+	-- if  not buffactive['Third Eye'] and abil_recasts[133] < latency then
+	--    windower.chat.input('/ja "Third Eye" <me>')
+	--    tickdelay = os.clock() + 1.1
+    -- end
     if buff == "Charm" then
         if gain then  			
         --    send_command('input /p Charmd, please Sleep me.')		
@@ -329,14 +512,14 @@ function job_buff_change(id, data,buff, gain, eventArgs)
         end
     end
 
-	if state.AutoReraiseeMode.value and not buffactive['Reraise']then
-		if buffactive['weakness'] then
-			equip(sets.Reraise)
-			disable('body','head')
-		else
-			enable('body','head')
-		end
-	end
+	-- if state.AutoReraiseMode.value and not buffactive['Reraise']then
+	-- 	if buffactive['weakness'] then
+	-- 		equip(sets.Reraise)
+	-- 		disable('body','head')
+	-- 	else
+	-- 		enable('body','head')
+	-- 	end
+	-- end
 
 	-- Create a timer when we gain weakness.  Remove it when weakness is gone.
 	if buff:lower() == 'weakness' then
@@ -356,7 +539,6 @@ function job_buff_change(id, data,buff, gain, eventArgs)
             -- send_command('input /p Petrification, please Stona.')		
     else
             -- send_command('input /p '..player.name..' is no longer Petrify!')
-            handle_equipping_gear(player.status)
     end
     if buffactive['Sleep'] then
             -- send_command('input /p ZZZzzz, please cure.')		
@@ -446,6 +628,13 @@ end)
 -- Set eventArgs.handled to true if we don't want automatic equipping of gear.
 function job_update(cmdParams, eventArgs)
 	update_melee_groups()
+	if state.SubtleBlowMode.value then
+        if not data.areas.cities:contains(world.area) and player.status ~= 'Event' then
+            if player.status == 'Engaged' then
+                handle_equipping_gear(player.status)
+            end
+        end
+    end
 end
 
 -- Set eventArgs.handled to true if we don't want the automatic display to be run.
@@ -472,32 +661,58 @@ function update_melee_groups()
 	end	
 end
 
+
+
 function check_hasso()
-	if player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or main_weapon_is_one_handed() or silent_check_amnesia()) then
+	if (player.status == 'Engaged' or player.in_combat or being_attacked) and not main_weapon_is_one_handed() and not silent_check_amnesia() then
 		
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		
-		if state.Stance.value == 'Hasso' and abil_recasts[138] < latency then
-			windower.chat.input('/ja "Hasso" <me>')
-			tickdelay = os.clock() + 1.1
-			return true
-		elseif state.Stance.value == 'Seigan' and abil_recasts[139] < latency then
-			windower.chat.input('/ja "Seigan" <me>')
-			tickdelay = os.clock() + 1.1
-			return true
-		else
-			return false
-		end
-	end
+		if state.Stance.value == 'Hasso' and not buffactive['Hasso'] and abil_recasts[138] < latency then
+            windower.chat.input('/ja "Hasso" <me>')
+            tickdelay = os.clock() + 1.1
+            return true
 
+        elseif state.Stance.value == 'Seigan' and not buffactive['Seigan'] and abil_recasts[139] < latency then
+            windower.chat.input('/ja "Seigan" <me>')
+            tickdelay = os.clock() + 1.1
+            return true
+        end
+    
+	end
+    if (player.status == 'Engaged' or player.in_combat or being_attacked) and  not silent_check_amnesia() and buffactive['Seigan'] and not buffactive['Third Eye'] then
+        local abil_recasts = windower.ffxi.get_ability_recasts()
+        if abil_recasts[133] < latency then
+            windower.chat.input('/ja "Third Eye" <me>')
+            tickdelay = os.clock() + 1.1
+            return true
+        end
+    end
 	return false
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+    -- لا تعمل إلا بعد 10 ثواني من آخر تغيير
+    if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+
 	if state.AutoBuffMode.value ~= 'Off' and player.in_combat and not state.Buff['SJ Restriction'] then
 		
 		local abil_recasts = windower.ffxi.get_ability_recasts()
-
+        -- if abil_recasts[133] < latency then
+        --     windower.chat.input('/ja "Third Eye" <me>')
+        --     tickdelay = os.clock() + 1.1
+		-- end
 		if player.sub_job == 'DRK' and not buffactive['Last Resort'] and abil_recasts[87] < latency then
 			windower.chat.input('/ja "Last Resort" <me>')
 			tickdelay = os.clock() + 1.1
@@ -566,7 +781,7 @@ windower.register_event('prerender', function()
     if now - zombie_last_check > 1 then -- كل 1 ثانية
         zombie_last_check = now
 
-		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+		if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
             send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
         end
     end

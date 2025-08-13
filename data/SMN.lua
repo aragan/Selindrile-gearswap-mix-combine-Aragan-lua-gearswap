@@ -191,7 +191,7 @@ function job_setup()
 	autows = 'Spirit Taker'
 	autofood = 'Akamochi'
 	
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","PactSpamMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","Avatars","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoNukeMode","PactSpamMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","Avatars","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -656,8 +656,12 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.z = windower.ffxi.get_mob_by_index(player.index).z
 end
 
+
+local last_check = 0
 moving = false
 windower.raw_register_event('prerender',function()
+	if os.clock() - last_check < 5 then return end
+    last_check = os.clock()	
     mov.counter = mov.counter + 1;
 	if state.HippoMode.value == "Hippo" then
 		moving = false
@@ -1053,7 +1057,21 @@ function handle_elemental(cmdParams)
     end
 end
 
+
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+    if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do

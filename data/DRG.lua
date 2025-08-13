@@ -91,13 +91,14 @@ function job_setup()
     state.Buff.Hasso = buffactive.Hasso or false
     state.Buff.Seigan = buffactive.Seigan or false
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
-	state.AutoJumpMode = M(false, 'Auto Jump Mode')
+	state.AutoJumpMode = M(true, 'Auto Jump Mode')
 	state.AutoBondMode = M(true, 'Auto Bond Mode')
-	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
+	state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
 
 	absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
 
 	autows = 'Savage Blade'
+	-- autowstp = 1750
 	autofood = 'Soy Ramen'
 
 	Breath_HPP = 60
@@ -109,7 +110,7 @@ function job_setup()
 	update_combat_form()  
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoJumpMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoJumpMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","TreasureMode",})
 end
 
 function job_precast(spell, spellMap, eventArgs)
@@ -245,14 +246,7 @@ end
 
 function job_buff_change(buff, gain)
 	update_melee_groups()
-	if state.AutoReraiseeMode.value and not buffactive['Reraise']then
-		if buffactive['weakness'] then
-			equip(sets.Reraise)
-			disable('body','head')
-		else
-			enable('body','head')
-		end
-	end
+
 	if buff == "Dragon Breaker" then
         if gain then  			
             send_command('input /p "Dragon Breaker" [ON]')		
@@ -463,21 +457,35 @@ end
 
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness'])  then
 	    meleeSet = set_combine(meleeSet, sets.Reraise)
     end
     return meleeSet
 end
 
 function job_customize_idle_set(idleSet)
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness'])  then
 	    idleSet = set_combine(idleSet, sets.Reraise)
     end
 	if buffactive['Tactician\'s Roll'] then 
 		idleSet = set_combine(idleSet, sets.rollerRing)
 	end
-	return id
+	return idleSet
 end
+function job_customize_defense_set(defenseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		defenseSet = set_combine(defenseSet, sets.Reraise)
+	end
+    return defenseSet
+end
+function job_customize_passive_set(baseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		baseSet = set_combine(baseSet, sets.Reraise)
+	end
+    return baseSet
+end
+
+
 function check_hasso()
 if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.value == 'None' or state.Buff.Hasso or state.Buff.Seigan or state.Buff['SJ Restriction'] or main_weapon_is_one_handed() or silent_check_amnesia()) then
 		
@@ -529,7 +537,21 @@ function check_jump()
     end
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and player.in_combat then
 		
 		local abil_recasts = windower.ffxi.get_ability_recasts()
@@ -588,18 +610,18 @@ end
 -- end
 -- )
 
-zombie_last_check = 0
+-- zombie_last_check = 0
 
-windower.register_event('prerender', function()
-    local now = os.clock()
-    if now - zombie_last_check > 1 then -- كل 1 ثانية
-        zombie_last_check = now
+-- windower.register_event('prerender', function()
+--     local now = os.clock()
+--     if now - zombie_last_check > 1 then -- كل 1 ثانية
+--         zombie_last_check = now
 
-		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-            send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
-        end
-    end
-end)
+-- 		if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+--             send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
+--         end
+--     end
+-- end)
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat

@@ -104,6 +104,7 @@ function job_setup()
     state.Buff.Souleater = buffactive.Souleater or false
     state.Buff['Dark Seal'] = buffactive['Dark Seal'] or false
 	state.Buff['Nether Void'] = buffactive['Nether Void'] or false
+	state.Buff['Diabolic Eye'] = buffactive['Diabolic Eye'] or false
     state.Buff['Aftermath'] = buffactive['Aftermath'] or false
     state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Hasso = buffactive.Hasso or false
@@ -115,8 +116,15 @@ function job_setup()
     state.AutoEquipBurst = M(true)
     state.RP = M(false, "Reinforcement Points Mode")    
 	state.SubtleBlowMode = M(false, 'SubtleBlow Mode') 
-	state.AutoReraiseeMode = M(true, 'Auto Reraise Mode')
+	state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
     state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
+    state.AbsorbMode = M{['description']='AbsorbMode','Potency','ACC'}
+    state.SouleaterMode = M(true, 'Soul Eater Mode')
+    state.LastResortMode = M(true,false)
+	
+	-- Use Gavialis helm?
+	-- Weaponskills you want Gavialis helm used with (only considered if use_gavialis = true)
+	use_gavialis = true
 
 	autows = ''
 	autofood = 'Soy Ramen'
@@ -125,7 +133,8 @@ function job_setup()
 	LowTierNukes = S{'Stone', 'Water', 'Aero', 'Fire', 'Blizzard', 'Thunder',
 	'Stone II', 'Water II', 'Aero II', 'Fire II', 'Blizzard II', 'Thunder II',
 	'Stonega', 'Waterga', 'Aeroga', 'Firaga', 'Blizzaga', 'Thundaga'}
-	
+	wsList = S{}
+
 	 -- Greatswords you use. 
 	 gsList = S{'Ragnarok','Caladbolg','Nandaka','Foreshock Sword','Agwu\'s Claymore'}
 	 scytheList = S{'Apocalypse', 'Anguta'}
@@ -147,7 +156,7 @@ function job_setup()
 	
 	update_melee_groups()
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode","AutoReraiseeMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","Absorbs","Stance","DrainSwapWeaponMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode","AutoReraiseMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","Absorbs","Stance","DrainSwapWeaponMode","TreasureMode",})
 end
 	
 -------------------------------------------------------------------------------------------------------------------
@@ -215,138 +224,8 @@ function job_precast(spell, spellMap, eventArgs)
 				end
 			end
 	end
-
-end
-function job_filter_aftercast(spell, spellMap, eventArgs)
-    if not spell.interrupted then
-		if (spell.english == 'Drain II' or spell.english == 'Drain III') and state.DrainSwapWeaponMode.value ~= 'Never' then
-			if player.equipment.main and sets.DrainWeapon and player.equipment.main == sets.DrainWeapon.main and player.equipment.main ~= sets.weapons[state.Weapons.value].main then
-				equip_weaponset(state.Weapons.value)
-			end
-        elseif state.UseCustomTimers.value and (spell.english == 'Sleep' or spell.english == 'Sleepga') then
-            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
-		elseif spell.english == "Sleep II" then
-            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
-        elseif spell.english == "Sleepga II" then
-            send_command('timers create "Sleepga II ' ..tostring(spell.target.name).. ' " 90 down spells/00274.png')
-        elseif spell.english == 'Impact' then
-                send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
-        elseif spell.english == "Bind" then
-            send_command('timers create "Bind" 60 down spells/00258.png')
-        elseif spell.english == "Break" then
-            send_command('timers create "Break Petrification" 33 down spells/00255.png')
-        elseif spell.english == "Breakga" then
-            send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
-		elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
-            state.MagicBurstMode:reset()
-			if state.DisplayMode.value then update_job_states()	end
-        end
-    end
-end
-function job_aftercast(spell, spellMap, eventArgs)
-    if not spell.interrupted then
-		if (spell.english == 'Drain II' or spell.english == 'Drain III') and state.DrainSwapWeaponMode.value ~= 'Never' then
-			if player.equipment.main and sets.DrainWeapon and player.equipment.main == sets.DrainWeapon.main and player.equipment.main ~= sets.weapons[state.Weapons.value].main then
-				equip_weaponset(state.Weapons.value)
-			end
-        elseif state.UseCustomTimers.value and (spell.english == 'Sleep' or spell.english == 'Sleepga') then
-            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
-		elseif spell.english == "Sleep II" then
-            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
-        elseif spell.english == "Sleepga II" then
-            send_command('timers create "Sleepga II ' ..tostring(spell.target.name).. ' " 90 down spells/00274.png')
-        elseif spell.english == 'Impact' then
-                send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
-        elseif spell.english == "Bind" then
-            send_command('timers create "Bind" 60 down spells/00258.png')
-        elseif spell.english == "Break" then
-            send_command('timers create "Break Petrification" 33 down spells/00255.png')
-        elseif spell.english == "Breakga" then
-            send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
-		elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
-            state.MagicBurstMode:reset()
-			if state.DisplayMode.value then update_job_states()	end
-        end
-    end
-
 end
 
-windower.register_event('hpp change', -- code add from Aragan Asura
-function(new_hpp,old_hpp)
-    if state.AutoReraiseeMode.value and not buffactive['Reraise'] and new_hpp < 5 then
-        equip(sets.Reraise)
-    end
-end
-)
--- Modify the default idle set after it was constructed.
-function job_customize_idle_set(idleSet)
-    if player.mpp < 51 and (state.IdleMode.value == 'Normal' or state.IdleMode.value:contains('Sphere')) then
-        idleSet = set_combine(idleSet, sets.latent_refresh)
-    end
-    if state.RP.current == 'on' then
-        equip(sets.RP)
-        disable('neck')
-    else
-        enable('neck')
-    end
-	if buffactive['Tactician\'s Roll'] and __rollNum == 11 then
-		idleSet = set_combine(idleSet, sets.rollerRing)
-	end
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-	    idleSet = set_combine(idleSet, sets.Reraise)
-    end
-
-    return idleSet
-end
-
--- Modify the default melee set after it was constructed.
-function job_customize_melee_set(meleeSet)
-    if state.Buff.Souleater and state.DefenseMode.current == 'None' then
-        meleeSet = set_combine(meleeSet, sets.buff.Souleater)
-    end
-    if state.RP.current == 'on' then
-        equip(sets.RP)
-        disable('neck')
-    else
-        enable('neck')
-    end
-
-	if state.SubtleBlowMode.value then
-		if buffactive['Auspice'] then
-			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlow)
-		else
-			meleeSet = set_combine(meleeSet, sets.passive.SubtleBlowMBOZE)
-		end
-	end
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-	    meleeSet = set_combine(meleeSet, sets.Reraise)
-    end
-    return meleeSet
-end
-
-function job_customize_defense_set(defenseSet)
-	if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-		defenseSet = set_combine(defenseSet, sets.Reraise)
-	end
-    return defenseSet
-end
---[[function update_combat_form()
-    -- Check for H2H or single-wielding
-    if player.equipment.sub == "Blurred Shield +1" or player.equipment.sub == "Beatific Shield +1" or player.equipment.sub == "Utu Grip" or 
-    player.equipment.sub == "Alber Strap" or player.equipment.sub == 'empty' then
-        state.CombatForm:reset()
-
-    end
-
-end]]
-function job_state_change(stateField, newValue, oldValue)
-    if state.WeaponLock.value == true then
-        disable('main','sub')
-    else
-        enable('main','sub')
-    end
-
-end
 -- Run after the general precast() is done.
 function job_post_precast(spell, spellMap, eventArgs)
 	
@@ -389,11 +268,16 @@ function job_post_precast(spell, spellMap, eventArgs)
 				equip(sets.DayWSEars[spell.english] or sets.DayWSEars)
 			end
 		end
-		
 		if state.Buff.Souleater then   
 			equip(sets.buff.Souleater)
 		end
+		if is_sc_element_today(spell) then
+            if state.OffenseMode.current == 'Normal' and wsList:contains(spell.english) then
+                equip(sets.WSDayBonus)
+            end
+        end
 	end
+
 end
 
 Wants_Dark_Seal_maps = S{
@@ -402,6 +286,7 @@ Wants_Dark_Seal_maps = S{
 
 
 function job_post_midcast(spell, spellMap, eventArgs)
+
 	if state.CastingMode.value == 'SIRD' then
         equip(sets.SIRD)
     elseif state.CastingMode.value == 'DT' then
@@ -464,7 +349,154 @@ function job_post_midcast(spell, spellMap, eventArgs)
 			end
 		end
 	end
+	if state.AbsorbMode.value == 'ACC' and (spell.skill == 'Dark Magic' or spell.skill == 'Enfeebling Magic') and player.target.type == "MONSTER" then
+		equip(sets.midcast.Absorb.Acc) 
+		
+	    if state.DisplayMode.value then update_job_states()	end
+    end
 end 
+
+function job_filter_aftercast(spell, spellMap, eventArgs)
+    if not spell.interrupted then
+		if (spell.english == 'Drain II' or spell.english == 'Drain III') and state.DrainSwapWeaponMode.value ~= 'Never' then
+			if player.equipment.main and sets.DrainWeapon and player.equipment.main == sets.DrainWeapon.main and player.equipment.main ~= sets.weapons[state.Weapons.value].main then
+				equip_weaponset(state.Weapons.value)
+			end
+        elseif state.UseCustomTimers.value and (spell.english == 'Sleep' or spell.english == 'Sleepga') then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+		elseif spell.english == "Sleep II" then
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
+        elseif spell.english == "Sleepga II" then
+            send_command('timers create "Sleepga II ' ..tostring(spell.target.name).. ' " 90 down spells/00274.png')
+        elseif spell.english == 'Impact' then
+                send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+        elseif spell.english == "Bind" then
+            send_command('timers create "Bind" 60 down spells/00258.png')
+        elseif spell.english == "Break" then
+            send_command('timers create "Break Petrification" 33 down spells/00255.png')
+        elseif spell.english == "Breakga" then
+            send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
+		elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
+            state.MagicBurstMode:reset()
+			if state.DisplayMode.value then update_job_states()	end
+        end
+    end
+end
+function job_aftercast(spell, spellMap, eventArgs)
+    if not spell.interrupted then
+		if (spell.english == 'Drain II' or spell.english == 'Drain III') and state.DrainSwapWeaponMode.value ~= 'Never' then
+			if player.equipment.main and sets.DrainWeapon and player.equipment.main == sets.DrainWeapon.main and player.equipment.main ~= sets.weapons[state.Weapons.value].main then
+				equip_weaponset(state.Weapons.value)
+			end
+        elseif state.UseCustomTimers.value and (spell.english == 'Sleep' or spell.english == 'Sleepga') then
+            send_command('@timers c "'..spell.english..' ['..spell.target.name..']" 60 down spells/00220.png')
+		elseif spell.english == "Sleep II" then
+            send_command('timers create "Sleep II ' ..tostring(spell.target.name).. ' " 90 down spells/00259.png')
+        elseif spell.english == "Sleepga II" then
+            send_command('timers create "Sleepga II ' ..tostring(spell.target.name).. ' " 90 down spells/00274.png')
+        elseif spell.english == 'Impact' then
+                send_command('timers create "Impact ' ..tostring(spell.target.name).. ' " 180 down spells/00502.png')
+        elseif spell.english == "Bind" then
+            send_command('timers create "Bind" 60 down spells/00258.png')
+        elseif spell.english == "Break" then
+            send_command('timers create "Break Petrification" 33 down spells/00255.png')
+        elseif spell.english == "Breakga" then
+            send_command('timers create "Breakga Petrification" 33 down spells/00365.png') 
+		elseif spell.skill == 'Elemental Magic' and state.MagicBurstMode.value == 'Single' then
+            state.MagicBurstMode:reset()
+			if state.DisplayMode.value then update_job_states()	end
+        end
+    end
+
+end
+
+-- windower.register_event('hpp change', -- code add from Aragan Asura
+-- function(new_hpp,old_hpp)
+--     if state.AutoReraiseMode.value and not buffactive['Reraise'] and new_hpp < 5 then
+--         equip(sets.Reraise)
+--     end
+-- end
+-- )
+-- Modify the default idle set after it was constructed.
+function job_customize_idle_set(idleSet)
+    if player.mpp < 51 and (state.IdleMode.value == 'Normal' or state.IdleMode.value:contains('Sphere')) then
+        idleSet = set_combine(idleSet, sets.latent_refresh)
+    end
+    if state.RP.current == 'on' then
+        equip(sets.RP)
+        disable('neck')
+    else
+        enable('neck')
+    end
+	if buffactive['Tactician\'s Roll'] and __rollNum == 11 then
+		idleSet = set_combine(idleSet, sets.rollerRing)
+	end
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+	    idleSet = set_combine(idleSet, sets.Reraise)
+    end
+
+    return idleSet
+end
+
+-- Modify the default melee set after it was constructed.
+function job_customize_melee_set(meleeSet)
+    if state.Buff.Souleater and state.DefenseMode.current == 'None' then
+        meleeSet = set_combine(meleeSet, sets.buff.Souleater)
+    end
+    if state.RP.current == 'on' then
+        equip(sets.RP)
+        disable('neck')
+    else
+        enable('neck')
+    end
+
+	if state.SubtleBlowMode.value then
+		if buffactive['Auspice'] then
+			state.Passive:set('SubtleBlow')
+		else
+			state.Passive:set('SubtleBlowMBOZE')
+			-- meleeSet = set_combine(meleeSet, sets.passive.SubtleBlowMBOZE)
+		end
+
+		handle_equipping_gear(player.status)
+
+		if state.DisplayMode.value then update_job_states()	end
+	end
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+	    meleeSet = set_combine(meleeSet, sets.Reraise)
+    end
+    return meleeSet
+end
+
+function job_customize_defense_set(defenseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		defenseSet = set_combine(defenseSet, sets.Reraise)
+	end
+    return defenseSet
+end
+function job_customize_passive_set(baseSet)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+		baseSet = set_combine(baseSet, sets.Reraise)
+	end
+    return baseSet
+end
+--[[function update_combat_form()
+    -- Check for H2H or single-wielding
+    if player.equipment.sub == "Blurred Shield +1" or player.equipment.sub == "Beatific Shield +1" or player.equipment.sub == "Utu Grip" or 
+    player.equipment.sub == "Alber Strap" or player.equipment.sub == 'empty' then
+        state.CombatForm:reset()
+
+    end
+
+end]]
+function job_state_change(stateField, newValue, oldValue)
+    if state.WeaponLock.value == true then
+        disable('main','sub')
+    else
+        enable('main','sub')
+    end
+
+end
 
 
 function check_tp_mp_lower()
@@ -492,7 +524,6 @@ function job_tick()
 			tickdelay = os.clock() + 1.5
 		return true
 	end
-
 	return false
 end
 function update_combat_form()
@@ -503,7 +534,7 @@ function update_combat_form()
     end
 end
 function determine_haste_group()
-    classes.CustomMeleeGroups:clear()
+    -- classes.CustomMeleeGroups:clear()
     if DW == true then
         if DW_needed <= 11 then
             classes.CustomMeleeGroups:append('MaxHaste')
@@ -688,22 +719,34 @@ end
 
 function job_update(cmdParams, eventArgs)
     update_melee_groups()
+
 	if player.sub_job ~= 'SAM' and state.Stance.value ~= "None" then
 		state.Stance:set("None")
 		update_job_states()
 	end
+	if state.SubtleBlowMode.value then
+        if not data.areas.cities:contains(world.area) and player.status ~= 'Event' then
+            if player.status == 'Engaged' then
+                handle_equipping_gear(player.status)
+            end
+        end
+    end
 end
 
 function job_buff_change(buff, gain)
 	update_melee_groups()
-	if state.AutoReraiseeMode.value and not buffactive['Reraise']then
-		if buffactive['weakness'] then
-			equip(sets.Reraise)
-			disable('body','head')
-		else
-			enable('body','head')
-		end
-	end
+	if buff:lower() == 'auspice' then
+		send_command('gs c update')
+        handle_equipping_gear(player.status)
+    end
+	-- if state.AutoReraiseMode.value and not buffactive['Reraise']then
+	-- 	if buffactive['weakness'] then
+	-- 		equip(sets.Reraise)
+	-- 		disable('body','head')
+	-- 	else
+	-- 		enable('body','head')
+	-- 	end
+	-- end
     if buff == "Arcane Circle " then
         if gain then  			
             send_command('input /p "Arcane Circle " [ON]')		
@@ -822,8 +865,8 @@ function update_melee_groups()
 		classes.CustomMeleeGroups:append('Adoulin')
     end
 	
-	if (player.equipment.main == "Liberator" and buffactive['Aftermath: Lv.3']) then
-			classes.CustomMeleeGroups:append('AM')
+	if player.equipment.main == "Liberator" and state.OffenseMode.value == "Normal" and (buffactive['Aftermath: Lv.3'] or buffactive['Aftermath: Lv.1']) then
+		classes.CustomMeleeGroups:append('AM')
 	end
 	--[[if (player.sub_job ~= 'NIN' and player.sub_job ~= 'DNC')  then
         state.CombatForm:set("SW")
@@ -841,6 +884,10 @@ if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.
 			windower.chat.input('/ja "Hasso" <me>')
 			tickdelay = os.clock() + 1.1
 			return true
+		elseif state.Stance.value == 'Hasso' and buffactive['Last Resort'] then
+			send_command('@wait .5;cancel "Last Resort"')
+		    tickdelay = os.clock() + 1.1
+		    return true
 		elseif state.Stance.value == 'Seigan' and abil_recasts[139] < latency then
 			windower.chat.input('/ja "Seigan" <me>')
 			tickdelay = os.clock() + 1.1
@@ -853,7 +900,21 @@ if player.sub_job == 'SAM' and player.status == 'Engaged' and not (state.Stance.
 	return false
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -864,7 +925,7 @@ function check_buff()
 			end
 		end
 		
-		if state.AutoBuffMode.value == 'Auto' and player.in_combat then
+		if state.AutoBuffMode.value == 'Auto' and (player.in_combat or player.status == 'Engaged') then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
 
 			if not buffactive['Last Resort'] and abil_recasts[87] < latency then
@@ -891,7 +952,7 @@ function check_buff()
 				return false
 			end
 		end
-		if state.AutoBuffMode.value == 'Sortie' and player.in_combat then
+		if state.AutoBuffMode.value == 'Sortie' and (player.in_combat or player.status == 'Engaged') then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
 
 		   if buffactive['Last Resort'] then
@@ -918,16 +979,57 @@ function check_buff()
 				return false
 			end
 		end
-		if state.AutoBuffMode.value == 'Defend' and player.in_combat and player.sub_job == 'WAR' then
+		
+		if state.AutoBuffMode.value == 'Full' and (player.in_combat or player.status == 'Engaged') then
+			local abil_recasts = windower.ffxi.get_ability_recasts()
+
+			if not buffactive['Last Resort'] and abil_recasts[87] < latency then
+				windower.chat.input('/ja "Last Resort" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive['Hasso'] and abil_recasts[138] < latency then
+				windower.chat.input('/ja "Hasso" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive.Souleater and abil_recasts[85] < latency then
+				windower.chat.input('/ja "Souleater" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive['Diabolic Eye'] and abil_recasts[90] < latency then
+				windower.chat.input('/ja "Diabolic Eye" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif not buffactive['Scarlet Delirium'] and abil_recasts[44] < latency then
+				windower.chat.input('/ja "Scarlet Delirium" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Berserk and abil_recasts[1] < latency then
+				windower.chat.input('/ja "Berserk" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Aggressor and abil_recasts[4] < latency then
+				windower.chat.input('/ja "Aggressor" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+				windower.chat.input('/ja "Warcry" <me>')
+				tickdelay = os.clock() + 1.1
+				return true
+			else
+				return false
+			end
+		end
+
+		if state.AutoBuffMode.value == 'Defend' and (player.in_combat or player.status == 'Engaged') and player.sub_job == 'WAR' then
 
 			local abil_recasts = windower.ffxi.get_ability_recasts()
 	
 			if buffactive['Last Resort'] then
-				send_command('@wait .5;cancel Berserk')
+				send_command('@wait .5;cancel "Last Resort"')
 				tickdelay = os.clock() + 1.1
 				return true
 			elseif buffactive.Berserk then
-				send_command('@wait .5;cancel "Last Resort"')
+				send_command('@wait .5;cancel Berserk')
 				tickdelay = os.clock() + 1.1
 				return true
 			elseif not buffactive.Defender and abil_recasts[3] < latency then
@@ -993,22 +1095,22 @@ windower.register_event('incoming text',function(org)
 	end
 	--Sortie 	--Vagary
 	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
-		windower.send_command('input //gs c set ElementalMode water')
+		windower.send_command('gs c set ElementalMode water')
 	end
 	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
-		windower.send_command('input //gs c set ElementalMode Lightning')
+		windower.send_command('gs c set ElementalMode Lightning')
 	end
 	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
-		windower.send_command('input //gs c set ElementalMode Fire')
+		windower.send_command('gs c set ElementalMode Fire')
 	end
 	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
-		windower.send_command('input //gs c set ElementalMode Wind')
+		windower.send_command('gs c set ElementalMode Wind')
 	end
 	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
-		windower.send_command('input //gs c set ElementalMode Earth')
+		windower.send_command('gs c set ElementalMode Earth')
 	end
 	if string.find(org, "Blast of Reticence") then
-		windower.send_command('input //gs c set ElementalMode Ice')
+		windower.send_command('gs c set ElementalMode Ice')
 	end
 
 	-----------
@@ -1038,28 +1140,28 @@ windower.register_event('incoming text',function(org)
 	-- 	windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
 	-- end
 	if string.find(org, "Chokehold") then
-		windower.chat.input('//gs c set ElementalMode Ice')
+		windower.send_command('gs c set ElementalMode Ice')
 	end
 	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
-		windower.send_command('input //gs c set ElementalMode water')
+		windower.send_command('gs c set ElementalMode water')
 	end
 	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
-		windower.send_command('input //gs c set ElementalMode Lightning')
+		windower.send_command('gs c set ElementalMode Lightning')
 	end
 	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
-		windower.send_command('input //gs c set ElementalMode Fire')
+		windower.send_command('gs c set ElementalMode Fire')
 
 	end
 	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
-		windower.send_command('input //gs c set ElementalMode Wind')
+		windower.send_command('gs c set ElementalMode Wind')
 
 	end
 	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
-		windower.send_command('input //gs c set ElementalMode Earth')
+		windower.send_command('gs c set ElementalMode Earth')
 
 	end
 	if string.find(org, "Blast of Reticence") then
-		windower.send_command('input //gs c set ElementalMode Ice')
+		windower.send_command('gs c set ElementalMode Ice')
 	end
 	
 end)
@@ -1080,6 +1182,16 @@ buff_spell_lists = {
 	},
 }
 
+
+function job_zone_change(new_id,old_id)
+	--tickdelay = os.clock() + 10	
+	current_zone = windower.ffxi.get_info().zone
+	if data.areas.cities:contains(world.area)  then
+		send_command('wait 10;gs c set DefenseMode Physical;gs c set PhysicalDefenseMode SEboost') --Turns addon on hide show off some no need in city on screen.
+	end
+end
+
+
 -- zombie_last_check = 0
 
 -- windower.register_event('prerender', function()
@@ -1087,7 +1199,7 @@ buff_spell_lists = {
 --     if now - zombie_last_check > 1 then -- كل 1 ثانية
 --         zombie_last_check = now
 
--- 		if state.AutoReraiseeMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
+-- 		if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
 -- 			equip(sets.Reraise)
 -- 			send_command('gs c update') -- يجبر GearSwap يعيد فحص الشروط وتطبيق Zombie gear
 --         end

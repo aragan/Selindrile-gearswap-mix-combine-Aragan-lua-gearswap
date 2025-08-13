@@ -117,7 +117,7 @@ function job_setup()
 	autofood = 'Pear Crepe'
 	autonuke = 'Absorb-TP'
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoManawell","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","Stance","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoNukeMode","AutoManawell","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","Stance","RuneElement","RecoverMode","ElementalMode","CastingMode","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -619,8 +619,11 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.z = windower.ffxi.get_mob_by_index(player.index).z
 end
 
+local last_check = 0
 moving = false
 windower.raw_register_event('prerender',function()
+    if os.clock() - last_check < 5 then return end
+    last_check = os.clock()	
     mov.counter = mov.counter + 1;
     if state.HippoMode.value == true then 
         moving = false
@@ -870,7 +873,20 @@ function check_stance()
 	end
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+    if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -934,7 +950,7 @@ attack staggers the fiend!
 	--abyssea stagger
 	if string.find(org, "attack staggers the fiend!") then
 		windower.send_command('input /p Stagger! <call14>!')  -- code add by (Aragan@Asura)
-		send_command('input //gs c set CastingMode Normal;')
+		send_command('gs c set CastingMode Normal;')
 	end
 	if string.find(org, "Aita readies Vivisection") then
 		windower.chat.input('/ja "Mana Wall" <me>')
@@ -960,43 +976,43 @@ attack staggers the fiend!
 		windower.send_command('input /p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
 	end
 	if string.find(org, "The fiend appears vulnerable to ice elemental magic!") then
-		windower.send_command('input //gs c set ElementalMode Ice')
+		windower.send_command('gs c set ElementalMode Ice')
 	end
 	if string.find(org, "The fiend appears vulnerable to water elemental magic!") then
-		windower.send_command('input //gs c set ElementalMode water')
+		windower.send_command('gs c set ElementalMode water')
 	end
 	if string.find(org, "The fiend appears vulnerable to lightning elemental magic!") then
-		windower.send_command('input //gs c set ElementalMode Lightning')
+		windower.send_command('gs c set ElementalMode Lightning')
 	end	
 	if string.find(org, "The fiend appears vulnerable to fire elemental magic!") then
-		windower.send_command('input //gs c set ElementalMode Fire')
+		windower.send_command('gs c set ElementalMode Fire')
 	end	
 	if string.find(org, "The fiend appears vulnerable to wind elemental magic!") then
-		windower.send_command('input //gs c set ElementalMode Wind')
+		windower.send_command('gs c set ElementalMode Wind')
 	end	
 	if string.find(org, "The fiend appears vulnerable to earth elemental magic!") then
-		windower.send_command('input //gs c set ElementalMode Earth')
+		windower.send_command('gs c set ElementalMode Earth')
 	end
 
 
 	--Sortie 	--Vagary
 	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
-		windower.send_command('input //gs c set ElementalMode water')
+		windower.send_command('gs c set ElementalMode water')
 	end
 	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
-		windower.send_command('input //gs c set ElementalMode Lightning')
+		windower.send_command('gs c set ElementalMode Lightning')
 	end
 	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
-		windower.send_command('input //gs c set ElementalMode Fire')
+		windower.send_command('gs c set ElementalMode Fire')
 	end
 	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
-		windower.send_command('input //gs c set ElementalMode Wind')
+		windower.send_command('gs c set ElementalMode Wind')
 	end
 	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
-		windower.send_command('input //gs c set ElementalMode Earth')
+		windower.send_command('gs c set ElementalMode Earth')
 	end
 	if string.find(org, "Blast of Reticence") then
-		windower.send_command('input //gs c set ElementalMode Ice')
+		windower.send_command('gs c set ElementalMode Ice')
 	end
 end)
 

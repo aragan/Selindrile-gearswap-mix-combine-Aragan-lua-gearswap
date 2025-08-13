@@ -117,15 +117,15 @@ function job_setup()
     state.BoostSpell = M{['description']='BoostSpell',  'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
 
 	barStatus = S{'Barpoison','Barparalyze','Barvirus','Barsilence','Barpetrify','Barblind','Baramnesia','Barsleep','Barpoisonra','Barparalyzra','Barvira','Barsilencera','Barpetra','Barblindra','Baramnesra','Barsleepra'}
-	state.AutoBarStatus           = M{['description'] = 'Auto BarStatus','Barparalyze','Off','Barsilence','Barpoison','Barvirus','Barpetrify','Barblind','Baramnesia','Barsleep'}
-	state.AutoBoostStat           = M{['description'] = 'Auto BoostStat','Boost-STR','Off', 'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
+	state.AutoBarStatus           = M{['description'] = 'Auto BarStatus','Barparalyze','Barsleep','Barsilence','Barpoison','Barvirus','Barpetrify','Barblind','Baramnesia'}
+	state.AutoBoostStat           = M{['description'] = 'Auto BoostStat','Boost-STR', 'Boost-INT', 'Boost-AGI', 'Boost-VIT', 'Boost-DEX', 'Boost-MND', 'Boost-CHR'}
 
 	autows = 'Dagan'
 	autofood = 'Miso Ramen'
 	
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Light','Dark','Ice','Wind','Earth','Lightning','Water',}
 
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","AutoMedicineMode"},{"AutoBuffMode","Weapons","OffenseMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","BarStatus","BoostSpell","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","HippoMode","SrodaNecklace","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","Weapons","OffenseMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","BarStatus","AutoBoostStat","TreasureMode",})
 	
 	function handle_smartcure(cmdParams)
 		if cmdParams[2] then
@@ -244,6 +244,9 @@ end
 function job_filter_pretarget(spell, spellMap, eventArgs)
 
 	local abil_recasts = windower.ffxi.get_ability_recasts()
+    local party = windower.ffxi.get_party()
+    if party.p5 ~= nil then return false end
+	local in_party = (party.count or 0) > 1
 
 	if party.count ~= 1 and spell.skill == 'Enhancing Magic' and (spell.english:contains('storm')) and get_current_stratagem_count() > 0 then
 		cast_delay(1.1)
@@ -251,11 +254,12 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
 		send_command('@input /echo <recast=Stratagems>')
 		send_command('@input /p <recast=Stratagems>')
-
-
 	end
-	
-	if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
+	local party = windower.ffxi.get_party()
+    if party.p5 ~= nil then return false end
+	local in_party = (party.count or 0) > 1
+
+	if  in_party and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
 		cast_delay(1.1)
 		windower.chat.input('/ja "Accession" <me>')
 		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
@@ -392,16 +396,16 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
 			if state.DisplayMode.value then update_job_states()	end
         end
     end
-	if (player.in_combat or being_attacked) and (spellMap == 'Cure' or spell.skill == 'Enhancing Magic') and spell.interrupted then
-		state.CastingMode:set('SIRD')
-		--send_command('gs c set state.CastingMode.value SIRD')
-		send_command('gs c update')
-		tickdelay = os.clock() + 1.1
-	elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
-		state.CastingMode:set('Duration')
-		send_command('gs c update')
-		tickdelay = os.clock() + 1.1
-    end
+	-- if (player.in_combat or being_attacked) and (spellMap == 'Cure' or spell.skill == 'Enhancing Magic') and spell.interrupted then
+	-- 	state.CastingMode:set('SIRD')
+	-- 	--send_command('gs c set state.CastingMode.value SIRD')
+	-- 	send_command('gs c update')
+	-- 	tickdelay = os.clock() + 1.1
+	-- elseif not data.areas.cities:contains(world.area) and not (player.in_combat or being_attacked) then
+	-- 	state.CastingMode:set('Duration')
+	-- 	send_command('gs c update')
+	-- 	tickdelay = os.clock() + 1.1
+    -- end
 end
 
 function job_aftercast(spell, spellMap, eventArgs)
@@ -543,8 +547,12 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
     mov.z = windower.ffxi.get_mob_by_index(player.index).z
 end
 
+
+local last_check = 0
 moving = false
 windower.raw_register_event('prerender',function()
+	if os.clock() - last_check < 5 then return end
+    last_check = os.clock()	
     mov.counter = mov.counter + 1;
     if state.HippoMode.value == true then 
         moving = false
@@ -697,7 +705,21 @@ function handle_elemental(cmdParams)
     end
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -736,14 +758,14 @@ function check_buff()
 		  windower.chat.input("/ma "..state.AutoBoostStat.value.." <me>")
 		end
 		if not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] then
-			windower.chat.input('gs c barstatus')
+			windower.chat.input('//gs c barstatus')
 		end
-		    -- windower.chat.input('gs c boostspell')
+		    -- windower.chat.input('//gs c boostspell')
 		
 	    --elseif not buffactive[data.elements.BarElement_of[state.ElementalMode.value]] then
 	--[[ 
 			   
-		    windower.chat.input('gs c boostspell')
+		    windower.chat.input('//gs c boostspell')
 		end
 	    ]]
 		local barspell = data.elements.Bar2Element_of[state.ElementalMode.value]
@@ -862,10 +884,21 @@ buff_spell_lists = {
 		{Name='Blink',			Buff='Blink',		SpellID=53,		When='Always'},
 		{Name='Phalanx',		Buff='Phalanx',		SpellID=106,	When='Always'},
 	},
+	Sortie = {
+		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},
+		{Name='Shellra V',		Buff='Shell',		SpellID=134,	When='Always'},
+		{Name='Protectra V',	Buff='Protect',		SpellID=129,	When='Always'},
+		{Name='Auspice',		Buff='Auspice',		SpellID=96,		When='Always'},
+		{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
+		{Name='Aquaveil',		Buff='Aquaveil',	SpellID=55,		When='Always'},
+		{Name='Stoneskin',		Buff='Stoneskin',	SpellID=54,		When='Always'},
+		{Name='Blink',			Buff='Blink',		SpellID=53,		When='Always'},
+		{Name='Phalanx',		Buff='Phalanx',		SpellID=106,	When='Always'},
+	},
 	Melee = {
 		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	When='Always'},
 		{Name='Haste',			Buff='Haste',		SpellID=57,		When='Always'},
-		{Name='Boost-STR',		Buff='STR Boost',	SpellID=479,	When='Always'},
+		-- {Name='Boost-STR',		Buff='STR Boost',	SpellID=479,	When='Always'},
 		{Name='Shellra V',		Buff='Shell',		SpellID=134,	When='Always'},
 		{Name='Protectra V',	Buff='Protect',		SpellID=129,	When='Always'},
 		{Name='Auspice',		Buff='Auspice',		SpellID=96,		When='Always'},
@@ -884,7 +917,7 @@ buff_spell_lists = {
 	Melee = {
 		{Name='Reraise IV',		Buff='Reraise',		SpellID=848,	Reapply=false},
 		{Name='Haste',			Buff='Haste',		SpellID=57,		Reapply=false},
-		{Name='Boost-STR',		Buff='STR Boost',	SpellID=479,	Reapply=false},
+		-- {Name='Boost-STR',		Buff='STR Boost',	SpellID=479,	Reapply=false},
 		{Name='Shellra V',		Buff='Shell',		SpellID=134,	Reapply=false},
 		{Name='Protectra V',	Buff='Protect',		SpellID=129,	Reapply=false},
 		{Name='Auspice',		Buff='Auspice',		SpellID=96,		Reapply=false},

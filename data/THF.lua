@@ -115,7 +115,7 @@ function job_setup()
     determine_haste_group()
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","TreasureMode",})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -147,9 +147,9 @@ function job_filtered_precast(spell, spellMap, eventArgs)
  
     attack = player.attack
     if attack > attack2 then
-		windower.send_command('input //gs c set WeaponskillMode PDL')
+		windower.send_command('gs c set WeaponskillMode PDL')
     else
-		windower.send_command('input //gs c set WeaponskillMode PDL')
+		windower.send_command('gs c set WeaponskillMode PDL')
     end
     equip(active_ws[spell.name])
 
@@ -506,7 +506,7 @@ end
 
 -- Called by the 'update' self-command.
 function job_update(cmdParams, eventArgs)
-    th_update(cmdParams, eventArgs)
+    -- th_update(cmdParams, eventArgs)
 	update_melee_groups()
 end
 
@@ -555,7 +555,21 @@ end
 -- Utility functions specific to this job.
 -------------------------------------------------------------------------------------------------------------------
 
+
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+    if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		if player.in_combat and player.sub_job == 'WAR' then
 			local abil_recasts = windower.ffxi.get_ability_recasts()

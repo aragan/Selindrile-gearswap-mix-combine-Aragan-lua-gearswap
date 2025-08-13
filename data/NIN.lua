@@ -158,7 +158,7 @@ state.AutoLoggerMode = M(false, 'AutoLoggerMode')
 	Haste = 0
     DW_needed = 0
     DW = false
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","ElementalWheel","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","ElementalWheel","AutoMedicineMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","TreasureMode",})
 end
 function job_auto_change_target(spell, action, spellMap, eventArgs)
 	eventArgs.SelectNPCTargets = true
@@ -751,7 +751,7 @@ end
 function job_self_command(commandArgs, eventArgs)
 	gearinfo(commandArgs, eventArgs)
     if commandArgs[1]:lower() == 'abyssea' then
-        send_command('@input //ept track "' .. state.abyssea.value .. '"')
+        send_command('@ept track "' .. state.abyssea.value .. '"')
         eventArgs.handled = true
     end
 	if commandArgs[1]:lower() == 'elemental' then
@@ -1016,7 +1016,21 @@ function check_stance()
 
 end
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -1179,22 +1193,22 @@ windower.register_event('incoming text',function(org)
 	handle_equipping_gear(player.status)  
 	--Sortie 	--Vagary
 	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
-		windower.send_command('input //gs c set ElementalMode water')
+		windower.send_command('gs c set ElementalMode water')
 	end
 	if string.find(org, "Flashflood") or string.find(org, "Torrential Pain") then
-		windower.send_command('input //gs c set ElementalMode Lightning')
+		windower.send_command('gs c set ElementalMode Lightning')
 	end
 	if string.find(org, "Icy Grasp") or string.find(org, "Frozen Blood") then
-		windower.send_command('input //gs c set ElementalMode Fire')
+		windower.send_command('gs c set ElementalMode Fire')
 	end
 	if string.find(org, "Eroding Flesh") or string.find(org, "Ensepulcher") then
-		windower.send_command('input //gs c set ElementalMode Wind')
+		windower.send_command('gs c set ElementalMode Wind')
 	end
 	if string.find(org, "Fulminous Smash") or string.find(org, "Ceaseless Surge") then
-		windower.send_command('input //gs c set ElementalMode Earth')
+		windower.send_command('gs c set ElementalMode Earth')
 	end
 	if string.find(org, "Blast of Reticence") then
-		windower.send_command('input //gs c set ElementalMode Ice')
+		windower.send_command('gs c set ElementalMode Ice')
 	end
 
 	
@@ -1223,10 +1237,10 @@ end)
 function default_zone_change(new_id,old_id)
 
 	if world.area:contains('Abyssea') then
-		send_command('input //ept show;gs c set SkipProcWeapons false;/lockstyleset 1;lua u fastcs') --Turns addon on.
+		send_command('ept show;gs c set SkipProcWeapons false;/lockstyleset 1;lua u fastcs') --Turns addon on.
 		set_macro_page(6, 5)
 	else
-		send_command('input //ept hide;') --Turns addon off.
+		send_command('ept hide;') --Turns addon off.
 	end
 end
 

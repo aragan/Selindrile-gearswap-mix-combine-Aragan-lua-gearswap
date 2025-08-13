@@ -166,7 +166,7 @@ function job_setup()
     update_combat_form()  
 
     define_roll_values()
-	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing","AutoMedicineMode",},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","Rollset","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
+	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing","AutoMedicineMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","Rollset","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
 end
 
 
@@ -197,7 +197,16 @@ function job_filtered_action(spell, eventArgs)
 end
 
 function job_pretarget(spell, spellMap, eventArgs)
+    if state.TargetMode.value and spell.type == "WeaponSkill" and spell.targets.Enemy then
+		if spell.target.raw == '<t>' and spell.target.type == 'MONSTER' then
+			change_target('<stnpc>')
+			windower.chat.input('/ma "'..spell.name..'" <stnpc>')
+            tickdelay = os.clock() + 1.1
+			eventArgs.cancel = true
 
+			return
+		end
+    end
 end
 already_announced_roll = false
 
@@ -219,6 +228,7 @@ function job_precast(spell, spellMap, eventArgs)
         send_command('@input /p ROLL starting Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
         already_announced_roll = true
     end
+
 	if spell.action_type == 'Ranged Attack' then
 		state.CombatWeapon:set(player.equipment.range)
     -- Check that proper ammo is available if we're using ranged attacks or similar.
@@ -232,6 +242,11 @@ function job_precast(spell, spellMap, eventArgs)
     end
 	if spell.type == 'CorsairRoll' and not spell.interrupted then
 		enable('range')
+        if can_dual_wield then
+            equip(sets.precast.CorsairRoll.DW)
+        else
+            equip(sets.precast.CorsairRoll)
+        end
 	end
     if spell.action_type == 'Ranged Attack' or spell.name == 'Shadowbind' or (spell.type == 'WeaponSkill' and spell.skill == 'Marksmanship') then
         do_bullet_checks(spell, spellMap, eventArgs)
@@ -242,7 +257,13 @@ function job_post_precast(spell, spellMap, eventArgs)
 	if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
 		equip(sets.precast.WS.SubtleBlow)
 	end
-
+    -- if spell.type == 'CorsairRoll' and not spell.interrupted then
+    --     if can_dual_wield then
+    --         equip(sets.precast.CorsairRoll.DW)
+    --     else
+    --         equip(sets.precast.CorsairRoll)
+    --     end
+    -- end
 end
 function job_post_midcast(spell, spellMap, eventArgs)
 	if spell.action_type == 'Ranged Attack' then
@@ -316,7 +337,7 @@ function job_aftercast(spell, spellMap, eventArgs)
         display_roll_info(spell)
 	end
     if spell.english == 'Bolter\'s Roll' then
-        send_command('@input //roller off')
+        send_command('@roller off')
     end
 	if state.UseDefaultAmmo.value then
 		equip({ammo=gear.RAbullet})
@@ -328,6 +349,8 @@ function job_aftercast(spell, spellMap, eventArgs)
         check_weaponset()
     end
 	check_weaponset()
+    handle_equipping_gear(player.status)
+    send_command('@wait 1.1;gs c update')
 
 end
 
@@ -340,13 +363,7 @@ function filter_update_combat_form()
     else
         state.CombatForm:reset()
     end
-    if player.sub_job == 'NIN' or player.sub_job == 'DNC' or player.sub_job == 'THF' then
-        state.CombatForm:set('DW')
-        windower.add_to_chat(123, '>> تم تفعيل DW عبر CombatForm')
-    else
-        state.CombatForm:reset()
-        windower.add_to_chat(123, '>> تم إلغاء DW: Subjob غير مؤهل')
-    end
+
     if DW == true then
         state.CombatForm:set('DW')
     elseif DW == false then
@@ -374,16 +391,16 @@ function job_self_command(commandArgs, eventArgs)
 		eventArgs.handled = true			
 	end
     if commandArgs[1]:lower() == 'roller1' then
-       send_command('@input //roller roll1 "'..state.Roller1.value..'"')
+       send_command('@roller roll1 "'..state.Roller1.value..'"')
     elseif commandArgs[1]:lower() == 'roller2' then
-        send_command('@input //roller roll2 "'..state.Roller2.value..'"')
+        send_command('@roller roll2 "'..state.Roller2.value..'"')
     elseif commandArgs[1]:lower() == 'rollset' then
-        send_command('@input //roller "'..state.Rollset.value..'"')
+        send_command('@roller "'..state.Rollset.value..'"')
     end
    --[[ if commandArgs[1]:lower() == 'roller1' then
-        send_command('@input //cor roll 1 "'..state.Roller1.value..'"')
+        send_command('@cor roll 1 "'..state.Roller1.value..'"')
      elseif commandArgs[1]:lower() == 'roller2' then
-         send_command('@input //cor roll 2 "'..state.Roller2.value..'"')
+         send_command('@cor roll 2 "'..state.Roller2.value..'"')
      end]]
 
 end
@@ -491,7 +508,9 @@ function job_buff_change(buff, gain)
 			
 		end
 	end
-	if state.AutoMedicineMode.value == true then
+    
+	if state.AutoMedicineMode.value then
+
 		if buff == "Defense Down" then
 			if gain then  			
 				send_command('input /item "Panacea" <me>')
@@ -944,8 +963,22 @@ function job_tick()
 end
 
 
+buff_activation_time = nil
+last_auto_buff_mode = nil
+
 function check_buff()
-	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+
+    if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
         if player.in_combat  then
             local abil_recasts = windower.ffxi.get_ability_recasts()
 

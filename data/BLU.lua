@@ -113,7 +113,7 @@ function job_setup()
 	state.AutoBLUSpam = M(false, 'AutoBLUSpam')
 
 	state.LearningMode = M(false, 'Learning Mode')
-	state.AutoUnbridled = M(true, 'Auto Unbridled Mode')
+	state.AutoUnbridled = M(false, 'Auto Unbridled Mode')
 	autows = 'Chant Du Cygne'
 	autofood = 'Soy Ramen'
 	
@@ -286,7 +286,7 @@ function job_setup()
 	 DW = false
 	 determine_haste_group()
 	 update_combat_form()  
-	init_job_states({"Capacity","AutoRuneMode","AutoTrustMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","CastingMode","RuneElement","ElementalMode","LearningMode","TreasureMode"})
+	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","HippoMode","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","CastingMode","RuneElement","ElementalMode","LearningMode","TreasureMode"})
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -330,12 +330,18 @@ function job_filtered_action(spell, eventArgs)
 
 end
 function job_filter_pretarget(spell, spellMap, eventArgs)
+	local allRecasts = windower.ffxi.get_ability_recasts()
+	local Burst_AffinityCooldown = allRecasts[182]
+	
+	local allRecasts = windower.ffxi.get_ability_recasts()
+	local Chain_AffinityCooldown = allRecasts[181]
+	local party = windower.ffxi.get_party()
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+
 	if (spell.skill == 'Blue Magic' and spellMap:contains('Magical')) then
 
 
-        local allRecasts = windower.ffxi.get_ability_recasts()
-        local Burst_AffinityCooldown = allRecasts[182]
-        
+
         
         if player.main_job_level >= 25 and Burst_AffinityCooldown < 3 then
             cast_delay(1.1)
@@ -346,11 +352,6 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
         end
 	end
 	if (spell.skill == 'Blue Magic' and spellMap:contains('Physical')) then
-
-
-		local allRecasts = windower.ffxi.get_ability_recasts()
-		local Chain_AffinityCooldown = allRecasts[181]
-		
 		
 		if player.main_job_level >= 40 and Chain_AffinityCooldown < 3 then
 			cast_delay(1.1)
@@ -360,15 +361,13 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 			job_update()
 		end
 	end
-	local abil_recasts = windower.ffxi.get_ability_recasts()
 
-	if spell.skill == 'Blue Magic' and (unbridled_spells:contains(spell.english) and blue_magic_maps.Buff:contains(spell.english)) and not buffactive.Diffusion and abil_recasts[184] < latency then
+	if not world.area:contains('Walk of Echoes [P1]') and (player.target.type == 'SELF' or player.target.in_party) and party.count ~= 1 and not data.npcs.trusts:contains(party.name) and spell.skill == 'Blue Magic' and (unbridled_spells:contains(spell.english) and blue_magic_maps.Buff:contains(spell.english)) and not buffactive.Diffusion and abil_recasts[184] < latency then
 		cast_delay(1.1)
 		windower.chat.input('/ja "Diffusion" <me>')
 	end
-	local abil_recasts = windower.ffxi.get_ability_recasts()
 
-	if player.target.type == 'MONSTER' and spell.skill == 'Blue Magic' and unbridled_spells:contains(spell.english) and not (state.Buff['Unbridled Learning'] or state.Buff['Unbridled Wisdom']) and windower.ffxi.get_ability_recasts()[81] < latency then
+	if spell.name == 'Cruel Joke' and not (state.Buff['Unbridled Learning'] or state.Buff['Unbridled Wisdom']) and windower.ffxi.get_ability_recasts()[81] < latency then
 		cast_delay(1.1)
 		windower.chat.input('/ja "Unbridled Learning" <me>')
 		if not midaction() then
@@ -376,18 +375,18 @@ function job_filter_pretarget(spell, spellMap, eventArgs)
 		end
 	end
 
+	local party = windower.ffxi.get_party()
 
-	if party.count ~= 1 and spell.skill == 'Enhancing Magic' and (spell.english:contains('storm')) and get_current_stratagem_count() > 0 then
+	if (player.target.type == 'SELF' or player.target.in_party) and party.count ~= 1 and not data.npcs.trusts:contains(party.name) and spell.skill == 'Enhancing Magic' and (spell.english:contains('storm')) and get_current_stratagem_count() > 0 then
 		cast_delay(1.1)
 		windower.chat.input('/ja "Accession" <me>')
 		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
 		send_command('@input /echo <recast=Stratagems>')
 		send_command('@input /p <recast=Stratagems>')
-
-
 	end
-	
-	if party.count ~= 1 and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
+	local party = windower.ffxi.get_party()
+
+	if (player.target.type == 'SELF' or player.target.in_party) and party.count ~= 1 and not data.npcs.trusts:contains(party.name) and (spell.english == 'Sneak' or spell.english == 'Invisible') and get_current_stratagem_count() > 0 then
 		cast_delay(1.1)
 		windower.chat.input('/ja "Accession" <me>')
 		add_to_chat(204, 'Stratagem Charges Available: ['..get_current_stratagem_count()..']~~~')
@@ -409,13 +408,35 @@ function job_filter_precast(spell, spellMap, eventArgs)
 		if (state.AutoUnbridled.value or buffup ~= '' or state.AutoBuffMode.value ~= 'Off') and (windower.ffxi.get_ability_recasts()[81] < latency and (windower.ffxi.get_spell_recasts()[spell.recast_id]/60) < spell_latency) then
 			eventArgs.cancel = true
 			windower.chat.input('/ja "Unbridled Learning" <me>')
-			windower.chat.input:schedule(1,'/ma "'..spell.english..'" '..spell.target.raw..'')
+			windower.chat.input:schedule(1.5,'/ma "'..spell.english..'" '..spell.target.raw..'')
 			return
 		else
-			eventArgs.cancel = true
-			add_to_chat(123,'Abort: Unbridled Learning not active.')
+			-- eventArgs.cancel = true
+			-- add_to_chat(123,'Abort: Unbridled Learning not active.')
 		end
 	end
+	-- if spell.skill == 'Blue Magic' and unbridled_spells:contains(spell.english) and not silent_check_amnesia() and not (buffactive['Unbridled Learning'] or buffactive['Unbridled Wisdom']) then
+	-- 	if windower.ffxi.get_ability_recasts()[81] < latency and (windower.ffxi.get_spell_recasts()[spell.recast_id]/60) < spell_latency then
+	-- 		eventArgs.cancel = true
+	-- 		windower.chat.input:schedule(1.7,'/ja "Unbridled Learning" <me>')
+	-- 		windower.chat.input:schedule(3.4,'/ma "'..spell.english..'" '..spell.target.raw..'')
+	-- 		return
+	-- 	else
+	-- 		eventArgs.cancel = true
+	-- 		add_to_chat(123,'Abort: Unbridled Learning and Diffusion not active.')
+	-- 	end
+	-- elseif spell.skill == 'Blue Magic' and aoe_unbridled_spells:contains(spell.english) and not silent_check_amnesia() and not (buffactive['Unbridled Learning'] or buffactive['Unbridled Wisdom']) and not buffactive['Diffusion'] then
+	-- 	if (windower.ffxi.get_ability_recasts()[184] < latency or windower.ffxi.get_ability_recasts()[81] < latency) and (windower.ffxi.get_spell_recasts()[spell.recast_id]/60) < spell_latency then
+	-- 		eventArgs.cancel = true
+	-- 		windower.chat.input('/ja "Diffusion" <me>')
+	-- 		windower.chat.input:schedule(1.7,'/ja "Unbridled Learning" <me>')
+	-- 		windower.chat.input:schedule(3.4,'/ma "'..spell.english..'" '..spell.target.raw..'')
+	-- 		return
+	-- 	else
+	-- 		eventArgs.cancel = true
+	-- 		add_to_chat(123,'Abort: Unbridled Learning and Diffusion not active.')
+	-- 	end
+	-- end
 end
 	
 function job_precast(spell, spellMap, eventArgs)
@@ -867,7 +888,7 @@ function job_self_command(commandArgs, eventArgs)
 		eventArgs.handled = true			
 	end
 	if commandArgs[1]:lower() == 'spellset' then
-        send_command('@input //aset set "'..state.Spellset.value..'"')
+        send_command('aset set "'..state.Spellset.value..'"')
 	end
 end
 
@@ -1083,8 +1104,21 @@ function check_tp_lower()
 		return false
 	end
 end
+buff_activation_time = nil
+last_auto_buff_mode = nil
 
 function check_buff()
+	if last_auto_buff_mode ~= state.AutoBuffMode.value then
+        buff_activation_time = os.clock()
+        last_auto_buff_mode = state.AutoBuffMode.value
+        return false
+    end
+
+	--Does not work until seconds add after the last change
+	if not buff_activation_time or os.clock() - buff_activation_time < 3 then
+        return false
+    end
+	
 	if state.AutoBuffMode.value ~= 'Off' and not data.areas.cities:contains(world.area) then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		for i in pairs(buff_spell_lists[state.AutoBuffMode.Value]) do
@@ -1109,7 +1143,7 @@ function check_buff()
 		if player.in_combat and player.sub_job == 'WAR' then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
 
-			if not buffactive.Berserk and abil_recasts[1] < latency then
+			if not buffactive.Berserk and not state.Buff['SJ Restriction'] and abil_recasts[1] < latency then
 				windower.chat.input('/ja "Berserk" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
@@ -1117,11 +1151,11 @@ function check_buff()
 				send_command('@wait .5;cancel Defender')
 				tickdelay = os.clock() + 1.1
 				return true
-			elseif not buffactive.Aggressor and abil_recasts[4] < latency then
+			elseif not buffactive.Aggressor and not state.Buff['SJ Restriction'] and abil_recasts[4] < latency then
 				windower.chat.input('/ja "Aggressor" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
-			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+			elseif player.sub_job == 'WAR' and not state.Buff['SJ Restriction'] and not buffactive.Warcry and abil_recasts[2] < latency then
 				windower.chat.input('/ja "Warcry" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
@@ -1135,11 +1169,11 @@ function check_buff()
 				send_command('@wait .5;cancel Berserk')
 				tickdelay = os.clock() + 1.1
 				return true
-			elseif not buffactive.Defender and abil_recasts[3] < latency then
+			elseif not buffactive.Defender and not state.Buff['SJ Restriction'] and abil_recasts[3] < latency then
 				windower.chat.input('/ja "Defender" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
-			elseif not buffactive.Warcry and abil_recasts[2] < latency then
+			elseif not buffactive.Warcry and not state.Buff['SJ Restriction'] and abil_recasts[2] < latency then
 				windower.chat.input('/ja "Warcry" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
@@ -1218,7 +1252,93 @@ buff_spell_lists = {
 		{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Idle'},
 		{Name='Nat. Meditation',	Buff='Attack Boost',	SpellID=700,	When='Engaged'},
 		{Name='Mighty Guard',		Buff='Mighty Guard',	SpellID=750,	When='Combat'},
+		{Name='Aquaveil',	        Buff='Aquaveil',	    SpellID=55,		When='Always'},
+	},
+	Odyssey = {
+		{Name='Aquaveil',	        Buff='Aquaveil',	    SpellID=55,     When='Always'},
+		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
+		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
+		-- {Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Idle'},
+		{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Idle'},
+		{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+		{Name='Cocoon',             Buff='Defense Boost',          SpellID=547,    When='Idle'},
+		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
+		-- {Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
+		-- {Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
+	},
+	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+	{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Idle'},
+	{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+	{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+	{Name='Cocoon',             Buff='Defense Boost',          SpellID=547,    When='Idle'},
+    },
+	melee = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+	{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Engaged'},
+	--{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+	{Name='Nat. Meditation',	Buff='Attack Boost',	SpellID=700,	When='Engaged'},
+	{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Engaged'},
+	{Name='Mighty Guard',		Buff='Mighty Guard',	SpellID=750,	When='Engaged'},
+    },
+	mp = {
 		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
+		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
+		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
+		{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Idle'},
+		{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+		-- {Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
+		{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Idle'},
+		-- {Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
+	},
+	Cleave = {
+		{Name='Aquaveil',	        Buff='Aquaveil',	    SpellID=55,		When='Always'},
+		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
+		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
+		{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Idle'},
+		{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
+		{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Idle'},
+		-- {Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
+		{Name='Cocoon',             Buff='Defense Boost',          SpellID=547,    When='Idle'},
+
+	},
+	Vagary = {
+		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
+		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
+		{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
+		--{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Always'},
+		--{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
+		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
+		--{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
+		--{Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
+		{Name='Cocoon',             Buff='Defense Boost',          SpellID=547,    When='Idle'},
+
+	},
+	VagaryParty = {
+		{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
+		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
+		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
+		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
+		--{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
+		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
+		--{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Always'},
+		{Name='Diamondhide',		Buff='Stoneskin',		SpellID=632,		When='Idle'},
+		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
+		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
+		--{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
+		--{Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
+		{Name='Cocoon',             Buff='Defense Boost',          SpellID=547,    When='Idle'},
+
 	},
 	
 	Default = {
@@ -1234,70 +1354,5 @@ buff_spell_lists = {
 		{Name='Mighty Guard',		Buff='Mighty Guard',	SpellID=750,	Reapply=false},
 		{Name='Nat. Meditation',	Buff='Attack Boost',	SpellID=700,	Reapply=false},
 	},
-	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-	{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
-	{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
-	{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
-	{Name='Cocoon',             Buff='Cocoon',          SpellID=547,    When='Always'},
-    },
-	melee = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-	{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Engaged'},
-	--{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
-	{Name='Nat. Meditation',	Buff='Attack Boost',	SpellID=700,	When='Engaged'},
-	{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Engaged'},
-	{Name='Mighty Guard',		Buff='Mighty Guard',	SpellID=750,	When='Engaged'},
-    },
-	mp = {
-		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
-		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
-		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
-		{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
-		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
-		{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Always'},
-		{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
-		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
-		{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
-		{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
-		{Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
-	},
-	Cleave = {
-		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
-		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
-		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
-		{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
-		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
-		{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Always'},
-		{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
-		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
-		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
-		{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
-		{Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
-	},
-	Vagary = {
-		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
-		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
-		{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
-		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
-		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
-		--{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Always'},
-		--{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		When='Always'},
-		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
-		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
-		--{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
-		--{Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
-	},
-	VagaryParty = {
-		{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
-		{Name='Aquaveil',	Buff='Aquaveil',	SpellID=55,		When='Always'},
-		{Name='Erratic Flutter',	Buff='Haste',			SpellID=710,	When='Always'},
-		{Name='Battery Charge',		Buff='Refresh',			SpellID=662,	When='Always'},
-		--{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Always'},
-		{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Always'},
-		--{Name='Barrier Tusk',		Buff='Phalanx',			SpellID=685,	When='Always'},
-		{Name='Diamondhide',		Buff='Stoneskin',		SpellID=632,		When='Always'},
-		{Name='Occultation',		Buff='Blink',			SpellID=679,	When='Always'},
-		--{Name='Blink',				Buff='Blink',			SpellID=53,		When='Always'},
-		--{Name='Carcharian Verve',	Buff='Aquaveil',		SpellID=745,	When='Always'},
-		--{Name='Memento Mori',		Buff='Magic Atk. Boost',SpellID=538,	When='Always'},
-	},
+
 }
