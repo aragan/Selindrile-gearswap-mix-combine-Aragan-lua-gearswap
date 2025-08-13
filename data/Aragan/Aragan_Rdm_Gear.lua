@@ -21,12 +21,12 @@ function user_job_setup()
 
 	-- Options: Override default values
     state.OffenseMode:options('None', 'Acc','STP', 'CRIT', 'Enspell', 'SubtleBlow')
-    state.HybridMode:options('PDT','Normal')
+    state.HybridMode:options('DT','Normal')
 	state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
 	state.CastingMode:options( 'Duration','Normal', 'Burst', 'SIRD', 'DT')
 	state.Passive:options('None','Enspellhand','Shiniryu1','Shiniryu2','Enspell','EnspellFULL','EnspellFULLDT','SubtleBlow','DT25','DT50')--, ,'Resist','Refresh''EnemyCritRate', 'Regen'
 	state.IdleMode:options('DT','Normal', 'PDT','Empy', 'MDT','Regen', 'Regain', 'HP', 'EnemyCritRate', 'Evasion', 'Enmity', 'Sphere')
-    state.PhysicalDefenseMode:options('PDT','NukeLock')
+    state.PhysicalDefenseMode:options('PDT','HP')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('None','DualSWORDS','DualSWORDS2','DualCrocea','DualRedLotus','DualEnspell','DualSanguine','DualClub','DualDAGGERS','DualAeolian','SWORDS', 'Crocea','Sanguine', 'DAGGERS', 'Club','Staff')
@@ -106,7 +106,7 @@ function init_gear_sets()
 
 	sets.weapons.Normal = {}
 	sets.weapons.SWORDS = {main="Naegling",}
-	sets.weapons.Crocea = {main="CrDocea Mors", }
+	sets.weapons.Crocea = {main="Crocea Mors", }
 	sets.weapons.Sanguine = {main="Crocea Mors", }
 	sets.weapons.Club = {main="Maxentius", }
 	sets.weapons.Staff = {main="Xoanon",sub="Niobid Strap"}
@@ -473,8 +473,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 
 	sets.Duration = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
-		sub="Ammurapi Shield",
+		-- main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
+		-- sub="Ammurapi Shield",
 		head="Telchine Cap",
 		body="Lethargy Sayon +3",
 		hands="Lethargy Gantherots +2",
@@ -539,8 +539,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
 
 	sets.midcast['Enhancing Magic'] = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
-		sub="Ammurapi Shield",
+		-- main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
+		-- sub="Ammurapi Shield",
 		head="Befouled Crown",
 		body="Telchine Chas.",
 		hands={ name="Chironic Gloves", augments={'Mag. Acc.+11','Spell interruption rate down -10%','MND+8',}},
@@ -555,8 +555,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		back={ name="Sucellos's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	sets.midcast['Enhancing Magic'].SelfDuration = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
-		sub="Ammurapi Shield",
+		-- main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
+		-- sub="Ammurapi Shield",
 		head="Telchine Cap",
 		body="Telchine Chas.",
 		hands="Telchine Gloves",
@@ -571,8 +571,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		back={ name="Sucellos's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Mag. Acc.+10','"Fast Cast"+10','Phys. dmg. taken-10%',}},
 	}
 	sets.midcast['Enhancing Magic'].Duration = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
-		sub="Ammurapi Shield",
+		-- main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
+		-- sub="Ammurapi Shield",
 		head="Leth. Chappel +2",   
 		body="Telchine Chas.",
 		hands="Leth. Ganth. +2",
@@ -596,8 +596,8 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	--Red Mage enhancing sets are handled in a different way from most, layered on due to the way Composure works
 	--Don't set combine a full set with these spells, they should layer on Enhancing Set > Composure (If Applicable) > Spell
 	sets.EnhancingSkill = {
-		main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
-		sub="Ammurapi Shield",
+		-- main={ name="Colada", augments={'Enh. Mag. eff. dur. +4','Mag. Acc.+14','DMG:+13',}},
+		-- sub="Ammurapi Shield",
 		head="Befouled Crown",
 		body="Telchine Chas.",
 		hands={ name="Chironic Gloves", augments={'Mag. Acc.+11','Spell interruption rate down -10%','MND+8',}},
@@ -620,14 +620,15 @@ sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
     sets.midcast['Enhancing Magic'].GainSpell = set_combine(sets.midcast['Enhancing Magic'].SelfDuration, {})
 	sets.midcast.Refresh = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
 
-    set_combine(sets.EnhancingSkill, {
-		back={ name="Ghostfyre Cape", augments={'Enfb.mag. skill +9','Enha.mag. skill +2','Mag. Acc.+7',}},
-	})
+    -- set_combine(sets.EnhancingSkill, {
+	-- 	back={ name="Ghostfyre Cape", augments={'Enfb.mag. skill +9','Enha.mag. skill +2','Mag. Acc.+7',}},
+	-- })
 	sets.midcast.Aquaveil = {hands="Regal Cuffs",}
 	sets.midcast.BarElement = {}
 	sets.midcast.Temper = sets.EnhancingSkill
 	sets.midcast.Enspell = set_combine(sets.EnhancingSkill, {
 		main={ name="Pukulatmuj +1", augments={'Path: A',}},
+		sub="Demers. Degen +1",
 		back="Ghostfyre Cape", })
 	sets.midcast.BoostStat = {}
 	sets.midcast.Protect = {ring2="Sheltered Ring"}
@@ -947,7 +948,7 @@ sets.idle.HP={
 	left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
 	right_ear="Tuisto Earring",
 	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-	right_ring="Ilabrat Ring",
+	right_ring="Eihwaz Ring",
 	back="Moonlight Cape",
 }
 
@@ -974,12 +975,12 @@ sets.idle.Evasion = {
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	feet={ name="Nyame Sollerets", augments={'Path: B',}},
 	neck={ name="Bathy Choker +1", augments={'Path: A',}},
-	waist="Svelt. Gouriz +1",
+	waist="Null Belt",
 	left_ear="Infused Earring",
 	right_ear="Eabani Earring",
 	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 	right_ring="Vengeful Ring",
-	back="Moonlight Cape",
+	back="Null Shawl",
 }
 sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, { 
 	ammo="Eluder's Sachet",
@@ -1035,6 +1036,7 @@ sets.idle.Sphere = set_combine(sets.idle, {
 		body="Malignance Tabard",hands="Malignance Gloves",ring1="Defending Ring",ring2="Vengeful Ring",
 		back="Moonlight Cape",waist="Carrier's Sash",legs="Malignance Tights",feet="Malignance Boots"}
 
+	sets.defense.HP = sets.idle.HP  
 
 	sets.defense.NukeLock = sets.midcast['Elemental Magic']
 		
@@ -1433,7 +1435,7 @@ sets.engaged.CRIT = {
 
 	}
 
-	sets.engaged.PDT = set_combine(sets.engaged , {
+	sets.engaged.DT = set_combine(sets.engaged , {
 		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1443,7 +1445,7 @@ sets.engaged.CRIT = {
 		right_ring="Defending Ring",
 
 	})
-	sets.engaged.Acc.PDT = set_combine(sets.engaged , {
+	sets.engaged.Acc.DT = set_combine(sets.engaged , {
 			-- ammo="Staunch Tathlum +1",
 			head="Malignance Chapeau",
 			body="Malignance Tabard",
@@ -1453,7 +1455,7 @@ sets.engaged.CRIT = {
 			right_ring="Defending Ring",
 
 	})
-	sets.engaged.STP.PDT =  set_combine(sets.engaged.STP , {
+	sets.engaged.STP.DT =  set_combine(sets.engaged.STP , {
 		ammo="Coiste Bodhar",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1462,7 +1464,7 @@ sets.engaged.CRIT = {
 		feet="Malignance Boots",
 
 	})
-	sets.engaged.Enspell.PDT =  set_combine(sets.engaged.Enspell , {
+	sets.engaged.Enspell.DT =  set_combine(sets.engaged.Enspell , {
 		ammo="Coiste Bodhar",
 		head="Umuthi Hat",
 		body="Malignance Tabard",
@@ -1473,7 +1475,7 @@ sets.engaged.CRIT = {
 		left_ring="Chirich Ring +1",
 		right_ring="Defending Ring",
 	})
-	sets.engaged.EnspellDBL.PDT = set_combine(sets.engaged.EnspellDBL , {
+	sets.engaged.EnspellDBL.DT = set_combine(sets.engaged.EnspellDBL , {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Umuthi Hat",
 			body="Malignance Tabard",
@@ -1484,7 +1486,7 @@ sets.engaged.CRIT = {
 			left_ring="Hetairoi Ring",
 			back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	})
-	sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT , {
+	sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT , {
 		ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1493,7 +1495,7 @@ sets.engaged.CRIT = {
 		feet="Malignance Boots",
 		right_ring="Defending Ring",
 	})
-	sets.engaged.SubtleBlow.PDT = set_combine(sets.SubtleBlow ,{
+	sets.engaged.SubtleBlow.DT = set_combine(sets.SubtleBlow ,{
 		ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1507,7 +1509,7 @@ sets.engaged.CRIT = {
 
 	--DW-DT
 
-	sets.engaged.DW.PDT = set_combine(sets.engaged.DW , {
+	sets.engaged.DW.DT = set_combine(sets.engaged.DW , {
 		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1519,7 +1521,7 @@ sets.engaged.CRIT = {
 		right_ring="Defending Ring",
 
 	})
-	sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.Acc , {
+	sets.engaged.DW.Acc.DT = set_combine(sets.engaged.Acc , {
 		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1531,7 +1533,7 @@ sets.engaged.CRIT = {
 		right_ring="Defending Ring",
 
 	})
-	sets.engaged.DW.STP.PDT = set_combine(sets.engaged.STP , {
+	sets.engaged.DW.STP.DT = set_combine(sets.engaged.STP , {
 		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1543,7 +1545,7 @@ sets.engaged.CRIT = {
 		right_ring="Defending Ring",
 
 	})
-	sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.CRIT , {
+	sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.CRIT , {
 		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1554,7 +1556,7 @@ sets.engaged.CRIT = {
 		left_ear="Suppanomimi",
 		right_ring="Defending Ring",
 	})
-	sets.engaged.DW.Enspell.PDT =  set_combine(sets.engaged.Enspell , {
+	sets.engaged.DW.Enspell.DT =  set_combine(sets.engaged.Enspell , {
 		ammo="Coiste Bodhar",
 		head="Umuthi Hat",
 		body="Malignance Tabard",
@@ -1568,7 +1570,7 @@ sets.engaged.CRIT = {
 		right_ring="Defending Ring",
 
 	})
-	sets.engaged.DW.EnspellDBL.PDT = set_combine(sets.engaged.EnspellDBL , {
+	sets.engaged.DW.EnspellDBL.DT = set_combine(sets.engaged.EnspellDBL , {
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Umuthi Hat",
 		body="Malignance Tabard",
@@ -1582,7 +1584,7 @@ sets.engaged.CRIT = {
 		right_ring="Defending Ring",
 		back={ name="Sucellos's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Store TP"+10','Phys. dmg. taken-10%',}},
 	})
-	sets.engaged.DW.SubtleBlow.PDT = set_combine(sets.SubtleBlow ,{
+	sets.engaged.DW.SubtleBlow.DT = set_combine(sets.SubtleBlow ,{
 		-- ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
@@ -1599,20 +1601,20 @@ sets.engaged.CRIT = {
 ---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
 ------------------------------------------------------------------------------------------------
 
-sets.engaged.DW.PDT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.PDT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.PDT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.PDT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
 
-sets.engaged.DW.PDT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.PDT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.PDT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.PDT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
 
-sets.engaged.DW.PDT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.PDT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.PDT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.PDT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
 
 
 end
@@ -1633,42 +1635,42 @@ function select_default_macro_book()
 	end
 end
 
---Job Specific Trust Overwrite
-function check_trust()
-	if not moving then
-		if state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Elvorseal'] or buffactive['Reive Mark'] or not player.in_combat) then
-			local party = windower.ffxi.get_party()
-			if party.p5 == nil then
-				local spell_recasts = windower.ffxi.get_spell_recasts()
+-- --Job Specific Trust Overwrite
+-- function check_trust()
+-- 	if not moving then
+-- 		if state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Elvorseal'] or buffactive['Reive Mark'] or not player.in_combat) then
+-- 			local party = windower.ffxi.get_party()
+-- 			if party.p5 == nil then
+-- 				local spell_recasts = windower.ffxi.get_spell_recasts()
 
-				if spell_recasts[980] < spell_latency and not have_trust("Yoran-Oran") then
-					windower.chat.input('/ma "Yoran-Oran (UC)" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[984] < spell_latency and not have_trust("August") then
-					windower.chat.input('/ma "August" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
-					windower.chat.input('/ma "Qultada" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[914] < spell_latency and not have_trust("Ulmia") then
-					windower.chat.input('/ma "Ulmia" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[979] < spell_latency and not have_trust("Selh'teus") then
-					windower.chat.input('/ma "Selh\'teus" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				else
-					return false
-				end
-			end
-		end
-	end
-	return false
-end
+-- 				if spell_recasts[980] < spell_latency and not have_trust("Yoran-Oran") then
+-- 					windower.chat.input('/ma "Yoran-Oran (UC)" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[984] < spell_latency and not have_trust("August") then
+-- 					windower.chat.input('/ma "August" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+-- 					windower.chat.input('/ma "Qultada" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[914] < spell_latency and not have_trust("Ulmia") then
+-- 					windower.chat.input('/ma "Ulmia" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[979] < spell_latency and not have_trust("Selh'teus") then
+-- 					windower.chat.input('/ma "Selh\'teus" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				else
+-- 					return false
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- 	return false
+-- end
 
 function user_job_buff_change(buff, gain)
 	if buff:startswith('Addendum: ') or buff:endswith(' Arts') then
@@ -1758,7 +1760,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then

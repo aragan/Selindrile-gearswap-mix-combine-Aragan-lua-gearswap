@@ -139,13 +139,15 @@ for buf before seg ody or enter sortie just used turn autobuff to seg
 
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
-    state.OffenseMode:options('Normal','STP', 'Acc','CRIT', 'Enspell', 'SubtleBlow')
+    state.OffenseMode:options('Normal','STP', 'Acc','MaxAcc','CRIT', 'Enspell', 'SubtleBlow')
     state.HybridMode:options('Normal', 'DT')
+    state.WeaponskillMode:options('Match', 'SubtleBlow')
     state.CastingMode:options('Normal','DT','Seidr','magicburst','Enmity','ConserveMP','Sird','SubtleBlow', 'Proc','OccultAcumen')
-    state.IdleMode:options('DT','Normal','Empy', 'Resist','BoostHP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
-    state.PhysicalDefenseMode:options('PDT','BoostHP', 'Evasion', 'Resist')
+    state.IdleMode:options('DT','Normal','Empy', 'Resist','HP','BoostMB', 'Evasion', 'EnemyCritRate','vagary','Sphere')
+    state.PhysicalDefenseMode:options('PDT','HP', 'Evasion', 'Resist')
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
+    state.Passive = M{['description'] = 'Passive Mode','None','MaxAcc'}
 	state.Weapons:options('Mpaca','Marin','None','Musa','Xoanon', 'Club','TernionDagger','DualDaybreak','DualMaxentius')
 	state.AutoBuffMode:options('Off','seg','Auto','Fullbuff') --,'Vagary','Off','Off','Off','Off',
 
@@ -168,7 +170,7 @@ function user_job_setup()
     --send_command('bind ![ gs c scholar aoe')
     --send_command('bind !] gs c scholar duration')
     send_command('bind !; gs c scholar cost')
-    send_command('bind f5 gs c cycle HelixMode')
+    send_command('bind f7 gs c cycle HelixMode')
     send_command('bind @r gs c cycle RegenMode')
     send_command('bind @s gs c toggle StormSurge')
     send_command('bind !w gs c toggle WeaponLock')
@@ -181,16 +183,20 @@ function user_job_setup()
     send_command('bind !/ gs enable all')
     send_command('bind f4 gs c cycle ElementalMode')
     send_command('bind @f4 gs c cycleback ElementalMode')
+    send_command('bind f3 gs c toggle AutoAPMode')
 
-    send_command('bind f3 input //gs c Elemental weather')
+    
+    -- send_command('bind f3 gs c Elemental weather')
+
 		-- Additional local binds
 	send_command('bind ^` gs c cycle ElementalMode')
 	send_command('bind !` gs c scholar power')
 	send_command('bind @` gs c cycle MagicBurstMode')
 	send_command('bind ^q gs c weapons Khatvanga;gs c set CastingMode OccultAcumen')
 	send_command('bind !q gs c weapons default;gs c reset CastingMode')
-    send_command('bind f2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
+    -- send_command('bind f2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
 	send_command('bind !f2 gs c cycle RecoverMode')
+    send_command('bind f2 gs c cycle AutoBuffMode') --Automatically keeps certain buffs up, job-dependant.
     send_command('bind @f2 gs c cycle AutoBuffMode') --Automatically keeps certain buffs up, job-dependant.
 	--send_command('bind @f8 gs c toggle AutoNukeMode')
     send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
@@ -341,7 +347,12 @@ right_ear="Telos Earring",
         left_ring="Rufescent Ring",
         right_ring="Cornelia's Ring",
         back={ name="Aurist's Cape +1", augments={'Path: A',}},}
-
+        
+    sets.precast.WS.SubtleBlow =  {
+            left_ear="Sherida Earring",
+            left_ring="Chirich Ring +1",
+            right_ring="Chirich Ring +1",
+        }
     sets.precast.WS['Omniscience'] = set_combine(sets.precast.WS, {
         ammo="Pemphredo Tathlum",
         head="Pixie Hairpin +1",
@@ -999,7 +1010,7 @@ right_ear="Telos Earring",
     right_ring="Defending Ring",
     back="Moonlight Cape",})
 
-    sets.idle.BoostHP = {        
+    sets.idle.HP = {        
         ammo="Homiliary",
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
@@ -1046,12 +1057,12 @@ right_ear="Telos Earring",
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Plat. Mog. Belt",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring="Defending Ring",
         right_ring="Vengeful Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     }
     sets.idle.vagary =  {
     main={ name="Musa", augments={'Path: C',}},
@@ -1080,7 +1091,6 @@ sets.idle.Sphere = set_combine(sets.idle, {
     sets.Adoulin = {body="Councilor's Garb",}
 
     sets.resting = set_combine(sets.idle, {
-        main="Contemplator +1",
         ammo="Homiliary",
         head="Null Masque",
         body="Shamash Robe",
@@ -1127,13 +1137,33 @@ sets.idle.Sphere = set_combine(sets.idle, {
 }
 
 sets.defense.Resist = sets.idle.Resist
-sets.defense.BoostHP = sets.idle.BoostHP
+sets.defense.HP = sets.idle.HP
 sets.defense.Evasion = sets.idle.Evasion
 sets.defense.MEVA = sets.defense.MDT
 
 sets.MoveSpeed = {feet="Herald's Gaiters"}
-    sets.Kiting = {feet="Herald's Gaiters"}
-    sets.latent_refresh = {waist="Fucho-no-obi",}
+sets.Kiting = {feet="Herald's Gaiters"}
+sets.latent_refresh = {waist="Fucho-no-obi",}
+
+    
+-- Extra defense sets.  Apply these on top of melee or defense sets.
+--Passive set
+
+sets.Passive.MaxAcc = {
+    ammo="Amar Cluster",
+    head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    body="Arbatel Gown +3",
+    hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
+    legs="Arbatel Pants +2",
+    feet="Arbatel Loafers +3",
+    neck="Null Loop",
+    waist="Null Belt",
+    left_ear="Mache Earring +1",
+    right_ear="Mache Earring +1",
+    left_ring={ name="Cacoethic Ring +1", augments={'Path: A',}},
+    right_ring="Chirich Ring +1",
+    back="Null Shawl",
+}
 
     ------------------------------------------------------------------------------------------------
     ---------------------------------------- Engaged Sets ------------------------------------------
@@ -1184,7 +1214,21 @@ sets.engaged.Acc = {
     right_ring="Chirich Ring +1",
     back="Null Shawl",
 }
-    
+sets.engaged.MaxAcc = {
+    ammo="Amar Cluster",
+    head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    body="Arbatel Gown +3",
+    hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
+    legs="Arbatel Pants +2",
+    feet="Arbatel Loafers +3",
+    neck="Null Loop",
+    waist="Null Belt",
+    left_ear="Mache Earring +1",
+    right_ear="Mache Earring +1",
+    left_ring={ name="Cacoethic Ring +1", augments={'Path: A',}},
+    right_ring="Chirich Ring +1",
+    back="Null Shawl",
+}
 sets.engaged.CRIT = set_combine(sets.engaged, {
     neck="Nefarious Collar +1",
 })

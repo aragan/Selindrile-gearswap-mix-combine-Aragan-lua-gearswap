@@ -14,7 +14,7 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc','STP', 'CRIT','Fodder', 'SubtleBlow')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'Fodder')
-    state.HybridMode:options('PDT', 'Normal','Counter')
+    state.HybridMode:options('DT', 'Normal','Counter')
     state.PhysicalDefenseMode:options('PDT', 'HP')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
@@ -36,6 +36,7 @@ function user_job_setup()
 	-- send_command('bind ^backspace input /ja "Mantra" <me>')
 	send_command('bind @` gs c cycle SkillchainMode')
     send_command('bind f1 gs c cycle HippoMode')
+    send_command('bind f2 gs c cycle AutoBuffMode') --Automatically keeps certain buffs up, job-dependant.
 
 	select_default_macro_book()
 end
@@ -587,7 +588,7 @@ sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],
         waist="Plat. Mog. Belt",
         right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
         left_ear="Tuisto Earring",
-        right_ring="Ilabrat Ring",
+        right_ring="Eihwaz Ring",
         left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
@@ -615,12 +616,12 @@ sets.defense.Evasion = {
     legs="Malignance Tights",
     feet="Malignance Boots",
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
-    waist="Svelt. Gouriz +1",
+    waist="Null Belt",
     left_ear="Infused Earring",
     right_ear="Eabani Earring",
     left_ring="Vengeful Ring",
     right_ring="Defending Ring",
-    back="Moonlight Cape",
+    back="Null Shawl",
 }
 		
 	sets.defense.MEVA = {ammo="Staunch Tathlum +1",
@@ -785,14 +786,14 @@ sets.defense.Evasion = {
         --right_ring="Defending Ring",
         back={ name="Segomo's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
-    sets.engaged.PDT = set_combine(sets.engaged, sets.DT)
-    sets.engaged.Acc.PDT = set_combine(sets.engaged.Acc, sets.DT)
-    sets.engaged.Fodder.PDT = set_combine(sets.engaged.Fodder, sets.DT,{
+    sets.engaged.DT = set_combine(sets.engaged, sets.DT)
+    sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.DT)
+    sets.engaged.Fodder.DT = set_combine(sets.engaged.Fodder, sets.DT,{
         legs={ name="Mpaca's Hose", augments={'Path: A',}},
     })
-    --sets.engaged.STP.PDT = set_combine(sets.engaged.STP, sets.DT)
-    --sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT, sets.Defensive)
-    sets.engaged.SubtleBlow.PDT = { 
+    --sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.DT)
+    --sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.Defensive)
+    sets.engaged.SubtleBlow.DT = { 
     ammo={ name="Coiste Bodhar", augments={'Path: A',}},
     head={ name="Mpaca's Cap", augments={'Path: A',}},
     body="Mpaca's Doublet",
@@ -868,7 +869,7 @@ sets.engaged.SubtleBlow.Counter = set_combine(sets.engaged, {
 end
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -898,41 +899,41 @@ function select_default_macro_book()
 end
 
 
-function check_trust()
-	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
-		local party = windower.ffxi.get_party()
-		if party.p5 == nil then
-			local spell_recasts = windower.ffxi.get_spell_recasts()
+-- function check_trust()
+-- 	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
+-- 		local party = windower.ffxi.get_party()
+-- 		if party.p5 == nil then
+-- 			local spell_recasts = windower.ffxi.get_spell_recasts()
 			
-			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
-				windower.chat.input('/ma "Monberaux" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
-				windower.chat.input('/ma "Sylvie (UC)" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
-				windower.chat.input('/ma "Koru-Moru" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
-				windower.chat.input('/ma "Joachim" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
-				windower.chat.input('/ma "Qultada" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
-				windower.chat.input('/ma "Lilisette" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			else
-				return false
-			end
-		end
+-- 			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
+-- 				windower.chat.input('/ma "Monberaux" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+-- 				windower.chat.input('/ma "Sylvie (UC)" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
+-- 				windower.chat.input('/ma "Koru-Moru" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+-- 				windower.chat.input('/ma "Joachim" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+-- 				windower.chat.input('/ma "Qultada" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
+-- 				windower.chat.input('/ma "Lilisette" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			else
+-- 				return false
+-- 			end
+-- 		end
 	
-	end
-	return false
-end
+-- 	end
+-- 	return false
+-- end

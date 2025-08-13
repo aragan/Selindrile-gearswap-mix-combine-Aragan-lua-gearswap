@@ -23,18 +23,18 @@ function user_job_setup()
 
     -- Options: Override default values	
 	state.OffenseMode:options('Normal', 'TP', 'Acc', 'STP', 'CRIT')
-    state.HybridMode:options('Tank','Normal','PDT')
+    state.HybridMode:options('Tank','Normal','DT')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'Acc','Enmity')
     state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
 	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation','Resist','SphereRegain')
-    state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HPBOOST','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
+    state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HP','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
     state.MagicalDefenseMode:options('MDT','MDT_HP','MDT_Reraise')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
-	state.IdleMode:options('Tank','Kiting','DT','PDT','PDH','Block','Evasion','MDT','MEVA','Regen','Regain','Normal')
+	state.IdleMode:options('Tank','Kiting','DT','PDT','PDH', 'HP','Block','Evasion','MDT','MEVA','Regen','Regain','Normal')
 	state.Weapons:options('Burtgang','None','MalignanceSword','Naegling','Reikiko','SakpataSword','Malevolence','Club','Caladbolg','MalignancePole',
 	'Shining','DualNaegling','DualReikiko','DualReikikoThibron','DualNaeglingThibron')
-	state.ShieldMode = M{['description']='Shield Mode', 'Aegis','Srivatsa','Normal','Ochain','Duban', 'Priwen'} -- , 'Priwen' }
-	state.AutoBuffMode:options('Off','Auto','Odyss','Defense','Reprisal','Aminon','TankFull') --,'Off','Off','Off','Off','Off',
+	state.ShieldMode = M{['description']='Shield Mode', 'Aegis','Srivatsa','Normal','Ochain','Duban', 'Priwen','Adamas','Blurred','Sacro'} -- , 'Priwen' }
+	state.AutoBuffMode:options('Off','Auto','Odyss','Defense','Reprisal','Aminon','TankFull','Melee') --,'Off','Off','Off','Off','Off',
 
     state.ExtraDefenseMode = M{['description']='Extra Defense Mode','None','EnemyCritRate','ReverenceGauntlets', 'Refresh', 'Resist', 'EnemyTPaccumulation','MP','Twilight'}
 	
@@ -120,6 +120,9 @@ function init_gear_sets()
 	sets.Duban = {sub="Duban"}
 	sets.Srivatsa = {sub="Srivatsa"}
 	sets.Priwen = {sub="Priwen"}
+	sets.Adamas = {sub="Adamas"}
+	sets.Blurred = {sub="Blurred Shield +1"}
+	sets.Sacro = {sub="Sacro Bulwark"}
 
      -- neck JSE Necks Reinf
 	 sets.RP = {}
@@ -337,7 +340,7 @@ function init_gear_sets()
 	
 	   --Stat Modifier: 50%MND / 50%STR fTP: 1000:4.0 2000:10.25 3000:13.75
 	sets.precast.WS['Savage Blade'] = {
-	   ammo="Oshasha's Treatise",
+	ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 	head="Nyame Helm",
 	body="Nyame Mail",
 	hands="Nyame Gauntlets",
@@ -355,6 +358,7 @@ function init_gear_sets()
 	   ammo="Crepuscular Pebble",
 	   hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 	   left_ring="Sroda Ring", 
+	   right_ring="Cornelia's Ring",
 	})
 	sets.precast.WS['Savage Blade'].Acc = set_combine(sets.precast.WS['Savage Blade'], {ear1="Mache Earring +1",ear2="Telos Earring"})
 
@@ -942,9 +946,25 @@ sets.midcast.Stoneskin.ConserveMP = set_combine(sets.midcast['Enhancing Magic'].
 		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		right_ring="Moonlight Ring"}
 	
+	sets.idle.HP = {
+			main="Burtgang",
+			ammo="Staunch Tathlum +1",
+			head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+			body="Rev. Surcoat +3",
+			hands="Regal Gauntlets",
+			legs={ name="Souv. Diechlings +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+			feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+			neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+			waist="Plat. Mog. Belt",
+			left_ear="Tuisto Earring",
+			right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+			left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+			right_ring="Moonlight Ring",
+			back="Moonlight Cape",
+		}
 
     sets.idle.Block = {ammo="Staunch Tathlum +1",
-		head="Chev. Armet +3",neck={ name="Loricate Torque +1", augments={'Path: A',}},ear1="Creed Earring",ear2="Thureous Earring",
+		head="Chev. Armet +3",neck={ name="Loricate Torque +1", augments={'Path: A',}},ear1="Ethereal Earring",ear2="Thureous Earring",
 		body="Sakpata's Breastplate",hands="Souv. Handsch. +1",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
 		back="Shadow Mantle",waist="Flume Belt +1",legs="Sakpata's Cuisses",feet="Souveran Schuhs +1"}
 		
@@ -1010,12 +1030,13 @@ sets.idle.Evasion={
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
 	feet={ name="Nyame Sollerets", augments={'Path: B',}},
 	neck={ name="Bathy Choker +1", augments={'Path: A',}},
-	waist="Plat. Mog. Belt",
+	waist="Null Belt",
 	left_ear="Infused Earring",
 	right_ear="Eabani Earring",
 	left_ring="Regal Ring",
 	right_ring="Vengeful Ring",
-	back="Rudianos's Mantle",}
+	back="Null Shawl",
+}
 	sets.idle.Regen = { 
 		ammo="Staunch Tathlum +1",
         head="Null Masque",
@@ -1033,7 +1054,7 @@ sets.idle.Evasion={
 	}
 
     sets.idle.Regain = {
-        head="Wakido Kabuto +3",
+        head="Null Masque",
         body="Makora Meikogai",
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -1130,7 +1151,7 @@ sets.passive.SphereRegain = {
 
     
     sets.defense.Block = {ammo="Eluder's Sachet",
-		head="Chev. Armet +3",neck="Diemer Gorget",ear1="Creed Earring",ear2="Thureous Earring",
+		head="Chev. Armet +3",neck="Diemer Gorget",ear1="Ethereal Earring",ear2="Thureous Earring",
 		body="Sakpata's Breastplate",hands="Souv. Handsch. +1",ring1="Defending Ring",ring2="Warden's Ring",
 		back="Shadow Mantle",waist="Flume Belt +1",legs="Sakpata's Cuisses",feet="Souveran Schuhs +1"}
 		
@@ -1205,7 +1226,7 @@ sets.passive.SphereRegain = {
 		right_ring="Moonlight Ring",
 		back="Rudianos's Mantle",
 	}
-	sets.defense.HPBOOST = {
+	sets.defense.HP = {
 		main="Burtgang",
 		ammo="Staunch Tathlum +1",
 		head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
@@ -1371,8 +1392,8 @@ sets.defense.Turtle ={
    }
  --1179 / 1315 avec enlight up
 	sets.engaged.STP = {  
-	--main="Naegling",
-	--sub="Blurred Shield +1",
+	main="Naegling",
+	sub="Blurred Shield +1",
 	ammo="Aurgelmir Orb +1",
 	head={ name="Sakpata's Helm", augments={'Path: A',}},
 	body={ name="Sakpata's Plate", augments={'Path: A',}},
@@ -1527,7 +1548,7 @@ sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)-- 12%
     ---------------------------------------- Hybrid Sets -------------------------------------------
     ------------------------------------------------------------------------------------------------
 
-	sets.engaged.PDT = --1179 / 1315 avec enlight up
+	sets.engaged.DT = --1179 / 1315 avec enlight up
 	{	head={ name="Sakpata's Helm", augments={'Path: A',}},
 		body={ name="Sakpata's Plate", augments={'Path: A',}},
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
@@ -1567,7 +1588,7 @@ sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)-- 12%
 	 ------------------------------------------------------------------------------------------------
  
  
-  sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.DW.Acc,{
+  sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc,{
 	 ammo="Staunch Tathlum +1",
 	 left_ring="Defending Ring",
 	 right_ring="Moonlight Ring",
@@ -1575,7 +1596,7 @@ sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)-- 12%
 	 left_ear="Suppanomimi",
 	 waist="Reiki Yotai",
  })
- sets.engaged.DW.TP.PDT = set_combine(sets.engaged.DW.TP,{
+ sets.engaged.DW.TP.DT = set_combine(sets.engaged.DW.TP,{
 	 ammo="Staunch Tathlum +1",
 	 left_ring="Defending Ring",
 	 right_ring="Moonlight Ring",
@@ -1583,7 +1604,7 @@ sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)-- 12%
 	 left_ear="Suppanomimi",
 	 waist="Reiki Yotai",
  })
- sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP,{
+ sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP,{
 	 ammo="Staunch Tathlum +1",
 	 left_ring="Defending Ring",
 	 right_ring="Moonlight Ring",
@@ -1591,7 +1612,7 @@ sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)-- 12%
 	 left_ear="Suppanomimi",
 	 waist="Reiki Yotai",
  })
- sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.DW.CRIT,{
+ sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT,{
 	 ammo="Staunch Tathlum +1",
 	 left_ring="Defending Ring",
 	 right_ring="Moonlight Ring",
@@ -1600,21 +1621,21 @@ sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)-- 12%
 	 waist="Reiki Yotai",
  })
  
-	 --sets.engaged.DW.PDT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.PDT)
-	 --sets.engaged.DW.PDT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.PDT)
-	 --sets.engaged.DW.PDT.MaxHaste = set_combine(sets.engaged.DW.PDT.MaxHaste, sets.engaged.PDT)
-	 sets.engaged.DW.Acc.PDT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.PDT)
-	 sets.engaged.DW.Acc.PDT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.PDT)
-	 sets.engaged.DW.Acc.PDT.MaxHaste = set_combine(sets.engaged.DW.Acc.PDT.MaxHaste, sets.engaged.PDT)
-	 sets.engaged.DW.TP.PDT.LowHaste = set_combine(sets.engaged.DW.TP.LowHaste, sets.engaged.PDT)
-	 sets.engaged.DW.TP.PDT.MidHaste = set_combine(sets.engaged.DW.TP.MidHaste, sets.engaged.PDT)
-	 sets.engaged.DW.TP.PDT.MaxHaste = set_combine(sets.engaged.DW.TP.PDT.MaxHaste, sets.engaged.PDT)
-	 sets.engaged.DW.STP.PDT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.PDT)
-	 sets.engaged.DW.STP.PDT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.PDT)
-	 sets.engaged.DW.STP.PDT.MaxHaste = set_combine(sets.engaged.DW.STP.PDT.MaxHaste, sets.engaged.PDT)
-	 sets.engaged.DW.CRIT.PDT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.PDT)
-	 sets.engaged.DW.CRIT.PDT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.PDT)
-	 sets.engaged.DW.CRIT.PDT.MaxHaste = set_combine(sets.engaged.DW.CRIT.PDT.MaxHaste, sets.engaged.PDT)
+	 --sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.DT)
+	 --sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.DT)
+	 --sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.DT.MaxHaste, sets.engaged.DT)
+	 sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.DT)
+	 sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.DT)
+	 sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.DT.MaxHaste, sets.engaged.DT)
+	 sets.engaged.DW.TP.DT.LowHaste = set_combine(sets.engaged.DW.TP.LowHaste, sets.engaged.DT)
+	 sets.engaged.DW.TP.DT.MidHaste = set_combine(sets.engaged.DW.TP.MidHaste, sets.engaged.DT)
+	 sets.engaged.DW.TP.DT.MaxHaste = set_combine(sets.engaged.DW.TP.DT.MaxHaste, sets.engaged.DT)
+	 sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.DT)
+	 sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.DT)
+	 sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.DT.MaxHaste, sets.engaged.DT)
+	 sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.DT)
+	 sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.DT)
+	 sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.DT.MaxHaste, sets.engaged.DT)
 
 
 
@@ -1706,7 +1727,7 @@ function select_default_macro_book()
         set_macro_page(3, 20)
 	elseif player.sub_job == 'BLU' then
         set_macro_page(1, 20)
-        send_command('input //blupldsets set pld') --addon work with sub
+        send_command('blupldsets set pld') --addon work with sub
 	elseif player.sub_job == 'DNC' then
 		set_macro_page(5, 20)
 	elseif player.sub_job == 'WAR' then
@@ -1729,44 +1750,44 @@ autows_list = {['Naegling']='Savage Blade',['Burtgang']='Atonement',['Malignance
 
 	 
 
-function check_trust()
-	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
-		local party = windower.ffxi.get_party()
-		if party.p5 == nil then
-			local spell_recasts = windower.ffxi.get_spell_recasts()
+-- function check_trust()
+-- 	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
+-- 		local party = windower.ffxi.get_party()
+-- 		if party.p5 == nil then
+-- 			local spell_recasts = windower.ffxi.get_spell_recasts()
 			
-			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
-				windower.chat.input('/ma "Monberaux" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
-				windower.chat.input('/ma "Sylvie (UC)" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
-				windower.chat.input('/ma "Koru-Moru" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
-				windower.chat.input('/ma "Joachim" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
-				windower.chat.input('/ma "Qultada" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
-				windower.chat.input('/ma "Lilisette" <me>')
-				tickdelay = os.clock() + 4.5
-				return true
-			else
-				return false
-			end
-		end
+-- 			if spell_recasts[999] < spell_latency and not have_trust("Monberaux") then
+-- 				windower.chat.input('/ma "Monberaux" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+-- 				windower.chat.input('/ma "Sylvie (UC)" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
+-- 				windower.chat.input('/ma "Koru-Moru" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+-- 				windower.chat.input('/ma "Joachim" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+-- 				windower.chat.input('/ma "Qultada" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
+-- 				windower.chat.input('/ma "Lilisette" <me>')
+-- 				tickdelay = os.clock() + 4.5
+-- 				return true
+-- 			else
+-- 				return false
+-- 			end
+-- 		end
 	
-	end
-	return false
-end
+-- 	end
+-- 	return false
+-- end
 
 function buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
@@ -1788,7 +1809,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then

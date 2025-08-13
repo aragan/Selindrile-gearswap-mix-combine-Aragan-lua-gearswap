@@ -27,10 +27,10 @@ function user_job_setup()
 	state.CastingMode:options('Normal', 'SIRD', 'Spaekona', 'ConserveMP', 'Proc','OccultAcumen')
 	state.OffenseMode:options('Normal','TP', 'CRIT', 'Locked')
 	state.HybridMode:options('DT','Normal')
-	state.PhysicalDefenseMode:options('PDT', 'MDT')
+	state.PhysicalDefenseMode:options('PDT', 'HP', 'MDT')
     state.MagicalDefenseMode:options('MDT')
 	state.Enfeebling = M('None', 'Effect')
-	state.IdleMode:options('DT','Normal','DT','Empy', 'PDT', 'MDT', 'HB', 'MB', 'Evasion', 'EnemyCritRate', 'Sphere')
+	state.IdleMode:options('DT','Normal','DT','Empy', 'PDT', 'MDT', 'HP', 'MB', 'Evasion', 'EnemyCritRate', 'Sphere')
 	state.Weapons:options('None','Mpaca', 'Marin','BunziClub', 'MaxentiusClub', 'Drepanum', 'Maliya','TernionDagger')
 	state.AutoBuffMode:options('Off','MB','Auto') --,'Off','Off','Off','Off','Off',
 	state.Passive = M{['description'] = 'Passive Mode','None','MP','Twilight'}
@@ -55,7 +55,7 @@ function user_job_setup()
 	send_command('bind ^0 gs c weapons Khatvanga;gs c set CastingMode OccultAcumen')
 	send_command('bind !9 gs c weapons Default;gs c reset CastingMode;gs c reset DeathMode;gs c reset MagicBurstMode')
 	send_command('bind !\\\\ input /ja "Manawell" <me>')
-	send_command('bind !` input /ma "Aspir III" <t>')
+	-- send_command('bind !` input /ma "Aspir III" <t>')
 	send_command('bind @` gs c cycle MagicBurstMode')
 	send_command('bind @f10 gs c cycle RecoverMode')
 	send_command('bind @f9 gs c cycle DeathMode')
@@ -69,6 +69,7 @@ function user_job_setup()
     send_command('bind f1 gs c cycle HippoMode')
     send_command('bind !f6 gs c cycleback Weapons')
     send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
+    send_command('bind f2 gs c cycle AutoBuffMode') --Automatically keeps certain buffs up, job-dependant.
 
     --[[]	send_command('bind ^backspace input /ma "Stun" <t>')
 	send_command('bind !backspace input /ja "Enmity Douse" <t>')
@@ -907,8 +908,8 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 		right_ring="Stikini Ring +1",
 		right_ring="Shadow Ring",
 		back="Moonlight Cape",
-		}
-		sets.idle.MDT = {
+	}
+	sets.idle.MDT = {
 			ammo="Staunch Tathlum +1",
 			head="Wicce Petasos +2",
 			body="Nyame Mail",
@@ -922,8 +923,24 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 			left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
 			right_ring="Shadow Ring",
 			back="Moonlight Cape",
-		}
+	}
 		
+sets.idle.HP = {
+	head={ name="Nyame Helm", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    body="Adamantite Armor",
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+    waist="Plat. Mog. Belt",
+    left_ear="Tuisto Earring",
+    right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    left_ring="Eihwaz Ring",
+    right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    back="Moonlight Cape",
+}
+
+
 	sets.idle.DTHippo = set_combine(sets.idle.PDT, {feet="Hippo. Socks +1"})
 
 	sets.idle.Death = {        ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
@@ -975,24 +992,6 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
     })
 
 
-    sets.idle.HB = {
-        main="Malignance Pole",
-        sub="Alber Strap",
-        ammo="Staunch Tathlum +1",
-        head={ name="Nyame Helm", augments={'Path: B',}},
-        body="Adamantite Armor",
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
-        legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet={ name="Nyame Sollerets", augments={'Path: B',}},
-        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
-        waist="Plat. Mog. Belt",
-        left_ear="Tuisto Earring",
-        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
-        right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
-        back="Moonlight Cape",
-    }
-
     sets.idle.DT = {
         sub="Alber Strap",
         ammo="Staunch Tathlum +1",
@@ -1028,12 +1027,12 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Plat. Mog. Belt",
+        waist="Null Belt",
         left_ear="Eabani Earring",
         right_ear="Ethereal Earring",
-        left_ring={ name="Cacoethic Ring +1", augments={'Path: A',}},
+        left_ring="Defending Ring",
         right_ring="Vengeful Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     })
 
     sets.idle.Empy = set_combine(sets.idle, { 
@@ -1087,8 +1086,12 @@ sets.midcast.Drain = set_combine(sets.midcast['Dark Magic'], {
 		head="Nyame Helm",neck="Warder's Charm +1",ear1="Etiolation Earring",ear2="Ethereal Earring",
 		body="Nyame Mail",hands="Nyame Gauntlets",ring1="Defending Ring",ring2="Shadow Ring",
 		back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
+    
+    sets.defense.HP = sets.idle.HP  
 
     -- Extra defense sets.  Apply these on top of melee or defense sets.
+    --Passive set
+
     sets.passive.MP = { body={ name="Ros. Jaseran +1", augments={'Path: A',}},}
     sets.passive.Twilight = {head=empty,body="Twilight Cloak"}
 
@@ -1226,7 +1229,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then

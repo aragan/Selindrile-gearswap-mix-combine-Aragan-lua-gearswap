@@ -9,6 +9,9 @@ waist="Gishdubar Sash",
 left_ring="Purity Ring",
 right_ring="Blenmot's Ring +1",}
 
+--Gavialis
+sets.WSDayBonus = {head="Gavialis Helm"}
+
 sets.TreasureHunter = {ammo="Per. Lucky Egg",head="Volte Cap",waist="Chaac Belt"}
 
 sets.precast.Item['Hallowed Water'] = {neck="Nicander's Necklace",

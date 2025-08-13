@@ -14,8 +14,8 @@ keyboard binds and chat
 function user_job_setup()
     state.OffenseMode:options('Normal','Acc')
     state.CastingMode:options('Normal')
-    state.IdleMode:options('Normal', 'PDT', 'Regen', 'Sphere', 'MagicalBloodPactRage', 'PhysicalBloodPactRage')
-    state.PhysicalDefenseMode:options('Normal','PDT', 'Regen', 'Mdt', 'MagicalBloodPactRage', 'PhysicalBloodPactRage')
+    state.IdleMode:options('Normal', 'PDT', 'Evasion', 'Regen', 'Sphere', 'MagicalBloodPactRage', 'PhysicalBloodPactRage')
+    state.PhysicalDefenseMode:options('Normal','PDT','HP', 'Regen', 'Mdt', 'MagicalBloodPactRage', 'PhysicalBloodPactRage')
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
 
@@ -28,7 +28,7 @@ function user_job_setup()
 	
     send_command('bind !` input /ja "Release" <me>')
 	send_command('bind @` gs c cycle MagicBurst')
-	send_command('bind !f3 gs c toggle PactSpamMode')
+	send_command('bind f3 gs c toggle PactSpamMode')
     send_command('bind !f2 gs c toggle AutoFavor')
 	send_command('bind !f1 gs c toggle AutoConvert')
 
@@ -36,12 +36,12 @@ function user_job_setup()
 	send_command('bind ^q gs c weapons Khatvanga;gs c set CastingMode OccultAcumen')
 	send_command('bind !q gs c weapons default;gs c reset CastingMode')
     send_command('bind f1 gs c cycle HippoMode')
-    send_command('bind f3 gs c cycle avatars')
-    send_command('bind ^f3 gs c cycleback avatars')
-    send_command('bind f2 input //gs c avatars')
+    send_command('bind ` gs c cycle avatars')
+    send_command('bind @` gs c cycleback avatars')
+    send_command('bind f2 gs c avatars')
     send_command('bind ^f2 input /pet "Release" <me>')
     send_command('bind f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
-    send_command('bind @f4 input //gs c siphon')
+    send_command('bind @f4 gs c siphon')
 
     select_default_macro_book()
 end
@@ -562,6 +562,20 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
         back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
     }
     
+	sets.idle.HP =  {
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body="Adamantite Armor",
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Plat. Mog. Belt",
+        left_ear="Tuisto Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Eihwaz Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+    }
     sets.idle.Sphere = set_combine(sets.idle, {
         body="Annoint. Kalasiris",
     })
@@ -646,7 +660,21 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
         right_ring="Varar Ring +1",
         back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
-
+sets.idle.HP = {
+    ammo="Eluder's Sachet",
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+    waist="Plat. Mog. Belt",
+    left_ear="Tuisto Earring",
+    right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    left_ring="Eihwaz Ring",
+    right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    back="Moonlight Cape",
+}
     sets.idle.Regen.Avatar = {
         main="Contemplator +1",
         sub="Elan Strap +1",
@@ -664,7 +692,20 @@ sets.midcast['Dark Magic'] = set_combine(sets.midcast['Enfeebling Magic'], {
         right_ring="C. Palug Ring",
         back={ name="Campestres's Cape", augments={'Pet: M.Acc.+20 Pet: M.Dmg.+20','Eva.+20 /Mag. Eva.+20','Pet: Magic Damage+10','Pet: Haste+10',}},
 }
-
+sets.idle.Evasion = {
+	head={ name="Nyame Helm", augments={'Path: B',}},
+	body={ name="Nyame Mail", augments={'Path: B',}},
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck={ name="Bathy Choker +1", augments={'Path: A',}},
+	waist="Null Belt",
+	left_ear="Infused Earring",
+	right_ear="Eabani Earring",
+	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+	right_ring="Vengeful Ring",
+	back="Null Shawl",
+}
 sets.idle.PhysicalBloodPactRage.Avatar = {
     main={ name="Grioavolr", augments={'Blood Pact Dmg.+9','Pet: Mag. Acc.+17',}},
     sub="Elan Strap +1",
@@ -702,11 +743,6 @@ sets.idle.MagicalBloodPactRage.Avatar = {
 }
 
     sets.idle.Spirit = {}
-
-    sets.idle.Town = {
-    feet="Herald's Gaiters",
-    left_ear="Infused Earring",
-}
 
     -- Favor uses Caller's Horn instead of Convoker's Horn for refresh
     sets.idle.Avatar.Favor = {head="Beckoner's Horn +2",}
@@ -837,6 +873,8 @@ sets.defense.MagicalBloodPactRage = {
 		ring1="Vengeful Ring",Ring2="Purity Ring",
         back="Aurist's Cape +1"}
 		
+    sets.defense.HP = sets.idle.HP  
+
     sets.Kiting = {feet="Herald's Gaiters"}
     sets.latent_refresh = {waist="Fucho-no-obi"}
 	sets.latent_refresh_grip = {}

@@ -24,7 +24,7 @@ keyboard binds and chat
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'Aminon', 'DT')
-    state.HybridMode:options( 'PDT','Normal')
+    state.HybridMode:options( 'DT','Normal')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'SC', 'PDL')
 	state.IdleMode:options('DT','Normal','PDT','Regen', 'HP', 'Evasion', 'Enmity', 'EnemyCritRate','Regain')
     state.PhysicalDefenseMode:options('Evasion', 'PDT', 'DT', 'Enmity', 'HP', 'Aminon')
@@ -58,6 +58,7 @@ function user_job_setup()
     send_command('bind f4 gs c cycle altstep')
     send_command('bind f7 gs c toggle usealtstep')
 	send_command('bind !5 gs c toggle DanceStance')
+    send_command('bind f2 gs c cycle AutoBuffMode') --Automatically keeps certain buffs up, job-dependant.
 
     Haste = 0
     DW_needed = 0
@@ -736,12 +737,12 @@ function init_gear_sets()
         legs="Malignance Tights",
         feet="Macu. Toe Sh. +2",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Svelt. Gouriz +1",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring="Vengeful Ring",
         right_ring="Defending Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     }
     
     sets.idle.HP = {
@@ -1251,26 +1252,26 @@ sets.engaged.DW.CRIT = {
         ring2="Defending Ring", --10
     }
 
-    sets.engaged.PDT = set_combine(sets.engaged, sets.engaged.Hybrid)
-    sets.engaged.Acc.PDT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
-    sets.engaged.STP.PDT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
-    sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
-    sets.engaged.SubtleBlow.PDT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid,{ 
+    sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
+    sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
+    sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
+    sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
+    sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid,{ 
     left_ring="Chirich Ring +1",})
-    sets.engaged.Aminon.PDT = set_combine(sets.engaged.Aminon, sets.engaged.Hybrid,{
+    sets.engaged.Aminon.DT = set_combine(sets.engaged.Aminon, sets.engaged.Hybrid,{
         neck="Rep. Plat. Medal",
         head={ name="Gleti's Mask", augments={'Path: A',}},
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
         hands="Regal Gloves",
         legs={ name="Gleti's Breeches", augments={'Path: A',}},
         feet={ name="Gleti's Boots", augments={'Path: A',}},})
-    sets.engaged.DW.PDT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
-    sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
-    sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
-    sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
-    sets.engaged.DW.SubtleBlow.PDT = set_combine(sets.engaged.DW.SubtleBlow, sets.engaged.Hybrid,{ 
+    sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
+    sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
+    sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
+    sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
+    sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.engaged.Hybrid,{ 
     left_ring="Chirich Ring +1",})
-    sets.engaged.DW.Aminon.PDT = set_combine(sets.engaged.DW.Aminon, sets.engaged.Hybrid,{
+    sets.engaged.DW.Aminon.DT = set_combine(sets.engaged.DW.Aminon, sets.engaged.Hybrid,{
         neck="Rep. Plat. Medal",
         head={ name="Gleti's Mask", augments={'Path: A',}},
         body={ name="Gleti's Cuirass", augments={'Path: A',}},
@@ -1283,31 +1284,31 @@ sets.engaged.DW.CRIT = {
       ---------------------------------------- DW-HASTE Hybrid ------------------------------------------
     ------------------------------------------------------------------------------------------------
 
-        sets.engaged.DW.PDT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
-        sets.engaged.DW.Acc.PDT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
-        sets.engaged.DW.CRIT.PDT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
-        sets.engaged.DW.STP.PDT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
-        sets.engaged.DW.SubtleBlow.PDT.LowHaste = set_combine(sets.engaged.DW.SubtleBlow.LowHaste, sets.engaged.Hybrid,{ 
+        sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+        sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+        sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+        sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+        sets.engaged.DW.SubtleBlow.DT.LowHaste = set_combine(sets.engaged.DW.SubtleBlow.LowHaste, sets.engaged.Hybrid,{ 
             left_ring="Chirich Ring +1",})
 
     
-        sets.engaged.DW.PDT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid, {
+        sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid, {
             left_ear="Suppanomimi",  --5
         })-- 5%
-        sets.engaged.DW.Acc.PDT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid, {
+        sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid, {
             left_ear="Suppanomimi",  --5
         })-- 5%
-        sets.engaged.DW.CRIT.PDT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid, {
+        sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid, {
             left_ear="Suppanomimi",  --5
         })-- 5%
-        sets.engaged.DW.STP.PDT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid, {
+        sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid, {
             left_ear="Suppanomimi",  --5
         })-- 5%)
-        sets.engaged.DW.PDT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
-        sets.engaged.DW.Acc.PDT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
-        sets.engaged.DW.CRIT.PDT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
-        sets.engaged.DW.STP.PDT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
-        sets.engaged.DW.SubtleBlow.PDT.MaxHaste = set_combine(sets.engaged.DW.SubtleBlow.MaxHaste, sets.engaged.Hybrid,{ 
+        sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+        sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+        sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
+        sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+        sets.engaged.DW.SubtleBlow.DT.MaxHaste = set_combine(sets.engaged.DW.SubtleBlow.MaxHaste, sets.engaged.Hybrid,{ 
             left_ring="Chirich Ring +1",})
 
         --SubtleBlow 55% set
@@ -1357,7 +1358,7 @@ end
 
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -1367,7 +1368,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 end
 

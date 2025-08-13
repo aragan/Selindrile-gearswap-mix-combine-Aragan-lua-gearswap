@@ -1091,7 +1091,7 @@ sets.idle.MDT = {
     back="Moonlight Cape",
 }
 sets.idle.HP = {
-    head={ name="Nyame Helm", augments={'Path: B',}},
+    head="Genmei Kabuto",
     body="Adamantite Armor",
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -1142,18 +1142,18 @@ sets.idle.Evasion = {
     legs="Malignance Tights",
     feet="Malignance Boots",
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
-    waist="Svelt. Gouriz +1",
+    waist="Null Belt",
     left_ear="Eabani Earring",
     right_ear="Infused Earring",
     left_ring="Vengeful Ring",
     right_ring="Hizamaru Ring",
-    back="Moonlight Cape",
+    back="Null Shawl",
 }    
 sets.idle.Empy = set_combine(sets.idle, {
-    head="Hattori Zukin +1",
+    head="Hattori Zukin +2",
     body="Hattori Ningi +2",
     hands="Hattori Tekko +2",
-    legs="Hattori Hakama +1",
+    legs="Hattori Hakama +2",
     feet="Hattori Kyahan +2",
 })
 
@@ -1694,7 +1694,7 @@ function user_job_lockstyle()
     if not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
         windower.chat.input('/lockstyleset 1')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -1745,7 +1745,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then

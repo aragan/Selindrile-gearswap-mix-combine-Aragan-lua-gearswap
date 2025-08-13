@@ -13,16 +13,16 @@ state.Roller1 state.Roller2 have all rolls send to roller addon
 
 cycle Roll
 
-    send_command('bind f2 gs c cycle Roller1;input //gs c Roller1')
-    send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
-    send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
-    send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
+    send_command('bind f2 gs c cycle Roller1;gs c Roller1')
+    send_command('bind f3 gs c cycle Roller2;gs c Roller2')
+    send_command('bind ^f2 gs c cycleback Roller1;gs c Roller1')
+    send_command('bind ^f3 gs c cycleback Roller2;gs c Roller2')
 
 macro
 
 /con gs c Roller1
 /con gs c Roller2
-/con input //roll
+/con roll
 
 ----------
 skillchains for farm apex fast kill
@@ -32,16 +32,16 @@ Last Stand(3000TP) - Requiescat - Savage Blade - Last Stand (Light) - Last Stand
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'Ranged', 'CRIT')
-    state.HybridMode:options( 'PDT','Normal')
-    state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow10','SubtleBlow40')
+    state.HybridMode:options( 'DT25','DT','Normal')
+    state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow','SubtleBlow40')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'Resistant')
     state.IdleMode:options('DT','Normal','Empy', 'Evasion', 'HP', 'Regen','Regain', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT','Aminon', 'Evasion', 'HP')
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
-	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax','SubtleBlow10','SubtleBlow40'}
-	state.Weapons:options('None','DualSWORDS','DualRostam','DualTauret','DualKustawi','DualRanged','SWORDS','Tauret','Rostam','Kustawi','Ranged')--'DualHotShot','DualLeaden','Leaden','HotShot'
+	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax','SubtleBlow','SubtleBlow40'}
+	state.Weapons:options('None','DualSWORDS','DualRostam','DualKustawi','DualTauret','DualRanged','SWORDS','Tauret','Rostam','Kustawi','Ranged')--'DualHotShot','DualLeaden','Leaden','HotShot'
 	state.CompensatorMode:options('Never','Always','300','1000')
     --state.ranged:options('normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp')
     state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
@@ -78,8 +78,8 @@ function user_job_setup()
 	send_command('bind ^@!\\\\ gs c toggle LuzafRing')
     send_command('bind ^2 gs c toggle LuzafRing')
 	send_command('bind @f7 gs c toggle RngHelper')
-	send_command('bind @2 gs c toggle RngHelper;gs c toggle RngHelperQuickDraw')
-    send_command('bind !a gs c toggle phalanxset') 
+	send_command('bind @2 gs c toggle RngHelper;wait 0.2;gs c toggle RngHelperQuickDraw')
+    -- send_command('bind !a gs c toggle phalanxset') 
 
 	--send_command('bind !r gs c weapons DualSavageWeapons;gs c update')
 	--send_command('bind ^q gs c weapons DualAeolian;gs c update')
@@ -93,20 +93,23 @@ function user_job_setup()
 	send_command('bind @z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
     send_command('bind !f3 gs c cycle QDMode')
     send_command('bind !z gs c toggle CompensatorMode')  
-    send_command('bind f2 gs c cycle Roller1;input //gs c Roller1')
-    send_command('bind f3 gs c cycle Roller2;input //gs c Roller2')
-    send_command('bind ^f2 gs c cycleback Roller1;input //gs c Roller1')
-    send_command('bind ^f3 gs c cycleback Roller2;input //gs c Roller2')
-    send_command('bind ^z gs c Rollset')--;input //gs c Rollset
-    send_command('bind !6 gs c cycle Rollset;awit;input //gs c Rollset')
-    send_command('bind f1 gs c cycle Rollset;awit;input //gs c Rollset')
-    send_command('bind !f1 gs c cycleback Rollset;awit;input //gs c Rollset')
+    send_command('bind f2 gs c cycle Roller1;gs c Roller1')
+    send_command('bind f3 gs c cycle Roller2;gs c Roller2')
+    send_command('bind ^f2 gs c cycleback Roller1;gs c Roller1')
+    send_command('bind ^f3 gs c cycleback Roller2;gs c Roller2')
+    -- send_command('bind ^z gs c Rollset')--;gs c Rollset
+    -- send_command('bind !6 gs c cycle Rollset;awit;gs c Rollset')
+    send_command('bind f1 gs c cycle Rollset;awit;gs c Rollset')
+    send_command('bind ` gs c cycle Rollset;awit;gs c Rollset')
+    send_command('bind @` gs c cycleback Rollset;awit;gs c Rollset')
+
+    send_command('bind !f1 gs c cycleback Rollset;awit;gs c Rollset')
     send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
 
 
     
-    --send_command('alias melee input //roller roll1 Chaos Roll;wait .1;input //roller roll2 Samurai Roll')
-    --send_command('alias magic input //roller roll1 Wizard\'s Roll;wait .1;input //roller roll2 Caster\'s Roll')
+    --send_command('alias melee roller roll1 Chaos Roll;wait .1;roller roll2 Samurai Roll')
+    --send_command('alias magic roller roll1 Wizard\'s Roll;wait .1;roller roll2 Caster\'s Roll')
     -- Define the roll commands in a table
     --send_command('bind !f7 gs c toggle rangedautows')
 
@@ -118,6 +121,12 @@ function user_job_setup()
 
     select_default_macro_book()
 end
+autows_list = {['DualSWORDS']='Savage Blade',['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='Aeolian Edge',
+['DualRostam']='Leaden Salute',['DualTauret']='Aeolian Edge',
+['Ranged']='Leaden Salute',['Kustawi']='Last Stand',['DualKustawi']='Last Stand',['DualSavageWeapons']='Savage Blade',
+['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',
+['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
+
 
 -- Define sets and vars used by this job file.
 function init_gear_sets()
@@ -132,10 +141,10 @@ function init_gear_sets()
 	sets.weapons.DualSWORDS = {main="Naegling",sub="Crepuscular Knife"}
 	--sets.weapons.DualSavage = {main="Naegling", sub="Crepuscular Knife",}
     sets.weapons.DualRostam = {main={ name="Rostam", augments={'Path: A',}}, sub="Tauret"}
-	sets.weapons.DualTauret = {main="Tauret", sub="Crepuscular Knife",}
+	sets.weapons.DualTauret = {main={name="Tauret", priority=1},  sub="Crepuscular Knife",}
     sets.weapons.DualKustawi = {main="Kustawi +1", sub="Crepuscular Knife",}
-    sets.weapons.DualRanged = {main="Rostam",sub="Nusku Shield",}
-    sets.weapons.DualLeaden = {main="Rostam",sub="Tauret",}
+    sets.weapons.DualRanged = {main={ name="Rostam", augments={'Path: A',}},sub="Nusku Shield",}
+    sets.weapons.DualLeaden = {main={ name="Rostam", augments={'Path: A',}},sub="Tauret",}
     sets.weapons.DualHotShot = {main="Naegling", sub="Tauret",}
     -- sets.weapons.procsword = {main="Naegling", sub="Tauret",}
 
@@ -153,8 +162,8 @@ function init_gear_sets()
     sets.weapons.Rostam = {main={ name="Rostam", augments={'Path: A',}}}
 	sets.weapons.Tauret = {main="Tauret"}
     sets.weapons.Kustawi = {main="Kustawi +1"}
-    sets.weapons.Ranged = {main="Rostam",sub="Nusku Shield"}
-    sets.weapons.Leaden = {main="Rostam",sub="Tauret",}
+    sets.weapons.Ranged = {main={ name="Rostam", augments={'Path: A',}},sub="Nusku Shield"}
+    sets.weapons.Leaden = {main={ name="Rostam", augments={'Path: A',}},sub="Tauret",}
     sets.weapons.HotShot = {main="Naegling", sub="Tauret",}
     --Weapongun
     sets.normal = {}
@@ -175,25 +184,29 @@ function init_gear_sets()
 
 	sets.precast.JA['Triple Shot'] = {body="Chasseur's Frac +2"}
     sets.precast.JA['Snake Eye'] = {}
-    sets.precast.JA['Wild Card'] = {feet="Lanun Bottes +3"}
+    sets.precast.JA['Wild Card'] = {feet="Lanun Bottes +4"}
     sets.precast.JA['Random Deal'] = {body="Lanun Frac +3"}
     sets.precast.FoldDoubleBust = {hands="Lanun Gants +3"}
 
     sets.precast.CorsairRoll = {
         main={ name="Rostam", augments={'Path: C',}},
+        -- sub={ name="Rostam", augments={'Path: A',}},
         range="Compensator", 
         head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
         body="Adamantite Armor",
         hands="Chasseur's Gants +3",
         legs="Desultor Tassets",
-        feet="Lanun Bottes +3",
+        feet="Lanun Bottes +4",
         neck="Regal Necklace",
         right_ear="Genmei Earring",
         left_ring="Defending Ring",
         right_ring="Luzaf's Ring",
         back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
     }
-        
+    sets.precast.CorsairRoll.DW = set_combine(sets.precast.CorsairRoll, {
+        main={ name="Rostam", augments={'Path: C',}},
+        sub={ name="Rostam", augments={'Path: A',}},
+    })
     sets.precast.LuzafRing = {ring2="Luzaf's Ring"}
     
     sets.precast.CorsairRoll["Caster's Roll"] = set_combine(sets.precast.CorsairRoll, {legs="Chasseur's Culottes +3",})
@@ -207,7 +220,7 @@ function init_gear_sets()
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet="Lanun Bottes +3",
+    feet="Lanun Bottes +4",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Skrymir Cord",
     left_ear="Friomisi Earring",
@@ -325,7 +338,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         body="Laksa. Frac +3",
         hands="Nyame Gauntlets",
         legs="Nyame Flanchard",
-        feet="Lanun Bottes +3",
+        feet="Lanun Bottes +4",
         neck="Fotia Gorget",
         waist="Fotia Belt",
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
@@ -404,7 +417,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         hands="Meg. Gloves +2",
         legs="Meg. Chausses +2",
-        feet="Lanun Bottes +3",
+        feet="Lanun Bottes +4",
         neck="Fotia Gorget",
         waist="Fotia Belt",
         right_ear="Telos Earring",
@@ -420,7 +433,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
     body="Ikenga's Vest",
     hands="Chasseur's Gants +3",
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
-    feet="Lanun Bottes +3",
+    feet="Lanun Bottes +4",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Fotia Belt",
     right_ear="Ishvara Earring",
@@ -450,7 +463,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         body="Laksa. Frac +3",
         hands="Chasseur's Gants +3",
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
-        feet="Lanun Bottes +3",
+        feet="Lanun Bottes +4",
         neck="Fotia Gorget",
         waist="Fotia Belt",
         right_ear="Ishvara Earring",
@@ -466,7 +479,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
         body="Lanun Frac +3",
         hands="Nyame Gauntlets",
         legs="Nyame Flanchard",
-        feet="Lanun Bottes +3",
+        feet="Lanun Bottes +4",
         neck={ name="Comm. Charm +2", augments={'Path: A',}},
         waist="Orpheus's Sash",
         left_ear="Friomisi Earring",
@@ -490,7 +503,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet="Lanun Bottes +3",
+    feet="Lanun Bottes +4",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Svelt. Gouriz +1",
     right_ear="Friomisi Earring",
@@ -506,7 +519,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet="Lanun Bottes +3",
+    feet="Lanun Bottes +4",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Svelt. Gouriz +1",
     right_ear="Friomisi Earring",
@@ -532,7 +545,7 @@ sets.precast.WS['Sanguine Blade'] = set_combine(sets.precast.WS, {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet="Lanun Bottes +3",
+    feet="Lanun Bottes +4",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Svelt. Gouriz +1",
     right_ear="Friomisi Earring",
@@ -554,7 +567,7 @@ sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet="Lanun Bottes +3",
+    feet="Lanun Bottes +4",
     neck="Baetyl Pendant",
     waist="Orpheus's Sash",
     right_ear="Friomisi Earring",
@@ -740,8 +753,9 @@ sets.midcast.RA.Critical = set_combine(sets.midcast.RA, {
     right_ring="Dingir Ring",
     back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 })
-sets.midcast.RA.SubtleBlow10 = set_combine(sets.midcast.RA, {
-    hands="Ikenga's Gloves",
+sets.midcast.RA.SubtleBlow = set_combine(sets.midcast.RA, {
+    ring1="Chirich Ring +1",
+    ring2="Chirich Ring +1",
 })
 sets.midcast.RA.SubtleBlow40 = set_combine(sets.midcast.RA, {
     hands="Oshosi Gloves +1",
@@ -755,7 +769,7 @@ sets.midcast.CorsairShot = {
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
-    feet="Lanun Bottes +3",
+    feet="Lanun Bottes +4",
     neck={ name="Comm. Charm +2", augments={'Path: A',}},
     waist="Skrymir Cord",
     left_ear="Friomisi Earring",
@@ -897,7 +911,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         waist="Plat. Mog. Belt",
         left_ear="Tuisto Earring",
         right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring="Ilabrat Ring",
+        left_ring="Eihwaz Ring",
         right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
@@ -947,12 +961,12 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         legs="Malignance Tights",
         feet="Malignance Boots",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Svelt. Gouriz +1",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring="Defending Ring",
         right_ring="Vengeful Ring",
-        back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+        back="Null Shawl",
     })
     sets.idle.Town ={legs="Carmine Cuisses +1",
         left_ear="Infused Earring",}
@@ -966,7 +980,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         waist="Plat. Mog. Belt",
         left_ear="Tuisto Earring",
         right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring="Ilabrat Ring",
+        left_ring="Eihwaz Ring",
         right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
@@ -1005,9 +1019,13 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         feet="Chasseur's Bottes +2",
     })
 
+    --other
+
     sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
     sets.rollerRing = {left_ring="Roller's Ring"}
+
+    -- Extra Melee sets.  Apply these on top of melee sets.
 
 	sets.DWMax = {
         body="Adhemar Jacket +1",
@@ -1017,8 +1035,9 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         right_ear="Eabani Earring", --4
         waist="Reiki Yotai", --7
     }
-	sets.SubtleBlow10 = {
-        hands="Ikenga's Gloves",
+	sets.SubtleBlow = {
+        ring1="Chirich Ring +1",
+        ring2="Chirich Ring +1",
     }
 	sets.SubtleBlow40 = {
         hands="Oshosi Gloves +1",
@@ -1254,8 +1273,8 @@ sets.engaged.Hybrid = {
     feet="Malignance Boots",
     --waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 }
-   
-sets.engaged.PDT = set_combine(sets.engaged,{
+
+sets.engaged.DT = set_combine(sets.engaged,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1263,7 +1282,7 @@ sets.engaged.PDT = set_combine(sets.engaged,{
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
-sets.engaged.Acc.PDT = set_combine(sets.engaged.Acc,{
+sets.engaged.Acc.DT = set_combine(sets.engaged.Acc,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1271,7 +1290,7 @@ sets.engaged.Acc.PDT = set_combine(sets.engaged.Acc,{
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
-sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT,{
+sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1279,7 +1298,7 @@ sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT,{
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
-sets.engaged.Ranged.PDT = set_combine(sets.Ranged,{    
+sets.engaged.Ranged.DT = set_combine(sets.Ranged,{    
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1287,7 +1306,7 @@ sets.engaged.Ranged.PDT = set_combine(sets.Ranged,{
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
-sets.engaged.STP.PDT = set_combine(sets.engaged.STP,{
+sets.engaged.STP.DT = set_combine(sets.engaged.STP,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1295,7 +1314,7 @@ sets.engaged.STP.PDT = set_combine(sets.engaged.STP,{
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
-sets.engaged.DW.PDT = set_combine(sets.engaged.DW, {
+sets.engaged.DW.DT = set_combine(sets.engaged.DW, {
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1303,7 +1322,7 @@ sets.engaged.DW.PDT = set_combine(sets.engaged.DW, {
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
-sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.DW.Acc,{
+sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1311,7 +1330,7 @@ sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.DW.Acc,{
     feet="Malignance Boots",
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
-sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.DW.CRIT,{
+sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1320,7 +1339,7 @@ sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.DW.CRIT,{
     left_ear="Suppanomimi",
     waist="Reiki Yotai",
 })
-sets.engaged.DW.Ranged.PDT = set_combine(sets.engaged.DW.Ranged,{    
+sets.engaged.DW.Ranged.DT = set_combine(sets.engaged.DW.Ranged,{    
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1329,7 +1348,7 @@ sets.engaged.DW.Ranged.PDT = set_combine(sets.engaged.DW.Ranged,{
     waist={ name="Sailfi Belt +1", augments={'Path: A',}},
 })
 
-sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP,{
+sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP,{
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -1339,28 +1358,67 @@ sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP,{
     waist="Reiki Yotai",
 })
 
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- Hybrid 25% Sets -------------------------------------------
+------------------------------------------------------------------------------------------------
+sets.engaged.Hybrid25 = {
+    head="Malignance Chapeau",
+    legs="Chasseur's Culottes +3",
+    back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+}
+sets.engaged.DT25 = set_combine(sets.engaged, sets.engaged.Hybrid25)
+sets.engaged.Acc.DT25 = set_combine(sets.engaged.Acc, sets.engaged.Hybrid25)
+sets.engaged.CRIT.DT25 = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid25)
+sets.engaged.Ranged.DT25 = set_combine(sets.engaged.Ranged, sets.engaged.Hybrid25)
+sets.engaged.STP.DT25 = set_combine(sets.engaged.STP, sets.engaged.Hybrid25)
+
+sets.engaged.DW.DT25 = set_combine(sets.engaged.DW, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25 = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25 = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid25)
+sets.engaged.DW.Ranged.DT25 = set_combine(sets.engaged.DW.Ranged, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25 = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid25)
+
+
+sets.engaged.DW.DT25.LowHaste = set_combine(sets.engaged.DW, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25.LowHaste = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25.LowHaste = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid25)
+sets.engaged.DW.Ranged.DT25.LowHaste = set_combine(sets.engaged.DW.Ranged, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25.LowHaste = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid25)
+
+sets.engaged.DW.DT25.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.Ranged.DT25.MidHaste = set_combine(sets.engaged.DW.Ranged.MidHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid25)
+
+sets.engaged.DW.DT25.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.Ranged.DT25.MaxHaste = set_combine(sets.engaged.DW.Ranged.MaxHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid25)
 
 ------------------------------------------------------------------------------------------------
 ---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
 ------------------------------------------------------------------------------------------------
 
-sets.engaged.DW.PDT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.PDT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.PDT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Ranged.PDT.LowHaste = set_combine(sets.engaged.DW.Ranged.LowHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.PDT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Ranged.DT.LowHaste = set_combine(sets.engaged.DW.Ranged.LowHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid)
 
-sets.engaged.DW.PDT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.PDT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.PDT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Ranged.PDT.MidHaste = set_combine(sets.engaged.DW.Ranged.MidHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.PDT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Ranged.DT.MidHaste = set_combine(sets.engaged.DW.Ranged.MidHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid)
 
-sets.engaged.DW.PDT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.PDT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.PDT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.Ranged.PDT.MaxHaste = set_combine(sets.engaged.DW.Ranged.MaxHaste, sets.engaged.Hybrid)
-sets.engaged.DW.STP.PDT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.DT.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.Ranged.DT.MaxHaste = set_combine(sets.engaged.DW.Ranged.MaxHaste, sets.engaged.Hybrid)
+sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
 
 end
 
@@ -1381,7 +1439,7 @@ end
 
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 163')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -1391,7 +1449,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 
 	--[[if player.equipment.main == nil or player.equipment.main == 'empty' then
@@ -1420,11 +1478,6 @@ function user_job_lockstyle()
 		end
 	end]]
 end
-
-autows_list = {['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='Aeolian Edge',
-['Ranged']='Leaden Salute',['Kustawi']='Last Stand',['DualSavageWeapons']='Savage Blade',
-['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',
-['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
 
 
 function buff_change(buff, gain)

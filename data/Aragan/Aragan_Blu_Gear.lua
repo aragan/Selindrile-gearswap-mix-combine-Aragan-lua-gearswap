@@ -42,13 +42,13 @@ function user_job_setup()
     state.WeaponskillMode:options('Match', 'SubtleBlow','PDL', 'SC','Proc')
     state.CastingMode:options('Normal', 'SIRD', 'ConserveMP', 'Duration', 'DT','Proc')
     state.IdleMode:options('DT','Normal','Empy','MDT', 'Evasion','Regen','Regain', 'HP', 'EnemyCritRate', 'Enmity')--, 'Learning'
-	state.Passive:options('None','Resist','Refresh','Empy', 'SubtleBlow', 'SubtleBlow40', 'SubtleBlow50')--, 'EnemyCritRate', 'Regen'
-	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'Enmity')
+	state.Passive:options('None','Enspell','Resist','Refresh','Empy', 'SubtleBlow', 'SubtleBlow40', 'SubtleBlow50')--, 'EnemyCritRate', 'Regen'
+	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('Naegling', 'Naegling2','None', 'Maxentius', 'Nuking', 'MaccWeapons','Staff','proc')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','MP','SuppaBrutal','DWEarrings','DWMax'}
-	state.AutoBuffMode:options('Off','Auto','Cleave','Vagary','VagaryParty','melee','Defend') --,'Vagary','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','Cleave','Odyssey','Vagary','VagaryParty','melee','Defend') --,'Vagary','Off','Off','Off','Off',
 
 	gear.wsd_jse_back = {}
 
@@ -57,9 +57,9 @@ function user_job_setup()
     --use //listbinds    .. to show command keys
     -- Additional local binds
     send_command('lua l azureSets')
-    send_command('bind f7 input //Sublimator')
-    send_command('bind f3 gs c cycle Storms')
-    send_command('bind f2 input //gs c Storms')	
+    -- send_command('bind f7 Sublimator')
+    -- send_command('bind f3 gs c cycle Storms;gs c Storms')
+    -- send_command('bind f2 gs c Storms')	
 	--send_command('bind ^` input /ja "Chain Affinity" <me>')
 	--send_command('bind @` input /ja "Efflux" <me>')
 	--send_command('bind !` input /ja "Burst Affinity" <me>')
@@ -79,17 +79,19 @@ function user_job_setup()
 	send_command('bind !9 gs c weapons HybridWeapons;gs c update')
     send_command('bind f1 gs c cycle HippoMode')
     send_command('alias destroy setkey down down;')
-	--send_command('bind ^f2 gs c toggle AutoBuffMode')
+	send_command('bind f2 gs c toggle AutoBuffMode')
     send_command('bind ` gs c cycle Spellset;')
     send_command('bind @` gs c cycleback Spellset;')
     send_command('bind ^` gs c Spellset')
 	send_command('bind @6 gs c toggle AutoBLUSpam')
+	send_command('bind f3 gs c toggle AutoUnbridled')
 
-	send_command('bind !` input //lua l bluguide') --Turns addon on .addon 
+
+	send_command('bind !` lua l bluguide') --Turns addon on .addon 
 
 	
-    send_command('alias lamp input /targetnpc;wait .1; input //tradenpc 1 "Smoldering Lamp";wait 1.4;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey right down;wait .4;setkey right up;wait .1;setkey numpadenter down;wait .1;setkey numpadenter up;')  --//lamp
-    send_command('alias glowing input /targetnpc;wait .1; input //tradenpc 1 "Glowing Lamp";wait 1.8;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;') -- //glowing 
+    send_command('alias lamp targetnpc;wait .1;tradenpc 1 "Smoldering Lamp";wait 1.4;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey right down;wait .4;setkey right up;wait .1;setkey numpadenter down;wait .1;setkey numpadenter up;')  --//lamp
+    send_command('alias glowing targetnpc;wait .1;tradenpc 1 "Glowing Lamp";wait 1.8;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;') -- //glowing 
 	
 	local was_chat_open = false
 	windower.register_event('prerender', function()
@@ -692,7 +694,10 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.midcast['Blue Magic'].Magical.SIRD = set_combine(sets.SIRD, sets.midcast['Blue Magic'].Magical)
 		 
 	sets.midcast['Blue Magic'].Subduction = sets.midcast['Blue Magic'].Magical
-					 
+	sets.midcast['Blue Magic'].Entomb = set_combine(sets.midcast['Blue Magic'].Magical, {
+		neck="Quanpur Necklace",
+	})
+
 	sets.midcast['Blue Magic'].Magical.Proc = {}
 					 
 	sets.midcast['Blue Magic'].Magical.Resistant = set_combine(sets.midcast['Blue Magic'].Magical,{})
@@ -770,6 +775,21 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ring="Stikini Ring +1",
 		back={ name="Fi Follet Cape +1", augments={'Path: A',}},
 	}
+	sets.EnhancingSkill = {
+		main={ name="Pukulatmuj +1", augments={'Path: A',}},
+		head={ name="Carmine Mask +1", augments={'Accuracy+20','Mag. Acc.+12','"Fast Cast"+4',}},
+		body={ name="Telchine Chas.", augments={'Mag. Evasion+6','"Fast Cast"+5','Enh. Mag. eff. dur. +10',}},
+		hands={ name="Telchine Gloves", augments={'Mag. Acc.+18','"Cure" potency +5%','Enh. Mag. eff. dur. +10',}},
+		legs={ name="Carmine Cuisses +1", augments={'Accuracy+20','Attack+12','"Dual Wield"+6',}},
+		feet={ name="Telchine Pigaches", augments={'Mag. Evasion+21','"Conserve MP"+3','Enh. Mag. eff. dur. +10',}},
+		neck="Incanter's Torque",
+		waist="Olympus Sash",
+		left_ear="Mendi. Earring",
+		right_ear="Andoaa Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Fi Follet Cape +1", augments={'Path: A',}},
+	}
 	sets.midcast.Aquaveil = set_combine(sets.midcast['Enhancing Magic'], {
 		ammo="Pemphredo Tathlum",
 		head="Telchine Cap",
@@ -815,7 +835,9 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.midcast.Protectra = sets.midcast.Protect
 	sets.midcast.Shell = sets.midcast.Protect
 	sets.midcast.Shellra = sets.midcast.Protect
-
+	sets.midcast.Enspell = set_combine(sets.EnhancingSkill, {
+		main={ name="Pukulatmuj +1", augments={'Path: A',}},
+		back="Ghostfyre Cape", })
 	sets.midcast['Divine Magic'] = sets.midcast['Enfeebling Magic']
 	sets.midcast['Elemental Magic'] = sets.midcast['Blue Magic'].Magical
 	sets.midcast['Elemental Magic'].Resistant = sets.midcast['Blue Magic'].Magical
@@ -949,7 +971,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.midcast.Phalanx.SIRD = set_combine(sets.SIRD, sets.midcast.Phalanx) 
 		
 	sets.Phalanx_Received = {
-		main="Sakpata's Sword",
+		-- main="Sakpata's Sword",
 		head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
@@ -1030,12 +1052,12 @@ sets.idle.Evasion = {
     legs="Malignance Tights",
     feet="Malignance Boots",
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
-    waist="Svelt. Gouriz +1",
+	waist="Null Belt",
     left_ear="Infused Earring",
     right_ear="Eabani Earring",
     left_ring="Defending Ring",
     right_ring="Vengeful Ring",
-    back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Evasion+10','"Mag.Atk.Bns."+10','Evasion+15',}},
+	back="Null Shawl",
 }
 sets.idle.DT = {    
 ammo="Staunch Tathlum +1",
@@ -1142,12 +1164,12 @@ sets.idle.Learning = set_combine(sets.idle, sets.Learning, {
 		legs="Malignance Tights",
 		feet="Malignance Boots",
 		neck={ name="Bathy Choker +1", augments={'Path: A',}},
-		waist="Svelt. Gouriz +1",
+        waist="Null Belt",
 		left_ear="Infused Earring",
 		right_ear="Eabani Earring",
 		left_ring="Defending Ring",
 		right_ring="Vengeful Ring",
-		back={ name="Rosmerta's Cape", augments={'INT+20','Mag. Acc+20 /Mag. Dmg.+20','Evasion+10','"Mag.Atk.Bns."+10','Evasion+15',}},
+        back="Null Shawl",
 	}
 	
 	sets.defense.Enmity = {
@@ -1262,6 +1284,26 @@ left_ear="Digni. Earring",
 left_ring="Chirich Ring +1",
 right_ring="Chirich Ring +1",
 }
+sets.passive.Enspell = {
+    main={ name="Pukulatmuj +1", augments={'Path: A',}},
+    sub={ name="Iris", augments={'Blue Magic skill +15','Mag. Acc.+15','"Mag.Atk.Bns."+15',}},
+    ammo="Pemphredo Tathlum",
+    head="Malignance Chapeau",
+    body="Malignance Tabard",
+    hands="Aya. Manopolas +2",
+    legs="Malignance Tights",
+    feet="Malignance Boots",
+    neck={ name="Mirage Stole +2", augments={'Path: A',}},
+    waist="Orpheus's Sash",
+    right_ear="Hashi. Earring +1", 
+    right_ear="Crep. Earring",
+    left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
+    right_ring="Stikini Ring +1",
+    back={ name="Aurist's Cape +1", augments={'Path: A',}},
+	-- ands="Aya. Manopolas +2",
+	-- waist="Orpheus's Sash",
+}
+
 --[[
 sets.Passive.EnemyCritRate = { 
 ammo="Eluder's Sachet",
@@ -1682,7 +1724,7 @@ sets.engaged.DW.SubtleBlow.DT.MaxHaste = set_combine(sets.engaged.DW.SubtleBlow.
 end
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -1692,7 +1734,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 end
 -- Select default macro book on initial load or subjob change.
@@ -1739,7 +1781,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then

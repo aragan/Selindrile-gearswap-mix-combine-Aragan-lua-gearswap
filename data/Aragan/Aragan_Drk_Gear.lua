@@ -130,9 +130,9 @@ function user_job_setup()
 	state.shield = M{['description']='Weapon Set', 'Normal', 'shield'}
 
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','Empy'}
-	state.Passive = M{['description'] = 'Passive Mode','None','SubtleBlow20','SphereRegain','Crepuscular','MDT','Enspell','Death Spikes', 'SubtleBlow', 'SubtleBlowMBOZE','SubtleBlowFULL','SubtleBlowDT'}
+	state.Passive = M{['description'] = 'Passive Mode','None','PDL','SubtleBlow20','SphereRegain','Crepuscular','MDT','Enspell','Death Spikes', 'SubtleBlow', 'SubtleBlowMBOZE','SubtleBlowFULL','SubtleBlowDT','SubtleBlowDT2'}
 	state.DrainSwapWeaponMode = M{'Never','Always','300','1000'}
-	state.AutoBuffMode:options('Off','Auto','Sortie','Defend') --,'Vagary','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','Sortie','Full','Defend') --,'Vagary','Off','Off','Off','Off',
 
 	--use //listbinds    .. to show command keys
 	-- Additional local binds
@@ -152,8 +152,9 @@ function user_job_setup()
     --send_command('bind @f9 gs c toggle SouleaterMode')
     --send_command('bind f3 gs c toggle LastResortMode')
 	send_command('bind !6 gs c toggle SubtleBlowMode')
-	send_command('bind !n gs c toggle AutoReraiseeMode')
+	send_command('bind !n gs c toggle AutoReraiseMode')
     send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
+    send_command('bind @6 gs c toggle AbsorbMode')  
 
 	select_default_macro_book()
 end
@@ -358,6 +359,21 @@ sets.ConserveMP = {
         ring1="Evanescence Ring", -- 10
         ring2="Kishar Ring",
         back="Chuparrosa Mantle",
+    })
+    sets.midcast.Absorb.Acc = set_combine(sets.midcast['Dark Magic'], {
+        ammo="Pemphredo Tathlum",
+        head="Heath. Burgeon. +2",
+        body="Heath. Cuirass +2",
+        hands="Heath. Gauntlets +2",
+        legs="Heath. Flanchard +2",
+        feet="Heath. Sollerets +2",
+        neck="Null Loop",
+        waist="Null Belt",
+        left_ear="Malignance Earring",
+        right_ear="Digni. Earring",
+        left_ring="Stikini Ring +1",
+        right_ring="Stikini Ring +1",
+        back="Null Shawl",
     })
 	sets.midcast.Absorb.SIRD = set_combine(sets.midcast.Absorb,sets.SIRD, {
 		ammo="Staunch Tathlum +1",
@@ -1016,8 +1032,8 @@ sets.precast.WS['Nightmare Scythe'] = {
     waist="Fotia Belt",
     left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
     right_ear="Schere Earring",
-    left_ring="Niqmaddu Ring",
-    right_ring="Regal Ring",
+    left_ring="Regal Ring",
+    right_ring="Niqmaddu Ring",
     back="Null Shawl",
 }
   
@@ -1281,6 +1297,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS["Armor Break"], {
 	sets.DayMaxTPWSEars = {}
 	sets.AccDayWSEars = {}
 	sets.DayWSEars = {}
+    sets.WSDayBonus      = {  } --head="Gavialis Helm"
 
     -- Extra defense sets.  Apply these on top of melee or defense sets.
     sets.MP = {neck="Coatl Gorget +1",ear2="Ethereal Earring",waist="Flume Belt +1",}
@@ -1304,7 +1321,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS["Armor Break"], {
     sets.defense.HP = {
         ammo="Staunch Tathlum +1",
         head="Crepuscular Helm",
-        body="Adamantite Armor",
+        body="Hjarrandi Breast.",
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
         legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
         feet={ name="Sakpata's Leggings", augments={'Path: A',}},
@@ -1324,12 +1341,12 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS["Armor Break"], {
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Carrier's Sash",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         right_ring="Vengeful Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     }
 sets.defense['Dread Spikes'] = {
     ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -1536,6 +1553,12 @@ sets.defense.SEboost = {
 	sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.passive.Reraise = {head="Crepuscular Helm",body="Crepuscular Mail"}
 	sets.passive['Death Spikes'] = {body="Tartarus Platemail",}
+	sets.passive['PDL'] = {
+        head="Heath. Burgeon. +2",
+        neck="Abyssal Beads +2",
+        right_ear="Heathen's Earring",
+        left_ring="Sroda Ring",
+    }
 
     sets.passive.SubtleBlow ={        
         body="Dagon Breast.",
@@ -1585,6 +1608,24 @@ sets.defense.SEboost = {
         waist="Ioskeha Belt +1",
         legs="Sakpata's Cuisses",
         feet= "Sakpata's Leggings", --R20 (SB1+10)
+        back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+
+    }
+    sets.passive.SubtleBlowDT2  = {
+        ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
+        head={ name="Loess Barbuta +1", augments={'Path: A',}},
+        body="Dagon Breast.",
+        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+        legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+        feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+        neck={ name="Abyssal Beads +2", augments={'Path: A',}},
+        waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+        left_ear="Telos Earring",
+        right_ear="Digni. Earring",
+        right_ring="Niqmaddu Ring",
+        left_ring="Chirich Ring +1",
+        back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+
     }
     sets.passive.MDT = {
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
@@ -1623,7 +1664,7 @@ sets.defense.SEboost = {
 	sets.engaged ={
 		ammo={ name="Coiste Bodhar", augments={'Path: A',}},
 		head="Flam. Zucchetto +2",
-		body="Crepuscular Mail",
+        body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
 		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
 		legs="Ignominy Flanchard +3",
 		feet="Flam. Gambieras +2",
@@ -1855,29 +1896,28 @@ sets.engaged.DW.CRIT.MaxHaste = set_combine(sets.engaged.DW.CRIT)
 ------------------------------------------------------------------------------------------------
 
 sets.engaged.Hybrid = {
-    ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
-    head="Hjarrandi Helm",
-    body="Hjarrandi Breast.",
+    head={ name="Sakpata's Helm", augments={'Path: A',}},
+    body={ name="Sakpata's Plate", augments={'Path: A',}},
     hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-    left_ring="Moonlight Ring",
-    right_ring="Defending Ring",
-    back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
-
+    legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+    feet={ name="Sakpata's Leggings", augments={'Path: A',}},
 }
 
 sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
 sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
 sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
---sets.engaged.DA.DT = set_combine(sets.engaged.DA, sets.engaged.Hybrid)
+sets.engaged.DA.DT = set_combine(sets.engaged.DA, sets.engaged.Hybrid)
 sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
-sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid, {})
-
+sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid, {
+    body="Dagon Breast.",
+    left_ring="Defending Ring",
+})
 sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
 sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
 sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
---sets.engaged.DW.DA.DT = set_combine(sets.engaged.DW.DA, sets.engaged.Hybrid)
+sets.engaged.DW.DA.DT = set_combine(sets.engaged.DW.DA, sets.engaged.Hybrid)
 sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
-
+   
 
 ------------------------------------------------------------------------------------------------
 ---------------------------------------- DW-HASTE Hybrid Sets-----------------------------------
@@ -1909,11 +1949,125 @@ sets.engaged.DW.Acc.DT.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets
 sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid)
 sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
 
-
-
 ------------------------------------------------------------------------------------------------
 ---------------------------------------- AM3 Sets -------------------------------------------
 ------------------------------------------------------------------------------------------------
+
+-- Liberator melee sets
+sets.engaged.Liberator = set_combine(sets.engaged, {})
+sets.engaged.Liberator.Acc = set_combine(sets.engaged.Acc, {})
+sets.engaged.Liberator.STP = set_combine(sets.engaged.STP, {})
+sets.engaged.Liberator.DA = set_combine(sets.engaged.DA, {})
+sets.engaged.Liberator.CRIT = set_combine(sets.engaged.CRIT, {})
+   
+sets.engaged.Liberator.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
+sets.engaged.Liberator.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
+sets.engaged.Liberator.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
+sets.engaged.Liberator.DA.DT = set_combine(sets.engaged.DA, sets.engaged.Hybrid)
+sets.engaged.Liberator.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
+   
+sets.engaged.Liberator.AM = {
+    ammo="Aurgelmir Orb +1",
+    head="Sulevia's Mask +2",
+    body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
+    hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+    legs="Flamma Dirs +2",
+    feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}},
+    neck={ name="Abyssal Beads +2", augments={'Path: A',}},
+    waist="Ioskeha Belt +1",
+    left_ear="Crep. Earring",
+    right_ear="Dedition Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Chirich Ring +1",
+    back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+}
+-- sets.engaged.Liberator.DT = set_combine(sets.engaged.Liberator, {
+--     hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+--     left_ring="Moonlight Ring",
+--     right_ring="Moonlight Ring",
+--     back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+-- }) -- 11%
+sets.engaged.Liberator.DT.AM = set_combine(sets.engaged.Liberator.AM, {
+    hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+    body="Hjarrandi Breast.",
+    legs="Ig. Flanchard +3",
+    waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    left_ring="Moonlight Ring",
+    right_ring="Moonlight Ring",
+    back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+}) -- 11%
+
+
+-- Caladbolg melee sets
+sets.engaged.Caladbolg = set_combine(sets.engaged, {
+    ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+    head="Flam. Zucchetto +2",
+    body={ name="Sakpata's Plate", augments={'Path: A',}},
+    hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+    legs="Ig. Flanchard +3",
+    feet={ name="Carmine Greaves +1", augments={'HP+80','MP+80','Phys. dmg. taken -4',}},
+    neck={ name="Abyssal Beads +2", augments={'Path: A',}},
+    waist="Ioskeha Belt +1",
+    left_ear="Telos Earring",
+    right_ear="Dedition Earring",
+    right_ring="Niqmaddu Ring",
+    left_ring="Petrov Ring",
+    back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+})
+sets.engaged.Caladbolg.Acc = set_combine(sets.engaged.Acc, {})
+sets.engaged.Caladbolg.STP = set_combine(sets.engaged.STP, {})
+sets.engaged.Caladbolg.DA = set_combine(sets.engaged.DA, {})
+sets.engaged.Caladbolg.CRIT = set_combine(sets.engaged.CRIT, {})
+   
+sets.engaged.Caladbolg.DT = set_combine(sets.engaged.Caladbolg, sets.engaged.Hybrid)
+sets.engaged.Caladbolg.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
+sets.engaged.Caladbolg.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
+sets.engaged.Caladbolg.DA.DT = set_combine(sets.engaged.DA, sets.engaged.Hybrid)
+sets.engaged.Caladbolg.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
+   
+-- Apocalypse melee sets
+sets.engaged.Apocalypse = {
+    ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+    head="Flam. Zucchetto +2",
+    body={ name="Valorous Mail", augments={'"Store TP"+7','Accuracy+10','Attack+4',}},
+    hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+    legs="Ignominy Flanchard +3",
+    feet="Flam. Gambieras +2",
+    neck="Abyssal Beads +2",
+    waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    left_ear="Telos Earring",
+    right_ear="Cessance Earring",
+    right_ring="Moonlight Ring",
+    left_ring="Chirich Ring +1",
+    back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+}
+sets.engaged.Apocalypse.Acc = set_combine(sets.engaged.Acc, {})
+sets.engaged.Apocalypse.STP = set_combine(sets.engaged.STP, {})
+sets.engaged.Apocalypse.DA = set_combine(sets.engaged.DA, {})
+sets.engaged.Apocalypse.CRIT = set_combine(sets.engaged.CRIT, {})
+   
+sets.engaged.Apocalypse.DT = set_combine(sets.engaged.Apocalypse, sets.engaged.Hybrid)
+sets.engaged.Apocalypse.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
+sets.engaged.Apocalypse.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
+sets.engaged.Apocalypse.DA.DT = set_combine(sets.engaged.DA, sets.engaged.Hybrid)
+sets.engaged.Apocalypse.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
+   
+-- Anguta melee sets
+sets.engaged.Anguta = {
+    ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+    head="Flam. Zucchetto +2",
+    body={ name="Sakpata's Plate", augments={'Path: A',}},
+    hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+    legs="Ig. Flanchard +3",
+    feet="Flam. Gambieras +2",
+    neck={ name="Abyssal Beads +2", augments={'Path: A',}},
+    waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+    left_ear="Telos Earring",
+    right_ear="Dedition Earring",
+    left_ring="Chirich Ring +1",
+    right_ring="Niqmaddu Ring",
+    back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+}
 --[[
 	sets.engaged.Caladbolg.AM = {
 		ammo="Aurgelmir Orb +1",
@@ -1967,36 +2121,7 @@ sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, se
 	--sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
 	--sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
 	
-		
-------------------------------------------------------------------------------------------------
----------------------------------------- Hybrid Sets -------------------------------------------
-------------------------------------------------------------------------------------------------
-
-
-sets.engaged.Hybrid = {
-    head={ name="Sakpata's Helm", augments={'Path: A',}},
-    body={ name="Sakpata's Plate", augments={'Path: A',}},
-    hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-    legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
-    feet={ name="Sakpata's Leggings", augments={'Path: A',}},
-}
-
-sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid)
-sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid)
-sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid)
-sets.engaged.DA.DT = set_combine(sets.engaged.DA, sets.engaged.Hybrid)
-sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid)
-sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid, {
-    body="Dagon Breast.",
-    left_ring="Defending Ring",
-})
-sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.engaged.Hybrid)
-sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid)
-sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid)
-sets.engaged.DW.DA.DT = set_combine(sets.engaged.DW.DA, sets.engaged.Hybrid)
-sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid)
-   
-
+    --------------------
 
 	--Example sets:
 --[[
@@ -2144,7 +2269,7 @@ end
 function user_job_lockstyle()
 
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -2154,7 +2279,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 167')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 end
 
@@ -2182,7 +2307,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then

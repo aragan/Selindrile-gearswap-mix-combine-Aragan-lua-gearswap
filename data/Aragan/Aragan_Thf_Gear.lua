@@ -1,7 +1,7 @@
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
 	-- Options: Override default values
-    state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'Ranger')
+    state.OffenseMode:options('Normal', 'Acc', 'STP','DA', 'CRIT', 'Ranger')
     state.HybridMode:options('DT','Normal')
     state.RangedMode:options('Normal', 'Acc')
     state.WeaponskillMode:options('Match', 'Proc','SubtleBlow', 'PDL', 'Mod')
@@ -9,7 +9,7 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP','Regain')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('None','Twashtar','Centovente', 'Tauret', 'Aeneas', 'Naegling')--'test',
+	state.Weapons:options('None','Twashtar','Centovente', 'Tauret', 'Aeneas', 'Naegling', 'Proc')--'test',
 	state.Passive:options('None', 'SubtleBlow','Parry','MDT', 'Enspell')
 	state.AutoBuffMode:options('Off','Auto','Defend') --,'Vagary','Off','Off','Off','Off',
 
@@ -32,7 +32,7 @@ function user_job_setup()
 	send_command('bind !9 gs c weapons MagicWeapons')
 	send_command('bind ^\\\\ input /ja "Despoil" <t>')
 	send_command('bind !\\\\ input /ja "Mug" <t>')
-
+    send_command('bind f3 gs c cycle treasuremode') --Toggles hitting htings with your treasure hunter set.
     send_command('bind f2 gs c toggle AutoBuffMode')
 
     Haste = 0
@@ -58,9 +58,9 @@ function init_gear_sets()
     sets.weapons.Tauret = {main="Tauret", sub={ name="Gleti's Knife", augments={'Path: A',}},}
     sets.weapons.Aeneas = {main="Aeneas", sub="Malevolence"}
     sets.weapons.Naegling = {main="Naegling", sub="Centovente"}
+    sets.weapons.Proc = {main="Fermion Sword",sub="Trainee Sword",}
     -- sets.weapons.test = {    main="Excalipoor II",sub="Caduceus",}
 
-    
 	sets.TreasureHunter = {hands={ name="Plun. Armlets +3", augments={'Enhances "Perfect Dodge" effect',}},feet="Skulk. Poulaines +2", }
     sets.Kiting =  {feet="Jute Boots +1"}
 
@@ -667,12 +667,12 @@ sets.precast.WS["Empyreal Arrow"] = {
         legs="Malignance Tights",
         feet="Malignance Boots",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Svelt. Gouriz +1",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring="Vengeful Ring",
         right_ring="Defending Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     }
 
     sets.defense.PDT = {
@@ -873,8 +873,23 @@ sets.precast.WS["Empyreal Arrow"] = {
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
         back="Toutatis's Cape",
-        }
+    }
 
+    sets.engaged.DA={
+            ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+            head="Skulker's Bonnet +2",
+            body="Pillager's Vest +3",
+            hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
+            legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+            feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
+            neck="Asperity Necklace",
+            waist="Windbuffet Belt +1",
+            left_ear="Sherida Earring",
+            right_ear="Cessance Earring",
+            left_ring="Epona's Ring",
+            right_ring="Gere Ring",
+            back="Null Shawl",
+    }
         sets.engaged.CRIT = {range=empty,
         ammo="Yetshila +1",
         head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -968,7 +983,21 @@ sets.precast.WS["Empyreal Arrow"] = {
         right_ring="Chirich Ring +1",
         back="Toutatis's Cape",
     }
-
+    sets.engaged.DW.DA={
+        ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+        head="Skulker's Bonnet +2",
+        body="Pillager's Vest +3",
+        hands={ name="Adhemar Wrist. +1", augments={'Accuracy+20','Attack+20','"Subtle Blow"+8',}},
+        legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
+        feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
+        neck="Asperity Necklace",
+        waist="Reiki Yotai",
+        left_ear="Sherida Earring",
+        right_ear="Cessance Earring",
+        left_ring="Epona's Ring",
+        right_ring="Gere Ring",
+        back="Null Shawl",
+}
         sets.engaged.DW.CRIT = {range=empty,
         ammo="Yetshila +1",
         head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
@@ -1144,7 +1173,7 @@ end
 
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -1154,7 +1183,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 
     --[[ if player.equipment.main == nil or player.equipment.main == 'empty' then

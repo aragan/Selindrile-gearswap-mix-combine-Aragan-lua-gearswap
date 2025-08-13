@@ -709,7 +709,7 @@ sets.idle.Regen = set_combine(sets.idle, {
 })
 
 sets.idle.Regain = {
-	head="Wakido Kabuto +3",
+	head="Null Masque",
 	body="Adamantite Armor",
 	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -1351,7 +1351,7 @@ function select_default_macro_book()
 		--send_command('gs c Light Arts')
     elseif player.sub_job == 'BLU' then
         set_macro_page(3, 19)
-        send_command('input //blupldsets set pld')
+        send_command('blupldsets set pld')
 	elseif player.sub_job == 'NIN' then
 		set_macro_page(3, 19)
 	elseif player.sub_job == 'SAM' then

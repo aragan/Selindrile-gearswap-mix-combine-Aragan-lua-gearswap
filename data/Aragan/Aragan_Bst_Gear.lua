@@ -12,12 +12,12 @@ keyboard binds and chat
 
 function user_job_setup()
 	state.OffenseMode:options('Normal','Acc')
-	state.HybridMode:options('PDT','Normal','PetTank','BothDD')
+	state.HybridMode:options('DT','Normal','PetTank','BothDD')
 	state.WeaponskillMode:options('Match', 'SubtleBlow', 'Acc', 'PDL')
 	state.CastingMode:options('Normal')
-	state.IdleMode:options('Normal', 'MDTMaster', 'Turtle', 'MEva','Regain')
+	state.IdleMode:options('Normal', 'MDTMaster', 'Turtle', 'MEva','Regain','HP','Evasion')
 	state.RestingMode:options('Normal')
-	state.PhysicalDefenseMode:options('PDT', 'PetPDT', 'Reraise', 'Killer')
+	state.PhysicalDefenseMode:options('PDT', 'PetPDT', 'Reraise', 'HP', 'Killer')
 	state.MagicalDefenseMode:options('PetMDT', 'MDT', 'Petregen')
 	state.ResistDefenseMode:options('PetMEVA', 'MEVA')
 	state.Weapons:options('None','Agwu', 'SWORDS', 'AXE', 'SCYTHE', 'DAGGERS', 'CLUB','Staff')
@@ -34,8 +34,8 @@ function user_job_setup()
 	gear.MABKumbha = {}
 	
 	send_command('lua l PetCharges')
-	send_command('alias lamp input /targetnpc;wait .1; input //tradenpc 1 "Smoldering Lamp";wait 1.4;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey right down;wait .4;setkey right up;wait .1;setkey numpadenter down;wait .1;setkey numpadenter up;')  --//lamp
-	send_command('alias glowing input /targetnpc;wait .1; input //tradenpc 1 "Glowing Lamp";wait 1.8;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;') -- //glowing 
+	send_command('alias lamp targetnpc;wait .1;tradenpc 1 "Smoldering Lamp";wait 1.4;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;wait .1;setkey right down;wait .4;setkey right up;wait .1;setkey numpadenter down;wait .1;setkey numpadenter up;')  --//lamp
+	send_command('alias glowing targetnpc;wait .1;tradenpc 1 "Glowing Lamp";wait 1.8;setkey up down;wait .1;setkey up up;wait .1;setkey numpadenter down;wait 0.1;setkey numpadenter up;') -- //glowing 
 	-- Set up Jug Pet cycling and keybind Ctrl+F7
 	-- INPUT PREFERRED JUG PETS HERE
 	state.JugMode = M{['description']='Jug Mode','GenerousArthur','FatsoFargann','ScissorlegXerin','BlackbeardRandy','AttentiveIbuki','DroopyDortwin','WarlikePatrick','AcuexFamiliar'}
@@ -745,6 +745,20 @@ sets.precast.WS['Primal Rend'] = {
 		back="Moonlight Cape",
 }
 		
+sets.idle.HP = {
+	head="Genmei Kabuto",
+    body="Adamantite Armor",
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+    waist="Plat. Mog. Belt",
+    left_ear="Tuisto Earring",
+    right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    left_ring="Moonlight Ring",
+    right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+    back="Moonlight Cape",
+}
 sets.idle.Regain = {
 	head="Null Masque",
 	body={ name="Gleti's Cuirass", augments={'Path: A',}},
@@ -791,7 +805,20 @@ sets.idle.Regain = {
 		right_ring="Defending Ring",
 		back="Moonlight Cape",
 })
-			
+sets.idle.Evasion = {
+	head={ name="Nyame Helm", augments={'Path: B',}},
+	body={ name="Nyame Mail", augments={'Path: B',}},
+	hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+	legs={ name="Nyame Flanchard", augments={'Path: B',}},
+	feet={ name="Nyame Sollerets", augments={'Path: B',}},
+	neck={ name="Bathy Choker +1", augments={'Path: A',}},
+	waist="Null Belt",
+	left_ear="Infused Earring",
+	right_ear="Eabani Earring",
+	left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+	right_ring="Vengeful Ring",
+	back="Null Shawl",
+}
 	sets.idle.MEva = set_combine(sets.idle, {
 		ammo="Staunch Tathlum +1",
 		head="Malignance Chapeau",
@@ -1018,7 +1045,7 @@ sets.idle.Regain = {
 	back="Null Shawl",}
 
 	-- MELEE (SINGLE-WIELD) HYBRID SETS
-	sets.engaged.PDT = set_combine(sets.engaged, {
+	sets.engaged.DT = set_combine(sets.engaged, {
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -1027,7 +1054,7 @@ sets.idle.Regain = {
 		})
 
 
-	sets.engaged.Acc.PDT = set_combine(sets.engaged, {
+	sets.engaged.Acc.DT = set_combine(sets.engaged, {
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -1068,9 +1095,9 @@ sets.idle.Regain = {
 
 
 	-- MELEE (DUAL-WIELD) HYBRID SETS
-	sets.engaged.DW.PDT = set_combine(sets.engaged.PDT, {		waist="Reiki Yotai",
+	sets.engaged.DW.DT = set_combine(sets.engaged.DT, {		waist="Reiki Yotai",
 	left_ear="Suppanomimi",})
-	sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.Acc.PDT, {		waist="Reiki Yotai",
+	sets.engaged.DW.Acc.DT = set_combine(sets.engaged.Acc.DT, {		waist="Reiki Yotai",
 	left_ear="Suppanomimi",})
 
 	-- GEARSETS FOR MASTER ENGAGED (SINGLE-WIELD) & PET ENGAGED
@@ -1190,7 +1217,7 @@ sets.idle.Regain = {
 end
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -1200,7 +1227,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 end
 -- Select default macro book on initial load or subjob change.

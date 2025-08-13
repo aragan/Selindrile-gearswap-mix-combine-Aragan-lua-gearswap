@@ -1,7 +1,7 @@
 -----------------------------Authors of this file--------------------------------
 ------           ******************************************                ------
 ---                                                                           ---
---	  Aragan (Asura) --------------- [Author Primary]                          -- 
+--	  Aragan --------------- [Author Primary]                          -- 
 --                                                                             --
 ---------------------------------------------------------------------------------
 --[[ Note: optional : u can install macro all jobs from my web and addons plugin bot
@@ -38,7 +38,7 @@ function user_job_setup()
     state.OffenseMode:options('Normal','Acc','FullAcc','MaxTP','SubtleBlow')
     state.HybridMode:options('Pet','DT','Normal')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
-    state.PhysicalDefenseMode:options('PDT')
+    state.PhysicalDefenseMode:options('PDT', 'HP')
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options('Normal','PDT','Empy','EnemyCritRate','Evasion','HP','MDT','Regain','Refresh','Sphere')
@@ -606,10 +606,9 @@ range="Trollbane",  }
         right_ring="Stikini Ring +1",
         back={ name="Aurist's Cape +1", augments={'Path: A',}},
     }
+
+
 	sets.TreasureHunter = set_combine(sets.TreasureHunter, {})
-
-
-
 
 	sets.midcast.Dia = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
 	sets.midcast.Diaga = set_combine(sets.midcast.FastRecast, sets.TreasureHunter)
@@ -621,6 +620,11 @@ range="Trollbane",  }
 	--sets.midcast.Pet.WeaponSkill = {}
 
     -- Sets to return to when not performing an action.
+
+    -- Extra Melee sets.  Apply these on top of melee sets.
+
+	-- passive set
+
     sets.passive.SubtleBlow = {
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
@@ -651,6 +655,8 @@ range="Trollbane",  }
     sets.passive.SubtleBlowPETONLY = {
         waist="Isa Belt",
         right_ear="Gelai Earring",
+        hands="Foire Dastanas +3",-- pet haste 4%
+        feet="Tali'ah Crackows +2", -- pet haste 7%
 	}
     -- Resting sets
     sets.resting = {
@@ -709,7 +715,7 @@ range="Trollbane",  }
         body="Annoint. Kalasiris",
     })
     sets.idle.Regain = {
-        head="Wakido Kabuto +3",
+        head="Null Masque",
 		body="Adamantite Armor",
 		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 	    legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -753,7 +759,7 @@ range="Trollbane",  }
         waist="Plat. Mog. Belt",
         right_ear="Tuisto Earring",
         left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring="Defending Ring",
+        left_ring="Eihwaz Ring",
         right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
@@ -765,12 +771,12 @@ range="Trollbane",  }
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Carrier's Sash",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         right_ring="Vengeful Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     }
 
     -- Set for idle while pet is out (eg: pet regen gear)
@@ -969,7 +975,7 @@ range="Trollbane",  }
         back="Moonlight Cape",
     }
 
-
+    sets.defense.HP = sets.idle.HP  
 
 	sets.idle.Empy = set_combine(sets.idle.PDT, {
         head="Karagoz Cappello +2",
@@ -1369,7 +1375,7 @@ function select_default_macro_book()
 end
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.

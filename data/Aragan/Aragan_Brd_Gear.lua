@@ -27,15 +27,15 @@ macro
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT')
-	state.HybridMode:options('DT','Normal')
+	state.HybridMode:options('DT','DT25','Normal')
     state.CastingMode:options('Normal','AoE')
-	state.PhysicalDefenseMode:options('PDT', 'Evasion','Aminon')
+	state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP','Aminon')
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
     state.WeaponskillMode:options('Match','SubtleBlow', 'PDL')
     state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere','Regain')
 	state.Weapons:options('None','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon')
-    state.Passive = M{['description'] = 'Passive Mode','None','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20'}
+    state.Passive = M{['description'] = 'Passive Mode','None','RegalGloves','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20'}
 
     -- Whether to use Carn (or song daggers in general) under a certain threshhold even when weapons are locked.
 	state.CarnMode = M{'Never','Always','300','1000',}
@@ -99,13 +99,16 @@ function user_job_setup()
     send_command('bind ` gs c cycle Songset;')
     send_command('bind @` gs c cycleback Songset;')
 
-    send_command('bind f4 gs c songsetnoph')
-    send_command('bind f3 gs c songsetph')
-    --send_command('bind ^f3 gs c cycleback songsetph')
-    send_command('bind f2 gs c songsetphccsv')
+    -- send_command('bind f4 gs c songsetnoph')
+    -- send_command('bind f3 gs c songsetph')
+    -- --send_command('bind ^f3 gs c cycleback songsetph')
+    -- send_command('bind f2 gs c songsetphccsv')
     --send_command('bind ^f4 gs c cycleback songsetphccsv')
     --send_command('bind !f2 gs c Songset')
     
+    send_command('bind f3 gs c apply_songset')
+    send_command('bind f4 gs c toggle_songset')
+
 local was_chat_open = false
 windower.register_event('prerender', function()
     local chat_open = windower.ffxi.get_info().chat_open
@@ -216,7 +219,9 @@ function init_gear_sets()
 		legs="Doyen Pants",
 		head="Umuthi Hat",
 		waist="Siegel Sash",})
-	
+    -- sets.precast.FC.BardSong.main = set_combine(sets.precast.FC.BardSong, {
+    -- main="Carnwenhan",
+    --     })
 	sets.precast.FC.BardSong = {
 	-- main="Carnwenhan",
 	-- sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
@@ -227,11 +232,12 @@ function init_gear_sets()
 	feet="Fili Cothurnes +2",
 	neck="Baetyl Pendant",
 	waist="Witful Belt",
-	right_ear="Etiolation Earring",
+    right_ear="Fili Earring +1",
 	left_ear="Loquac. Earring",
 	right_ring="Kishar Ring",
 	left_ring="Prolix Ring",
 	back={ name="Fi Follet Cape +1", augments={'Path: A',}},}
+	sets.precast.FC.BardSong.Barfawc = set_combine(sets.precast.FC.BardSong,{main="Barfawc"})
 
 	sets.precast.FC.SongDebuff = set_combine(sets.precast.FC.BardSong,{range="Marsyas"})
 	sets.precast.FC.SongDebuff.Resistant = set_combine(sets.precast.FC.BardSong,{range="Daurdabla"})
@@ -519,8 +525,8 @@ sets.precast.WS['Shattersoul'] = {
 	-- General set for recast times.
 	sets.midcast.FastRecast = sets.precast.FC
 
-    	-- For song buffs (duration and AF3 set bonus)
-	sets.midcast.SongEffect = {    main="Carnwenhan",
+    -- For song buffs (duration and AF3 set bonus)
+	sets.midcast.SongEffect = {   main="Carnwenhan",
     -- sub={ name="Kali", augments={'Mag. Acc.+15','String instrument skill +10','Wind instrument skill +10',}},
     head="Fili Calot +2",
     body="Fili Hongreline +2",
@@ -549,6 +555,9 @@ sets.precast.WS['Shattersoul'] = {
     ring2="Stikini Ring +1",
     waist="Witful Belt",
     back="Intarabus's Cape",}
+    sets.midcast.SongEffect.Barfawc = set_combine(sets.midcast.SongEffect,{main="Barfawc"})
+    sets.midcast.SongEffect.Barfawc.DW = set_combine(sets.midcast.SongEffect,{main="Barfawc"})
+
 	-- Gear to enhance certain classes of songs
 	sets.midcast.Ballad = {legs="Fili Rhingrave +2"}
 	sets.midcast.Lullaby = {range="Marsyas",hands="Brioso Cuffs +3"}
@@ -762,12 +771,12 @@ sets.precast.WS['Shattersoul'] = {
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Svelt. Gouriz +1",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring="Vengeful Ring",
         right_ring="Defending Ring",
-        back="Intarabus's Cape",
+        back="Null Shawl",
     }
 
     sets.defense.MDT = {
@@ -785,7 +794,7 @@ sets.precast.WS['Shattersoul'] = {
         back="Moonlight Cape",
     }
         
-	sets.defense.MEVA = {  ammo="Yamarang",
+	sets.defense.MEVA = {  --ammo="Yamarang",
     head={ name="Gleti's Mask", augments={'Path: A',}},
     body={ name="Gleti's Cuirass", augments={'Path: A',}},
     hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
@@ -799,6 +808,21 @@ sets.precast.WS['Shattersoul'] = {
     right_ring="Defending Ring",
     back="Moonlight Cape",}
 
+    sets.defense.HP = {
+        head="Genmei Kabuto",
+        hands="Regal Gloves",
+        body="Adamantite Armor",
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Plat. Mog. Belt",
+        left_ear="Tuisto Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Moonlight Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+    }
+    
     sets.defense.Aminon = {
         head="Null Masque",
         body="Adamantite Armor",
@@ -846,7 +870,7 @@ sets.precast.WS['Shattersoul'] = {
     }
 
 sets.idle.HP = {
-	head={ name="Nyame Helm", augments={'Path: B',}},
+    head="Genmei Kabuto",
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     body="Adamantite Armor",
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -859,6 +883,7 @@ sets.idle.HP = {
     right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
     back="Moonlight Cape",
 }
+sets.idle.HP = sets.defense.HP
 sets.idle.MDT = sets.defense.MDT
 sets.idle.Evasion = sets.defense.Evasion
 sets.idle.EnemyCritRate = set_combine(sets.idle.PDT, { 
@@ -943,10 +968,13 @@ sets.idle.Sphere = set_combine(sets.idle, {
     }
 	sets.passive.Enspell = {
         head="Umuthi Hat",
-		ands="Aya. Manopolas +2",
+		hands="Aya. Manopolas +2",
         waist="Orpheus's Sash",}
 
-
+        sets.passive.RegalGloves = {
+            hands="Regal Gloves",
+}
+    
 
 	-- Engaged sets
 
@@ -973,7 +1001,7 @@ sets.idle.Sphere = set_combine(sets.idle, {
 -- Sets with weapons defined.
 sets.engaged.STP = {
     ranged="Linos",
-    head="Bunzi's Hat",
+    head="Aya. Zucchetto +2",
     body="Ashera Harness",
     hands="Bunzi's Gloves",
 	legs={ name="Nyame Flanchard", augments={'Path: B',}},
@@ -1040,7 +1068,7 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
         range="Linos",
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
         body="Ashera Harness",
-        hands="Volte Mittens",
+        hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet="Battlecast Gaiters",
         neck={ name="Bard's Charm +2", augments={'Path: A',}},
@@ -1055,7 +1083,7 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
     sets.engaged.DW.Acc = set_combine(sets.engaged.Acc ,{
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
         body="Ashera Harness",
-        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck="Null Loop",
@@ -1068,6 +1096,7 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
     })
 
     sets.engaged.DW.STP = set_combine(sets.engaged.STP, {
+        hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
         waist="Reiki Yotai",
         left_ear="Suppanomimi",
     })
@@ -1076,6 +1105,7 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
     sets.engaged.DW.CRIT = set_combine(sets.engaged.CRIT, {
     range="Linos",
     head={ name="Blistering Sallet +1", augments={'Path: A',}},
+    hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
     legs={ name="Zoar Subligar +1", augments={'Path: A',}},
     feet="Aya. Gambieras +2",
     neck="Nefarious Collar +1",
@@ -1091,25 +1121,21 @@ sets.engaged.CRIT = set_combine(sets.engaged, {
 
   -- 15% Magic Haste (67% DW to cap)
   sets.engaged.DW.LowHaste = set_combine(sets.engaged.DW, {
-    range=empty,
     left_ear="Suppanomimi", --5
     right_ear="Eabani Earring", --4
     waist="Reiki Yotai", --7
 }) -- 16%
 sets.engaged.DW.Acc.LowHaste = set_combine(sets.engaged.DW.Acc, {
-        range=empty,
         left_ear="Suppanomimi", --5
         right_ear="Eabani Earring", --4
         waist="Reiki Yotai", --7
     }) -- 16%
     sets.engaged.DW.STP.LowHaste = set_combine(sets.engaged.DW.STP, {
-        range=empty,
         left_ear="Suppanomimi", --5
         right_ear="Eabani Earring", --4
         waist="Reiki Yotai", --7
     }) -- 16%
     sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
-        range=empty,
         left_ear="Suppanomimi", --5
         right_ear="Eabani Earring", --4
         waist="Reiki Yotai", --7
@@ -1217,6 +1243,57 @@ sets.engaged.DW.STP.DT.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets
 sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid)
 
 
+------------------------------------------------------------------------------------------------
+---------------------------------------- Hybrid 25% Sets -------------------------------------------
+------------------------------------------------------------------------------------------------
+
+sets.engaged.Hybrid25 = {
+    body="Ashera Harness",
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    ring2="Moonlight Ring", --5/5
+    }
+
+    sets.engaged.DT25 = set_combine(sets.engaged, sets.engaged.Hybrid25)
+    sets.engaged.Acc.DT25 = set_combine(sets.engaged.Acc, sets.engaged.Hybrid25)
+    sets.engaged.CRIT.DT25 = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid25)
+
+    sets.engaged.DW.DT25 = set_combine(sets.engaged.DW, sets.engaged.Hybrid25)
+    sets.engaged.DW.Acc.DT25 = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid25)
+    sets.engaged.DW.CRIT.DT25 = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid25)
+
+
+------------------------------------------------------------------------------------------------
+---------------------------------------- DW-HASTE Hybrid 25% Sets-----------------------------------
+------------------------------------------------------------------------------------------------
+
+
+sets.engaged.DW.DT25 = set_combine(sets.engaged.DW, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25 = set_combine(sets.engaged.DW.Acc, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25 = set_combine(sets.engaged.DW.STP, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25 = set_combine(sets.engaged.DW.CRIT, sets.engaged.Hybrid25)
+
+sets.engaged.DW.DT25.LowHaste = set_combine(sets.engaged.DW.LowHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25.LowHaste = set_combine(sets.engaged.DW.Acc.LowHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25.LowHaste = set_combine(sets.engaged.DW.STP.LowHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25.LowHaste = set_combine(sets.engaged.DW.CRIT.LowHaste, sets.engaged.Hybrid25)
+
+sets.engaged.DW.DT25.MidHaste = set_combine(sets.engaged.DW.MidHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25.MidHaste = set_combine(sets.engaged.DW.Acc.MidHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25.MidHaste = set_combine(sets.engaged.DW.STP.MidHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25.MidHaste = set_combine(sets.engaged.DW.CRIT.MidHaste, sets.engaged.Hybrid25)
+
+sets.engaged.DW.DT25.HighHaste = set_combine(sets.engaged.DW.HighHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25.HighHaste = set_combine(sets.engaged.DW.Acc.HighHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25.HighHaste = set_combine(sets.engaged.DW.STP.HighHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25.HighHaste = set_combine(sets.engaged.DW.CRIT.HighHaste, sets.engaged.Hybrid25)
+
+sets.engaged.DW.DT25.MaxHaste = set_combine(sets.engaged.DW.MaxHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.Acc.DT25.MaxHaste = set_combine(sets.engaged.DW.Acc.MaxHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.STP.DT25.MaxHaste = set_combine(sets.engaged.DW.STP.MaxHaste, sets.engaged.Hybrid25)
+sets.engaged.DW.CRIT.DT25.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, sets.engaged.Hybrid25)
+
+
 
 
 end
@@ -1249,58 +1326,58 @@ autows_list = {['Naegling']='Savage Blade',['Aeneas']="Aeolian Edge",['Twashtar'
 ['DualTwashtarCrepuscular']="Rudra's Storm",['DualAeneas']="Aeolian Edge",}
 
 
---Job Specific Trust Overwrite
-function check_trust()
-	if not moving then
-		if state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Elvorseal'] or buffactive['Reive Mark'] or not player.in_combat) then
-			local party = windower.ffxi.get_party()
-            if (world.area == 'Temenos' or world.area == 'Apollyon') and party.p3 == nil then
-				local spell_recasts = windower.ffxi.get_spell_recasts()
+-- --Job Specific Trust Overwrite
+-- function check_trust()
+-- 	if not moving then
+-- 		if state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Elvorseal'] or buffactive['Reive Mark'] or not player.in_combat) then
+-- 			local party = windower.ffxi.get_party()
+--             if (world.area == 'Temenos' or world.area == 'Apollyon') and party.p3 == nil then
+-- 				local spell_recasts = windower.ffxi.get_spell_recasts()
 			
-				if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
-					windower.send_command('input /ma "Ygnas" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[952] < spell_latency and not have_trust("Koru-Moru") then
-					windower.send_command('input /ma "Koru-Moru" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
-					windower.send_command('input /ma "Sylvie (UC)" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				else
-					return false
-				end
-			end
-            if (world.area ~= 'Temenos' or world.area ~= 'Apollyon') and party.p5 == nil then
-				local spell_recasts = windower.ffxi.get_spell_recasts()
+-- 				if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
+-- 					windower.send_command('input /ma "Ygnas" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[952] < spell_latency and not have_trust("Koru-Moru") then
+-- 					windower.send_command('input /ma "Koru-Moru" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+-- 					windower.send_command('input /ma "Sylvie (UC)" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				else
+-- 					return false
+-- 				end
+-- 			end
+--             if (world.area ~= 'Temenos' or world.area ~= 'Apollyon') and party.p5 == nil then
+-- 				local spell_recasts = windower.ffxi.get_spell_recasts()
 			
-				if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
-					windower.send_command('input /ma "Ygnas" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[952] < spell_latency and not have_trust("Koru-Moru") then
-					windower.send_command('input /ma "Koru-Moru" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
-					windower.send_command('input /ma "Sylvie (UC)" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
-					windower.send_command('input /ma "Joachim" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
-					windower.send_command('input /ma "Qultada" <me>')
-					tickdelay = os.clock() + 3
-					return true
-				else
-					return false
-				end
-			end
-		end
-	end
-	return false
-end
+-- 				if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
+-- 					windower.send_command('input /ma "Ygnas" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[952] < spell_latency and not have_trust("Koru-Moru") then
+-- 					windower.send_command('input /ma "Koru-Moru" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+-- 					windower.send_command('input /ma "Sylvie (UC)" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+-- 					windower.send_command('input /ma "Joachim" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+-- 					windower.send_command('input /ma "Qultada" <me>')
+-- 					tickdelay = os.clock() + 3
+-- 					return true
+-- 				else
+-- 					return false
+-- 				end
+-- 			end
+-- 		end
+-- 	end
+-- 	return false
+-- end

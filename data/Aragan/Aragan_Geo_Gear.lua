@@ -81,7 +81,7 @@ function user_job_setup()
 	state.CastingMode:options('Normal','SIRD', 'ConserveMP','OccultAcumen')
     state.WeaponskillMode:options('Match','SubtleBlow')
     state.IdleMode:options('Normal','DT','MDT','HP', 'Regen', 'Refresh', 'Evasion', 'EnemyCritRate','Sphere')
-	state.PhysicalDefenseMode:options('PDT')
+	state.PhysicalDefenseMode:options('PDT', 'HP')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.Weapons:options('Idris','None', 'Maxentius','Bunzi','MalignancePole','Xoanon','TernionDagger')
@@ -116,9 +116,9 @@ function user_job_setup()
 	send_command('bind f1 gs c cycle Indi2')
     send_command('bind f2 gs c cycle Indi')
     send_command('bind f3 gs c cycle geo')
-    --send_command('bind !f1 input //gs c Indi2')
-    --send_command('bind !f2 input //gs c Indi')
-    --send_command('bind !f3 input //gs c geo')
+    --send_command('bind !f1 gs c Indi2')
+    --send_command('bind !f2 gs c Indi')
+    --send_command('bind !f3 gs c geo')
 	send_command('bind ^f1 gs c cycle HippoMode')
 	send_command('bind ^f2 gs c toggle AutoStunMode')
     send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
@@ -703,7 +703,7 @@ function init_gear_sets()
         waist="Plat. Mog. Belt",
         left_ear="Tuisto Earring",
         right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        right_ring="Defending Ring",
+        right_ring="Eihwaz Ring",
         left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
@@ -803,17 +803,18 @@ function init_gear_sets()
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Svelt. Gouriz +1",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring="Vengeful Ring",
         right_ring="Defending Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     }
 
 		
     sets.defense.MEVA = sets.defense.MDT
-		
+    sets.defense.HP = sets.idle.HP  
+
 		
 	sets.defense.NukeLock = sets.midcast['Elemental Magic']
 	
@@ -1017,7 +1018,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then

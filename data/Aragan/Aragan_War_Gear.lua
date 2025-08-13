@@ -32,6 +32,15 @@ Savage Blade Scission
 Red Lotus Blade Liquefaction
 Savage Blade Scission 
 
+--sc 6step Fell Cleave spam
+
+Fell Cleave > Fell Cleave (Detonation) > Fell Cleave (Scission) > Fell Cleave (Detonation) > Fell Cleave (Scission)
+
+--sc 6step 
+Sturmwind -> Steel ->Sturmwind -> Steel ->Sturmwind -> Steel ->Sturmwind -> Steel ->
+
+--sc 3step 
+Upheaval -> Steel -> Upheaval -> Steel [For darkness multi step
 ]]
 
 
@@ -39,14 +48,14 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow', 'H2H')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'SC', 'PDL','Proc')
-    state.HybridMode:options('Normal', 'PDT')
+    state.HybridMode:options('Normal', 'DT')
     state.PhysicalDefenseMode:options('PDT', 'HP','Evasion','Empy', 'Enmity', 'MP', 'Reraise')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options( 'DT','Normal', 'Tank', 'MDT', 'HP', 'Regen', 'Regain', 'Evasion', 'EnemyCritRate', 'Enmity', 'Refresh')
-    state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
-	state.Passive = M{['description'] = 'Passive Mode','None','Crepuscular', 'EnemyCritRate','EnemyTPaccumulation','Resist', 'Regen','SphereRegain' , 'Death Spikes'}
-	state.Weapons:options('None','Naegling','Loxotic','Shining','Chango','AgwuClaymore','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
+    state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None','EnemyTPaccumulation'}
+	state.Passive = M{['description'] = 'Passive Mode','None', 'SubtleBlowMBOZE','SubtleBlowFULL','SubtleBlowDT','SubtleBlowDT2','SubtleBlowDTEnemyTPac','Crepuscular', 'EnemyCritRate','EnemyTPaccumulation','Resist', 'Regen','SphereRegain' , 'Death Spikes'}
+	state.Weapons:options('None','Naegling','Loxotic','Shining','Chango','AgwuClaymore','Nandaka','Malevo','Drepanum','IkengaAxe','DualNaegling','DualLoxotic','DualMalevo','DualIkengaAxe','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
     state.Shield = M{['description']='Weapon Set', 'Normal', 'BlurredShield', 'AdapaShield', 'SacroBulwark'}
 	state.AutoBuffMode:options('Off','Auto','Full','Defend') --,'Vagary','Off','Off','Off','Off',
 
@@ -60,7 +69,7 @@ function user_job_setup()
     send_command('bind f7 gs c cycle Shield')
     send_command('bind ^m gs c toggle Medicine')
 	send_command('bind f2 gs c toggle AutoBuffMode')
-	send_command('bind !n gs c toggle AutoReraiseeMode')
+	send_command('bind !n gs c toggle AutoReraiseMode')
 
 	send_command('bind !8 gs c weapons Greatsword;gs c update')
 	send_command('bind !0 gs c set WeaponskillMode Proc;;gs c set CastingMode Proc;gs c update')
@@ -85,6 +94,7 @@ sets.weapons.Shining = {main="Shining One", sub="Utu Grip"}
 sets.weapons.Loxotic = {main="Loxotic Mace +1", sub="Blurred Shield +1",}
 sets.weapons.Chango = {main="Chango", sub="Utu Grip"}
 sets.weapons.AgwuClaymore = {main="Agwu's Claymore", sub="Utu Grip"}
+sets.weapons.Nandaka = {main="Nandaka", sub="Utu Grip"}
 sets.weapons.Malevo = {main="Malevolence", sub="Blurred Shield +1",}
 sets.weapons.Drepanum = {main="Drepanum", sub="Utu Grip",}
 sets.weapons.IkengaAxe = {main="Ikenga's Axe", sub="Blurred Shield +1",}
@@ -950,9 +960,86 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         left_ear="Infused Earring",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
-	 }
+	}
 
-	 -- passive set
+
+    -- Extra Melee sets.  Apply these on top of melee sets.
+
+    sets.EnemyTPaccumulation ={
+        head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+    }
+	-- passive set
+
+    sets.passive.SubtleBlowDTEnemyTPac ={
+        ammo="Staunch Tathlum +1",
+        head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
+        body="Dagon Breast.",
+        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+        legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+        feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+        neck={ name="War. Beads +2", augments={'Path: A',}},
+        waist="Ioskeha Belt +1",
+        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        right_ear="Boii Earring +1",
+        left_ring="Niqmaddu Ring",
+        right_ring="Defending Ring",
+        back={ name="Cichol's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    }
+    sets.passive.SubtleBlowFULL ={        
+        body="Dagon Breast.",
+		hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+        feet= "Sakpata's Leggings", --R20 (SB1+10)
+        neck={ name="Bathy Choker +1", augments={'Path: A',}},
+        right_ear="Boii Earring +1",
+        left_ring="Chirich Ring +1",
+        right_ring="Niqmaddu Ring",
+    }
+    sets.passive.SubtleBlowMBOZE ={        
+        ammo="Seeth. Bomblet +1", -- (R15 for Haste +5%)
+        head="Sulevia's Mask +2", --(SB1 +4 *with Sulevia set bonus from legs)
+        body="Dagon Breast.", --(SB2 + 10)
+        hands="Sakpata's Gauntlets", --(SB1 +8)
+        legs="Sulev. Cuisses +2", --(SB1 +4 *with Sulevia set bonus from head)
+        feet= "Sakpata's Leggings", --R20 (SB1+10)
+        neck="Loricate Torque +1", --R15 (Used for DT)
+        waist="Ioskeha Belt +1", --(Used over Sailfi +1 for Accuracy)
+        left_ear="Odnowa Earring +1", --(R11, used for DT and Accuracy)
+        right_ear="Boii Earring +1",--(SB1 +6)
+        left_ring="Chirich Ring +1", --(SB1 +10)
+        right_ring="Niqmaddu Ring", --(SB2 +5)
+		back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+    }
+    sets.passive.SubtleBlowDT  = {
+        ammo="Aurgelmir Orb +1",
+        head="Sakpata's Helm",
+        neck={ name="War. Beads +2", augments={'Path: A',}},
+        ear1="Telos Earring",
+        ear2="Boii Earring +1",
+        body="Dagon Breast.",
+        hands="Sakpata's Gauntlets",
+        ring1="Niqmaddu Ring",
+		ring2="Defending Ring",
+        waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+        legs="Sakpata's Cuisses",
+        feet= "Sakpata's Leggings", --R20 (SB1+10)
+        back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+    }
+    sets.passive.SubtleBlowDT2  = {
+        ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
+        head={ name="Loess Barbuta +1", augments={'Path: A',}},
+        body="Dagon Breast.",
+        hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
+        legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+        feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+        neck={ name="War. Beads +2", augments={'Path: A',}},
+        waist={ name="Sailfi Belt +1", augments={'Path: A',}},
+        left_ear="Telos Earring",
+        right_ear="Boii Earring +1",
+        left_ring="Niqmaddu Ring",
+        right_ring="Chirich Ring +1",
+        back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','"Store TP"+10','Phys. dmg. taken-10%',}},
+    }
+
      sets.passive['Death Spikes'] = {body="Tartarus Platemail",}
 
      sets.passive.Crepuscular = {
@@ -986,6 +1073,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 	sets.passive.EnemyTPaccumulation ={
         head={ name="Souv. Schaller +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
     }
+
      -- Defense sets
 	 
      sets.defense.PDT = {
@@ -1013,7 +1101,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         feet={ name="Souveran Schuhs +1", augments={'HP+105','Enmity+9','Potency of "Cure" effect received +15%',}},
         neck={ name="Unmoving Collar +1", augments={'Path: A',}},
         waist="Plat. Mog. Belt",
-        left_ear="Kyrene's Earring",
+        left_ear="Tuisto Earring",
         right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
         left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         right_ring="Moonlight Ring",
@@ -1027,12 +1115,12 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Engraved Belt",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         right_ring="Vengeful Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     }
     sets.defense.Enmity = {
         ammo="Iron Gobbet",
@@ -1164,8 +1252,8 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         head="Hjarrandi Helm",
         body="Boii Lorica +3",
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-        legs="Pumm. Cuisses +3",
-        feet="Pumm. Calligae +3",
+        legs="Pumm. Cuisses +4",
+        feet="Pumm. Calligae +4",
         neck={ name="War. Beads +2", augments={'Path: A',}},
         waist="Ioskeha Belt +1",
         left_ear="Schere Earring",
@@ -1179,8 +1267,8 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         head="Hjarrandi Helm",
         body="Boii Lorica +3",
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
-        legs="Pumm. Cuisses +3",
-        feet="Pumm. Calligae +3",
+        legs="Pumm. Cuisses +4",
+        feet="Pumm. Calligae +4",
         neck="Null Loop",
         waist="Ioskeha Belt +1",
         left_ear="Telos Earring",
@@ -1196,7 +1284,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         body="Boii Lorica +3",
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}},
         legs={ name="Tatena. Haidate +1", augments={'Path: A',}},
-        feet="Pumm. Calligae +3",
+        feet="Pumm. Calligae +4",
         neck="Ainia Collar",
         waist={ name="Sailfi Belt +1", augments={'Path: A',}},
         left_ear="Dedition Earring",
@@ -1239,7 +1327,7 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 
      -- Defensive sets to combine with various weapon-specific sets below
      -- These allow hybrid acc/pdt sets for difficult content
-     sets.Defensive = {
+     sets.Hybrid = {
         head={ name="Sakpata's Helm", augments={'Path: A',}}, -- 4% haste
         body="Boii Lorica +3",-- 3% haste
         hands={ name="Sakpata's Gauntlets", augments={'Path: A',}}, -- 4% haste
@@ -1249,11 +1337,11 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
     }
 
 
-    sets.engaged.PDT = set_combine(sets.engaged, sets.Defensive)
-    sets.engaged.Acc.PDT = set_combine(sets.engaged.Acc, sets.Defensive)
-    sets.engaged.STP.PDT = set_combine(sets.engaged.STP, sets.Defensive)
-    sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT, sets.Defensive)
-    sets.engaged.SubtleBlow.PDT = set_combine(sets.engaged.SubtleBlow, sets.Defensive,{  
+    sets.engaged.DT = set_combine(sets.engaged, sets.Hybrid)
+    sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.Hybrid)
+    sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.Hybrid)
+    sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.Hybrid)
+    sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.Hybrid,{  
         body="Dagon Breast.",
         left_ring="Defending Ring",
     })
@@ -1286,11 +1374,11 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         right_ear="Eabani Earring", --4
      })
 
-     sets.engaged.DW.PDT = set_combine(sets.engaged.DW, sets.Defensive)
-     sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.DW.Acc, sets.Defensive)
-     sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP, sets.Defensive)
-     sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.DW.CRIT, sets.Defensive)
-     sets.engaged.DW.SubtleBlow.PDT = set_combine(sets.engaged.DW.SubtleBlow, sets.Defensive,{  
+     sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.Hybrid)
+     sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.Hybrid)
+     sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.Hybrid)
+     sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.Hybrid)
+     sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.Hybrid,{  
         body="Dagon Breast.",
         left_ring="Defending Ring",
     })
@@ -1335,7 +1423,7 @@ function user_job_lockstyle()
     if not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
         windower.chat.input('/lockstyleset 1')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -1345,7 +1433,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 end
 
@@ -1358,13 +1446,14 @@ autows_list = {['DualNaegling']='Circle Blade',['Malevo']='Aeolian Edge',['Naegl
 ['ProcClub']='Seraph Strike',['ProcGreatKatana']='Tachi: Jinpu',['ProcGreatKatana2']='Tachi: Koki',
 ['ProcKatana']='Blade: Ei',['ProcPolearm']='Raiden Thrust',['Hachimonji']='Tachi: Jinpu',
 ['Zanmato']='Tachi: Jinpu',['H2H']='Asuran Fists',['Loxotic']='Judgment',['DualLoxotic']='Judgment',
-['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive'}
+['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive',['Nandaka']='Ground Strike'}
 
 
 function buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Warcry"] = {gain = 'Warcry is on.', lose = 'Warcry wore off.', announce_gain = true, announce_lose = false},
+
         ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},
 		--["Bolter's Roll"]     = {gain = 'Bolter Roll is on.', lose = 'Bolter Roll wore off.', announce_gain = true, announce_lose = false},
 		--["Samurai Roll"] = {gain = 'Samurai Roll is on.', lose = 'Samurai Roll wore off.', announce_gain = false, announce_lose = true},
@@ -1379,7 +1468,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then
@@ -1439,53 +1528,53 @@ end
 	sets.engaged.FullAcc.Adoulin.Charge.Mighty = {}
 	sets.engaged.Fodder.Adoulin.Charge.Mighty = {}
 
-    sets.engaged.PDT = {}
-	sets.engaged.SomeAcc.PDT = {}
-	sets.engaged.Acc.PDT = {}
-	sets.engaged.FullAcc.PDT = {}
-	sets.engaged.Fodder.PDT = {}
+    sets.engaged.DT = {}
+	sets.engaged.SomeAcc.DT = {}
+	sets.engaged.Acc.DT = {}
+	sets.engaged.FullAcc.DT = {}
+	sets.engaged.Fodder.DT = {}
 	
-    sets.engaged.PDT.Charge = {}
-	sets.engaged.SomeAcc.PDT.Charge = {}
-	sets.engaged.Acc.PDT.Charge = {}
-	sets.engaged.FullAcc.PDT.Charge = {}
-	sets.engaged.Fodder.PDT.Charge = {}
+    sets.engaged.DT.Charge = {}
+	sets.engaged.SomeAcc.DT.Charge = {}
+	sets.engaged.Acc.DT.Charge = {}
+	sets.engaged.FullAcc.DT.Charge = {}
+	sets.engaged.Fodder.DT.Charge = {}
 	
-    sets.engaged.PDT.Mighty = {}
-	sets.engaged.SomeAcc.PDT.Mighty = {}
-	sets.engaged.Acc.PDT.Mighty = {}
-	sets.engaged.FullAcc.PDT.Mighty = {}
-	sets.engaged.Fodder.PDT.Mighty = {}
+    sets.engaged.DT.Mighty = {}
+	sets.engaged.SomeAcc.DT.Mighty = {}
+	sets.engaged.Acc.DT.Mighty = {}
+	sets.engaged.FullAcc.DT.Mighty = {}
+	sets.engaged.Fodder.DT.Mighty = {}
 
-    sets.engaged.PDT.Charge.Mighty = {}
-	sets.engaged.SomeAcc.PDT.Charge.Mighty = {}
-	sets.engaged.Acc.PDT.Charge.Mighty = {}
-	sets.engaged.FullAcc.PDT.Charge.Mighty = {}
-	sets.engaged.Fodder.PDT.Charge.Mighty = {}
+    sets.engaged.DT.Charge.Mighty = {}
+	sets.engaged.SomeAcc.DT.Charge.Mighty = {}
+	sets.engaged.Acc.DT.Charge.Mighty = {}
+	sets.engaged.FullAcc.DT.Charge.Mighty = {}
+	sets.engaged.Fodder.DT.Charge.Mighty = {}
 	
-    sets.engaged.PDT.Adoulin = {}
-	sets.engaged.SomeAcc.PDT.Adoulin = {}
-	sets.engaged.Acc.PDT.Adoulin = {}
-	sets.engaged.FullAcc.PDT.Adoulin = {}
-	sets.engaged.Fodder.PDT.Adoulin = {}
+    sets.engaged.DT.Adoulin = {}
+	sets.engaged.SomeAcc.DT.Adoulin = {}
+	sets.engaged.Acc.DT.Adoulin = {}
+	sets.engaged.FullAcc.DT.Adoulin = {}
+	sets.engaged.Fodder.DT.Adoulin = {}
 	
-    sets.engaged.PDT.Adoulin.Charge = {}
-	sets.engaged.SomeAcc.PDT.Adoulin.Charge = {}
-	sets.engaged.Acc.PDT.Adoulin.Charge = {}
-	sets.engaged.FullAcc.PDT.Adoulin.Charge = {}
-	sets.engaged.Fodder.PDT.Adoulin.Charge = {}
+    sets.engaged.DT.Adoulin.Charge = {}
+	sets.engaged.SomeAcc.DT.Adoulin.Charge = {}
+	sets.engaged.Acc.DT.Adoulin.Charge = {}
+	sets.engaged.FullAcc.DT.Adoulin.Charge = {}
+	sets.engaged.Fodder.DT.Adoulin.Charge = {}
 	
-    sets.engaged.PDT.Adoulin.Mighty = {}
-	sets.engaged.SomeAcc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Acc.PDT.Adoulin.Mighty = {}
-	sets.engaged.FullAcc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Fodder.PDT.Adoulin.Mighty = {}
+    sets.engaged.DT.Adoulin.Mighty = {}
+	sets.engaged.SomeAcc.DT.Adoulin.Mighty = {}
+	sets.engaged.Acc.DT.Adoulin.Mighty = {}
+	sets.engaged.FullAcc.DT.Adoulin.Mighty = {}
+	sets.engaged.Fodder.DT.Adoulin.Mighty = {}
 	
-    sets.engaged.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.SomeAcc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Acc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.FullAcc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Fodder.PDT.Adoulin.Charge.Mighty = {}
+    sets.engaged.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.SomeAcc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Acc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.FullAcc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Fodder.DT.Adoulin.Charge.Mighty = {}
 
     sets.engaged.MDT = {}
 	sets.engaged.SomeAcc.MDT = {}
@@ -1589,53 +1678,53 @@ end
 	sets.engaged.Conqueror.FullAcc.Adoulin.Charge.AM = {}
 	sets.engaged.Conqueror.Fodder.Adoulin.Charge.AM = {}
 
-	sets.engaged.Conqueror.PDT = {}
-	sets.engaged.Conqueror.SomeAcc.PDT = {}
-	sets.engaged.Conqueror.Acc.PDT = {}
-	sets.engaged.Conqueror.FullAcc.PDT = {}
-	sets.engaged.Conqueror.Fodder.PDT = {}
+	sets.engaged.Conqueror.DT = {}
+	sets.engaged.Conqueror.SomeAcc.DT = {}
+	sets.engaged.Conqueror.Acc.DT = {}
+	sets.engaged.Conqueror.FullAcc.DT = {}
+	sets.engaged.Conqueror.Fodder.DT = {}
 	
-	sets.engaged.Conqueror.PDT.Adoulin = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Adoulin = {}
-	sets.engaged.Conqueror.Acc.PDT.Adoulin = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Adoulin = {}
-	sets.engaged.Conqueror.Fodder.PDT.Adoulin = {}
+	sets.engaged.Conqueror.DT.Adoulin = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Adoulin = {}
+	sets.engaged.Conqueror.Acc.DT.Adoulin = {}
+	sets.engaged.Conqueror.FullAcc.DT.Adoulin = {}
+	sets.engaged.Conqueror.Fodder.DT.Adoulin = {}
 	
-	sets.engaged.Conqueror.PDT.AM = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.AM = {}
-	sets.engaged.Conqueror.Acc.PDT.AM = {}
-	sets.engaged.Conqueror.FullAcc.PDT.AM = {}
-	sets.engaged.Conqueror.Fodder.PDT.AM = {}
+	sets.engaged.Conqueror.DT.AM = {}
+	sets.engaged.Conqueror.SomeAcc.DT.AM = {}
+	sets.engaged.Conqueror.Acc.DT.AM = {}
+	sets.engaged.Conqueror.FullAcc.DT.AM = {}
+	sets.engaged.Conqueror.Fodder.DT.AM = {}
 	
-	sets.engaged.Conqueror.PDT.Adoulin.AM = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Adoulin.AM = {}
-	sets.engaged.Conqueror.Acc.PDT.Adoulin.AM = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Adoulin.AM = {}
-	sets.engaged.Conqueror.Fodder.PDT.Adoulin.AM = {}
+	sets.engaged.Conqueror.DT.Adoulin.AM = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Adoulin.AM = {}
+	sets.engaged.Conqueror.Acc.DT.Adoulin.AM = {}
+	sets.engaged.Conqueror.FullAcc.DT.Adoulin.AM = {}
+	sets.engaged.Conqueror.Fodder.DT.Adoulin.AM = {}
 	
-	sets.engaged.Conqueror.PDT.Charge = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Charge = {}
-	sets.engaged.Conqueror.Acc.PDT.Charge = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Charge = {}
-	sets.engaged.Conqueror.Fodder.PDT.Charge = {}
+	sets.engaged.Conqueror.DT.Charge = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Charge = {}
+	sets.engaged.Conqueror.Acc.DT.Charge = {}
+	sets.engaged.Conqueror.FullAcc.DT.Charge = {}
+	sets.engaged.Conqueror.Fodder.DT.Charge = {}
 	
-	sets.engaged.Conqueror.PDT.Adoulin.Charge = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Adoulin.Charge = {}
-	sets.engaged.Conqueror.Acc.PDT.Adoulin.Charge = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Adoulin.Charge = {}
-	sets.engaged.Conqueror.Fodder.PDT.Adoulin.Charge = {}
+	sets.engaged.Conqueror.DT.Adoulin.Charge = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Adoulin.Charge = {}
+	sets.engaged.Conqueror.Acc.DT.Adoulin.Charge = {}
+	sets.engaged.Conqueror.FullAcc.DT.Adoulin.Charge = {}
+	sets.engaged.Conqueror.Fodder.DT.Adoulin.Charge = {}
 	
-	sets.engaged.Conqueror.PDT.Charge.AM = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Charge.AM = {}
-	sets.engaged.Conqueror.Acc.PDT.Charge.AM = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Charge.AM = {}
-	sets.engaged.Conqueror.Fodder.PDT.Charge.AM = {}
+	sets.engaged.Conqueror.DT.Charge.AM = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Charge.AM = {}
+	sets.engaged.Conqueror.Acc.DT.Charge.AM = {}
+	sets.engaged.Conqueror.FullAcc.DT.Charge.AM = {}
+	sets.engaged.Conqueror.Fodder.DT.Charge.AM = {}
 	
-	sets.engaged.Conqueror.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Conqueror.Acc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Conqueror.Fodder.PDT.Adoulin.Charge.AM = {}
+	sets.engaged.Conqueror.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Conqueror.Acc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Conqueror.FullAcc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Conqueror.Fodder.DT.Adoulin.Charge.AM = {}
 
 	sets.engaged.Conqueror.MDT = {}
 	sets.engaged.Conqueror.SomeAcc.MDT = {}
@@ -1733,53 +1822,53 @@ end
 	sets.engaged.Conqueror.FullAcc.Adoulin.Charge.Mighty.AM = {}
 	sets.engaged.Conqueror.Fodder.Adoulin.Charge.Mighty.AM = {}
 
-	sets.engaged.Conqueror.PDT.Mighty = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Mighty = {}
-	sets.engaged.Conqueror.Acc.PDT.Mighty = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Mighty = {}
-	sets.engaged.Conqueror.Fodder.PDT.Mighty = {}
+	sets.engaged.Conqueror.DT.Mighty = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Mighty = {}
+	sets.engaged.Conqueror.Acc.DT.Mighty = {}
+	sets.engaged.Conqueror.FullAcc.DT.Mighty = {}
+	sets.engaged.Conqueror.Fodder.DT.Mighty = {}
 	
-	sets.engaged.Conqueror.PDT.Adoulin.Mighty = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Conqueror.Acc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Conqueror.Fodder.PDT.Adoulin.Mighty = {}
+	sets.engaged.Conqueror.DT.Adoulin.Mighty = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Adoulin.Mighty = {}
+	sets.engaged.Conqueror.Acc.DT.Adoulin.Mighty = {}
+	sets.engaged.Conqueror.FullAcc.DT.Adoulin.Mighty = {}
+	sets.engaged.Conqueror.Fodder.DT.Adoulin.Mighty = {}
 	
-	sets.engaged.Conqueror.PDT.Mighty.AM = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Mighty.AM = {}
-	sets.engaged.Conqueror.Acc.PDT.Mighty.AM = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Mighty.AM = {}
-	sets.engaged.Conqueror.Fodder.PDT.Mighty.AM = {}
+	sets.engaged.Conqueror.DT.Mighty.AM = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Mighty.AM = {}
+	sets.engaged.Conqueror.Acc.DT.Mighty.AM = {}
+	sets.engaged.Conqueror.FullAcc.DT.Mighty.AM = {}
+	sets.engaged.Conqueror.Fodder.DT.Mighty.AM = {}
 	
-	sets.engaged.Conqueror.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Conqueror.Acc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Conqueror.Fodder.PDT.Adoulin.Mighty.AM = {}
+	sets.engaged.Conqueror.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Conqueror.Acc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Conqueror.FullAcc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Conqueror.Fodder.DT.Adoulin.Mighty.AM = {}
 	
-	sets.engaged.Conqueror.PDT.Charge.Mighty = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Charge.Mighty = {}
-	sets.engaged.Conqueror.Acc.PDT.Charge.Mighty = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Charge.Mighty = {}
-	sets.engaged.Conqueror.Fodder.PDT.Charge.Mighty = {}
+	sets.engaged.Conqueror.DT.Charge.Mighty = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Charge.Mighty = {}
+	sets.engaged.Conqueror.Acc.DT.Charge.Mighty = {}
+	sets.engaged.Conqueror.FullAcc.DT.Charge.Mighty = {}
+	sets.engaged.Conqueror.Fodder.DT.Charge.Mighty = {}
 	
-	sets.engaged.Conqueror.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Conqueror.Acc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Conqueror.Fodder.PDT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Conqueror.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Conqueror.Acc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Conqueror.FullAcc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Conqueror.Fodder.DT.Adoulin.Charge.Mighty = {}
 	
-	sets.engaged.Conqueror.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Conqueror.Acc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Conqueror.Fodder.PDT.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.DT.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.Acc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.FullAcc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.Fodder.DT.Charge.Mighty.AM = {}
 	
-	sets.engaged.Conqueror.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Conqueror.SomeAcc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Conqueror.Acc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Conqueror.FullAcc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Conqueror.Fodder.PDT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.SomeAcc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.Acc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.FullAcc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Conqueror.Fodder.DT.Adoulin.Charge.Mighty.AM = {}
 
 	sets.engaged.Conqueror.MDT.Mighty = {}
 	sets.engaged.Conqueror.SomeAcc.MDT.Mighty = {}
@@ -1878,53 +1967,53 @@ end
 	sets.engaged.Bravura.FullAcc.Adoulin.Charge.AM = {}
 	sets.engaged.Bravura.Fodder.Adoulin.Charge.AM = {}
 
-	sets.engaged.Bravura.PDT = {}
-	sets.engaged.Bravura.SomeAcc.PDT = {}
-	sets.engaged.Bravura.Acc.PDT = {}
-	sets.engaged.Bravura.FullAcc.PDT = {}
-	sets.engaged.Bravura.Fodder.PDT = {}
+	sets.engaged.Bravura.DT = {}
+	sets.engaged.Bravura.SomeAcc.DT = {}
+	sets.engaged.Bravura.Acc.DT = {}
+	sets.engaged.Bravura.FullAcc.DT = {}
+	sets.engaged.Bravura.Fodder.DT = {}
 	
-	sets.engaged.Bravura.PDT.Adoulin = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Adoulin = {}
-	sets.engaged.Bravura.Acc.PDT.Adoulin = {}
-	sets.engaged.Bravura.FullAcc.PDT.Adoulin = {}
-	sets.engaged.Bravura.Fodder.PDT.Adoulin = {}
+	sets.engaged.Bravura.DT.Adoulin = {}
+	sets.engaged.Bravura.SomeAcc.DT.Adoulin = {}
+	sets.engaged.Bravura.Acc.DT.Adoulin = {}
+	sets.engaged.Bravura.FullAcc.DT.Adoulin = {}
+	sets.engaged.Bravura.Fodder.DT.Adoulin = {}
 	
-	sets.engaged.Bravura.PDT.AM = {}
-	sets.engaged.Bravura.SomeAcc.PDT.AM = {}
-	sets.engaged.Bravura.Acc.PDT.AM = {}
-	sets.engaged.Bravura.FullAcc.PDT.AM = {}
-	sets.engaged.Bravura.Fodder.PDT.AM = {}
+	sets.engaged.Bravura.DT.AM = {}
+	sets.engaged.Bravura.SomeAcc.DT.AM = {}
+	sets.engaged.Bravura.Acc.DT.AM = {}
+	sets.engaged.Bravura.FullAcc.DT.AM = {}
+	sets.engaged.Bravura.Fodder.DT.AM = {}
 	
-	sets.engaged.Bravura.PDT.Adoulin.AM = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Adoulin.AM = {}
-	sets.engaged.Bravura.Acc.PDT.Adoulin.AM = {}
-	sets.engaged.Bravura.FullAcc.PDT.Adoulin.AM = {}
-	sets.engaged.Bravura.Fodder.PDT.Adoulin.AM = {}
+	sets.engaged.Bravura.DT.Adoulin.AM = {}
+	sets.engaged.Bravura.SomeAcc.DT.Adoulin.AM = {}
+	sets.engaged.Bravura.Acc.DT.Adoulin.AM = {}
+	sets.engaged.Bravura.FullAcc.DT.Adoulin.AM = {}
+	sets.engaged.Bravura.Fodder.DT.Adoulin.AM = {}
 	
-	sets.engaged.Bravura.PDT.Charge = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Charge = {}
-	sets.engaged.Bravura.Acc.PDT.Charge = {}
-	sets.engaged.Bravura.FullAcc.PDT.Charge = {}
-	sets.engaged.Bravura.Fodder.PDT.Charge = {}
+	sets.engaged.Bravura.DT.Charge = {}
+	sets.engaged.Bravura.SomeAcc.DT.Charge = {}
+	sets.engaged.Bravura.Acc.DT.Charge = {}
+	sets.engaged.Bravura.FullAcc.DT.Charge = {}
+	sets.engaged.Bravura.Fodder.DT.Charge = {}
 	
-	sets.engaged.Bravura.PDT.Adoulin.Charge = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Adoulin.Charge = {}
-	sets.engaged.Bravura.Acc.PDT.Adoulin.Charge = {}
-	sets.engaged.Bravura.FullAcc.PDT.Adoulin.Charge = {}
-	sets.engaged.Bravura.Fodder.PDT.Adoulin.Charge = {}
+	sets.engaged.Bravura.DT.Adoulin.Charge = {}
+	sets.engaged.Bravura.SomeAcc.DT.Adoulin.Charge = {}
+	sets.engaged.Bravura.Acc.DT.Adoulin.Charge = {}
+	sets.engaged.Bravura.FullAcc.DT.Adoulin.Charge = {}
+	sets.engaged.Bravura.Fodder.DT.Adoulin.Charge = {}
 	
-	sets.engaged.Bravura.PDT.Charge.AM = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Charge.AM = {}
-	sets.engaged.Bravura.Acc.PDT.Charge.AM = {}
-	sets.engaged.Bravura.FullAcc.PDT.Charge.AM = {}
-	sets.engaged.Bravura.Fodder.PDT.Charge.AM = {}
+	sets.engaged.Bravura.DT.Charge.AM = {}
+	sets.engaged.Bravura.SomeAcc.DT.Charge.AM = {}
+	sets.engaged.Bravura.Acc.DT.Charge.AM = {}
+	sets.engaged.Bravura.FullAcc.DT.Charge.AM = {}
+	sets.engaged.Bravura.Fodder.DT.Charge.AM = {}
 	
-	sets.engaged.Bravura.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Bravura.Acc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Bravura.FullAcc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Bravura.Fodder.PDT.Adoulin.Charge.AM = {}
+	sets.engaged.Bravura.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Bravura.SomeAcc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Bravura.Acc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Bravura.FullAcc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Bravura.Fodder.DT.Adoulin.Charge.AM = {}
 
 	sets.engaged.Bravura.MDT = {}
 	sets.engaged.Bravura.SomeAcc.MDT = {}
@@ -2022,53 +2111,53 @@ end
 	sets.engaged.Bravura.FullAcc.Adoulin.Charge.Mighty.AM = {}
 	sets.engaged.Bravura.Fodder.Adoulin.Charge.Mighty.AM = {}
 
-	sets.engaged.Bravura.PDT.Mighty = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Mighty = {}
-	sets.engaged.Bravura.Acc.PDT.Mighty = {}
-	sets.engaged.Bravura.FullAcc.PDT.Mighty = {}
-	sets.engaged.Bravura.Fodder.PDT.Mighty = {}
+	sets.engaged.Bravura.DT.Mighty = {}
+	sets.engaged.Bravura.SomeAcc.DT.Mighty = {}
+	sets.engaged.Bravura.Acc.DT.Mighty = {}
+	sets.engaged.Bravura.FullAcc.DT.Mighty = {}
+	sets.engaged.Bravura.Fodder.DT.Mighty = {}
 	
-	sets.engaged.Bravura.PDT.Adoulin.Mighty = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Bravura.Acc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Bravura.FullAcc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Bravura.Fodder.PDT.Adoulin.Mighty = {}
+	sets.engaged.Bravura.DT.Adoulin.Mighty = {}
+	sets.engaged.Bravura.SomeAcc.DT.Adoulin.Mighty = {}
+	sets.engaged.Bravura.Acc.DT.Adoulin.Mighty = {}
+	sets.engaged.Bravura.FullAcc.DT.Adoulin.Mighty = {}
+	sets.engaged.Bravura.Fodder.DT.Adoulin.Mighty = {}
 	
-	sets.engaged.Bravura.PDT.Mighty.AM = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Mighty.AM = {}
-	sets.engaged.Bravura.Acc.PDT.Mighty.AM = {}
-	sets.engaged.Bravura.FullAcc.PDT.Mighty.AM = {}
-	sets.engaged.Bravura.Fodder.PDT.Mighty.AM = {}
+	sets.engaged.Bravura.DT.Mighty.AM = {}
+	sets.engaged.Bravura.SomeAcc.DT.Mighty.AM = {}
+	sets.engaged.Bravura.Acc.DT.Mighty.AM = {}
+	sets.engaged.Bravura.FullAcc.DT.Mighty.AM = {}
+	sets.engaged.Bravura.Fodder.DT.Mighty.AM = {}
 	
-	sets.engaged.Bravura.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Bravura.Acc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Bravura.FullAcc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Bravura.Fodder.PDT.Adoulin.Mighty.AM = {}
+	sets.engaged.Bravura.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Bravura.SomeAcc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Bravura.Acc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Bravura.FullAcc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Bravura.Fodder.DT.Adoulin.Mighty.AM = {}
 	
-	sets.engaged.Bravura.PDT.Charge.Mighty = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Charge.Mighty = {}
-	sets.engaged.Bravura.Acc.PDT.Charge.Mighty = {}
-	sets.engaged.Bravura.FullAcc.PDT.Charge.Mighty = {}
-	sets.engaged.Bravura.Fodder.PDT.Charge.Mighty = {}
+	sets.engaged.Bravura.DT.Charge.Mighty = {}
+	sets.engaged.Bravura.SomeAcc.DT.Charge.Mighty = {}
+	sets.engaged.Bravura.Acc.DT.Charge.Mighty = {}
+	sets.engaged.Bravura.FullAcc.DT.Charge.Mighty = {}
+	sets.engaged.Bravura.Fodder.DT.Charge.Mighty = {}
 	
-	sets.engaged.Bravura.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Bravura.Acc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Bravura.FullAcc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Bravura.Fodder.PDT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Bravura.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Bravura.SomeAcc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Bravura.Acc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Bravura.FullAcc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Bravura.Fodder.DT.Adoulin.Charge.Mighty = {}
 	
-	sets.engaged.Bravura.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Bravura.Acc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Bravura.FullAcc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Bravura.Fodder.PDT.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.DT.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.SomeAcc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.Acc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.FullAcc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.Fodder.DT.Charge.Mighty.AM = {}
 	
-	sets.engaged.Bravura.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Bravura.SomeAcc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Bravura.Acc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Bravura.FullAcc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Bravura.Fodder.PDT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.SomeAcc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.Acc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.FullAcc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Bravura.Fodder.DT.Adoulin.Charge.Mighty.AM = {}
 
 	sets.engaged.Bravura.MDT.Mighty = {}
 	sets.engaged.Bravura.SomeAcc.MDT.Mighty = {}
@@ -2167,53 +2256,53 @@ end
 	sets.engaged.Ragnarok.FullAcc.Adoulin.Charge.AM = {}
 	sets.engaged.Ragnarok.Fodder.Adoulin.Charge.AM = {}
 
-	sets.engaged.Ragnarok.PDT = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT = {}
-	sets.engaged.Ragnarok.Acc.PDT = {}
-	sets.engaged.Ragnarok.FullAcc.PDT = {}
-	sets.engaged.Ragnarok.Fodder.PDT = {}
+	sets.engaged.Ragnarok.DT = {}
+	sets.engaged.Ragnarok.SomeAcc.DT = {}
+	sets.engaged.Ragnarok.Acc.DT = {}
+	sets.engaged.Ragnarok.FullAcc.DT = {}
+	sets.engaged.Ragnarok.Fodder.DT = {}
 	
-	sets.engaged.Ragnarok.PDT.Adoulin = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Adoulin = {}
-	sets.engaged.Ragnarok.Acc.PDT.Adoulin = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Adoulin = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Adoulin = {}
+	sets.engaged.Ragnarok.DT.Adoulin = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Adoulin = {}
+	sets.engaged.Ragnarok.Acc.DT.Adoulin = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Adoulin = {}
+	sets.engaged.Ragnarok.Fodder.DT.Adoulin = {}
 	
-	sets.engaged.Ragnarok.PDT.AM = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.AM = {}
-	sets.engaged.Ragnarok.Acc.PDT.AM = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.AM = {}
-	sets.engaged.Ragnarok.Fodder.PDT.AM = {}
+	sets.engaged.Ragnarok.DT.AM = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.AM = {}
+	sets.engaged.Ragnarok.Acc.DT.AM = {}
+	sets.engaged.Ragnarok.FullAcc.DT.AM = {}
+	sets.engaged.Ragnarok.Fodder.DT.AM = {}
 	
-	sets.engaged.Ragnarok.PDT.Adoulin.AM = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Adoulin.AM = {}
-	sets.engaged.Ragnarok.Acc.PDT.Adoulin.AM = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Adoulin.AM = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Adoulin.AM = {}
+	sets.engaged.Ragnarok.DT.Adoulin.AM = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Adoulin.AM = {}
+	sets.engaged.Ragnarok.Acc.DT.Adoulin.AM = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Adoulin.AM = {}
+	sets.engaged.Ragnarok.Fodder.DT.Adoulin.AM = {}
 	
-	sets.engaged.Ragnarok.PDT.Charge = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Charge = {}
-	sets.engaged.Ragnarok.Acc.PDT.Charge = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Charge = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Charge = {}
+	sets.engaged.Ragnarok.DT.Charge = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Charge = {}
+	sets.engaged.Ragnarok.Acc.DT.Charge = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Charge = {}
+	sets.engaged.Ragnarok.Fodder.DT.Charge = {}
 	
-	sets.engaged.Ragnarok.PDT.Adoulin.Charge = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Adoulin.Charge = {}
-	sets.engaged.Ragnarok.Acc.PDT.Adoulin.Charge = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Adoulin.Charge = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Adoulin.Charge = {}
+	sets.engaged.Ragnarok.DT.Adoulin.Charge = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Adoulin.Charge = {}
+	sets.engaged.Ragnarok.Acc.DT.Adoulin.Charge = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Adoulin.Charge = {}
+	sets.engaged.Ragnarok.Fodder.DT.Adoulin.Charge = {}
 	
-	sets.engaged.Ragnarok.PDT.Charge.AM = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Charge.AM = {}
-	sets.engaged.Ragnarok.Acc.PDT.Charge.AM = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Charge.AM = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Charge.AM = {}
+	sets.engaged.Ragnarok.DT.Charge.AM = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Charge.AM = {}
+	sets.engaged.Ragnarok.Acc.DT.Charge.AM = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Charge.AM = {}
+	sets.engaged.Ragnarok.Fodder.DT.Charge.AM = {}
 	
-	sets.engaged.Ragnarok.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Ragnarok.Acc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Adoulin.Charge.AM = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Adoulin.Charge.AM = {}
+	sets.engaged.Ragnarok.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Ragnarok.Acc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Adoulin.Charge.AM = {}
+	sets.engaged.Ragnarok.Fodder.DT.Adoulin.Charge.AM = {}
 
 	sets.engaged.Ragnarok.MDT = {}
 	sets.engaged.Ragnarok.SomeAcc.MDT = {}
@@ -2311,53 +2400,53 @@ end
 	sets.engaged.Ragnarok.FullAcc.Adoulin.Charge.Mighty.AM = {}
 	sets.engaged.Ragnarok.Fodder.Adoulin.Charge.Mighty.AM = {}
 
-	sets.engaged.Ragnarok.PDT.Mighty = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Mighty = {}
-	sets.engaged.Ragnarok.Acc.PDT.Mighty = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Mighty = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Mighty = {}
+	sets.engaged.Ragnarok.DT.Mighty = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Mighty = {}
+	sets.engaged.Ragnarok.Acc.DT.Mighty = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Mighty = {}
+	sets.engaged.Ragnarok.Fodder.DT.Mighty = {}
 	
-	sets.engaged.Ragnarok.PDT.Adoulin.Mighty = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Ragnarok.Acc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Adoulin.Mighty = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Adoulin.Mighty = {}
+	sets.engaged.Ragnarok.DT.Adoulin.Mighty = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Adoulin.Mighty = {}
+	sets.engaged.Ragnarok.Acc.DT.Adoulin.Mighty = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Adoulin.Mighty = {}
+	sets.engaged.Ragnarok.Fodder.DT.Adoulin.Mighty = {}
 	
-	sets.engaged.Ragnarok.PDT.Mighty.AM = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Mighty.AM = {}
-	sets.engaged.Ragnarok.Acc.PDT.Mighty.AM = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Mighty.AM = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Mighty.AM = {}
+	sets.engaged.Ragnarok.DT.Mighty.AM = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Mighty.AM = {}
+	sets.engaged.Ragnarok.Acc.DT.Mighty.AM = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Mighty.AM = {}
+	sets.engaged.Ragnarok.Fodder.DT.Mighty.AM = {}
 	
-	sets.engaged.Ragnarok.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Ragnarok.Acc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Adoulin.Mighty.AM = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Adoulin.Mighty.AM = {}
+	sets.engaged.Ragnarok.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Ragnarok.Acc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Adoulin.Mighty.AM = {}
+	sets.engaged.Ragnarok.Fodder.DT.Adoulin.Mighty.AM = {}
 	
-	sets.engaged.Ragnarok.PDT.Charge.Mighty = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Charge.Mighty = {}
-	sets.engaged.Ragnarok.Acc.PDT.Charge.Mighty = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Charge.Mighty = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Charge.Mighty = {}
+	sets.engaged.Ragnarok.DT.Charge.Mighty = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Charge.Mighty = {}
+	sets.engaged.Ragnarok.Acc.DT.Charge.Mighty = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Charge.Mighty = {}
+	sets.engaged.Ragnarok.Fodder.DT.Charge.Mighty = {}
 	
-	sets.engaged.Ragnarok.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Ragnarok.Acc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Adoulin.Charge.Mighty = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Ragnarok.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Ragnarok.Acc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Adoulin.Charge.Mighty = {}
+	sets.engaged.Ragnarok.Fodder.DT.Adoulin.Charge.Mighty = {}
 	
-	sets.engaged.Ragnarok.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Ragnarok.Acc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Charge.Mighty.AM = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.DT.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.Acc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.Fodder.DT.Charge.Mighty.AM = {}
 	
-	sets.engaged.Ragnarok.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Ragnarok.SomeAcc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Ragnarok.Acc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Ragnarok.FullAcc.PDT.Adoulin.Charge.Mighty.AM = {}
-	sets.engaged.Ragnarok.Fodder.PDT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.SomeAcc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.Acc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.FullAcc.DT.Adoulin.Charge.Mighty.AM = {}
+	sets.engaged.Ragnarok.Fodder.DT.Adoulin.Charge.Mighty.AM = {}
 
 	sets.engaged.Ragnarok.MDT.Mighty = {}
 	sets.engaged.Ragnarok.SomeAcc.MDT.Mighty = {}

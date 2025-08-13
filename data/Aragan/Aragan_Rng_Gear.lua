@@ -13,13 +13,13 @@ keyboard binds and chat
 -- Setup vars that are user-dependent.  Can override this function in a sidecar file.
 function user_job_setup()
 	state.OffenseMode:options('Normal','Acc', 'DA', 'STP', 'Ranged')
-	state.HybridMode:options( 'PDT','Normal')
+	state.HybridMode:options( 'DT','Normal')
 	state.RangedMode:options('Normal', 'SubtleBlow', 'Acc', 'DA', 'STP', 'Ranged')
 	state.WeaponskillMode:options('Match', 'PDL', 'SC')
-    state.PhysicalDefenseMode:options('PDT', 'Evasion')
+    state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP')
     state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-    state.IdleMode:options('Normal', 'PDH', 'PDT', 'EnemyCritRate', 'Resist', 'Regen', 'Regain', 'Refresh', 'Enmity')
+    state.IdleMode:options('Normal', 'PDH', 'PDT', 'HP','Evasion', 'EnemyCritRate', 'Resist', 'Regen', 'Regain', 'Refresh', 'Enmity')
 	
 	state.Weapons:options('Default','None', 'SWORDS', 'DAGGERS', 'AXE','DualWeapons','DualSavageWeapons','DualEviscerationWeapons','DualMagicWeapons','DualMalevolence')
 	state.Weapongun = M{['description']='Weapon Set', 'normal', 'Holliday', 'Hangaku', 'Fomalhaut', 'Earp','Ullr'}
@@ -82,7 +82,9 @@ function user_job_setup()
 	send_command('bind @` gs c cycle SkillchainMode')
 	send_command('bind !0 gs c weapons MagicWeapons;gs c update')
 	send_command('bind ^0 gs c weapons SingleWeapon;gs c update')
-	send_command('bind f2 gs c toggle RngHelper')
+	send_command('bind f3 gs c toggle RngHelper')
+	send_command('bind f2 gs c toggle AutoBuffMode')
+
     send_command('bind f1 gs c cycle HippoMode')
     send_command('bind f7 gs c cycle Weapongun')
     send_command('bind !f7 gs c cycleback Weapongun')
@@ -602,7 +604,20 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ring="Defending Ring",
 		back="Moonlight Cape",
 	}
-
+	sets.defense.HP =  {
+        head="Genmei Kabuto",
+        body="Adamantite Armor",
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
+        neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+        waist="Plat. Mog. Belt",
+        left_ear="Tuisto Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+		left_ring="Eihwaz Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+    }
 	sets.defense.MDT = {
         head="Malignance Chapeau",
         body="Malignance Tabard",
@@ -636,7 +651,23 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
 		back="Moonlight Cape",
 	}
-		
+	sets.idle.HP = sets.defense.HP
+      
+	sets.idle.Evasion = {
+		head={ name="Nyame Helm", augments={'Path: B',}},
+		body={ name="Nyame Mail", augments={'Path: B',}},
+		hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+		legs={ name="Nyame Flanchard", augments={'Path: B',}},
+		feet={ name="Nyame Sollerets", augments={'Path: B',}},
+		neck={ name="Bathy Choker +1", augments={'Path: A',}},
+		waist="Null Belt",
+		left_ear="Infused Earring",
+		right_ear="Eabani Earring",
+		left_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+		right_ring="Vengeful Ring",
+		back="Null Shawl",
+	}
+
     sets.Kiting = {legs="Carmine Cuisses +1"}
 	sets.DayIdle = {}
 	sets.NightIdle = {}
@@ -783,7 +814,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		left_ring="Defending Ring",
 	}
 	   
-	sets.engaged.PDT = set_combine(sets.engaged,{
+	sets.engaged.DT = set_combine(sets.engaged,{
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -792,7 +823,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
 	})
-	sets.engaged.Acc.PDT = set_combine(sets.engaged.Acc,{
+	sets.engaged.Acc.DT = set_combine(sets.engaged.Acc,{
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -801,7 +832,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
 	})
-	sets.engaged.CRIT.PDT = set_combine(sets.engaged.CRIT,{
+	sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT,{
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -810,7 +841,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
 	})
-	sets.engaged.Ranged.PDT = set_combine(sets.Ranged,{    
+	sets.engaged.Ranged.DT = set_combine(sets.Ranged,{    
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -819,7 +850,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
 	})
-	sets.engaged.STP.PDT = set_combine(sets.engaged.STP,{
+	sets.engaged.STP.DT = set_combine(sets.engaged.STP,{
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -828,7 +859,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		neck={ name="Loricate Torque +1", augments={'Path: A',}},
 		left_ring="Defending Ring",
 	})
-	sets.engaged.DW.PDT = set_combine(sets.engaged.DW, {
+	sets.engaged.DW.DT = set_combine(sets.engaged.DW, {
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -838,7 +869,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		waist="Reiki Yotai",
 		left_ring="Defending Ring",
 	})
-	sets.engaged.DW.Acc.PDT = set_combine(sets.engaged.DW.Acc,{
+	sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc,{
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -849,7 +880,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		waist="Reiki Yotai",
 		left_ring="Defending Ring",
 	})
-	sets.engaged.DW.CRIT.PDT = set_combine(sets.engaged.DW.CRIT,{
+	sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT,{
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -860,7 +891,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		waist="Reiki Yotai",
 		left_ring="Defending Ring",
 	})
-	sets.engaged.DW.Ranged.PDT = set_combine(sets.engaged.DW.Ranged,{    
+	sets.engaged.DW.Ranged.DT = set_combine(sets.engaged.DW.Ranged,{    
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -870,7 +901,7 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 		left_ring="Defending Ring",
 	})
 	
-	sets.engaged.DW.STP.PDT = set_combine(sets.engaged.DW.STP,{
+	sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP,{
 		head="Malignance Chapeau",
 		body="Malignance Tabard",
 		hands="Malignance Gloves",
@@ -893,7 +924,7 @@ end
 
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -903,7 +934,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 end
 
@@ -946,7 +977,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then

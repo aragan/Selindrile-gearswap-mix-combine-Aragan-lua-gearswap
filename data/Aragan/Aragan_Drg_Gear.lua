@@ -23,14 +23,16 @@ function user_job_setup()
 	state.IdleMode:options( 'DT','Normal','Regen', 'HP', 'MDT', 'Evasion', 'EnemyCritRate', 'Regain')
     state.ExtraMeleeMode = M{['description']='Extra Melee Mode','None'}
 	state.Weapons:options('None', 'Naegling', 'Trishula', 'Shining', 'TernionDagger', 'Staff', 'Club', 'DualNaegling', 'DualTernionDagger', 'DualClub')
-	state.Passive = M{['description'] = 'Passive Mode','None','SphereRegain','Twilight','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20', 'SubtleBlow30','SubtleBlow62' , 'Death Spikes'}
+	state.Passive = M{['description'] = 'Passive Mode','None','SphereRegain','Twilight','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20', 'SubtleBlow30','SubtleBlow75','SubtleBlowFULLDT50' , 'Death Spikes'}
 
     select_default_macro_book()
 	
 	-- Additional local binds
-	send_command('bind ^` input /ja "Hasso" <me>')
-	send_command('bind !` input /ja "Seigan" <me>')
+	-- send_command('bind ^` input /ja "Hasso" <me>')
+	-- send_command('bind !` input /ja "Seigan" <me>')
 	send_command('bind ^f11 gs c cycle MagicalDefenseMode')
+    send_command('bind f3 gs c toggle AutoJumpMode')
+
 	send_command('bind @f7 gs c toggle AutoJumpMode')
 	send_command('bind @` gs c cycle SkillchainMode')
     send_command('bind f2 gs c toggle AutoBuffMode')
@@ -617,12 +619,12 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Plat. Mog. Belt",
+        waist="Null Belt",
         right_ear="Infused Earring",
         left_ear="Eabani Earring",
         right_ring="Defending Ring",
         left_ring="Vengeful Ring",
-        back="Moonlight Cape",
+        back="Null Shawl",
     }
 
     sets.defense.Reraise = set_combine(sets.defense.PDT, {
@@ -750,16 +752,35 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     }
-    sets.passive.SubtleBlow62 ={        
+    sets.passive.SubtleBlow75 ={        
+        ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+        head="Volte Tiara",
         body="Dagon Breast.",
         hands="Volte Mittens",
+        legs={ name="Gleti's Breeches", augments={'Path: A',}},
         feet="Volte Spats",
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Sarissapho. Belt",
+        waist={ name="Sailfi Belt +1", augments={'Path: A',}},
         left_ear="Sherida Earring",
-        right_ear="Pel. Earring +1",
+        right_ear={ name="Pel. Earring +1", augments={'System: 1 ID: 1676 Val: 0','Accuracy+11','Mag. Acc.+11','Crit.hit rate+3',}},
         left_ring="Chirich Ring +1",
         right_ring="Niqmaddu Ring",
+        back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
+    }
+    sets.passive.SubtleBlowFULLDT50 ={        
+        ammo="Staunch Tathlum +1",
+        head={ name="Loess Barbuta +1", augments={'Path: A',}},
+        body="Dagon Breast.",
+        hands="Volte Mittens",
+        legs={ name="Gleti's Breeches", augments={'Path: A',}},
+        feet="Volte Spats",
+        neck={ name="Loricate Torque +1", augments={'Path: A',}},
+        waist="Tempus Fugit +1",
+        left_ear="Sherida Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Chirich Ring +1",
+        right_ring="Niqmaddu Ring",
+        back={ name="Brigantia's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
     sets.passive.MDT = {
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
@@ -1114,7 +1135,7 @@ end
 
 function user_job_lockstyle()
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
-        windower.chat.input('/lockstyleset 151')
+        windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
         windower.chat.input('/lockstyleset 164')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 10 then --Great Katana in main hand.
@@ -1124,7 +1145,7 @@ function user_job_lockstyle()
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 4 then --Great Sword in main hand.
         windower.chat.input('/lockstyleset 165')
     else
-        windower.chat.input('/lockstyleset 151') --Catchall
+        windower.chat.input('/lockstyleset 152') --Catchall
     end
 end
 

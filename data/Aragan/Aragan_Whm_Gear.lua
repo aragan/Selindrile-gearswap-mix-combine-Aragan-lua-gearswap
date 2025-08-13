@@ -22,7 +22,7 @@ keyboard binds and chat
 -- Setup vars that are user-dependent.  Can override this in a sidecar file.
 function user_job_setup()
     state.OffenseMode:options('Normal','STP', 'Acc','CRIT', 'Enspell', 'SubtleBlow')
-    state.HybridMode:options('Normal', 'DT50','DT30')
+    state.HybridMode:options('Normal', 'DT','DT25')
     state.CastingMode:options('Duration', 'Normal','DT', 'ConserveMP', 'SIRD', 'Enmity')
     state.Passive:options('None','EnemyCritRate','DTCure','Resist','Refresh')
     state.IdleMode:options( 'DT','Normal','Empy','PDT', 'MDT', 'HP', 'Evasion', 'MP', 'Refresh', 'Sphere')
@@ -30,7 +30,7 @@ function user_job_setup()
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
 	state.WeaponskillMode:options('Match', 'PDL')
-	state.AutoBuffMode:options('Off','Auto') --,,'Melee','Fullbuff''Off','Off','Off','Off','Off',
+	state.AutoBuffMode:options('Off','Auto','Melee','Fullbuff','Sortie') --,,'Melee','Fullbuff''Off','Off','Off','Off','Off',
     state.ShieldMode:options('Normal','Genmei','Ammurapi')
 	state.Weapons:options('None','Maxentius','Queller','Daybreak','Staff','Xoanon','DualDaybreak','DualMaxentius')
 	-- state.AutoTrustMode:options('Off','Auto','Cleave','Buff','Defend') --,'Vagary','Off','Off','Off','Off',
@@ -480,7 +480,7 @@ function init_gear_sets()
     }
 	sets.midcast.Teleport = sets.ConserveMP
 	
-    sets.midcast.FastRecast = {}
+    sets.midcast.FastRecast = sets.midcast.SIRD
 		
     -- Cure sets
 
@@ -1079,12 +1079,12 @@ function init_gear_sets()
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
-        waist="Svelt. Gouriz +1",
+        waist="Null Belt",
         left_ear="Infused Earring",
         right_ear="Eabani Earring",
         left_ring="Defending Ring",
         right_ring="Vengeful Ring",
-        back="Alaunus's Cape",
+        back="Null Shawl",
     }
     sets.defense.DT = {
         ammo="Eluder's Sachet",
@@ -1112,7 +1112,7 @@ function init_gear_sets()
         waist="Plat. Mog. Belt",
         left_ear="Tuisto Earring",
         right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        left_ring="Ilabrat Ring",
+        left_ring="Eihwaz Ring",
         right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
         back="Moonlight Cape",
     }
@@ -1350,7 +1350,7 @@ function init_gear_sets()
 
 -- dt -50%
 
-sets.engaged.Hybrid50 = {
+sets.engaged.Hybrid = {
     ammo="Crepuscular Pebble",
     head="Null Masque",
     body={ name="Nyame Mail", augments={'Path: B',}},
@@ -1360,51 +1360,51 @@ sets.engaged.Hybrid50 = {
     right_ring="Defending Ring",
 }
 
-sets.engaged.DT50 = set_combine(sets.engaged, sets.engaged.Hybrid50,{})
-sets.engaged.Acc.DT50 = set_combine(sets.engaged.Acc, sets.engaged.Hybrid50,{
+sets.engaged.DT = set_combine(sets.engaged, sets.engaged.Hybrid,{})
+sets.engaged.Acc.DT = set_combine(sets.engaged.Acc, sets.engaged.Hybrid,{
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
-sets.engaged.STP.DT50 = set_combine(sets.engaged.STP, sets.engaged.Hybrid50,{})
-sets.engaged.CRIT.DT50 = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid50,{  
+sets.engaged.STP.DT = set_combine(sets.engaged.STP, sets.engaged.Hybrid,{})
+sets.engaged.CRIT.DT = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid,{  
     neck="Nefarious Collar +1",
 
 })
-sets.engaged.SubtleBlow.DT50 = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid50,{  
+sets.engaged.SubtleBlow.DT = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid,{  
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
     left_ear="Digni. Earring",
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
-sets.engaged.Enspell.DT50 = set_combine(sets.engaged.Enspell, sets.engaged.Hybrid50,{  
+sets.engaged.Enspell.DT = set_combine(sets.engaged.Enspell, sets.engaged.Hybrid,{  
 	head="Umuthi Hat",
     hands="Aya. Manopolas +2",
     waist="Orpheus's Sash",
 })
 
 
---dt -30%
+--dt -25%
 
-sets.engaged.Hybrid30 = {
+sets.engaged.Hybrid25 = {
     head="Aya. Zucchetto +2",
     body="Ayanmo Corazza +2",
     hands={ name="Bunzi's Gloves", augments={'Path: A',}},
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
 }
 
-sets.engaged.DT30 = set_combine(sets.engaged, sets.engaged.Hybrid30,{})
-sets.engaged.Acc.DT30 = set_combine(sets.engaged.Acc, sets.engaged.Hybrid30,{})
-sets.engaged.STP.DT30 = set_combine(sets.engaged.STP, sets.engaged.Hybrid30,{})
-sets.engaged.CRIT.DT30 = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid30,{  
+sets.engaged.DT25 = set_combine(sets.engaged, sets.engaged.Hybrid25,{})
+sets.engaged.Acc.DT25 = set_combine(sets.engaged.Acc, sets.engaged.Hybrid25,{})
+sets.engaged.STP.DT25 = set_combine(sets.engaged.STP, sets.engaged.Hybrid25,{})
+sets.engaged.CRIT.DT25 = set_combine(sets.engaged.CRIT, sets.engaged.Hybrid25,{  
     neck="Nefarious Collar +1",
 })
-sets.engaged.SubtleBlow.DT30 = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid30,{  
+sets.engaged.SubtleBlow.DT25 = set_combine(sets.engaged.SubtleBlow, sets.engaged.Hybrid25,{  
     neck={ name="Bathy Choker +1", augments={'Path: A',}},
     left_ear="Digni. Earring",
     left_ring="Chirich Ring +1",
     right_ring="Chirich Ring +1",
 })
-sets.engaged.Enspell.DT30 = set_combine(sets.engaged.Enspell, sets.engaged.Hybrid30,{  
+sets.engaged.Enspell.DT25 = set_combine(sets.engaged.Enspell, sets.engaged.Hybrid25,{  
 	head="Umuthi Hat",
     hands="Aya. Manopolas +2",
     waist="Orpheus's Sash",
@@ -1445,16 +1445,16 @@ sets.engaged.Enspell.DT30 = set_combine(sets.engaged.Enspell, sets.engaged.Hybri
 
 -- DW dt -50%
 
-     sets.engaged.DW.DT50 = set_combine(sets.engaged.DW, sets.Hybrid50)
-     sets.engaged.DW.Acc.DT50 = set_combine(sets.engaged.DW.Acc, sets.Hybrid50)
-     sets.engaged.DW.STP.DT50 = set_combine(sets.engaged.DW.STP, sets.Hybrid50)
-     sets.engaged.DW.CRIT.DT50 = set_combine(sets.engaged.DW.CRIT, sets.Hybrid50,{  
+     sets.engaged.DW.DT = set_combine(sets.engaged.DW, sets.Hybrid)
+     sets.engaged.DW.Acc.DT = set_combine(sets.engaged.DW.Acc, sets.Hybrid)
+     sets.engaged.DW.STP.DT = set_combine(sets.engaged.DW.STP, sets.Hybrid)
+     sets.engaged.DW.CRIT.DT = set_combine(sets.engaged.DW.CRIT, sets.Hybrid,{  
         neck="Nefarious Collar +1",})
-     sets.engaged.DW.Enspell.DT30 = set_combine(sets.engaged.DW.Enspell, sets.engaged.Hybrid50,{  
+     sets.engaged.DW.Enspell.DT25 = set_combine(sets.engaged.DW.Enspell, sets.engaged.Hybrid25,{  
         head="Umuthi Hat",
         hands="Aya. Manopolas +2",
         waist="Orpheus's Sash",})    
-     sets.engaged.DW.SubtleBlow.DT50 = set_combine(sets.engaged.DW.SubtleBlow, sets.Hybrid50,{  
+     sets.engaged.DW.SubtleBlow.DT = set_combine(sets.engaged.DW.SubtleBlow, sets.Hybrid,{  
         neck={ name="Bathy Choker +1", augments={'Path: A',}},
         left_ear="Digni. Earring",
         left_ring="Chirich Ring +1",
@@ -1462,18 +1462,18 @@ sets.engaged.Enspell.DT30 = set_combine(sets.engaged.Enspell, sets.engaged.Hybri
     })
 
 
--- DW dt -30%
+-- DW dt -25%
 
-sets.engaged.DW.DT30 = set_combine(sets.engaged.DW, sets.Hybrid30)
-sets.engaged.DW.Acc.DT30 = set_combine(sets.engaged.DW.Acc, sets.Hybrid30)
-sets.engaged.DW.STP.DT30 = set_combine(sets.engaged.DW.STP, sets.Hybrid30)
-sets.engaged.DW.CRIT.DT30 = set_combine(sets.engaged.DW.CRIT, sets.Hybrid30,{  
+sets.engaged.DW.DT25 = set_combine(sets.engaged.DW, sets.Hybrid25)
+sets.engaged.DW.Acc.DT25 = set_combine(sets.engaged.DW.Acc, sets.Hybrid25)
+sets.engaged.DW.STP.DT25 = set_combine(sets.engaged.DW.STP, sets.Hybrid25)
+sets.engaged.DW.CRIT.DT25 = set_combine(sets.engaged.DW.CRIT, sets.Hybrid25,{  
    neck="Nefarious Collar +1",})
-sets.engaged.DW.Enspell.DT30 = set_combine(sets.engaged.DW.Enspell, sets.engaged.Hybrid30,{  
+sets.engaged.DW.Enspell.DT25 = set_combine(sets.engaged.DW.Enspell, sets.engaged.Hybrid25,{  
    head="Umuthi Hat",
    hands="Aya. Manopolas +2",
    waist="Orpheus's Sash",})    
-sets.engaged.DW.SubtleBlow.DT30 = set_combine(sets.engaged.DW.SubtleBlow, sets.Hybrid50,{  
+sets.engaged.DW.SubtleBlow.DT25 = set_combine(sets.engaged.DW.SubtleBlow, sets.Hybrid25,{  
    neck={ name="Bathy Choker +1", augments={'Path: A',}},
    left_ear="Digni. Earring",
    left_ring="Chirich Ring +1",
@@ -1582,7 +1582,7 @@ function buff_change(buff, gain)
     }
 
     -- Check for specific buffs and their flags
-    if buff_messages[buff] then
+    if buff_messages[buff] and player.status ~= 'Dead' then
         if gain and buff_messages[buff].announce_gain then
             local gain_message = buff_messages[buff].gain
             if gain_message then
