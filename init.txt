@@ -1,12 +1,14 @@
 keyboard_allowmmf 1
 
 //Set console variables
+console_log 1
 console_position 15 50
 console_color 255 255 0 0
 console_displayactivity 1
 console_fadedelay 3500
 console_chatopen 1
 console_screendir screenshots
+console_load Guildwork
 
 //Set game variables
 game_forceambientlight 1
@@ -93,6 +95,7 @@ bind %h input /lockon;
 
 //Other addons I found that are quite good
 //lua load Gaze_check
+gzc auto_gaze
 //lua load SellNPC
 //lua load QuietSparks
 //lua load DistanceTParty
@@ -141,7 +144,7 @@ alias asets azuresets setlist
 alias attack input /attack
 alias dummy gs c cycle ExtraSongsMode
 alias dummysong gs c cycle ExtraSongsMode;herbpastoral me
-alias geo gs c toggle AutoBuffMode;gs c update user
+alias geom gs c toggle AutoBuffMode;gs c update user
 //alias ffxicalc run -runonce "D:/Games/FFXI Tools/FFXI Calculator/FFXICalculator.exe"
 //alias calculator run -runonce "C:/Windows/system32/calc.exe"
 //alias calc run -runonce "C:/Windows/system32/calc.exe"
@@ -224,6 +227,8 @@ alias cobra gs c useitem main Cobra Staff
 alias ram gs c useitem main Ram Staff
 alias republic gs c useitem main Republic Staff
 
+alias warpring input /equip "R.ring" "Warp Ring"; wait 10; input /item "Warp Ring" <me>
+
 --Capacity item binds.
 bind ^@!z get "Mecisto. Mantle" satchel;get "Capacity Ring" satchel;wait 1;get "Trizek Ring" satchel;wait 1;get "Vocation Ring" satchel;wait 1;get "Facility Ring" satchel
 bind ^!z put "Mecisto. Mantle" satchel;put "Capacity Ring" satchel;wait 1;put "Trizek Ring" satchel;wait 1;put "Vocation Ring" satchel;wait 1;put "Facility Ring" satchel;wait 1;put "Guide Beret" satchel
@@ -264,11 +269,18 @@ alias distortion gs c set ElementalMode Ice;gs c elemental skillchain2
 //Gearup Aliases
 
 alias gather gs c naked;gs disable all;wait .5;gs org;wait 3;gs c showset
-//alias gearup gs c naked;gs disable all;wait .5;put * wardrobe4 all;put storage slip* case all;wait 3;gs c showset
+alias gearup gs c naked;gs disable all;wait .5;put * wardrobe4 all;put storage slip* case all;wait 3;gs c showset
 alias geardown gs c naked;gs disable all;wait .5;get * wardrobe4 all; get storage slip* all;wait 3;gs c showset
-//alias porter packer repack
-//alias getslips get storage slip* all
-//alias putslips put storage slip* case all
+
+alias jobchange gs c naked;gs disable all;wait .5;get * wardrobe4 all; get storage slip* all;wait 3;gs c showset
+
+alias porter packer repack
+alias packer packer repack all
+alias getslips get storage slip* all
+alias putslips put storage slip* case all
+
+alias refa input /refa all
+alias tonics tonic buffup
 
 //Blockhelp
 //wait 30;input /blockhelp
@@ -280,7 +292,6 @@ config FrameRateDivisor 1
 //pivot a XiView
 
 // lua load SubTarget
-// lua load targetinfo
 lua load autoenterkey
 lua load autoMB
 lua load schskillchain
@@ -291,7 +302,9 @@ lua load QuestLog
 --lua load OhNoYouDont
 lua load finalAlert
 lua load finalAlert 250 330
-lua load Equipviewer 380 490
+lua load Equipviewer 380 530 -- scale windower 1.6
+// ev pos 380 470 --for screen res 1916 995
+//lua load Equipviewer 380 490
 // lua load Equipviewer 380 500 --for screen res 1920-1080
 // lua load Equipviewer 380 530 --for screen res 1600-1024
 // lua load Equipviewer 380 575
@@ -300,7 +313,7 @@ lua load parse
 // parse show defense
 lua load sparks
 --lua load Furrow
---lua load AutoJoin
+//lua load AutoJoin
 lua load tradenpc
 lua load sellnpc
 lua load anchor
@@ -311,8 +324,9 @@ lua load React
 lua load sheolhelper
 lua load trade
 lua load ShoutAlert
-lua load Sublimator
+--lua load Sublimator
 // lua load Cancel
+
 lua load Facing
 lua load partyhints
 --lua load PartyPets
@@ -321,26 +335,25 @@ lua load PartyBuffs
 --lua load shoutml
 --lua load SortieHUD
 lua load spellSpammer
-// lua load rolltracker
 --lua load fuckoff
 lua load enemybar2
 lua load EasySpells
 // lua load EasyNuke
 --lua load closetCleaner
 lua load chatfilter
---lua load azureSets
---lua load AutoRA
---lua load WS
---lua load KU
+//lua load azureSets
+//lua load AutoRA
+//lua load WS
+//lua load KU
 --lua load sc
 --lua load mob
 lua load DParty
 lua load SirPopaLot
---lua load smarttarget
+lua load smarttarget
+smrt off
 lua load AuctionHelper
 lua load whereisdi
---lua load findall
-lua load TargetBar
+//lua load findall
 lua load ATA
 lua load Eneresist
 lua load PetCharges
@@ -349,15 +362,60 @@ lua load blupldsets
 lua load AutoBuffBard
 lua load Gaze_check
 lua load callouts
+//co chatmode party
 lua load DropStop
 lua load GPS
-lua load autows
-// aws use Savage Blade
+lua load runewidget
+lua load autoitem
+//lua load staggertrack
+//lua load StatueStatus
+lua load help
+
+lua load roller
+lua load VanaFacts
+lua load PorterPacker
+lua load Cards
+lua load SortieJobs
+lua load collector
+lua load  GaolPlan
+lua load  BST-HUD
+lua load TargetBar
+lua load invtracker
+lua load invspace
+lua load metronome
+lua load fuckoff
+lua load autosc
+lua load skillchainer
+skillchainer paused
+//lua load PacketStun
+//lua load tonic
+lua load ambuloot
+lua load infohud
+lua load Silmaril
+//lua load nameless
+//lua load rtfm
+//lua load Commandcuts
+// lua load diagnostics
+
+-- addon work it for nm farm trial ph scan placeholder nm just 
+
+//lua load VoidWalker
+//lua load targetinfo --mob IDs for NM placeholders
+//lua load allseeingeye
+//lua load scanner -- useage://autoscan //scanner autotrack --//scanner scan
+//lua load scanzone -- useage: //scanzone find name
+//lua load widescantool -- useage:wst rga <name or pattern>: Remove Global Alert
+
+ept hide
+// aws use Savage Blade -- //aws set Savage Blade -- to add ws to addon autows
 
 wait 60
 lua load GearInfo
 lua load ShoutAlert
+// lua load autoNukes
+lua load autows
+lua load autosc
 
-lua l XIPivot
+// lua l XIPivot
 // gi show logo
-
+// (Aragan)
