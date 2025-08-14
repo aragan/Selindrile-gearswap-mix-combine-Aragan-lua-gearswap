@@ -95,7 +95,7 @@ state.SelectNPCTargets    = M(false, 'Select NPC Targets')
 state.PCTargetMode        = M{['description'] = 'PC Target Mode', 'default', 'stpt', 'stal', 'stpc'}
 state.SubtleBlowMode      = M(false, 'SubtleBlow Mode') 
 state.AutoOtherTargetWS   = M(false, 'AutoOtherTargetWS')
-state.TargetMode        = M(true, 'TargetMode')
+state.TargetMode        = M(false, 'TargetMode')
 -- state.Abyssea = M{['description']='Abyssea','Ulhuadshi','Chloris','Dragua','Bukhis'} 
 state.AutoLoggerMode = M(false, 'AutoLoggerMode')
 state.Songset = M{['description']='Songset','mboze', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
@@ -311,6 +311,9 @@ function global_on_load()
 	send_command('bind @2 gs c buffup;gs c input /p buffup")') --Buffup macro because buffs are love.
 	send_command('bind @3 gs c cycle RecoverMode')
 	send_command('bind @5 gs c toggle AutoFoodMode')
+	send_command('bind @7 gs c toggle TargetMode')
+
+	
 	send_command('bind !w gs c toggle WeaponLock')
 	send_command('bind !f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind !7 gs c toggle AutoAcceptRaiseMode')
@@ -334,7 +337,7 @@ function global_on_load()
 	send_command('bind ^[ get storage slip* all;wait 1;lua r PorterPacker;wait 1;po p a ') -- new version PorterPacker Porter used trade storage slip* all to porter
 
 	send_command('bind !m gs c toggle AutoMedicineMode') --use medicine if i have debuff
-	send_command('bind !n gs c toggle AutoReraiseMode') -- equip zombie set autoreraise if u in jobs sam pld war bst drk drg
+	-- send_command('bind !n gs c toggle AutoReraiseMode') -- equip zombie set autoreraise if u in jobs sam pld war bst drk drg
 
 	--send_command('bind @m gs c mount Raptor')
 
@@ -518,8 +521,22 @@ function global_unload()
 	send_command('unbind ^m')
 	send_command('unbind ^backspace')
 	send_command('unbind !n')
+	send_command('unbind !;')
+	send_command('unbind ^;')
+	send_command('unbind !`')
+	send_command('unbind @`')
+	send_command('unbind !q')
+	send_command('unbind @^`')
+	send_command('unbind !pause')
+	send_command('unbind @^`')
+	send_command('unbind ^\\\\')
+	send_command('unbind @\\\\')
+	send_command('unbind !\\\\')
+	send_command('unbind ')
+	send_command('unbind ')
 
 	
+
 	send_command('lua u Singer')--Turns addon off if job non brd.
 	send_command('lua u PLD-HUD')--Turns addon off if job non pld.
 	send_command('lua u DNC-hud')--Turns addon off if job non dnc.
@@ -632,7 +649,19 @@ function getAngle(index)
     return math.floor(angleInDegrees * mult + 0.5) / mult
 end
 
+function user_pretarget(spell, spellMap, eventArgs)
+    if state.TargetMode.value and spell.type == "WeaponSkill" and spell.targets.Enemy then
+		if spell.target.raw == '<t>' and spell.target.type == 'MONSTER' then
+			change_target('<stnpc>')
+			eventArgs.cancel = true
 
+			windower.chat.input('/ma "'..spell.name..'" <stnpc>')
+            tickdelay = os.clock() + 1.1
+
+			return
+		end
+    end
+end
 -- Global intercept on precast.
 function user_precast(spell, action, spellMap, eventArgs)
 	-- default_pretarget(spell, spellMap)

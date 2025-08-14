@@ -36,6 +36,7 @@ function user_job_setup()
 	send_command('bind @f7 gs c toggle AutoJumpMode')
 	send_command('bind @` gs c cycle SkillchainMode')
     send_command('bind f2 gs c toggle AutoBuffMode')
+	send_command('bind !n gs c toggle AutoReraiseMode')
 
 end
 

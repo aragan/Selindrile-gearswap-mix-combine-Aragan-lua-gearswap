@@ -26,7 +26,7 @@ function user_job_setup()
     state.HybridMode:options('Tank','Normal','DT')
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'Acc','Enmity')
     state.CastingMode:options('Duration','Normal','SIRD', 'DT', 'ConserveMP','Enmity')
-	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation','Resist','SphereRegain')
+	state.Passive:options('None','AbsorbMP','EnemyCritRate','ReverenceGauntlets','EnemyTPaccumulation','Resist','SphereRegain','kalunga')
     state.PhysicalDefenseMode:options('PDT', 'PD', 'Convert', 'Block', 'HP','Aminon', 'Enmity' ,'Enmitymax','Turtle','ResistCharm')
     state.MagicalDefenseMode:options('MDT','MDT_HP','MDT_Reraise')
 	state.ResistDefenseMode:options('MEVA','MEVA_HP')
@@ -63,6 +63,7 @@ function user_job_setup()
     send_command('bind f11 gs c cycle CastingMode')
     send_command('bind !f11 gs c set DefenseMode Magical')
     send_command('bind @3 gs c cycle passive')
+	send_command('bind !n gs c toggle AutoReraiseMode')
 
 	send_command('bind @s gs c toggle SrodaBelt')
 	send_command('bind f1 gs c cycle HippoMode')
@@ -1113,7 +1114,22 @@ sets.idle.Evasion={
 }
 sets.passive.SphereRegain = {
 	body="Makora Meikogai",
- }
+}
+
+sets.passive.kalunga = {  
+	ammo={ name="Coiste Bodhar", augments={'Path: A',}},
+	head="Chev. Armet +3",
+	body={ name="Sakpata's Plate", augments={'Path: A',}},
+	hands="Chev. Gauntlets +3",
+	legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
+	feet={ name="Sakpata's Leggings", augments={'Path: A',}},
+	neck={ name="Unmoving Collar +1", augments={'Path: A',}},
+	waist="Carrier's Sash",
+	left_ear="Tuisto Earring",
+	right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+	left_ring="Moonlight Ring",
+	right_ring="Chirich Ring +1",
+	back="Rudianos's Mantle",}
  
  ----
 

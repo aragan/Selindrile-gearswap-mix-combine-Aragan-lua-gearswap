@@ -53,6 +53,7 @@ function user_job_setup()
 	-- Set up Reward Modes and keybind Ctrl+Backspace
 	state.RewardMode = M{['description']='Reward Mode', 'Theta', 'Zeta', 'Eta'}
 	send_command('bind ^backspace gs c cycle RewardMode')
+	send_command('bind !n gs c toggle AutoReraiseMode')
 
 	send_command('bind f2 gs c toggle AutoReadyMode')
 	send_command('bind !` gs c ready default')

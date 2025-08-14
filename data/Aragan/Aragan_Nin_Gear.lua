@@ -87,8 +87,13 @@ function user_job_setup()
     DW_needed = 0
     DW = false
     
-local was_chat_open = false
-windower.register_event('prerender', function()
+    local last_check = 0
+    local was_chat_open = false
+    windower.register_event('prerender', function()
+    local curtime = os.clock()
+    if nexttime + delay <= curtime then
+        nexttime = curtime
+        delay = 0.9
     local chat_open = windower.ffxi.get_info().chat_open
     if chat_open and not was_chat_open then
 		send_command('unbind `')
