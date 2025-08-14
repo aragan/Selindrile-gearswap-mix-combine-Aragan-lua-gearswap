@@ -197,16 +197,16 @@ function job_filtered_action(spell, eventArgs)
 end
 
 function job_pretarget(spell, spellMap, eventArgs)
-    if state.TargetMode.value and spell.type == "WeaponSkill" and spell.targets.Enemy then
-		if spell.target.raw == '<t>' and spell.target.type == 'MONSTER' then
-			change_target('<stnpc>')
-			windower.chat.input('/ma "'..spell.name..'" <stnpc>')
-            tickdelay = os.clock() + 1.1
-			eventArgs.cancel = true
+    -- if state.TargetMode.value and spell.type == "WeaponSkill" and spell.targets.Enemy then
+	-- 	if spell.target.raw == '<t>' and spell.target.type == 'MONSTER' then
+	-- 		change_target('<stnpc>')
+	-- 		windower.chat.input('/ma "'..spell.name..'" <stnpc>')
+    --         tickdelay = os.clock() + 1.1
+	-- 		eventArgs.cancel = true
 
-			return
-		end
-    end
+	-- 		return
+	-- 	end
+    -- end
 end
 already_announced_roll = false
 
@@ -627,10 +627,24 @@ function job_customize_idle_set(idleSet)
     else
         enable('neck')
     end
-
-	if buffactive['Tactician\'s Roll'] then 
-        idleSet = set_combine(idleSet, sets.rollerRing)
-    end
+    -- rollinfo = rolls[spell.english]
+    -- local rollNum = act.targets[1].actions[1].param
+    -- if rollinfo == "Tactician's Roll" and rollNum < 11 then
+    --     idleSet = set_combine(idleSet, sets.rollerRing)
+    -- end 
+    -- if buffactive["Tactician's Roll"] then
+    --     local rollinfo = windower.ffxi.get_player().rolls
+    --     if rollinfo and rollinfo['Tactician\'s Roll'] and rollinfo['Tactician\'s Roll'].total > 11 then
+    --         idleSet = set_combine(idleSet, sets.rollerRing)
+    --     end
+    -- end
+    -- local player = windower.ffxi.get_player()
+    -- if player and player.rolls and player.rolls["Tactician's Roll"] then
+    --     local roll = player.rolls["Tactician's Roll"]
+    --     if roll.active and roll.total < 9 then
+    --         idleSet = set_combine(idleSet, sets.rollerRing)
+    --     end
+    -- end
     return idleSet
 end
 -- Modify the default melee set after it was constructed.
