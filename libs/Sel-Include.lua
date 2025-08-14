@@ -117,11 +117,13 @@ function init_include()
 	state.Passive   		  = M{['description'] = 'Passive Mode','None'}
 	state.Kiting              = M(false, 'Kiting')
 	state.SelectNPCTargets    = M(false, 'Select NPC Targets')
+    state.PCTargetMode        = M{['description'] = 'PC Target Mode', 'default', 'stpt', 'stal', 'stpc'}
+
 	state.Capacity 			  = M(false, 'Capacity Mode')
 	state.ReEquip 			  = M(false, 'ReEquip Mode')
 	state.AutoArts	 		  = M(true, 'AutoArts Mode')
 	state.AutoLockstyle	 	  = M(true, 'AutoLockstyle Mode')
-	state.AutoTrustMode 	  = M(false, 'Auto Trust Mode')
+	state.AutoTrustMode = M{['description'] = 'Auto Trust Mode', 'Off','Auto'}
 	state.RngHelper		 	  = M(false, 'RngHelper')
 	state.HoverShot		 	  = M(true, 'HoverShot')
 	state.IdleStep			  = M(true, 'Idle Step Mode')
@@ -157,11 +159,17 @@ function init_include()
 	state.WeaponSets	  	  = M{['description'] = 'Weapon Sets','None'}
 
 	state.AutoEquipBurst      = M(true)
-	state.AutoMedicineMode    = M(true, 'Auto Medicine Mode')
+	state.AutoMedicineMode    = M(false, 'Auto Medicine Mode')
 	state.AutoReraiseeMode    = M(true, 'Auto autoReraise Mode')
     state.HippoMode           = M(false, "HippoMode")
 	state.AutoCureMode        = M(true, 'Auto Cure Mode')
 	state.AutoJumpMode 		  = M(false, 'Auto Jump Mode')
+	state.SubtleBlowMode = M(false, 'SubtleBlow Mode') 
+	state.RP = M(false, "Reinforcement Points Mode")
+	state.NM = M(true, 'NM')
+
+
+    -- state.Abyssea = M{['description']='Abyssea','Ulhuadshi','Chloris','Dragua','Bukhis'} 
 
 	state.AutoBuffMode 		  = M{['description'] = 'Auto Buff Mode','Off','Auto'}
 	state.RuneElement 		  = M{['description'] = 'Rune Element','Ignis','Gelus','Flabra','Tellus','Sulpor','Unda','Lux','Tenebrae'}
@@ -170,7 +178,7 @@ function init_include()
 
 	state.MagicBurstMode 	  = M{['description'] = 'Magic Burst Mode', 'Off', 'Single', 'Lock'}
 	state.SkillchainMode 	  = M{['description'] = 'Skillchain Mode', 'Off', 'Single', 'Lock'}
-	state.PCTargetMode        = M{['description'] = 'PC Target Mode', 'default', 'stpt', 'stal', 'stpc'}
+	state.PCTargetMode        = M{['description'] = 'PC Target Mode', 'default', 'stpt', 'stal', 'stpc','stnpc'}
 	state.EquipStop           = M{['description'] = 'Stop Equipping Gear', 'off', 'precast', 'midcast', 'pet_midcast'}
 	state.CombatWeapon        = M{['description']='Combat Weapon', ['string']=''}
 	state.CombatForm          = M{['description']='Combat Form', ['string']=''}
@@ -255,6 +263,7 @@ function init_include()
 	petWillAct = 0
 	autonuke = 'Fire'
 	autows = ''
+	othertargetws = ''
 	autows_list = {}
 	weapons_pagelist = {}
 	smartws = nil
@@ -515,7 +524,7 @@ function target_change(new)
 	end
 	
 	if user_target_change then
-		if user_job_target_change(target) then return end
+		if user_target_change(target) then return end
 	end
 end
 
@@ -701,7 +710,7 @@ function global_unload()
 	send_command('unbind ^delete')
 	send_command('unbind !delete')
 	send_command('unbind @delete')
-	
+
 	if clear_job_states then
 		clear_job_states()
 	end		
@@ -1026,6 +1035,8 @@ function default_pretarget(spell, spellMap, eventArgs)
 		add_to_chat(123,'Blocking Warp2 on self, use Warp instead or disable the SelfWarp2Block state.')
 		return
 	end
+	--auto_change_target(spell, spellMap)
+
 end
 
 function default_precast(spell, spellMap, eventArgs)
@@ -1516,7 +1527,6 @@ function handle_equipping_gear(playerStatus, petStatus)
     end
 end
 
-
 -- Function to wrap logic for equipping gear on aftercast, status change, or user update.
 -- @param status : The current or new player status that determines what sort of gear to equip.
 function equip_gear_by_status(playerStatus, petStatus)
@@ -1685,8 +1695,8 @@ function get_idle_set(petStatus)
 		elseif state.Weapons.value == 'None' or state.UnlockWeapons.value then
 				idleSet = set_combine(idleSet, sets.IdleWakeUp)
 		elseif state.PWUnlock.value then
-			send_command('@input //gs c set unlockweapons true')
-			windower.chat.input:schedule(3,'//gs c set unlockweapons false')
+			send_command('@gs c set unlockweapons true')
+			windower.send_command:schedule(3,'gs c set unlockweapons false')
 			tickdelay = os.clock() + 1.25
 			idleSet = set_combine(idleSet, sets.IdleWakeUp)
 		end
@@ -1795,8 +1805,8 @@ function get_melee_set()
 		elseif state.Weapons.value == 'None' or state.UnlockWeapons.value then
 			meleeSet = set_combine(meleeSet, sets.buff.Sleep)
 		elseif state.PWUnlock.value then
-			send_command('@input //gs c set unlockweapons true')
-			windower.chat.input:schedule(3,'//gs c set unlockweapons false')
+			send_command('@gs c set unlockweapons true')
+			windower.send_command:schedule(3,'gs c set unlockweapons false')
 			tickdelay = os.clock() + 1.25
 			meleeSet = set_combine(meleeSet, sets.buff.Sleep)
 		end
@@ -1830,8 +1840,10 @@ function get_resting_set()
 
     mote_vars.set_breadcrumbs:append('sets')
     mote_vars.set_breadcrumbs:append('resting')
+	if state.AutoReraiseeMode.value then
+        restingSet = set_combine(restingSet, sets.Reraise)
 
-    if restingSet[state.RestingMode.current] then
+    elseif restingSet[state.RestingMode.current] then
         restingSet = restingSet[state.RestingMode.current]
         mote_vars.set_breadcrumbs:append(state.RestingMode.current)
     end
@@ -1902,6 +1914,23 @@ function get_precast_set(spell, spellMap)
             equipSet = equipSet[state.CastingMode.current]
             mote_vars.set_breadcrumbs:append(state.CastingMode.current)
         end
+		-- if can_dual_wield then
+		-- 	if sets.precast.FC[spell.english] and sets.precast.FC[spell.english][state.CastingMode.current] and sets.precast.FC[spell.english][state.CastingMode.current].DW then
+		-- 		equipSet = set_combine(equipSet, sets.precast.FC[spell.english][state.CastingMode.current].DW)
+		-- 	elseif sets.precast.FC[spell.english] and sets.precast.FC[spell.english].DW then
+		-- 		equipSet = set_combine(equipSet, sets.precast.FC[spell.english].DW)
+		-- 	elseif sets.precast.FC[spellMap] and sets.precast.FC[spellMap][state.CastingMode.current] and sets.precast.FC[spellMap][state.CastingMode.current].DW then
+		-- 		equipSet = set_combine(equipSet, sets.precast.FC[spellMap][state.CastingMode.current].DW)
+		-- 	elseif sets.precast.FC[spellMap] and sets.precast.FC[spellMap].DW then
+		-- 		equipSet = set_combine(equipSet, sets.precast.FC[spellMap].DW)
+		-- 	elseif sets.precast.FC[spell.skill] and sets.precast.FC[spell.skill][state.CastingMode.current] and sets.precast.FC[spell.skill][state.CastingMode.current].DW then
+		-- 		equipSet = set_combine(equipSet, sets.precast.FC[spell.skill][state.CastingMode.current].DW)
+		-- 	elseif sets.precast.FC[spell.skill] and sets.precast.FC[spell.skill].DW then
+		-- 		equipSet = set_combine(equipSet, sets.precast.FC[spell.skill].DW)
+		-- 	elseif sets.precast.FC.DW then
+		-- 		equipSet = set_combine(equipSet, sets.precast.FC.DW)
+		-- 	end
+		-- end
     elseif spell.type == 'WeaponSkill' then
         equipSet = get_weaponskill_set(equipSet, spell, spellMap)
     elseif spell.action_type == 'Ability' then
@@ -2279,6 +2308,10 @@ function sub_job_change(newSubjob, oldSubjob)
         user_job_sub_job_change(newSubjob, oldSubjob)
     end
     
+	if character_user_job_setup then
+		character_user_job_setup(newSubjob, oldSubjob)
+
+	end
     handle_update({'auto'})
 end
 

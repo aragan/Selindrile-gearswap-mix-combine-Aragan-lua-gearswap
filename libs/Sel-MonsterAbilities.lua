@@ -58,7 +58,7 @@ StunAbility = 	  S{"Fulmination","Breakga","Death Scissors","Hell Scissors","Ter
 					"Empty Salvation","Winds of Oblivion","Bewitching Lantern","Quenching Hammer","Dread Spikes","Yama's Judgment",
 					"??? Needles","10000 Needles","4000 Needles","Slimy Proposal","Ruthlessness","Stalking Prey","Level 3 Petrify",
 					"Chymous Reek","Crowning Flatus","Gnash 'n Guttle","Infected Illusion","Dynastic Gravitas","Fulminous Fury","Tartaric Sigil",
-				   "Death Trap","Noiahionto","Infernal Bulwark","Yama's Judgement"
+				   "Death Trap","Noiahionto","Infernal Bulwark","Yama's Judgement","Shah Mat","Tabbiyaa Gambit"
 				   }
 
 --"Raksha: Vengeance","Raksha: Judgment",
@@ -74,7 +74,7 @@ PhysicalAbility = S{"Ripper Fang","Chomp Rush","Scythe Tail","Cyclotail","Delta 
 					"Moonlit Charge","Bone Crunch","Throat Stab","Hell Scissors","Impalement","Deadly Hold","Empty Thrash","View Sync",
 					"Carousel","Vanity Dive","Quadratic Continuum","??? Needles","10000 Needles","4000 Needles","2000 Needles","1000 Needles",
 					"Rhinowrecker","Sub-zero Smash","Benthic Typhoon","Diabolic Claw","Barbed Crescent","Jet Stream","Megalith Throw",
-				   }
+				}
 
 --List of moves to activate magical defense on.
 

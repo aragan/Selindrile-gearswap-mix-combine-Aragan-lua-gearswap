@@ -174,6 +174,8 @@ function update_job_states()
 		LuzafRing = "Luzaf's Ring",
 		AutoDefenseMode = "Auto Defense",
 		AutoTrustMode = "Auto Trust",
+		-- AutoTrustMode = "Auto Trust: "..state.AutoTrustMode.value.."",
+
 		JugMode = "Pet",
 		RewardMode = "Reward",
 		AutoNukeMode = "Auto Nuke: "..autonuke.."",
@@ -219,11 +221,12 @@ function update_job_states()
 		SleepMode = "SleepMode",
 		ShieldMode = "ShieldMode",
 		AutoMedicineMode = "AutoMedicine",
-		AutoReraiseeMode  = "AutoReraisee",
+		AutoReraiseMode  = "AutoReraise",
+		Absorbs = "Absorbs: "..state.Absorbs.value.."",
 
 		ConquerorMode = "Conqueror Mode",
 		BuffWeaponsMode = "Buff Weapons",
-
+		AutoEffusionMode = "Auto Effusion",
     }
 
     stateBox:clear()
@@ -353,6 +356,10 @@ function update_job_states()
 			if state.AutoSambaMode.value ~= 'Off' then
 				stateBox:append(string.format("%sAuto Samba: %s%s    ", clr.w, clr.h, state.AutoSambaMode.value))
 			end
+		elseif n == 'AutoTrustMode' then
+			if state.AutoTrustMode.value ~= 'Off' then
+				stateBox:append(string.format("%sAuto Trust: %s%s    ", clr.w, clr.h, state.AutoTrustMode.value))
+			end
 		elseif n == 'IdleMode' then
 			if state.IdleMode.value ~= 'Normal' and state.DefenseMode.value == 'None' then
 				stateBox:append(string.format("%s%s: ${%s}    ", clr.w, labels[n], n))
@@ -388,6 +395,10 @@ function update_job_states()
 		elseif n == 'RuneElement' then
 				if not state.AutoRuneMode.value and (player.main_job == 'RUN' or player.sub_job == 'RUN') then
 					stateBox:append(string.format("%sRune: %s%s    ", clr.w, clr[data.elements.runes_lookup[state.RuneElement.value]], state.RuneElement.value))
+				end
+		elseif n == 'Absorbs' then
+				if state.Absorbs.value and (player.main_job == 'DRK' or player.sub_job == 'DRK') then
+					stateBox:append(string.format("%sAbsorbs: %s%s   ", clr.w, clr.h, state.Absorbs.value))
 				end
 		elseif n == 'LearningMode' then
 			if state.LearningMode.value and state.DefenseMode.value == 'None' then

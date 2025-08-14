@@ -95,7 +95,7 @@ end
 
 
 function notify_buffs(buff, gain)
-	if state.NotifyBuffs.value and NotifyBuffs:contains(buff) then
+	if state.NotifyBuffs.value and NotifyBuffs:contains(buff) and player.status ~= 'Dead' then
 		if gain then
 			windower.chat.input('/p '..buff:ucfirst()..' on me!')
 		else
@@ -408,6 +408,81 @@ function refine_waltz(spell, spellMap, eventArgs)
         return true
     end
 end
+
+-- Function to allow for automatic adjustment of the spell target type based on preferences.  
+function auto_change_target(spell, spellMap)  
+    -- Don't adjust targetting for explicitly named targets  
+    if not spell.target.raw:startswith('<') then  
+        return  
+    end  
+  
+    -- Do not modify target for spells where we get <lastst> or <me>.  
+    if spell.target.raw == ('<lastst>') or spell.target.raw == ('<me>') then  
+        return  
+    end  
+      
+    -- init a new eventArgs with current values  
+    local eventArgs = {handled = false, PCTargetMode = state.PCTargetMode.value, SelectNPCTargets = state.SelectNPCTargets.value}  
+  
+    -- Allow the job to do custom handling, or override the default values.  
+    -- They can completely handle it, or set one of the secondary eventArgs vars to selectively  
+    -- override the default state vars.  
+    if job_auto_change_target then  
+        job_auto_change_target(spell, action, spellMap, eventArgs)  
+    end  
+      
+    -- If the job handled it, we're done.  
+    if eventArgs.handled then  
+        return  
+    end  
+      
+    local pcTargetMode = eventArgs.PCTargetMode  
+    local selectNPCTargets = eventArgs.SelectNPCTargets  
+  
+      
+    local validPlayers = S{'Self', 'Player', 'Party', 'Ally', 'NPC'}  
+  
+    local intersection = spell.targets * validPlayers  
+    local canUseOnPlayer = not intersection:empty()  
+      
+    local newTarget  
+      
+    -- For spells that we can cast on players:  
+    if canUseOnPlayer and pcTargetMode ~= 'default' then  
+        -- Do not adjust targetting for player-targettable spells where the target was <t>  
+        if spell.target.raw ~= ('<t>') then  
+            if pcTargetMode == 'stal' then  
+                -- Use <stal> if possible, otherwise fall back to <stpt>.  
+                if spell.targets.Ally then  
+                    newTarget = '<stal>'  
+                elseif spell.targets.Party then  
+                    newTarget = '<stpt>'  
+                end  
+            elseif pcTargetMode == 'stpt' then  
+                -- Even ally-possible spells are limited to the current party.  
+                if spell.targets.Ally or spell.targets.Party then  
+                    newTarget = '<stpt>'  
+                end  
+            elseif pcTargetMode == 'stpc' then  
+                -- If it's anything other than a self-only spell, can change to <stpc>.  
+                if spell.targets.Player or spell.targets.Party or spell.targets.Ally or spell.targets.NPC then  
+                    newTarget = '<stpc>'  
+                end  
+            end  
+        end  
+    -- For spells that can be used on enemies:  
+    elseif spell.targets and spell.targets.Enemy and selectNPCTargets then  
+        -- Note: this means macros should be written for <t>, and it will change to <stnpc>  
+        -- if the flag is set.  It won't change <stnpc> back to <t>.  
+        newTarget = '<stnpc>'  
+    end  
+      
+    -- If a new target was selected and is different from the original, call the change function.  
+    if newTarget and newTarget ~= spell.target.raw then  
+        change_target(newTarget)  
+    end  
+end  
+
 
 -------------------------------------------------------------------------------------------------------------------
 -- Environment utility functions.
@@ -983,7 +1058,7 @@ function check_doom(spell, spellMap, eventArgs)
 						windower.chat.input('/item "Echo Drops" <me>')
 						eventArgs.cancel = true
 						return true
-					elseif player.inventory["Remedy"] then
+					elseif player.inventory["Remedy"] or player.satchel['Remedy'] then
 						windower.chat.input('/item "Remedy" <me>')
 						eventArgs.cancel = true
 						return true
@@ -1064,7 +1139,7 @@ function check_silence(spell, spellMap, eventArgs)
 			return true
 		elseif buffactive.silence then
 			if buffactive.paralysis then
-				if player.inventory["Remedy"] then
+				if player.inventory["Remedy"] or player.satchel['Remedy'] then
 					send_command('input /item "Remedy" <me>')
 				elseif player.inventory['Echo Drops'] or player.satchel['Echo Drops'] then
 					send_command('input /item "Echo Drops" <me>')
@@ -1074,7 +1149,7 @@ function check_silence(spell, spellMap, eventArgs)
 			else
 				if player.inventory['Echo Drops'] or player.satchel['Echo Drops'] then
 					send_command('input /item "Echo Drops" <me>')
-				elseif player.inventory["Remedy"] then
+				elseif player.inventory["Remedy"] or player.satchel['Remedy'] then
 					send_command('input /item "Remedy" <me>')
 				else
 					add_to_chat(123,'Abort: You are silenced.')
@@ -1100,7 +1175,7 @@ function silent_check_silence()
 	elseif buffactive.silence then
 			if player.inventory['Echo Drops'] or player.satchel['Echo Drops'] then
 				windower.chat.input('/item "Echo Drops" <me>')
-			elseif player.inventory["Remedy"] then
+			elseif player.inventory["Remedy"] or player.satchel['Remedy'] then
 				windower.chat.input('/item "Remedy" <me>')
 			end
 			tickdelay = os.clock() + 1.5
@@ -1310,11 +1385,11 @@ function check_jump(user)
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		if abil_recasts[158] < latency then
 			windower.chat.input('/ja "Jump" <t>')
-			add_tick_delay()
+            tickdelay = os.clock() + 2.4
 			return true
 		elseif abil_recasts[159] < latency then
 			windower.chat.input('/ja "High Jump" <t>')
-			add_tick_delay()
+            tickdelay = os.clock() + 2.4
 			return true
 		else
 			if user then
@@ -1433,7 +1508,46 @@ function check_cleanup()
 			if player.inventory['Kindred\'s Medal'] then send_command('put "Kindred\'s Medal" sack all') moveditem = true end
 			if player.inventory['Demon\'s Medal'] then send_command('put "Demon\'s Medal" sack all') moveditem = true end
 			if player.inventory['Etched Memory'] then send_command('put "Etched Memory" sack all') moveditem = true end
+			if player.inventory['Crystal Petrifact'] then send_command('put "Crystal Petrifact" sack all') moveditem = true end
+			if player.inventory['Void Crystal'] then send_command('put "Void Crystal" sack all') moveditem = true end
+			if player.inventory['Ra\'Kaz. Starstone'] then send_command('put "Ra\'Kaz. Starstone" sack all') moveditem = true end
+			if player.inventory['Ra\'Kaz. Sapphire'] then send_command('put "Ra\'Kaz. Sapphire" sack all') moveditem = true end
+			if player.inventory['L. Wing Box'] then send_command('put "L. Wing Box" sack all') moveditem = true end
+			if player.inventory['H-P Bayld'] then send_command('put "H-P Bayld" sack all') moveditem = true end
+			if player.inventory['Liminal Residue'] then send_command('put "Liminal Residue" sack all') moveditem = true end
+			if player.inventory['Devious Die'] then send_command('put "Devious Die" sack all') moveditem = true end
+			if player.inventory['Eikondrite'] then send_command('put "Eikondrite" sack all') moveditem = true end
+			if player.inventory['Octahedrite'] then send_command('put "Octahedrite" sack all') moveditem = true end
 
+			
+			if player.inventory['Eschalixir +2'] then send_command('put "Eschalixir +2" sack all') moveditem = true end
+			if player.inventory['Limule Pincer'] then send_command('put "Limule Pincer" sack all') moveditem = true end
+			if player.inventory['Clionid Wing'] then send_command('put "Clionid Wing" sack all') moveditem = true end
+			if player.inventory['Coin of Birth'] then send_command('put "Coin of Birth" sack all') moveditem = true end
+			if player.inventory['Coin of Adv.'] then send_command('put "Coin of Adv." sack all') moveditem = true end
+			if player.inventory['Coin of Glory'] then send_command('put "Coin of Glory" sack all') moveditem = true end
+			if player.inventory['Coin of Decay'] then send_command('put "Coin of Decay" sack all') moveditem = true end
+			if player.inventory['Coin of Ruin'] then send_command('put "Coin of Ruin" sack all') moveditem = true end
+			
+			if player.inventory['Rem\'s Tale Ch.1'] then send_command('put "Rem\'s Tale Ch.1" sack all') moveditem = true end
+			if player.inventory['Rem\'s Tale Ch.2'] then send_command('put "Rem\'s Tale Ch.2" sack all') moveditem = true end
+			if player.inventory['Rem\'s Tale Ch.3'] then send_command('put "Rem\'s Tale Ch.3" sack all') moveditem = true end
+			if player.inventory['Rem\'s Tale Ch.4'] then send_command('put "Rem\'s Tale Ch.4" sack all') moveditem = true end
+			if player.inventory['Rem\'s Tale Ch.5'] then send_command('put "Rem\'s Tale Ch.5" sack all') moveditem = true end
+			if player.inventory['Rem\'s Tale Ch.6'] then send_command('put "Rem\'s Tale Ch.6" sack all') moveditem = true end
+			if player.inventory['Rem\'s Tale Ch.7'] then send_command('put "Rem\'s Tale Ch.7" sack all') moveditem = true end
+			if player.inventory['Rem\'s Tale Ch.8'] then send_command('put "Rem\'s Tale Ch.8" sack all') moveditem = true end
+			if player.inventory['Rem\'s Tale Ch.9'] then send_command('put "Rem\'s Tale Ch.9" sack all') moveditem = true end
+			
+			if player.inventory['Wind Crystal'] then send_command('put "Wind Crystal" sack all') moveditem = true end
+			if player.inventory['Earth Crystal'] then send_command('put "Earth Crystal" sack all') moveditem = true end
+			if player.inventory['Fire Crystal'] then send_command('put "Fire Crystal" sack all') moveditem = true end
+			if player.inventory['Lightning Crystal'] then send_command('put "Lightning Crystal" sack all') moveditem = true end
+			if player.inventory['Dark Crystal'] then send_command('put "Dark Crystal" sack all') moveditem = true end
+			if player.inventory['Light Crystal'] then send_command('put "Light Crystal" sack all') moveditem = true end
+			if player.inventory['Water Crystal'] then send_command('put "Water Crystal" sack all') moveditem = true end
+			if player.inventory['Ice Crystal'] then send_command('put "Ice Crystal" sack all') moveditem = true end
+			
 		end 
 		
 		if not state.Capacity.value then
@@ -1445,7 +1559,21 @@ function check_cleanup()
 			if player.inventory['Facility Ring'] then send_command('put "Facility Ring" satchel') moveditem = true end
 			if player.inventory['Guide Beret'] then send_command('put "Guide Beret" satchel') moveditem = true end
 		end
-		
+		if state.CraftingMode.value then
+
+			if player.satchel['Goldsmith\'s Ring'] then send_command('get "Goldsmith\'s Ring" satchel;wait 2;gs c update') end
+			if player.satchel['Goldsmith\'s Smock'] then send_command('get "Goldsmith\'s Smock" satchel') end
+			if player.satchel['Goldsmith\'s Belt'] then send_command('get "Goldsmith\'s Belt" satchel') end
+			if player.satchel['Goldsmith\'s Torque'] then send_command('get "Goldsmith\'s Torque" satchel') end
+			if player.satchel['Shaded Specs.'] then send_command('get "Shaded Specs." satchel') end
+		else 
+			if player.inventory['Goldsmith\'s Ring'] then send_command('put "Goldsmith\'s Ring" satchel') moveditem = true end
+			if player.inventory['Goldsmith\'s Smock'] then send_command('put "Goldsmith\'s Smock" satchel')  moveditem = true end
+			if player.inventory['Goldsmith\'s Belt'] then send_command('put "Goldsmith\'s Belt" satchel')  moveditem = true end
+			if player.inventory['Goldsmith\'s Torque'] then send_command('put "Goldsmith\'s Torque" satchel') moveditem = true end
+			if player.inventory['Shaded Specs.'] then send_command('put "Shaded Specs." satchel')  moveditem = true end
+	
+		end
 		if moveditem then tickdelay = os.clock() + 2.3 return true end
 		
 		local shard_name = {'C. Ygg. Shard ','Z. Ygg. Shard ','A. Ygg. Shard ','P. Ygg. Shard '}
@@ -1460,17 +1588,52 @@ function check_cleanup()
 				end
 			end
 		end
-
-		return false
+				return false
 	else
 		return false
 	end
+	
+
 end
 
 function check_trust()
 	if not moving and state.AutoTrustMode.value and not data.areas.cities:contains(world.area) and (buffactive['Reive Mark'] or buffactive['Elvorseal'] or not player.in_combat) then
 		local party = windower.ffxi.get_party()
-		if party.p5 == nil then
+		
+        if world.area == 'Temenos' and party.p5 == nil then
+			local spell_recasts = windower.ffxi.get_spell_recasts()
+			
+
+			if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
+				windower.chat.input('/ma "Ygnas" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[981] < spell_latency and not have_trust("Sylvie (UC)") then
+				windower.chat.input('/ma "Sylvie (UC)" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1018] < spell_latency and not have_trust("Koru-Moru") then
+				windower.chat.input('/ma "Koru-Moru" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[911] < spell_latency and not have_trust("Joachim") then
+				windower.chat.input('/ma "Joachim" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[967] < spell_latency and not have_trust("Qultada") then
+				windower.chat.input('/ma "Qultada" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			elseif spell_recasts[1013] < spell_latency and not have_trust("Lilisette II") then
+				windower.chat.input('/ma "Lilisette" <me>')
+				tickdelay = os.clock() + 4.5
+				return true
+			else
+				return false
+			end
+		end
+
+        if world.area ~= 'Temenos' and party.p5 == nil then
 			local spell_recasts = windower.ffxi.get_spell_recasts()
 			
 			if spell_recasts[998] < spell_latency and not have_trust("Ygnas") then
@@ -1635,7 +1798,7 @@ function check_doomed()
 				elseif buffactive.silence then
 						if player.inventory['Echo Drops'] or player.satchel['Echo Drops'] then
 							windower.chat.input('/item "Echo Drops" <me>')
-						elseif player.inventory["Remedy"] then
+						elseif player.inventory["Remedy"] or player.satchel['Remedy'] then
 							windower.chat.input('/item "Remedy" <me>')
 						end
 						tickdelay = os.clock() + 1.5
@@ -1666,10 +1829,10 @@ function check_ws()
 			windower.chat.input('/ws "Catastrophe" <t>')
 			tickdelay = os.clock() + 2.8
 			return true
-		elseif player.mpp < 31 and state.AutoWSRestore.value and available_ws:contains(109) and player.target.distance < (3.2 + player.target.model_size) then
+		--[[elseif player.mpp < 31 and state.AutoWSRestore.value and available_ws:contains(109) and player.target.distance < (3.2 + player.target.model_size) then
 			windower.chat.input('/ws "Entropy" <t>')
 			tickdelay = os.clock() + 2.8
-			return true
+			return true]]
 		elseif player.mpp < 31 and state.AutoWSRestore.value and available_ws:contains(171) and player.target.distance < (3.2 + player.target.model_size) then
 			windower.chat.input('/ws "Mystic Boon" <t>')
 			tickdelay = os.clock() + 2.8
@@ -1681,9 +1844,15 @@ function check_ws()
 			tickdelay = os.clock() + 2.8
 			return true
 		elseif (buffactive['Aftermath: Lv.3'] or not state.MaintainAftermath.value or not data.equipment.mythic_weapons:contains(player.equipment.main)) and player.tp >= autowstp then
-			windower.chat.input('/ws "'..autows..'" <t>')
-			tickdelay = os.clock() + 2.8
-			return true
+			if state.AutoOtherTargetWS.value and othertargetws then
+				windower.send_command('gs c smartws ' ..othertargetws)
+				tickdelay = os.clock() + 2.8
+				return true
+			else
+				windower.chat.input('/ws "'..autows..'" <t>')
+				tickdelay = os.clock() + 2.8
+				return true
+			end
 		elseif player.tp == 3000 then
 			windower.chat.input('/ws "'..data.weaponskills.mythic[player.equipment.main]..'" <t>')
 			tickdelay = os.clock() + 2.8

@@ -772,28 +772,133 @@ data.skills.one_handed_combat = S{2,3,5,9,11} --Combat skills for one-handed-wea
 -- Stepdown Tables.
 -------------------------------------------------------------------------------------------------------------------
 spell_stepdown = {
+	-- White Magic - Cure line
+	['Cure VI'] = 'Cure V',
+	['Cure V']  = 'Cure IV',
 	['Cure IV'] = 'Cure III',
+	['Cure III'] = 'Cure II',
+	['Cure II'] = 'Cure',
+	['Cure'] = '',
+
+	-- White Magic - Cura/Curega line
+	['Cura IV'] = 'Cura III',
+	['Cura III'] = 'Cura II',
+	['Cura II'] = 'Cura',
+	['Cura'] = '',
+
+	['Curega IV'] = 'Curega III',
+	['Curega III'] = 'Curega II',
+	['Curega II'] = 'Curega',
+	['Curega'] = '',
+
+	-- Waltz - Single target healing
+	['Curing Waltz V'] = 'Curing Waltz IV',
+	['Curing Waltz IV'] = 'Curing Waltz III',
+	['Curing Waltz III'] = 'Curing Waltz II',
+	['Curing Waltz II'] = 'Curing Waltz',
+
+	-- Waltz - Debuff removal
+	['Healing Waltz'] = '',
+
+	-- Waltz - AoE healing
+	['Divine Waltz II'] = 'Divine Waltz',
+
+	-- Blue Magic - Healing spells
+	['White Wind'] = 'Magic Fruit',
+	['Restoral'] = 'Plenilune Embrace',
+	['Plenilune Embrace'] = 'Magic Fruit',
+	['Magic Fruit'] = 'Wild Carrot',
+	['Wild Carrot'] = 'Healing Breeze',
+	['Healing Breeze'] = 'Pollen',
+	['Pollen'] = '',
+
 	['Regen']='Regen',
+	['Absorb-ACC']='Absorb',
+	['Absorb-TP']='Absorb',
+	['Drain III']='Drain II',
+	['Drain II']='Drain',
+	['Aspir III'] = 'Aspir II',
+	['Aspir II'] = 'Aspir',
+	-- Job Abilities
+	['Sneak Attack'] = 'Sneak Attack',
+    ['Trick Attack'] = 'Trick Attack',
+    ['Feint'] = 'Feint',
+    ['Rampart'] = 'Sentinel',
+    ['Provoke'] = 'Animated Flourish',
+    -- ['Warcry'] = 'Aggressor',
+    ['Last Resort'] = 'Hasso',
+    -- ['Soul Voice'] = 'Marcato',
+    -- ['Feint'] = 'Sneak Attack',
+    -- ['Perfect Dodge'] = 'Flee',
+    -- ['Berserk'] = 'Aggressor',
+    -- ['Hasso'] = 'Meditate',
+    -- ['Chakra'] = 'Boost',
 	['Rampart']='Rampart',
 	['Refresh']='Refresh',
+
 	['Protect']='Protect',
 	['Shell']='Shell',
-	['Banish']='Banish',
-	['Holy']='Holy',
-	['Absorb-TP']='Absorb',
-	['Drain III']='Drain',
+	['Protectra']='Protectra',
+	['Shellra']='Shellra',
+	['Banish III']='Banish II',
+	['Banish II']='Banish',
+	['Holy II']='Holy',
 	['Poisona']='StatusRemoval',
 	['Barfire']='BarElement',
 	['Baramnesia']='BarStatus',
 	['Gain-AGI']='BoostStat',
 	['Burn']='ElementalEnfeeble',
-	['Katon: Ichi'] = 'ElementalNinjutsu',
 	['Pyrohelix']='Helix',
 	['Firestorm']='Storm',
+	--nin
+	['Katon: Ichi'] = 'ElementalNinjutsu',
 	['Utsusemi: Ichi']='Utsusemi',
-	['Battlefield Elegy']='Elegy',['Carnage Elegy']='Elegy',
-	['Aspir III'] = 'Aspir II',
-	['Aspir II'] = 'Aspir',
+	-- ['Utsusemi: San'] = 'Utsusemi: Ni',
+	-- ['Utsusemi: Ni'] = 'Utsusemi: Ichi',
+	-- ['Tonko: Ni'] = 'Tonko: Ichi',
+	-- ['Katon: San'] = 'Katon: Ni',
+	-- ['Katon: Ni'] = 'Katon: Ichi',
+	-- ['Suiton: San'] = 'Suiton: Ni',
+	-- ['Suiton: Ni'] = 'Suiton: Ichi',
+	-- ['Doton: San'] = 'Doton: Ni',
+	-- ['Doton: Ni'] = 'Doton: Ichi',
+	-- ['Hyoton: San'] = 'Hyoton: Ni',
+	-- ['Hyoton: Ni'] = 'Hyoton: Ichi',
+	-- ['Huton: San'] = 'Huton: Ni',
+	-- ['Huton: Ni'] = 'Huton: Ichi',
+	-- ['Raiton: San'] = 'Raiton: Ni',
+	-- ['Raiton: Ni'] = 'Raiton: Ichi',
+	['Hojo: Ni'] = 'Hojo: Ichi',
+	['Kurayami: Ni'] = 'Kurayami: Ichi',
+    --blm
+	-- ['Stoneja'] = 'Stone VI',
+	-- ['Stone VI'] = 'Stone V',
+	-- ['Stone V'] = 'Stone IV',
+	-- ['Stone IV'] = 'Stone III',
+	-- ['Waterja'] = 'Water VI',
+	-- ['Water VI'] = 'Water V',
+	-- ['Water V'] = 'Water IV',
+	-- ['Water IV'] = 'Water III',
+	-- ['Aeroja'] = 'Aero VI',
+	-- ['Aero VI'] = 'Aero V',
+	-- ['Aero V'] = 'Aero IV',
+	-- ['Aero IV'] = 'Aero III',
+	-- ['Firaja'] = 'Fire VI',
+	-- ['Fire VI'] = 'Fire V',
+	-- ['Fire V'] = 'Fire IV',
+	-- ['Fire IV'] = 'Fire III',
+	-- ['Blizzaja'] = 'Blizzard VI',
+	-- ['Blizzard VI'] = 'Blizzard V',
+	-- ['Blizzard V'] = 'Blizzard IV',
+	-- ['Blizzard IV'] = 'Blizzard III',
+	-- ['Thundaja'] = 'Thunder VI',
+	-- ['Thunder VI'] = 'Thunder V',
+	-- ['Thunder V'] = 'Thunder IV',
+	-- ['Thunder IV'] = 'Thunder III',
+	['jump'] = 'jump',
+
+	['Battlefield Elegy']='Elegy',
+	['Carnage Elegy']='Elegy',
 	['Sleepga II'] = 'Sleepga',
 	['Sleep II'] = 'Sleep',
 	['Arise'] = 'Raise III',
@@ -806,13 +911,30 @@ spell_stepdown = {
 	['Horde Lullaby II'] = 'Horde Lullaby',
 	['Foe Lullaby II'] = 'Foe Lullaby',
 	['Dark Threnody II']='Threnody',
+	['Scop\'s Operetta'] = 'Puppet\'s Operetta',
+	['Puppet\'s Operetta'] = 'Goblin Gavotte',
+	['Goblin Gavotte'] = 'Shining Fantasia',
 	['Water Maneuver']='Maneuver',
 	['Haste']='Haste',
-	
+	['Temper']='Temper',
+	['Teleport-Holla']='Teleport',
+	['Retrace']='TeleportOther',['Tractor']='TeleportOther',
+	--blu
+	['Magic Hammer'] = 'MP Drainkiss',
+    -- ['Cocoon'] = 'Metallic Body',
+    ['O. Counterstance'] = 'Counterspell',
+    -- ['Battery Charge'] = 'MP Drainkiss',
+    ['Refueling'] = 'Animating Wail',
+    ['Heat Breath'] = 'Fire Spit',
+    ['MP Drainkiss'] = 'Digest',
+    -- ['Sandspin'] = 'Sandblast',
+    ['1000 Needles'] = 'Sheep Song',
+	['Spectral Floe'] = 'Tenebral Crush',
+	['Anvil Lightning'] = 'Silent Storm',
 }
 
 item_stepdown = {
-	['Warp Ring'] = {'Treat Staff','main'},
+	['Warp Ring'] = {'Warp Cudgel','main'},
 	['Treat Staff'] = {'Warp Cudgel','main'},
 	['Warp Cudgel'] = {'Instant Warp','item'},
 	['Dusty Reraise'] = {'Instant Reraise','item'},
@@ -829,18 +951,36 @@ item_stepdown = {
 
 }
 
-disable_priority = T{
-    "User",
-    "Showset",
-    "Crafting",
-    "Doom",
-    "Sleep",
-    "UseItem",
-    "OneHour",
-    "Shield",
-    "Weapons",
-    "ShowTP",
-    "Ability",
-    "TreasureHunter",
-}:reverse()
+
+-- Elements for skillchain names
+skillchain_elements = {}
+skillchain_elements.Light = S{'Light','Fire','Wind','Lightning'}
+skillchain_elements.Darkness = S{'Dark','Ice','Earth','Water'}
+skillchain_elements.Fusion = S{'Light','Fire'}
+skillchain_elements.Fragmentation = S{'Wind','Lightning'}
+skillchain_elements.Distortion = S{'Ice','Water'}
+skillchain_elements.Gravitation = S{'Dark','Earth'}
+skillchain_elements.Transfixion = S{'Light'}
+skillchain_elements.Compression = S{'Dark'}
+skillchain_elements.Liquification = S{'Fire'}
+skillchain_elements.Induration = S{'Ice'}
+skillchain_elements.Detonation = S{'Wind'}
+skillchain_elements.Scission = S{'Earth'}
+skillchain_elements.Impaction = S{'Lightning'}
+skillchain_elements.Reverberation = S{'Water'}
+
+-- disable_priority = T{
+--     "User",
+--     "Showset",
+--     "Crafting",
+--     "Doom",
+--     "Sleep",
+--     "UseItem",
+--     "OneHour",
+--     "Shield",
+--     "Weapons",
+--     "ShowTP",
+--     "Ability",
+--     "TreasureHunter",
+-- }:reverse()
 

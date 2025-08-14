@@ -42,7 +42,6 @@
 --Requires Gearswap and Motenten includes.
 being_attacked = false
 engaging = os.clock()
-
 include('Sel-MonsterAbilities.lua')
 
 state.AutoDefenseMode = M(false, 'Auto Defense Mode')
@@ -68,7 +67,8 @@ ProshellraAbility = S{"Protectra","Protectra II","Protectra III","Protectra IV",
 				 
 RefreshAbility = S{"Refresh","Refresh II", "Refresh III"
 				 }
-				 
+RegenAbility = S{"Regen", "Regen II", "Regen III", "Regen IV", "Regen V"
+				}
 PhalanxAbility = S{"Phalanx II"
 				 }
 				 
@@ -138,16 +138,22 @@ function check_reaction(act)
 	end
 	
 	if curact.category == 1 then
+
 		if targetsMe then
 			if state.AutoEngageMode.value and actor.race == 0 and math.sqrt(actor.distance) < (3.2 + actor.model_size) and player.status == 'Idle' and not (moving or engaging > os.clock() or actor.name:contains("'s ")) then
 				engaging = os.clock() + 2
+				windower.send_command('gs c facemob')
+				-- handle_facemob()
+				face_target()
+				-- windower.ffxi.turn()
+				-- windower.ffxi.turn((actor):radian())			--Face the mob
 
 				packets.inject(packets.new('outgoing', 0x1a, {
 					['Target'] = actor.id,
 					['Target Index'] = actor.index,
 					['Category']     = 0x02,
 				}))
-				
+
 			elseif player.status == 'Idle' and not (being_attacked or midaction() or pet_midaction() or (petWillAct + 2) > os.clock()) then
 				windower.send_command('gs c forceequip')
 			end
@@ -243,6 +249,11 @@ function check_reaction(act)
 				do_equip('sets.Cure_Received')
 			elseif sets.Self_Healing then
 				do_equip('sets.Self_Healing') 
+			end
+			return
+		elseif RegenAbility:contains(act_info.name) then
+			if sets.Regen_Received then
+				do_equip('sets.Regen_Received')
 			end
 			return
 		elseif RefreshAbility:contains(act_info.name) then

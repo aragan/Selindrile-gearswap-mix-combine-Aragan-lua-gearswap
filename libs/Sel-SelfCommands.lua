@@ -499,14 +499,24 @@ function handle_delayedcast()
 	end
 end
 
-function handle_autonuke(cmdParams)
-	if #cmdParams == 0 then
-		add_to_chat(122,'You must specify a spell to autonuke with.')
-	else
-		autonuke = table.concat(cmdParams, ' '):ucfirst()
-		add_to_chat(122,'Your autonuke spell is set to '..autonuke..'.')
-		if state.DisplayMode.value then update_job_states()	end
-	end
+function handle_autonuke()
+    if not state.AutoNuke.value then return false end
+    if midaction() or buffactive['silence'] or not player.target then return false end
+    if player.status ~= 'Engaged' and not (player.target.model_size > 0) then return false end
+    if player.mp < 100 then return false end
+
+    local spell = autonuke_spells[autonuke_index]
+    
+    if spell and spell_recasts[spell] and spell_recasts[spell] == 0 then
+        send_command('@input /ma "'..spell..'" <t>')
+        autonuke_index = autonuke_index + 1
+        if autonuke_index > #autonuke_spells then
+            autonuke_index = 1
+        end
+        return true
+    end
+
+    return false
 end
 
 function handle_buffup(cmdParams)
@@ -659,6 +669,16 @@ function handle_shadows()
 		else
 			add_to_chat(123,"No shadows available!")
 		end
+	end
+end
+
+function handle_othertargetws(cmdParams)
+	if #cmdParams == 0 then
+		add_to_chat(122,'You must specify a mob name to smart-weaponskill with.')
+	else
+		othertargetws = table.concat(cmdParams, ' '):ucfirst()
+		add_to_chat(122,'Your smartws other target is set to '..othertargetws..'.')
+		if state.DisplayMode.value then update_job_states()	end
 	end
 end
 
@@ -1100,4 +1120,6 @@ selfCommandMaps = {
 	['runeelement']		= handle_runeelement,
 	['killstatue']		= handle_killstatue,
 	['smartws']			= handle_smartws,
+	['othertargetws']	= handle_othertargetws,
+
 	}
