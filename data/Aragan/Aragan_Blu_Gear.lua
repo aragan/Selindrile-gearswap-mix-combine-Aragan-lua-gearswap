@@ -1763,7 +1763,7 @@ autows_list = {['Naegling']='Savage Blade',['Naegling2']='Expiacion',['Maxentius
      ['MaccWeapons']='Chant Du Cygne',['Naegbron']='Black Halo',['Naegmace']='Chant Du Cygne'}
 
 	 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Nat. Meditation"]   = {gain = 'Nat. Meditation is on.', lose = 'Nat. Meditation wore off.', announce_gain = false, announce_lose = true},
