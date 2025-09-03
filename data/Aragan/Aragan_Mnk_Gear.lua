@@ -65,7 +65,7 @@ function init_gear_sets()
 	-- Precast Sets
 	
 	-- Precast sets to enhance JAs on use
-    sets.precast.JA['Hundred Fists'] = {legs="Hesychast's Hose +1"}
+    sets.precast.JA['Hundred Fists'] = {legs="Hes. Hose +3"}
     sets.precast.JA['Boost'] = {}--hands="Anchorite's Gloves +1"
     sets.precast.JA['Dodge'] = {feet="Anch. Gaiters +3"}
     sets.precast.JA['Focus'] = {}--head="Anchorite's Crown +1"
@@ -85,7 +85,7 @@ function init_gear_sets()
         ammo="Iron Gobbet",
         head="Genmei Kabuto",
         body={ name="Tatena. Harama. +1", augments={'Path: A',}},
-        hands={ name="Hes. Gloves +1", augments={'Enhances "Invigorate" effect',}},
+        hands={ name="Hes. Gloves +3", augments={'Enhances "Invigorate" effect',}},
         legs={ name="Tatena. Haidate +1", augments={'Path: A',}},
         feet={ name="Tatena. Sune. +1", augments={'Path: A',}},
         neck={ name="Unmoving Collar +1", augments={'Path: A',}},
@@ -293,7 +293,7 @@ body="Bhikku Cyclas +2"
         head={ name="Adhemar Bonnet +1", augments={'DEX+12','AGI+12','Accuracy+20',}},
         body="Mpaca's Doublet",
         hands="Mpaca's Gloves",
-        legs={ name="Mpaca's Hose", augments={'Path: A',}},
+        legs={ name="Hes. Hose +3", augments={'Enhances "Hundred Fists" effect',}},
         feet="Mpaca's Boots",
         neck="Fotia Gorget",
         waist="Moonbow Belt +1",

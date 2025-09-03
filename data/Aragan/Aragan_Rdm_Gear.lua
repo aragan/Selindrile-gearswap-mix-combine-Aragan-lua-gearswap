@@ -1672,7 +1672,7 @@ end
 -- 	return false
 -- end
 
-function user_job_buff_change(buff, gain)
+function user_job_user_job_buff_change(buff, gain)
 	if buff:startswith('Addendum: ') or buff:endswith(' Arts') then
 		style_lock = true
 	end
@@ -1740,7 +1740,7 @@ end
 
 
 --[[ 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Enspell"] = {gain = 'Enspell is on.', lose = 'Enspell is off. Fuck you, Mirukuu.', announce_gain = false, announce_lose = true},

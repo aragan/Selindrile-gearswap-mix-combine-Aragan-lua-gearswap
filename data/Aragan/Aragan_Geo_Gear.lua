@@ -1000,7 +1000,7 @@ autows_list = {['Idris']='Exudation',['Maxentius']='Black Halo',['Bunzi']="Flash
 ['TernionDagger']='Aeolian Edge',['Xoanon']='Retribution',['MalignancePole']='Cataclysm'}
 
 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Indicolure"] = {gain = 'Indicolure is on.', lose = 'Indi-spell wore off.', announce_gain = false, announce_lose = true},

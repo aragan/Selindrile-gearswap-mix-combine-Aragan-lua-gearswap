@@ -115,7 +115,6 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal','NOSchereEar', 'STP', 'Acc', 'SubtleBlow','DA', 'CRIT')
     state.RangedMode:options('Normal', 'Acc')
-
     state.WeaponskillMode:options('Match', 'SubtleBlow', 'Acc', 'PDL', 'SC', 'Dread', 'None')
     state.HybridMode:options('DT', 'Normal', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
@@ -2290,7 +2289,7 @@ autows_list = {['Caladbolg']='Torcleaver',['Liberator']='Insurgency',['Anguta']=
 
 
      
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
         ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},

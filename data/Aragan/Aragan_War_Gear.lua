@@ -1449,7 +1449,7 @@ autows_list = {['DualNaegling']='Circle Blade',['Malevo']='Aeolian Edge',['Naegl
 ['DualMalevo']='Aeolian Edge',['Shining']='Impulse Drive',['Nandaka']='Ground Strike'}
 
 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Warcry"] = {gain = 'Warcry is on.', lose = 'Warcry wore off.', announce_gain = true, announce_lose = false},

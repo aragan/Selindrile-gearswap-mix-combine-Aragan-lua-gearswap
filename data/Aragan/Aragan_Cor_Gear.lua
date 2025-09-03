@@ -46,11 +46,39 @@ function user_job_setup()
     --state.ranged:options('normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp')
     state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
 
-
     gear.RAbullet = "Decimating Bullet"
     gear.WSbullet = "Chrono Bullet"
     gear.MAbullet = "Living Bullet" --For MAB WS, do not put single-use bullets here.
     gear.QDbullet = "Living Bullet"
+    send_command('get *"' .. gear.QDbullet .. '" all;get *"' .. gear.WSbullet .. '" all;get *"' .. gear.MAbullet .. '" all')
+    -- Get all bullets from all bags (inventory, sack, satchel, case, wardrobe, etc.)
+    -- send_command('get *"' .. gear.WSbullet .. '" all')
+    -- send_command('get *"' .. gear.WSbullet .. '" inventory')
+    -- send_command('get *"' .. gear.WSbullet .. '" sack')
+    -- send_command('get *"' .. gear.WSbullet .. '" satchel')
+    -- send_command('get *"' .. gear.WSbullet .. '" case')
+    -- send_command('get *"' .. gear.WSbullet .. '" wardrobe')
+    -- send_command('get *"' .. gear.WSbullet .. '" wardrobe2')
+    -- send_command('get *"' .. gear.WSbullet .. '" wardrobe3')
+    -- send_command('get *"' .. gear.WSbullet .. '" wardrobe4')
+    -- -- The following require being at a Mog House and using the correct menu:
+    -- send_command('get *"' .. gear.WSbullet .. '" safe')
+    -- send_command('get *"' .. gear.WSbullet .. '" safe2')
+    -- send_command('get *"' .. gear.WSbullet .. '" storage')
+    -- send_command('get *"' .. gear.WSbullet .. '" locker')
+    -- send_command('get *"' .. gear.WSbullet .. '" temporary')
+    -- send_command('get *"' .. gear.MAbullet .. '" all')
+    -- send_command('get *"' .. gear.QDbullet .. '" all')
+    -- send_command('get *"' .. gear.RAbullet .. '" all')
+
+    -- send_command('get *"'..gear.MAbullet..'" all')
+    -- send_command('get *"'..gear.QDbullet..'" all')
+    -- send_command('get * "'..gear.QDbullet..'"  all')
+
+    -- send_command('get *"'..gear.QDbullet..'" locker')
+
+
+    
     options.ammo_warning_limit = 15
     --Ikenga_vest_bonus = 190  -- It is 190 at R20. Uncomment if you need to manually adjust because you are using below R20
 
@@ -92,6 +120,8 @@ function user_job_setup()
     send_command('bind @x gs c toggle RP')  
 	send_command('bind @z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
     send_command('bind !f3 gs c cycle QDMode')
+    send_command('bind @f4 gs c cycle QDMode')
+
     send_command('bind !z gs c toggle CompensatorMode')  
     send_command('bind f2 gs c cycle Roller1;gs c Roller1')
     send_command('bind f3 gs c cycle Roller2;gs c Roller2')
@@ -215,7 +245,7 @@ function init_gear_sets()
     sets.precast.CorsairRoll["Tactician's Roll"] = set_combine(sets.precast.CorsairRoll, {body="Chasseur's Frac +2",})
     sets.precast.CorsairRoll["Allies' Roll"] = set_combine(sets.precast.CorsairRoll, {hands="Chasseur's Gants +3",})
     
-    sets.precast.CorsairShot =  {ammo=gear.QDbullet,
+    sets.precast.CorsairShot =  {ammo="Hauksbok Bullet",
     head="Nyame Helm",
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
@@ -231,12 +261,12 @@ function init_gear_sets()
     }
 	sets.precast.CorsairShot.Damage =sets.precast.CorsairShot
 	
-    sets.precast.CorsairShot.Proc = {ammo=gear.RAbullet,
+    sets.precast.CorsairShot.Proc = {--ammo=gear.RAbullet,
         neck="Loricate Torque +1",ear1="Genmei Earring",ear2="Sanare Earring",
         body="Emet Harness +1",hands="Malignance Gloves",ring1="Defending Ring",
         back="Moonlight Cape",waist="Flume Belt +1",legs="Carmine Cuisses +1",feet="Chasseur's Bottes +2"}
 
-    sets.precast.CorsairShot['Light Shot'] = { ammo=gear.QDbullet,
+    sets.precast.CorsairShot['Light Shot'] = { --ammo=gear.QDbullet,
     head="Malignance Chapeau",
     body="Laksa. Frac +3",
     hands="Malignance Gloves",
@@ -279,7 +309,7 @@ function init_gear_sets()
 	
 	sets.precast.FC.Cure = set_combine(sets.precast.FC, {ear2="Mendi. Earring"})
 
-    sets.precast.RA = {ammo=gear.RAbullet,
+    sets.precast.RA = {--ammo=gear.RAbullet,
     hands={ name="Lanun Gants +3", augments={'Enhances "Fold" effect',}},
     head="Chass. Tricorne +2",
     body="Oshosi Vest +1",
@@ -428,7 +458,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
 }
 
     sets.precast.WS['Last Stand'] = {
-    ammo=gear.WSbullet,
+    -- ammo=gear.WSbullet,
     head={ name="Lanun Tricorne +3", augments={'Enhances "Winning Streak" effect',}},
     body="Ikenga's Vest",
     hands="Chasseur's Gants +3",
@@ -458,7 +488,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
     })
 
     sets.precast.WS['Last Stand'].SC = set_combine(sets.precast.WS['Last Stand'], {
-        ammo=gear.WSbullet,
+        -- ammo=gear.WSbullet,
         head={ name="Nyame Helm", augments={'Path: B',}},
         body="Laksa. Frac +3",
         hands="Chasseur's Gants +3",
@@ -474,7 +504,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
     })
 
     sets.precast.WS['Wildfire'] = {
-        ammo=gear.MAbullet,
+        -- ammo=gear.MAbullet,
         head="Nyame Helm",
         body="Lanun Frac +3",
         hands="Nyame Gauntlets",
@@ -498,7 +528,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
     hands="Chasseur's Gants +3",})
 
     sets.precast.WS['Leaden Salute'] = {     
-    ammo=gear.MAbullet,
+    -- ammo=gear.MAbullet,
     head="Pixie Hairpin +1",
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
@@ -514,7 +544,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
 }
     
     sets.precast.WS['Leaden Salute'].PDL = {   
-    ammo=gear.RAbullet,
+    --ammo=gear.RAbullet,
     head="Pixie Hairpin +1",
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
@@ -563,6 +593,7 @@ sets.precast.WS["Energy Drain"] = set_combine(sets.precast.WS["Sanguine Blade"],
 sets.precast.WS.Cataclysm = sets.precast.WS["Sanguine Blade"]
 
 sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
+    ammo="Hauksbok Bullet",
     head="Nyame Helm",
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
@@ -683,7 +714,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         back="Null Shawl"}
     
     -- Ranged gear
-    sets.midcast.RA = {  ammo=gear.RAbullet,
+    sets.midcast.RA = {  --ammo=gear.RAbullet,
     head="Ikenga's Hat",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -698,7 +729,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 }
 
-    sets.midcast.RA.Acc = {  ammo=gear.WSbullet,
+    sets.midcast.RA.Acc = {  --ammo=gear.WSbullet,
     head="Malignance Chapeau",
     body="Laksa. Frac +3",
     hands="Malignance Gloves",
@@ -713,7 +744,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     back="Null Shawl",
 }
 sets.midcast.RA.STP = {
-    ammo=gear.RAbullet,
+    -- ammo=gear.RAbullet,
     head="Ikenga's Hat",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -739,7 +770,7 @@ sets.midcast.RA.NOENMITY = set_combine(sets.midcast.RA, {
     back={ name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
 })
 sets.midcast.RA.Critical = set_combine(sets.midcast.RA, {
-    ammo=gear.WSbullet,
+    -- ammo=gear.WSbullet,
     head="Meghanada Visor +2",
     body="Nisroch Jerkin",
     hands="Chasseur's Gants +3",
@@ -764,7 +795,7 @@ sets.midcast.RA.SubtleBlow40 = set_combine(sets.midcast.RA, {
     right_ear="Digni. Earring",   
 })
 sets.midcast.CorsairShot = {
-    ammo=gear.QDbullet,
+    ammo="Hauksbok Bullet",    
     head="Nyame Helm",
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
@@ -780,7 +811,6 @@ sets.midcast.CorsairShot = {
 }
 
 sets.midcast.CorsairShot.Acc = {
-    ammo=gear.QDbullet,
     head="Nyame Helm",
     body="Lanun Frac +3",
     hands="Nyame Gauntlets",
@@ -795,7 +825,6 @@ sets.midcast.CorsairShot.Acc = {
     back="Null Shawl",
 }
 sets.midcast.CorsairShot.STP = {
-    ammo=gear.QDbullet,
     head="Malignance Chapeau",
     body="Malignance Tabard",
     hands="Malignance Gloves",
@@ -811,7 +840,7 @@ sets.midcast.CorsairShot.STP = {
 
     }
 sets.midcast.CorsairShot['Light Shot'] = {
-    ammo=gear.QDbullet,
+    -- ammo=gear.QDbullet,
     head="Malignance Chapeau",
     body="Laksa. Frac +3",
     hands="Malignance Gloves",
@@ -873,7 +902,7 @@ sets.midcast.CorsairShot.Enhance = {feet="Chasseur's Bottes +2"}
         back="Moonlight Cape",
     }
     
-    sets.defense.MDT = {
+    sets.defense.MDT =   {  
         head="Nyame Helm",
         body="Nyame Mail",
         hands="Nyame Gauntlets",
@@ -1480,7 +1509,7 @@ function user_job_lockstyle()
 end
 
 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
         --[[ 

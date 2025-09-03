@@ -24,7 +24,7 @@ made mode autoReraise auto equip zombie gear Reraise
 add reaction for sortie NM B/D F/H auto switch elemental mode to correct nm weak it if he use spell for job rdm drk blm sch .
 add passive set tartarus death if mob touch u for jobs pld war drk drg sam bst. if u have Tartarus Platemail red wings .
 add passive enspell for some job.
-add code auto swap gearto EnemyCritical idle set if u get hite critcal hit.
+add code auto swap gear to EnemyCritical idle set if u get hite critcal hit.
 add auto use ja Ebullience for blm job if sub /sch and in fight.
 add code tell msg if u get proc in abyssea and auto swap gear after msg for job war nin blm
 and add in macro special line for proc those job war nin blm. 
@@ -133,6 +133,9 @@ state.AutoShadowMode 	  = M(false, 'Auto Shadow Mode')
 state.RefineWaltz		  = M(true, 'RefineWaltz')
 state.Stance = M{['description']='Stance','None'}
 state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
+state.AutogearbuffMode = M(false, 'AutogearbuffMode')
+state.Autojoinptmode = M(true, 'Autojoinptmode')
+
 
 state.DefenseDownMode = M{['description']='Defense Down Mode'}
 state.DefenseDownMode:options('None','Tag')
@@ -148,7 +151,7 @@ state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Ana
 -- TOOGLE WS OPEN ON AUTOSC ADDON --auto set ws
 state.Ascws = M{['description']='Ascws','Exudation','Realmrazer','Black Halo','Blade: Teki','Blade: Chi','Blade: To','Blade: Shun','Tachi: Kagero','Tachi: Goten','Tachi: Koki','Tachi: Fudo','Torcleaver','Savage Blade','Requiescat','Victory Smite','Shijin Spiral','Evisceration','Rudra\'s Storm','Cross Reaper','Spiral Hell','Insurgency','Vorpal Scythe',}
 -- TOOGLE WS ON Skillchainer ADDON --auto set ws
-state.Skillchainerws = M{['description']='Skillchainerws','Fell Cleave','Exudation','Realmrazer','Last Stand','Black Halo','Blade: Teki','Blade: Chi','Blade: To','Blade: Shun','Tachi: Kagero','Tachi: Goten','Tachi: Koki','Tachi: Fudo','Torcleaver','Savage Blade','Requiescat','Victory Smite','Shijin Spiral','Evisceration','Rudra\'s Storm','Cross Reaper','Spiral Hell','Insurgency','Vorpal Scythe',}
+state.Skillchainerws = M{['description']='Skillchainerws','Fell Cleave','Exudation','Realmrazer','Last Stand','Black Halo','Blade: Yu','Blade: Teki','Blade: Chi','Blade: To','Blade: Shun','Tachi: Kagero','Tachi: Goten','Tachi: Koki','Tachi: Fudo','Torcleaver','Savage Blade','Requiescat','Victory Smite','Shijin Spiral','Evisceration','Rudra\'s Storm','Aeolian Edge','Cross Reaper','Spiral Hell','Insurgency','Vorpal Scythe',}
 
 NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
 
@@ -318,7 +321,9 @@ function global_on_load()
 	send_command('bind !f7 gs c toggle AutoSubMode') --Automatically uses sublimation and Myrkr.
 	send_command('bind !7 gs c toggle AutoAcceptRaiseMode')
 	send_command('bind !8 gs c toggle SkipProcWeapons')
-	
+	send_command('bind !9 gs c toggle AutogearbuffMode')
+	send_command('bind !0 gs c toggle Autojoinptmode')
+
 	send_command('bind ^- gs c toggle selectnpctargets') 
 	send_command('bind !- gs c cycle pctargetmode')
     send_command('lua r runewidget;rw show')--Turns addon off if job non /run. just used on screen left side to check elemtels cycle for used anythung like ws spell sc mb  and other idea
@@ -387,12 +392,12 @@ send_command('bind ^home trust toggle') --Turns addon trust start.
 send_command('bind home lua l autobuff') --Turns addon  on.
 send_command('bind end lua u autobuff') --Turns addon off.
 
-send_command('bind ^@!f12 gs reload') -- lua r Gaze_check /--Reloads gearswap.and addon Gaze_check
+send_command('bind ^@!f12 gs reload;gzc auto_point') -- lua r Gaze_check /--Reloads gearswap.and addon Gaze_check
 
 -- send_command('bind pageup ata on;lua load Gaze_check;input /p ((Attack is ON.)) >> killer machine ready <<')--Turns addon  auto attack target on. to be killer machine in Odyssey or Dynamis.
 -- send_command('bind pagedown ata off;lua unload Gaze_check')--Turns addon  auto attack target off.
 
-send_command('bind pageup ata toggle;gzc auto_point;gs c toggle AutoEngageMode')--Turns addon  auto attack target on. to be killer machine in Odyssey or Dynamis.
+send_command('bind pageup ata toggle;gs c toggle AutoEngageMode;gzc auto_point;')--Turns addon  auto attack target on. to be killer machine in Odyssey or Dynamis.
 -- send_command('bind pagedown ata off;lua unload Gaze_check')--Turns addon  auto attack target off.
 
 windower.raw_register_event('incoming text',function(org)
@@ -400,8 +405,56 @@ windower.raw_register_event('incoming text',function(org)
 		windower.send_command('input /echo ((Attack is ON.)) >> killer machine ready <<')  -- code add by (Aragan@Asura)
         -- windower.send_command('input /t '..player.name..' '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14> ' )
 	end
+	-- if string.find(org, "Helldive") then
+	-- 	-- state.weapons:('ProcScytheTwilight')
+	-- 	windower.add_to_chat(207, 'Helldive2')
+	-- end
+	-- if string.find(org, "Wing Cutter") then
+	-- 	-- state.weapons:('ProcScytheTwilight')
+	-- 	windower.add_to_chat(207, 'Wing Cutter2')
+	-- end
+	-- if string.find(org, "Abyssdiver readies Helldive") then
+	-- 	-- state.weapons:('ProcScytheTwilight')
+	-- 	windower.add_to_chat(207, 'readies Helldive3')
+	-- end
+	-- if string.find(org, "Abyssdiver readies Wing Cutter") then
+	-- 	-- state.weapons:('ProcScytheTwilight')
+	-- 	windower.add_to_chat(207, 'readies Wing Cutter3')
+	-- end
 end)
+windower.register_event('action', function(act)
+	local actor = (act.actor_id and windower.ffxi.get_mob_by_id(act.actor_id)) or 'unknown'
+	if type(actor) == "table" then
+		actor = actor.name
+	end
 
+	local monster_ability = res.monster_abilities[act.targets[1].actions[1].param]
+	local spell_start = res.spells[act.targets[1].actions[1].param]
+
+	if actor == 'Abyssdiver' then
+		local monster_ability = res.monster_abilities[act.param]
+		if monster_ability == nil then
+			return
+		elseif monster_ability.en == 'Helldive' then
+			windower.add_to_chat(207, 'Helldive')
+		elseif monster_ability.en == 'Wing Cutter' then
+			windower.add_to_chat(207, 'Wing Cutter')
+			-- coroutine.schedule(function()
+			-- 	windower.add_to_chat(207, 'Wing Cutter  is off!')
+			-- end, 30)
+		end
+	end
+	if actor == 'Minaruja' then
+		local monster_ability = res.monster_abilities[act.param]
+		if monster_ability == nil then
+			return
+		elseif monster_ability.en == 'Hurricane Breath' then
+			windower.add_to_chat(207, 'Hurricane Breath')
+			send_command('gs c update') 
+			style_lock = true
+		end
+	end
+end)
 send_command('bind !@^f7 gs c toggle AutoWSMode') --Turns auto-ws mode on and off.
 send_command('bind !^f7 gs c toggle AutoFoodMode') --Turns auto-ws mode on and off.
 send_command('bind f6 gs c cycle Weapons') --Cycle through weapons sets.
@@ -490,6 +543,7 @@ end)
 
 -- Function to revert binds when unloading.
 function global_unload()
+	send_command('clear_binds') 
 	send_command('unbind f1')
 	send_command('unbind f2')
 	send_command('unbind f3')
@@ -912,13 +966,11 @@ function user_post_precast(spell)
     end
     ]]
 
-    if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
-	    equip(sets.precast.WS.SubtleBlow)
-    end
+    -- if state.WeaponskillMode.value == 'SubtleBlow' and spell.type == 'WeaponSkill' then
+	--     equip(sets.precast.WS.SubtleBlow)
+    -- end
 	attack = player.attack -- auto equip to PDL ws set - code add by kastra,modi.(Aragan@Asura)
-
     if spell.type == 'WeaponSkill' then
-
         if state.WeaponskillMode.value == 'SubtleBlow' then --and (attack > attack2 or attack < attack2)
             equip(sets.precast.WS.SubtleBlow)
         elseif state.WeaponskillMode.value == 'Proc' then
@@ -928,12 +980,10 @@ function user_post_precast(spell)
         elseif attack > attack2 then
             equip(sets.precast.WS[spell.name].PDL)
 			 --windower.add_to_chat(123, 'Auto WS Mode: PDL')
-
         --[[else
             equip(sets.precast.WS[spell.name])
 			]]
         end
-
     end
 end
 
@@ -999,6 +1049,15 @@ function user_state_change(stateField, newValue, oldValue)
     else
         enable('main','sub')
     end
+	-- if state.AutogearbuffMode.value then
+	-- 	if buffactive['Endark'] then
+	-- 		state.HybridMode:set('DreadSP') 	
+	-- 	elseif buff == "Endark" and not gain then
+	-- 			add_to_chat(123, " off Amnesia")
+	-- 		state.HybridMode:set('Normal') 
+	-- 	end
+	-- 	-- send_command('@wait 0.5;gs c update')
+	-- end	
 	-- if (player.main_job == 'BST' or player.main_job == 'DRK'
 	--    or player.main_job == 'PLD' or player.main_job == 'SAM' or player.main_job == 'WAR') then
     --    if player.hpp < 5 then
@@ -1052,19 +1111,6 @@ function user_state_change(stateField, newValue, oldValue)
 
 end
 
-function user_tick()
-	--if check_arts() then return true end
-	if user_state_change() then return true end
-	if user_buff_change() then return end
-	if check_steps_subjob() then return true end
-	-- if refine_waltz(spell, action, spellMap, eventArgs) then return true end
-	-- if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
-	-- 	if check_tp_mp_lower() then return true end
-	-- 		tickdelay = os.clock() + 1.5
-	-- 	return true
-	-- end
-	return false
-end
 
 function gearinfo(commandArgs, eventArgs)
     if commandArgs[1] == 'gearinfo' then
@@ -1121,7 +1167,7 @@ function user_customize_idle_set(idleSet)
     elseif state.CraftQuality.value ~= 'Normal' then
 		idleSet = set_combine(idleSet,sets.crafting[state.CraftQuality.value])
 	end
-
+	
     return idleSet
 end
 -- Modify the default melee set after it was constructed.
@@ -1132,6 +1178,7 @@ function user_customize_melee_set(meleeSet)
     else
         enable('neck')
     end
+
     if state.TreasureMode.value == 'Fulltime' then
         meleeSet = set_combine(meleeSet, sets.TreasureHunter)
     end
@@ -1146,14 +1193,26 @@ function user_customize_melee_set(meleeSet)
 	--     end
 	-- end
 
+	
     return meleeSet
 end
 
 -- Global intercept on buff change.
 function user_buff_change(buff, gain, eventArgs)
+    add_to_chat(123, 'job_buff_change: '..buff..'  Gain: '..tostring(gain))
 
-	local abil_recasts = windower.ffxi.get_ability_recasts()
-	local spell_recasts = windower.ffxi.get_spell_recasts()
+	-- local abil_recasts = windower.ffxi.get_ability_recasts()
+	-- local spell_recasts = windower.ffxi.get_spell_recasts()
+
+	-- if state.AutogearbuffMode.value then
+	-- 	-- if buffactive['Endark'] then
+	-- 	if buff == "Endark" then
+	-- 		state.HybridMode:set('DreadSP') 	
+	-- 	else
+	-- 		state.HybridMode:set('Normal') 
+	-- 	end
+	-- 	-- send_command('@wait 0.5;gs c update')
+	-- end
 
 	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 	-- 	if player.sub_job == 'DNC' and not state.Buff['SJ Restriction'] and player.tp > 200 and abil_recasts[215] < latency and (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
@@ -1167,7 +1226,6 @@ function user_buff_change(buff, gain, eventArgs)
 	-- 	end
 	-- end
 
-
 	-- -- Create a timer when we gain weakness.  Remove it when weakness is gone.
 	-- if buff:lower() == 'weakness' then
 	-- 		send_command('timers create "Weakness" 300 up abilities/00255.png')
@@ -1175,6 +1233,36 @@ function user_buff_change(buff, gain, eventArgs)
 	-- 		send_command('timers delete "Weakness"')
 		
 	-- end
+
+	-- if state.AutogearbuffMode.value then
+	-- 	if buffactive['Sentinel\'s Scherzo'] then
+	-- 		state.HybridMode:set('Normal') 
+	-- 		send_command('@wait 0.5;gs c update')
+
+	-- 	else
+	-- 		state.HybridMode:set('DT') 
+	-- 		send_command('@wait 0.5;gs c update')
+
+	-- 	end
+	-- end
+	
+	-- if state.AutogearbuffMode.value then
+	-- 	if buffactive['amnesia'] then
+	-- 		state.OffenseMode:set('CRIT') 
+	-- 		send_command('@wait 0.5;gs c update')
+
+	-- 	else
+	-- 		state.OffenseMode:reset()  
+	-- 		send_command('@wait 0.5;gs c update')
+
+	-- 	end
+	-- end
+	
+	-- if buff == "Endark" and not gain then
+	-- 	add_to_chat(123, " off Amnesia")
+	--     state.HybridMode:set('Normal') 
+	-- end
+
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
 			windower.chat.input('/ma "Poisona" <me>')
@@ -1273,9 +1361,6 @@ function user_buff_change(buff, gain, eventArgs)
 				send_command('input /item "Holy Water" <me>')
 				equip(sets.precast.Item['Holy Water'])
 			end
-		end
-		if not midaction() then
-			job_update()
 		end
 	end
 
@@ -1384,6 +1469,22 @@ end
         end
     end]]
 
+
+	
+function user_tick()
+	--if check_arts() then return true end
+	if user_state_change() then return true end
+	-- if user_buff_change() then return true end
+	if check_steps_subjob() then return true end
+	-- if refine_waltz(spell, action, spellMap, eventArgs) then return true end
+	-- if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
+	-- 	if check_tp_mp_lower() then return true end
+	-- 		tickdelay = os.clock() + 1.5
+	-- 	return true
+	-- end
+	
+	return false
+end
 function user_zone_change(new_id,old_id)
 	--tickdelay = os.clock() + 10	
 	current_zone = windower.ffxi.get_info().zone
@@ -1410,12 +1511,12 @@ function user_zone_change(new_id,old_id)
 	else
 		send_command('NyzulHelper hide;NyzulBuddy stop;') --Turns addon off. -- iSpy
 	end
-	if not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
-		send_command('ept show;gs c set SkipProcWeapons false;input /lockstyleset 1') --Turns addon on.
+	-- if not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
+	-- 	send_command('input /lockstyleset 1;ept show;gs c set SkipProcWeapons false;get *"Forbidden Key" all;') --Turns addon on.
 
-	else
-		send_command('ept hide;') --Turns addon off.
-	end
+	-- else
+	-- 	send_command('ept hide;') --Turns addon off.
+	-- end
 	
 	if (world.area:contains('Sortie') or world.area:contains('Odyssey')) then
 		send_command('AutoItem on') --Turns addon on.
@@ -1435,6 +1536,12 @@ function user_sub_job_change(newSubjob, oldSubjob)	-- sub_job_change(new,old) --
 	user_job_lockstyle:schedule(7)
 
 end
+-- function user_lockstyle()
+--     if world.area:contains('Abyssea') then
+--         windower.chat.input:schedule(5,'/lockstyleset 1')
+--     end
+-- end
+
 -- If HP drops under 45% then equip Re-raise head/body
 -- windower.register_event('hpp change', -- code add from Aragan Asura
 -- function(new_hpp,old_hpp)
@@ -1480,8 +1587,24 @@ function user_target_change(target)
 		-- end
 	end
 end
+already_announced_timers = false
 
+-- windower.register_event('incoming text',function(org)     
+-- 	if string.find(org, "Amun") then
+-- 		windower.send_command('timers c "Amun Respawn" 600 down')
+-- 		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
+-- 		already_announced_timers = true
+-- 	end
+-- end)
 windower.raw_register_event('incoming text',function(org)
+	if state.Autojoinptmode.Value then
+		if string.find(org, "invites you to her party") or string.find(org, "invites you to his party") then
+			-- local sender = org:match("invites you to (.+) party")		
+				windower.send_command('wait 1.2;input /join')
+			-- add_to_chat(207, 'Auto-joined party from: ' .. sender)
+			add_to_chat(207, 'Auto-joined party ')
+		end
+	end
 	if state.DefenseDownMode.Value ~= 'None' then
 		--abyssea stagger --red pros
 		if string.find(org, "Armor Break") then
@@ -1489,7 +1612,7 @@ windower.raw_register_event('incoming text',function(org)
 			send_command('gs c Weapons Normal;gs c cycle DefenseDownMode;')
 		end
 	end
-	if string.find(org, "You find a volte tights") or string.find(org, "You find a volte tiara") 
+	if string.find(org, "You find a vial of eft blood") or string.find(org, "You find a volte tights") or string.find(org, "You find a volte tiara") 
 	or string.find(org, "You find a volte boots") or string.find(org, "You find a volte hose") 
 	or string.find(org, "You find a volte bracers") or string.find(org, "You find a crepuscular cloak") 
 	or string.find(org, "You find a volte moufles") or string.find(org, "You find a volte brayettes")
@@ -1500,6 +1623,42 @@ windower.raw_register_event('incoming text',function(org)
 
 		windower.send_command('input /echo '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14>!')  -- code add by (Aragan@Asura)
         windower.send_command('input /t '..player.name..' '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14> ' )
+	end
+	if string.find(org, "Hazhdiha") then
+		windower.send_command('timers c "Hazhdiha Respawn" 900 down')
+		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
+		already_announced_timers = true
+	end
+	if string.find(org, "Sisyphus") then
+		windower.send_command('timers c "Sisyphus Respawn" 900 down')
+		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
+		already_announced_timers = true
+	end
+	if string.find(org, "Fistule") then
+		windower.send_command('timers c "Fistule Respawn" 1200 down')
+		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
+		already_announced_timers = true
+	end
+	if string.find(org, "Lord Varney") then
+		windower.send_command('timers c "Lord Varney Respawn" 900 down')
+		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
+		already_announced_timers = true
+	end
+
+	if string.find(org, "Gukumatz ") then
+		windower.send_command('timers c "Gukumatz  Respawn" 900 down')
+		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
+		already_announced_timers = true
+	end
+	if string.find(org, "Jaculus") then
+		windower.send_command('timers c "Jaculus  Respawn" 900 down')
+		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
+		already_announced_timers = true
+	end
+	if string.find(org, "La Velue") then
+		windower.send_command('timers c "La Velue  Respawn" 3600 down')
+		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
+		already_announced_timers = true
 	end
 end)
 
@@ -1520,6 +1679,14 @@ function is_sc_element_today(spell)
     end
 
 end
+
+-- windower.register_event('chat message', function(message, sender, mode, gm)
+--     -- نتحقق إذا الرسالة تحتوي على موت Amun
+--     if message:contains("defeats the Amun") then
+--         -- يرسل للـ plugin timers مؤقت 30 دقيقة
+--         send_command('timers c "Amun Respawn" 1800 down')
+--     end
+-- end)
 
 trust_activation_time = nil  -- تعريف المتغير في أعلى ملفك
 last_auto_trust_mode = nil   -- لتتبع آخر قيمة

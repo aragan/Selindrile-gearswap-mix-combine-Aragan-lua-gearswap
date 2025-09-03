@@ -959,7 +959,7 @@ autows_list = {['SWORDS']='Savage Blade',['DAGGERS']='Trueflight',['Tauret']='Ae
 ['DualLeadenMelee']='Leaden Salute',['DualAeolian']='Aeolian Edge',['DualRanged']='Last Stand'}
 
 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Overkill"] = {gain = 'Overkill is on.', lose = 'Overkill wore off.', announce_gain = true, announce_lose = true},

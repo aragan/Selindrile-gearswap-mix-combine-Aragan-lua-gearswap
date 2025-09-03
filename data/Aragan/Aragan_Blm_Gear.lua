@@ -1211,7 +1211,7 @@ function user_job_lockstyle()
 end
 
 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Subtle Sorcery"] = {gain = 'Subtle Sorcery is on.', lose = 'Subtle Sorcery wore off.', announce_gain = true, announce_lose = true},

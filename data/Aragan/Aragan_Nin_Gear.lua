@@ -55,13 +55,15 @@ function user_job_setup()
     state.PhysicalDefenseMode:options('PDT', 'Evasion', 'HP', 'Enmity')
 	state.MagicalDefenseMode:options('MDT')
 	state.ResistDefenseMode:options('MEVA')
-	state.Weapons:options('Heishi','None','Tauret','Naegling','Hachimonji','Zanmato','CLUB','Staff','H2H','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2')
-    state.Passive:options('None', 'SubtleBlow','MDT', 'Enspell')
-    state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None','Resist','SuppaBrutal','DWEarrings','DWMax'}
-	state.AutoBuffMode:options('Off','Auto','Sortie','Tank','Defend') --,'Off','Off','Off','Off','Off',
+	state.Weapons:options('Normal','Heishi','None','Tauret','Naegling','Hachimonji','Zanmato','CLUB','Staff','H2H','ProcGreatSword','ProcScythe','ProcPolearm','ProcKatana','ProcDagger','ProcDagger2','ProcGreatKatana','ProcGreatKatana2','ProcSword','ProcSword2','ProcClub','ProcStaff','ProcStaff2','ProcCRIT','ProcCRIT2','ProcSword3')
+    state.Passive:options('None', 'SubtleBlow','MDT', 'Enspell','PDL')
+    state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None','Resist','SuppaBrutal','DWEarrings','DWMax','DWFull','DWFull2','DWFull32'}
+	state.AutoBuffMode:options('Off','Auto','Sortie','Abyssea','Tank','Defend') --,'Off','Off','Off','Off','Off',
 
 	gear.wsd_jse_back = {}
 	gear.da_jse_back = {}    
+	gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
+	gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
 
     swordList = S{'Naegling'}
     GKList = S{'Hachimonji','Zanmato +1'}
@@ -89,19 +91,22 @@ function user_job_setup()
     
     local last_check = 0
     local was_chat_open = false
-    windower.register_event('prerender', function()
+    local nexttime = os.clock()
+    local delay = 0.9
+windower.register_event('prerender', function()
     local curtime = os.clock()
     if nexttime + delay <= curtime then
         nexttime = curtime
         delay = 0.9
-    local chat_open = windower.ffxi.get_info().chat_open
-    if chat_open and not was_chat_open then
-		send_command('unbind `')
-		-- send_command('unbind tab')
-        was_chat_open = true
-    elseif not chat_open and was_chat_open then
-        send_command('bind ` gs c toggle abyssea;wait 0.1;gs c abyssea')
-        was_chat_open = false
+        local chat_open = windower.ffxi.get_info().chat_open
+        if chat_open and not was_chat_open then
+            send_command('unbind `')
+            -- send_command('unbind tab')
+            was_chat_open = true
+        elseif not chat_open and was_chat_open then
+            send_command('bind ` gs c toggle abyssea;wait 0.1;gs c abyssea')
+            was_chat_open = false
+        end
     end
 end)
 
@@ -138,6 +143,8 @@ function init_gear_sets()
     sets.weapons.ProcDagger2 = {main="Qutrub Knife",sub="Trainee Sword"}
 	sets.weapons.ProcSword = {main="Fermion Sword",sub="Trainee Sword"}
     sets.weapons.ProcSword2 = {main="Fermion Sword",sub="Trainee Sword"}
+    sets.weapons.ProcSword3 = {main="Naegling",sub={ name="Gleti's Knife", augments={'Path: A',}},}
+
 	sets.weapons.ProcGreatSword = {main="Irradiance Blade", sub="Alber Strap"}
 	sets.weapons.ProcScythe = {main="Maven's Scythe", sub="Alber Strap"}
 	sets.weapons.ProcPolearm = {main="Sha Wujing's La. +1", sub="Alber Strap"}
@@ -147,7 +154,8 @@ function init_gear_sets()
 	sets.weapons.ProcClub = {main="Caduceus",sub="Trainee Sword"}
 	sets.weapons.ProcStaff = {main="Profane Staff",sub="Sword Strap"}
     sets.weapons.ProcStaff2 = {main="Profane Staff",sub="Sword Strap"}
-
+    sets.weapons.ProcCRIT = {main={ name="Gleti's Knife", augments={'Path: A',}},sub="Crepuscular Knife",}
+    sets.weapons.ProcCRIT2 = {main="Blurred Knife +1",sub={ name="Gleti's Knife", augments={'Path: A',}},}
     --------------------------------------
     -- Precast sets
     --------------------------------------
@@ -209,7 +217,7 @@ function init_gear_sets()
     neck="Orunmila's Torque", 
     }
 
-    sets.precast.FC.Utsusemi = set_combine(sets.precast.FC, {neck="Magoraga Beads",body="Passion Jacket",feet="Hattori Kyahan +2"})
+    sets.precast.FC.Utsusemi = set_combine(sets.precast.FC, {neck="Magoraga Beads",body="Mochi. Chainmail +3",feet="Hattori Kyahan +2"})
 	sets.precast.FC.Shadows = set_combine(sets.precast.FC.Utsusemi, {ring1="Prolix Ring"})
 
     -- Snapshot for ranged
@@ -278,7 +286,7 @@ function init_gear_sets()
         back="Null Shawl",]]
     }
 
-    sets.precast.WS['Aeolian Edge'] = set_combine(sets.precast.WS, {       
+    sets.precast.WS['Aeolian Edge'] = {       
         ammo={ name="Ghastly Tathlum +1", augments={'Path: A',}},
         head={ name="Mochi. Hatsuburi +3", augments={'Enhances "Yonin" and "Innin" effect',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
@@ -292,13 +300,13 @@ function init_gear_sets()
         right_ear={ name="Lugra Earring +1", augments={'Path: A',}},
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         back="Sacro Mantle",
-    })
-    sets.precast.WS['Aeolian Edge'].Proc = {}
-    --sets.precast.WS['Aeolian Edge'].PDL = set_combine(sets.precast.WS['Aeolian Edge'],{})
-    
+    }
+    sets.precast.WS['Aeolian Edge'].Proc = set_combine(sets.precast.WS['Aeolian Edge'],{})
+    sets.precast.WS['Aeolian Edge'].PDL = set_combine(sets.precast.WS['Aeolian Edge'],{})
+    sets.precast.WS['Aeolian Edge'].DT = set_combine(sets.precast.WS['Aeolian Edge'],{})
 
     sets.Kamu = {
-        ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
+    ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
     head={ name="Nyame Helm", augments={'Path: B',}},
     body={ name="Nyame Mail", augments={'Path: B',}},
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
@@ -654,8 +662,7 @@ function init_gear_sets()
         left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
         back="Sacro Mantle",
     })
-    sets.precast.WS['Blade: Yu'] = sets.precast.WS['Blade: Teki']
-    sets.precast.WS['Blade: Yu'].PDL = sets.precast.WS['Blade: Yu'].PDL
+    sets.precast.WS['Blade: Yu'].PDL = sets.precast.WS['Blade: Yu']
 
     sets.precast.WS['Blade: Ei'] = set_combine(sets.precast.WS, {
         ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
@@ -824,8 +831,80 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     back="Null Shawl",
 })
 sets.precast.WS['Tachi: Ageha'] = sets.precast.WS["Shell Crusher"]
+sets.precast.WS["Shockwave"] = set_combine(sets.precast.WS, {})
 
-	-- Extra Melee sets.  Apply these on top of melee sets.
+-- Extra Melee sets.  Apply these on top of melee sets.
+
+    sets.Knockback = {}
+    sets.Resist = {
+        hands={ name="Floral Gauntlets", augments={'Rng.Acc.+15','Accuracy+15','"Triple Atk."+3','Magic dmg. taken -4%',}},
+        feet="Ahosi Leggings",
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Engraved Belt",
+    }
+
+	sets.SuppaBrutal = {ear1="Suppanomimi", ear2="Brutal Earring"}
+	sets.DWEarrings = {    left_ear="Suppanomimi", --5
+    right_ear="Eabani Earring", --4
+    }
+	sets.DWMax = {  head="Ryuo Somen +1", --9
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    feet="Hiza. Sune-Ate +2", --8
+    left_ear="Suppanomimi",  --5
+    right_ear="Eabani Earring", --4
+    waist="Reiki Yotai", --7
+    }
+    sets.DWFull =  {
+        -- head="Ryuo Somen +1", --9
+        body="Mochi. Chainmail +3", --9
+        -- legs={ name="Mochi. Hakama +3", augments={'Enhances "Mijin Gakure" effect',}},--10
+        hands={ name="Floral Gauntlets", augments={'Rng.Acc.+15','Accuracy+15','"Triple Atk."+3','Magic dmg. taken -4%',}},--5
+        feet=gear.taeon_dw_feet,--9
+        -- feet="Hiza. Sune-Ate +2", --8
+       left_ear="Suppanomimi",  --5
+       right_ear="Eabani Earring", --4
+       waist="Reiki Yotai", --7
+    }-- 39%
+
+    sets.DWFull2 =  {
+        -- head="Ryuo Somen +1", --9
+        body="Mochi. Chainmail +3", --9
+        -- legs={ name="Mochi. Hakama +3", augments={'Enhances "Mijin Gakure" effect',}},--10
+        hands={ name="Floral Gauntlets", augments={'Rng.Acc.+15','Accuracy+15','"Triple Atk."+3','Magic dmg. taken -4%',}},--5
+        feet=gear.taeon_dw_feet,--9
+        -- feet="Hiza. Sune-Ate +2", --8
+       left_ear="Suppanomimi",  --5
+       right_ear="Eabani Earring", --4
+       left_ring="Mummu Ring",
+       right_ring="Hetairoi Ring",
+       waist="Reiki Yotai", --7
+    }-- 39%
+    sets.DWFull32 =  {
+        -- head="Ryuo Somen +1", --9
+        body="Mochi. Chainmail +3", --9
+        -- legs={ name="Mochi. Hakama +3", augments={'Enhances "Mijin Gakure" effect',}},--10
+        hands={ name="Floral Gauntlets", augments={'Rng.Acc.+15','Accuracy+15','"Triple Atk."+3','Magic dmg. taken -4%',}},--5
+        feet=gear.taeon_dw_feet,--9
+        -- feet="Hiza. Sune-Ate +2", --8
+       left_ear="Suppanomimi",  --5
+       right_ear="Eabani Earring", --4
+       left_ring="Mummu Ring",
+       right_ring="Hetairoi Ring",
+       waist="Windbuffet Belt +1",
+    --    waist="Reiki Yotai", --7
+    }-- 32%
+
+	-- Treasure Hunter
+	--sets.TreasureHunter,
+	sets.TreasureHunter = set_combine({
+        legs=gear.herculean_treasure_legs,
+        head="Volte Cap",
+        ammo="Per. Lucky Egg", 
+        --legs={ name="Herculean Trousers", augments={'"Dbl.Atk."+1','AGI+6','"Treasure Hunter"+2','Accuracy+11 Attack+11','Mag. Acc.+9 "Mag.Atk.Bns."+9',}},
+    })
+
+	sets.Skillchain = {legs="Ryuo Hakama +1",}
+
 
 -- Swap to these on Moonshade using WS if at 3000 TP
 sets.MaxTP = {ear1="Ishvara Earring"}
@@ -834,9 +913,9 @@ sets.AccDayMaxTPWSEars = {}
 sets.DayMaxTPWSEars = {}
 sets.AccDayWSEars = {}
 sets.DayWSEars = {}
-    sets.rollerRing = {left_ring="Roller's Ring"}
+sets.rollerRing = {left_ring="Roller's Ring"}
 
-	--Passive set
+--Passive set
 	sets.passive.MDT = {
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
         waist="Carrier's Sash",
@@ -850,7 +929,13 @@ sets.DayWSEars = {}
 
 	}
 
-
+    sets.passive.PDL = {
+        ammo="Crepuscular Pebble",
+        legs={ name="Mpaca's Hose", augments={'Path: A',}},
+        neck={ name="Ninja Nodowa +2", augments={'Path: A',}},
+        right_ear="Hattori Earring +1",
+        left_ring="Sroda Ring",
+	}
     --------------------------------------
     -- Midcast sets
     --------------------------------------
@@ -999,7 +1084,7 @@ sets.DayWSEars = {}
         waist="Plat. Mog. Belt",
         left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
         right_ear="Mendi. Earring",
-        left_ring="Naji's Loop",
+        -- left_ring="Naji's Loop",
         right_ring="Defending Ring",
         back="Solemnity Cape",
 	}
@@ -1046,9 +1131,9 @@ sets.DayWSEars = {}
             left_ear="Infused Earring",
             left_ring="Chirich Ring +1",
             right_ring="Chirich Ring +1",
-    }
+}
 
-    -- Idle sets
+-- Idle sets
 
 --idle - defense
 
@@ -1342,18 +1427,18 @@ sets.idle.Empy = set_combine(sets.idle, {
     })
     sets.engaged.DOUBLE = set_combine(sets.engaged,{
         ammo={ name="Coiste Bodhar", augments={'Path: A',}},
-        head={ name="Mpaca's Cap", augments={'Path: A',}},
+        head={ name="Dampening Tam", augments={'DEX+10','Accuracy+15','Mag. Acc.+15','Quadruple Attack +3',}},
         body={ name="Tatena. Harama. +1", augments={'Path: A',}},
-        hands={ name="Tatena. Gote +1", augments={'Path: A',}},
+        hands={ name="Herculean Gloves", augments={'"Triple Atk."+4',}},
         legs={ name="Samnuha Tights", augments={'STR+10','DEX+10','"Dbl.Atk."+3','"Triple Atk."+3',}},
         feet={ name="Herculean Boots", augments={'Attack+5','"Triple Atk."+4','AGI+4','Accuracy+1',}},
         neck="Clotharius Torque",
-        waist="Sailfi Belt +1",
+        waist="Windbuffet Belt +1",
         left_ear="Balder Earring +1",
         right_ear="Cessance Earring",
-        right_ring="Gere Ring",
         left_ring="Epona's Ring",
-        back="Andartia's Mantle", 
+        right_ring="Gere Ring",
+        back={ name="Andartia's Mantle", augments={'STR+20','Accuracy+20 Attack+20','Attack+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     })
     sets.engaged.CRIT = {
         ammo="Yetshila +1",
@@ -1362,7 +1447,7 @@ sets.idle.Empy = set_combine(sets.idle, {
         hands="Mpaca's Gloves",
         legs="Mpaca's Hose",
         feet="Mpaca's Boots",
-        neck="Ninja Nodowa +2",
+        neck="Nefarious Collar +1",
         waist="Sailfi Belt +1",
         ear1="Odr Earring",
         ear2="Lugra Earring +1",
@@ -1432,12 +1517,12 @@ sets.idle.Empy = set_combine(sets.idle, {
         hands="Mpaca's Gloves",
         legs="Mpaca's Hose",
         feet="Mpaca's Boots",
-        neck="Ninja Nodowa +2",
-        waist="Sailfi Belt +1",
+        neck="Nefarious Collar +1",
+        waist="Gerdr Belt",
         ear1="Odr Earring",
         ear2="Lugra Earring +1",
-        ring1="Gere Ring",
-        ring2="Epona's Ring",
+        left_ring="Mummu Ring",
+        right_ring="Hetairoi Ring",
         back="Andartia's Mantle",
         --[[ammo="Yetshila +1",
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
@@ -1453,7 +1538,11 @@ sets.idle.Empy = set_combine(sets.idle, {
         right_ring="Hetairoi Ring",
         back="Andartia's Mantle",]]
     }
-    
+    sets.engaged.DW.DOUBLE = set_combine(sets.engaged.DOUBLE,{
+        left_ear="Suppanomimi",  --5
+        right_ear="Eabani Earring", --4
+        waist="Reiki Yotai", --7
+    })
 
 ------------------------------------------------------------------------------------------------
     ---------------------------------------- DW-HASTE ------------------------------------------
@@ -1493,21 +1582,13 @@ sets.engaged.DW.TP.LowHaste = set_combine(sets.engaged.DW.TP, {
     waist="Reiki Yotai", --7
 })-- 39%
 sets.engaged.DW.CRIT.LowHaste = set_combine(sets.engaged.DW.CRIT, {
-    ammo="Yetshila +1",
-    head="Adhemar Bonnet +1",
-    body="Mpaca's Doublet",
-    hands="Mpaca's Gloves",
-    legs="Mpaca's Hose",
-    feet="Mpaca's Boots",
-    neck="Ninja Nodowa +2",
-    waist="Sailfi Belt +1",
-    left_ear="Suppanomimi",  --5
-    right_ear="Eabani Earring", --4
-    ring1="Gere Ring",
-    ring2="Epona's Ring",
-    back="Andartia's Mantle",
-
-
+    head="Ryuo Somen +1", --9
+    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
+    legs={ name="Mochi. Hakama +3", augments={'Enhances "Mijin Gakure" effect',}},--10
+   feet="Hiza. Sune-Ate +2", --8
+   left_ear="Suppanomimi",  --5
+   right_ear="Eabani Earring", --4
+   waist="Reiki Yotai", --7
 })-- 39%
 
 --MID-HASTE
@@ -1533,19 +1614,9 @@ sets.engaged.DW.TP.MidHaste = set_combine(sets.engaged.DW.TP, {
     waist="Reiki Yotai", --7
 }) -- 16%
 sets.engaged.DW.CRIT.MidHaste = set_combine(sets.engaged.DW.CRIT, {
-    ammo="Yetshila +1",
-    head="Adhemar Bonnet +1",
-    body="Mpaca's Doublet",
-    hands="Mpaca's Gloves",
-    legs="Mpaca's Hose",
-    feet="Mpaca's Boots",
-    neck="Ninja Nodowa +2",
-    waist="Sailfi Belt +1",
-    left_ear="Suppanomimi",  --5
+    left_ear="Suppanomimi", --5
     right_ear="Eabani Earring", --4
-    ring1="Gere Ring",
-    ring2="Epona's Ring",
-    back="Andartia's Mantle",
+    waist="Reiki Yotai", --7
 }) -- 16%
 
 --HIGH-HASTE
@@ -1662,42 +1733,15 @@ back="Andartia's Mantle",
     sets.buff.Yonin = {} --
     sets.buff.Innin = {} --head="Hattori Zukin +1"
 
-    -- Extra Melee sets.  Apply these on top of melee sets.
-    sets.Knockback = {}
-    sets.Resist = {
-        hands={ name="Floral Gauntlets", augments={'Rng.Acc.+15','Accuracy+15','"Triple Atk."+3','Magic dmg. taken -4%',}},
-        feet="Ahosi Leggings",
-        neck={ name="Warder's Charm +1", augments={'Path: A',}},
-        waist="Engraved Belt",
-    }
-
-	sets.SuppaBrutal = {ear1="Suppanomimi", ear2="Brutal Earring"}
-	sets.DWEarrings = {    left_ear="Suppanomimi", --5
-    right_ear="Eabani Earring", --4
-    }
-	sets.DWMax = {  head="Ryuo Somen +1", --9
-    body={ name="Adhemar Jacket +1", augments={'DEX+12','AGI+12','Accuracy+20',}}, --6
-    feet="Hiza. Sune-Ate +2", --8
-    left_ear="Suppanomimi",  --5
-    right_ear="Eabani Earring", --4
-    waist="Reiki Yotai", --7
-    }
-	-- Treasure Hunter
-	--sets.TreasureHunter,
-	sets.TreasureHunter = set_combine({
-        legs=gear.herculean_treasure_legs,
-        head="Volte Cap",
-        ammo="Per. Lucky Egg", 
-        --legs={ name="Herculean Trousers", augments={'"Dbl.Atk."+1','AGI+6','"Treasure Hunter"+2','Accuracy+11 Attack+11','Mag. Acc.+9 "Mag.Atk.Bns."+9',}},
-    })
-
-	sets.Skillchain = {legs="Ryuo Hakama +1",}
-
-
 end
-function user_job_lockstyle()
-    if not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
+function user_job_lockstyle() 
+    if data.areas.Abyssea:contains(world.area) then
+
+    -- if (world.area:contains('Abyssea - Altepa') or world.area:contains('Abyssea - Misareaux') or world.area:contains('Abyssea - La Theine') or 
+    -- world.area:contains('Abyssea - Uleguerand') or world.area:contains('Abyssea - Konschtat') or world.area:contains('Abyssea - Vunkerl')) then
         windower.chat.input('/lockstyleset 1')
+        send_command('gs c update') 
+        style_lock = true
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
@@ -1733,7 +1777,7 @@ function select_default_macro_book()
 end
 
 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
         ["Naturalist's Roll"] = {gain = 'Naturalist Roll is on.', lose = 'Naturalist Roll wore off.', announce_gain = true, announce_lose = false},

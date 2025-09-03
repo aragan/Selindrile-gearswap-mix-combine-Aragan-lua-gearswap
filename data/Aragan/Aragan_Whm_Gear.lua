@@ -1564,7 +1564,7 @@ function user_job_lockstyle()
 	windower.chat.input('/lockstyleset 178')
 end
 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Reraise"] = {gain = 'Reraise is on.', lose = 'Reraise wore off.', announce_gain = true, announce_lose = true},

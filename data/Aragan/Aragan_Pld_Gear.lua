@@ -1805,7 +1805,7 @@ autows_list = {['Naegling']='Savage Blade',['Burtgang']='Atonement',['Malignance
 -- 	return false
 -- end
 
-function buff_change(buff, gain)
+function user_job_buff_change(buff, gain)
     -- Define messages for specific buffs with flags for gain and lose announcements
     local buff_messages = {
 	    ["Fealty"] = {gain = 'Fealty is on.', lose = 'Fealty wore off.', announce_gain = false, announce_lose = true},
