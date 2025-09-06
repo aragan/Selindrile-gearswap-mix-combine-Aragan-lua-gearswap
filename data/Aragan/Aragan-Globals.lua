@@ -54,6 +54,7 @@ SC3
 
 --Place for settings and custom functions to work across one characters, all jobs.
 latency = .75
+-- include(player.name..'-items.lua')
 
 --If this is set to true it will prevent you from casting shadows when you have more up than that spell would generate.
 conserveshadows = false
@@ -133,8 +134,9 @@ state.AutoShadowMode 	  = M(false, 'Auto Shadow Mode')
 state.RefineWaltz		  = M(true, 'RefineWaltz')
 state.Stance = M{['description']='Stance','None'}
 state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
-state.AutogearbuffMode = M(false, 'AutogearbuffMode')
+state.AutogearbuffMode = M(true, 'AutogearbuffMode')
 state.Autojoinptmode = M(true, 'Autojoinptmode')
+state.AutoDropItemsMode = M(true, 'AutoDropItemsMode')
 
 
 state.DefenseDownMode = M{['description']='Defense Down Mode'}
@@ -156,6 +158,16 @@ state.Skillchainerws = M{['description']='Skillchainerws','Fell Cleave','Exudati
 NotifyBuffs = S{'doom','petrification','sleep','slow','paralysis','weakness','elegy','curse recovery','zombie','super curse'}
 
 gear.TVRring = "Cornelia's Ring"
+
+-- --if get debuff slow equip set
+-- sets.buff.Slow = {hands={ name="Gazu Bracelets +1", augments={'Path: A',}}, --10% haste
+-- waist="Tempus Fugit +1",}  --15% haste
+-- global.lua
+-- if not sets then sets = {} end
+-- sets.buff = sets.buff or {}
+
+-- sets.buff.Slow = set_combine(sets.buff.Slow, {hands={ name="Gazu Bracelets +1", augments={'Path: A',}}, --10% haste
+-- waist="Tempus Fugit +1",})
 
 state.Absorbs = M{['description']='Absorbs', 'Absorb-TP', 'Absorb-VIT','Absorb-Attri', 'Absorb-MaxAcc','Absorb-STR', 'Absorb-DEX', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR',}
 
@@ -323,6 +335,7 @@ function global_on_load()
 	send_command('bind !8 gs c toggle SkipProcWeapons')
 	send_command('bind !9 gs c toggle AutogearbuffMode')
 	send_command('bind !0 gs c toggle Autojoinptmode')
+	send_command('bind ^0 gs c toggle AutoDropItemsMode')
 
 	send_command('bind ^- gs c toggle selectnpctargets') 
 	send_command('bind !- gs c cycle pctargetmode')
@@ -400,61 +413,39 @@ send_command('bind ^@!f12 gs reload;gzc auto_point') -- lua r Gaze_check /--Relo
 send_command('bind pageup ata toggle;gs c toggle AutoEngageMode;gzc auto_point;')--Turns addon  auto attack target on. to be killer machine in Odyssey or Dynamis.
 -- send_command('bind pagedown ata off;lua unload Gaze_check')--Turns addon  auto attack target off.
 
-windower.raw_register_event('incoming text',function(org)
-	if string.find(org, "AutoTargetAssist targeting: on")  then
-		windower.send_command('input /echo ((Attack is ON.)) >> killer machine ready <<')  -- code add by (Aragan@Asura)
-        -- windower.send_command('input /t '..player.name..' '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14> ' )
-	end
-	-- if string.find(org, "Helldive") then
-	-- 	-- state.weapons:('ProcScytheTwilight')
-	-- 	windower.add_to_chat(207, 'Helldive2')
-	-- end
-	-- if string.find(org, "Wing Cutter") then
-	-- 	-- state.weapons:('ProcScytheTwilight')
-	-- 	windower.add_to_chat(207, 'Wing Cutter2')
-	-- end
-	-- if string.find(org, "Abyssdiver readies Helldive") then
-	-- 	-- state.weapons:('ProcScytheTwilight')
-	-- 	windower.add_to_chat(207, 'readies Helldive3')
-	-- end
-	-- if string.find(org, "Abyssdiver readies Wing Cutter") then
-	-- 	-- state.weapons:('ProcScytheTwilight')
-	-- 	windower.add_to_chat(207, 'readies Wing Cutter3')
-	-- end
-end)
-windower.register_event('action', function(act)
-	local actor = (act.actor_id and windower.ffxi.get_mob_by_id(act.actor_id)) or 'unknown'
-	if type(actor) == "table" then
-		actor = actor.name
-	end
+-- windower.register_event('action', function(act)
+-- 	local actor = (act.actor_id and windower.ffxi.get_mob_by_id(act.actor_id)) or 'unknown'
+-- 	if type(actor) == "table" then
+-- 		actor = actor.name
+-- 	end
 
-	local monster_ability = res.monster_abilities[act.targets[1].actions[1].param]
-	local spell_start = res.spells[act.targets[1].actions[1].param]
+-- 	local monster_ability = res.monster_abilities[act.targets[1].actions[1].param]
+-- 	local spell_start = res.spells[act.targets[1].actions[1].param]
 
-	if actor == 'Abyssdiver' then
-		local monster_ability = res.monster_abilities[act.param]
-		if monster_ability == nil then
-			return
-		elseif monster_ability.en == 'Helldive' then
-			windower.add_to_chat(207, 'Helldive')
-		elseif monster_ability.en == 'Wing Cutter' then
-			windower.add_to_chat(207, 'Wing Cutter')
-			-- coroutine.schedule(function()
-			-- 	windower.add_to_chat(207, 'Wing Cutter  is off!')
-			-- end, 30)
-		end
-	end
-	if actor == 'Minaruja' then
-		local monster_ability = res.monster_abilities[act.param]
-		if monster_ability == nil then
-			return
-		elseif monster_ability.en == 'Hurricane Breath' then
-			windower.add_to_chat(207, 'Hurricane Breath')
-			send_command('gs c update') 
-			style_lock = true
-		end
-	end
-end)
+-- 	if actor == 'Abyssdiver' then
+-- 		local monster_ability = res.monster_abilities[act.param]
+-- 		if monster_ability == nil then
+-- 			return
+-- 		elseif monster_ability.en == 'Helldive' then
+-- 			windower.add_to_chat(207, 'Helldive')
+-- 		elseif monster_ability.en == 'Wing Cutter' then
+-- 			windower.add_to_chat(207, 'Wing Cutter')
+-- 			-- coroutine.schedule(function()
+-- 			-- 	windower.add_to_chat(207, 'Wing Cutter  is off!')
+-- 			-- end, 30)
+-- 		end
+-- 	end
+-- 	if actor == 'Minaruja' then
+-- 		local monster_ability = res.monster_abilities[act.param]
+-- 		if monster_ability == nil then
+-- 			return
+-- 		elseif monster_ability.en == 'Hurricane Breath' then
+-- 			windower.add_to_chat(207, 'Hurricane Breath')
+-- 			send_command('gs c update') 
+-- 			style_lock = true
+-- 		end
+-- 	end
+-- end)
 send_command('bind !@^f7 gs c toggle AutoWSMode') --Turns auto-ws mode on and off.
 send_command('bind !^f7 gs c toggle AutoFoodMode') --Turns auto-ws mode on and off.
 send_command('bind f6 gs c cycle Weapons') --Cycle through weapons sets.
@@ -496,49 +487,46 @@ send_command('alias temps temps buy')
 send_command('alias tonic tonic buffup')
 
 
-local last_check = 0
-local was_chat_open = false
-windower.register_event('prerender', function()
-	local curtime = os.clock()
-	if nexttime + delay <= curtime then
-		nexttime = curtime
-		delay = 0.9
-	    -- if os.clock() - last_check < 0.5 then return end
-        -- last_check = os.clock()	
-        local chat_open = windower.ffxi.get_info().chat_open
-		if chat_open and not was_chat_open then
-			send_command('unbind ~1')
-			send_command('unbind ~2')
-			send_command('unbind ~3')
-			send_command('unbind ~4')
-			-- send_command('unbind `')
-			-- send_command('unbind tab')
+-- local next_check = 0
+-- local check_delay = 1.0   -- ثانية بين كل فحص (تقدر تخليها 2.0 لو تبي أخف)
+-- local was_chat_open = false
+
+-- windower.register_event('prerender', function()
+--     local now = os.clock()
+--     if now < next_check then return end
+--     next_check = now + check_delay
+-- 	    -- if os.clock() - last_check < 0.5 then return end
+--         -- last_check = os.clock()	
+--         local chat_open = windower.ffxi.get_info().chat_open
+-- 		if chat_open and not was_chat_open then
+-- 			send_command('unbind ~1')
+-- 			send_command('unbind ~2')
+-- 			send_command('unbind ~3')
+-- 			send_command('unbind ~4')
+-- 			-- send_command('unbind `')
+-- 			-- send_command('unbind tab')
 	
-			was_chat_open = true
+-- 			was_chat_open = true
 	
-		elseif not chat_open and was_chat_open then
-			send_command('bind ~1 asc c 1')
-			send_command('bind ~2 asc c 2')
-			send_command('bind ~3 asc c 3')
-			send_command('bind ~4 asc c 4')
-			was_chat_open = false
-		end
+-- 		elseif not chat_open and was_chat_open then
+-- 			send_command('bind ~1 asc c 1')
+-- 			send_command('bind ~2 asc c 2')
+-- 			send_command('bind ~3 asc c 3')
+-- 			send_command('bind ~4 asc c 4')
+-- 			was_chat_open = false
+-- 		end
 	
-		if os.clock() - last_check < 8 then return end
-		last_check = os.clock()	
-		if player.equipment.ring2 == "Warp Ring" or player.equipment.feet == "Hippo. Socks +1" then
-			Warping()
-			tickdelay = os.clock() + 1
-		end
-		-- if state.AutoBuffMode.Value == 'Shinryu' then
-		-- 	if target and target.is_npc and target.hpp <= 1 and not low_hp_nm_triggered then
-		-- 		low_hp_nm_triggered = true
-		-- 		state.TreasureMode:set('Fulltime')
-		-- 		add_to_chat(123, 'NM HP ≤ 1% - Equipped low HP set.')
-		-- 	end
-		-- end
-    end
-end)
+
+
+-- 		-- if state.AutoBuffMode.Value == 'Shinryu' then
+-- 		-- 	if target and target.is_npc and target.hpp <= 1 and not low_hp_nm_triggered then
+-- 		-- 		low_hp_nm_triggered = true
+-- 		-- 		state.TreasureMode:set('Fulltime')
+-- 		-- 		add_to_chat(123, 'NM HP ≤ 1% - Equipped low HP set.')
+-- 		-- 	end
+-- 		-- end
+    
+-- end)
 
 
 -- Function to revert binds when unloading.
@@ -631,21 +619,35 @@ end
 -- 	end
 -- end)
 
--- function user_tick()
---     if player.equipment.ring2 == "Warp Ring" then
--- 	if Warping() then return true end
--- 			tickdelay = os.clock() + 1.5
--- 		return true
--- 	end
+function user_status_change(new_status, old_status)
+	if player.equipment.ring2 == "Warp Ring" then
+		Warping()
+		tickdelay = os.clock() + 1
+	end
+end
 
--- 	return false
--- end
+-- Delay for user_tick
+local next_user_tick = 0
+local user_tick_delay = 0.5 -- نصف ثانية
 
-bayld_items = {'Tlalpoloani','Macoquetza','Camatlatia','Icoyoca','Tlamini','Suijingiri Kanemitsu',
-'Zoquittihuitz','Quauhpilli Helm','Chocaliztli Mask','Xux Hat','Quauhpilli Gloves','Xux Trousers',
-'Chocaliztli Boots','Maochinoli','Xiutleato','Hatxiik','Kuakuakait','Azukinagamitsu','Atetepeyorg',
-'Kaquljaan','Ajjub Bow','Baqil Staff','Ixtab','Tamaxchi','Otomi Helm','Otomi Gloves','Kaabnax Hat',
-'Kaabnax Trousers','Ejekamal Mask','Ejekamal Boots','Quiahuiz Helm','Quiahuiz Trousers','Uk\'uxkaj Cap'}
+function user_tick()
+    local now = os.clock()
+    if now < next_user_tick then return false end
+    next_user_tick = now + user_tick_delay
+    -- if player.equipment.ring2 == "Warp Ring" then
+	-- if Warping() then return true end
+	-- 		tickdelay = os.clock() + 1.5
+	-- 	return true
+	-- end
+
+	return false
+end
+
+-- bayld_items = {'Tlalpoloani','Macoquetza','Camatlatia','Icoyoca','Tlamini','Suijingiri Kanemitsu',
+-- 'Zoquittihuitz','Quauhpilli Helm','Chocaliztli Mask','Xux Hat','Quauhpilli Gloves','Xux Trousers',
+-- 'Chocaliztli Boots','Maochinoli','Xiutleato','Hatxiik','Kuakuakait','Azukinagamitsu','Atetepeyorg',
+-- 'Kaquljaan','Ajjub Bow','Baqil Staff','Ixtab','Tamaxchi','Otomi Helm','Otomi Gloves','Kaabnax Hat',
+-- 'Kaabnax Trousers','Ejekamal Mask','Ejekamal Boots','Quiahuiz Helm','Quiahuiz Trousers','Uk\'uxkaj Cap'}
 
 --[[ List of all Bayld Items.
 bayld_items = {'Tlalpoloani','Macoquetza','Camatlatia','Icoyoca','Tlamini','Suijingiri Kanemitsu','Zoquittihuitz',
@@ -955,12 +957,12 @@ end
 
 
 function user_post_precast(spell)
-	if spell.name == "Holy Water" then
-		equip(sets.precast.Item['Holy Water'])
-		if buffactive['doom'] then
-			equip(sets.precast.Item['Holy Water'],sets.Reraise)
-		end
-    end
+	-- if spell.name == "Holy Water" then
+	-- 	equip(sets.precast.Item['Holy Water'])
+	-- 	if buffactive['doom'] then
+	-- 		equip(sets.precast.Item['Holy Water'],sets.Reraise)
+	-- 	end
+    -- end
     --[[if spell.type == 'WeaponSkill' and state.WeaponskillMode.value == 'SubtleBlow' then
 	equip(sets.precast.WS.SubtleBlow)
     end
@@ -1016,9 +1018,7 @@ function user_aftercast(spell, spellMap, eventArgs)
 		end
 	end
 
--- windower.register_event('incoming text',function(org)     
 
--- end)
 	-- if spell.skill == 'Elemental Magic' then
 	-- 	windower.send_command('input /p  ')
 	-- 	-- windower.chat.input('/p  ')
@@ -1160,7 +1160,6 @@ function user_customize_idle_set(idleSet)
     else
         enable('neck')
     end
-	
 	if state.CraftingMode.value ~= 'None' then
 		idleSet = set_combine(idleSet,sets.crafting[state.CraftingMode.value])
 	
@@ -1182,6 +1181,9 @@ function user_customize_melee_set(meleeSet)
     if state.TreasureMode.value == 'Fulltime' then
         meleeSet = set_combine(meleeSet, sets.TreasureHunter)
     end
+	-- if buffactive["Slow"] then
+	-- 	meleeSet = set_combine(meleeSet,sets.buff.Slow)
+	-- end
 	-- If HP drops under 45% then equip Re-raise head/body
 	-- if (player.main_job == 'BST' or player.main_job == 'DRG' or player.main_job == 'DRK'
 	-- 	or player.main_job == 'PLD' or player.main_job == 'SAM' or player.main_job == 'WAR') then
@@ -1197,9 +1199,49 @@ function user_customize_melee_set(meleeSet)
     return meleeSet
 end
 
+
+
+local debuff_items = {
+    ['Paralysis'] = "Remedy",
+    ['Blindness'] = "Remedy",
+    ['Silence'] = "Echo Drops",
+    ['Petrification'] = "Remedy",
+    ['Poison'] = "Antidote",
+    ['Doom'] = "Holy Water",
+    ['Curse'] = "Holy Water",
+    ['Plague'] = "Remedy",
+    ['Disease'] = "Remedy",
+    ['Amnesia'] = "Remedy",
+    ['Sleep'] = "Remedy",
+    ['Slow'] = "Remedy",
+    ['Bind'] = "Remedy",
+    ['Weight'] = "Remedy",
+    ['Bio'] = "Remedy",
+    ['Dia'] = "Remedy",
+    ['STR Down'] = "Panacea",
+    ['DEX Down'] = "Panacea",
+    ['VIT Down'] = "Panacea",
+    ['AGI Down'] = "Panacea",
+    ['INT Down'] = "Panacea",
+    ['MND Down'] = "Panacea",
+    ['CHR Down'] = "Panacea",
+    ['Max HP Down'] = "Panacea",
+    ['Max MP Down'] = "Panacea",
+    ['Max TP Down'] = "Panacea",
+    ['Accuracy Down'] = "Panacea",
+    ['Attack Down'] = "Panacea",
+    ['Evasion Down'] = "Panacea",
+    ['Defense Down'] = "Panacea",
+    ['Magic Atk. Down'] = "Panacea",
+    ['Magic Def. Down'] = "Panacea",
+    ['Magic Acc. Down'] = "Panacea",
+    ['Magic Evasion Down'] = "Panacea",
+}
+
+
 -- Global intercept on buff change.
 function user_buff_change(buff, gain, eventArgs)
-    add_to_chat(123, 'job_buff_change: '..buff..'  Gain: '..tostring(gain))
+    -- add_to_chat(123, 'job_buff_change: '..buff..'  Gain: '..tostring(gain))
 
 	-- local abil_recasts = windower.ffxi.get_ability_recasts()
 	-- local spell_recasts = windower.ffxi.get_spell_recasts()
@@ -1269,98 +1311,78 @@ function user_buff_change(buff, gain, eventArgs)
 			tickdelay = os.clock() + 1.1
 		end
 	end
+	if state.AutogearbuffMode.value and buff == "Sentinel's Scherzo" then
+		if gain then
+		state.HybridMode:set('Normal')
+	    else
+		state.HybridMode:set('DT')
+	    end
+	end
+
+	-- if state.AutogearbuffMode.value and buff == "Slow" then
+	-- 	if gain then
+	-- 		-- إذا أخذت Slow، نغير القطع لتعويض السرعة
+	-- 		equip(sets.buff.Slow)
+	-- 		add_to_chat(123, "[GearSwap] Slow detected: Equipping haste gear!")
+	-- 	end
+	-- end
+
+-- update code version 2.1.1 by Author:Aragan
+--------------- for Amnesia debuff
+	previous_hybrid_mode = previous_hybrid_mode or nil
+
+    if state.AutogearbuffMode.value and buff == "Amnesia" then
+		if gain then
+            if not previous_hybrid_mode then
+				previous_hybrid_mode = state.OffenseMode.value
+			    -- add_to_chat(123, '[GS] Scherzo ON →  '..previous_hybrid_mode..'  Normal')
+		    end
+			state.OffenseMode:set('CRIT')-- SWITCH TO CRITICAL SET
+			-- add_to_chat(123, '[GS] Scherzo ON → Normal')
+		else
+			if previous_hybrid_mode then
+                state.OffenseMode:set(previous_hybrid_mode) -- back to previous mode value
+                -- add_to_chat(122, "OffenseMode restored → "..previous_hybrid_mode)
+                previous_hybrid_mode = nil -- نفرغ التخزين
+            else
+				state.OffenseMode:reset() -- if all previous of this buff false , then reset
+                -- add_to_chat(122, "OffenseMode reset (no saved value)")
+            end
+        end
+	end
+
+-- update code version 2.1.1 by Author:Aragan
+------------ for scherszo buff
+	previous_hybrid_mode = previous_hybrid_mode or nil
 
 
+	if state.AutogearbuffMode.value and buff == "Sentinel's Scherzo" then
+		if gain then
+			if not previous_hybrid_mode then
+				previous_hybrid_mode = state.HybridMode.value
+				-- add_to_chat(123, '[GS] Scherzo ON → حفظ '..previous_hybrid_mode..' وتغيير لـ Normal')
+			end
+			state.HybridMode:set('Normal') -- SWITCH TO Normal SET
+			-- add_to_chat(123, '[GS] Scherzo ON → Normal')
+		else
+			if previous_hybrid_mode then
+				state.HybridMode:set(previous_hybrid_mode) -- back to previous hybrid mode value
+				-- add_to_chat(122, "HybridMode restored → "..previous_hybrid_mode)
+				previous_hybrid_mode = nil -- نفرغ التخزين
+			else
+				state.HybridMode:set('DT') -- if all previous of this buff false , then reset set HybridMode to DT for safety
+				-- add_to_chat(122, "HybridMode reset (no saved value)")
+			end
+		end
+	end
 	if state.AutoMedicineMode.value then
-		if buffactive['Poison'] then
-			send_command('input /item "remedy" <me>')
-			tickdelay = os.clock() + 1.1
-	
-		end
-		if buff == "Defense Down" then
-			if gain then  			
-				send_command('input /item "panacea" <me>')
-			end
-		elseif buff == "Magic Def. Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Max HP Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Evasion Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Magic Evasion Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Dia" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end  
-		elseif buff == "Bio" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Bind" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "slow" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "weight" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Attack Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Accuracy Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
+		if gain and debuff_items[buff] then
+			-- استخدام الدواء المناسب
+			windower.chat.input('/item "'..debuff_items[buff]..'" <me>')
 		end
 	
-		if buff == "VIT Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "INT Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "MND Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "STR Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "AGI Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "poison" then
-			if gain then  
-				send_command('input /item "remedy" <me>')
-			end
-		elseif buff == "paralysis" then
-			if gain then  
-				send_command('input /item "remedy" <me>')
-			end
-		end
-		if buff == "curse" then
-			if gain then  
-				send_command('input /item "Holy Water" <me>')
-				equip(sets.precast.Item['Holy Water'])
-			end
+		if not midaction() then
+			handle_equipping_gear(player.status)
 		end
 	end
 
@@ -1471,11 +1493,11 @@ end
 
 
 	
-function user_tick()
+-- function user_tick()
 	--if check_arts() then return true end
-	if user_state_change() then return true end
+	-- if user_state_change() then return true end
 	-- if user_buff_change() then return true end
-	if check_steps_subjob() then return true end
+	-- if check_steps_subjob() then return true end
 	-- if refine_waltz(spell, action, spellMap, eventArgs) then return true end
 	-- if state.AutoAbsorttpaspirSpam.value and player.in_combat and player.target.type == "MONSTER" and not moving then
 	-- 	if check_tp_mp_lower() then return true end
@@ -1483,8 +1505,8 @@ function user_tick()
 	-- 	return true
 	-- end
 	
-	return false
-end
+-- 	return false
+-- end
 function user_zone_change(new_id,old_id)
 	--tickdelay = os.clock() + 10	
 	current_zone = windower.ffxi.get_info().zone
@@ -1596,7 +1618,84 @@ already_announced_timers = false
 -- 		already_announced_timers = true
 -- 	end
 -- end)
-windower.raw_register_event('incoming text',function(org)
+
+
+
+
+res = require('resources')
+packets = require('packets')
+packets.raw_fields.incoming[0x009] = L{
+    {ctype='unsigned int',      label='ID',},             -- 04
+    {ctype='unsigned short',    label='Index',},          -- 08
+    {ctype='unsigned short',    label='Message'},         -- 0A
+    {ctype='unsigned char',     label='Attr'},            -- 0C
+    {ctype='char*',             label='data'},            -- 0D
+}
+
+windower.register_event('incoming chunk', function(id, original, modified, injected, blocked)
+    if not state.AutoDropItemsMode.value then return end
+
+	if id ~= 0x009 or injected then return end
+    local packet = packets.parse('incoming', original)
+    if packet.Message ~= 180 then return end -- Item dropped
+    local _, item_id_string, _, quantity_string = unpack(packet.data:split(' '))
+    local item_data = res.items[tonumber(item_id_string)]
+    local quantity = tonumber(quantity_string) or 1
+    
+    windower.add_to_chat(123, 'Detected that you dropped a "%s" x%d':format(item_data.en, quantity))
+    
+    windower.send_command('treasury drop add '..item_data.en)
+end)
+
+
+
+
+
+
+-- local res = require('resources')
+-- require('chat')
+-- local drop_items = S{
+--     "beetle shell","beetle jaw","volte tights","volte tiara","volte boots",
+--     "volte hose","volte bracers","volte moufles","volte brayettes",
+--     "crepuscular cloak","fu's scale","kin's scale","kyou's scale","kei's scale","gin's scale"
+-- }
+-- local alerted_items = S{}
+
+windower.raw_register_event('incoming text',function(org, original, modified)
+	-- if not original then return end
+
+    -- local text = tostring(original)  -- تأكد أن النص نص
+    -- local player_name = windower.ffxi.get_player().name or "Unknown"
+	-- item_name = item_name and item_name:strip_format()
+
+    -- for item_name in drop_items:it() do
+    --     -- إزالة a/the في النص لتسهيل المطابقة
+    --     local pattern = "You find [aA] "..item_name
+    --     if text:match(pattern) and not alerted_items:contains(item_name) then
+    --         local msg = player_name.." >> "..item.." << ITS DROP LOT IT!"
+    --         windower.send_command('input /echo '..msg)
+    --         windower.send_command('input /t '..player_name..' '..msg)
+            
+    --         alerted_items:add(item_name)
+    --         break
+    --     end
+    -- end
+	
+	-- if not state.AutoDropItemsMode.value then return end
+
+	-- local item_name = original:match('You throw away a (.+)%.') or original:match('You toss (.+)%.')
+	-- item_name = item_name and item_name:strip_format()
+    -- if item_name then
+    --     windower.send_command('treasury drop add '..item_name..'')
+    --     windower.add_to_chat(207, '[Treasury] Added dropped item: ' .. item_name)
+    -- end
+
+
+    -- -- الكود الجديد لفحص إذا رميت شيء م
+	-- if string.find(org, "AutoTargetAssist targeting: on")  then
+	-- 	windower.send_command('input /echo ((Attack is ON.)) >> killer machine ready <<')  -- code add by (Aragan@Asura)
+    --     -- windower.send_command('input /t '..player.name..' '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14> ' )
+	-- end
 	if state.Autojoinptmode.Value then
 		if string.find(org, "invites you to her party") or string.find(org, "invites you to his party") then
 			-- local sender = org:match("invites you to (.+) party")		
@@ -1605,6 +1704,9 @@ windower.raw_register_event('incoming text',function(org)
 			add_to_chat(207, 'Auto-joined party ')
 		end
 	end
+
+
+
 	if state.DefenseDownMode.Value ~= 'None' then
 		--abyssea stagger --red pros
 		if string.find(org, "Armor Break") then
@@ -1612,18 +1714,19 @@ windower.raw_register_event('incoming text',function(org)
 			send_command('gs c Weapons Normal;gs c cycle DefenseDownMode;')
 		end
 	end
-	if string.find(org, "You find a vial of eft blood") or string.find(org, "You find a volte tights") or string.find(org, "You find a volte tiara") 
-	or string.find(org, "You find a volte boots") or string.find(org, "You find a volte hose") 
-	or string.find(org, "You find a volte bracers") or string.find(org, "You find a crepuscular cloak") 
-	or string.find(org, "You find a volte moufles") or string.find(org, "You find a volte brayettes")
-	or string.find(org, "You find a fu's scale") or string.find(org, "You find a kin's scale")
-	or string.find(org, "You find a kyou's scale") or string.find(org, "You find a kei's scale")
-	or string.find(org, "You find a gin's scale") then
-		local item_name = org:match("You find a (.+)")
+	--beetle shell --beetle jaw
+	-- if string.find(original, "You find a beetle shell") or string.find(org, "You find a volte tights") or string.find(org, "You find a volte tiara") 
+	-- or string.find(org, "You find a volte boots") or string.find(org, "You find a volte hose") 
+	-- or string.find(org, "You find a volte bracers") or string.find(org, "You find a crepuscular cloak") 
+	-- or string.find(org, "You find a volte moufles") or string.find(org, "You find a volte brayettes")
+	-- or string.find(org, "You find a fu's scale") or string.find(org, "You find a kin's scale")
+	-- or string.find(org, "You find a kyou's scale") or string.find(org, "You find a kei's scale")
+	-- or string.find(org, "You find a gin's scale") then
+	-- 	local item_name = org:match("You find a (.+)")
 
-		windower.send_command('input /echo '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14>!')  -- code add by (Aragan@Asura)
-        windower.send_command('input /t '..player.name..' '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14> ' )
-	end
+	-- 	windower.send_command('input /echo '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14>!')  -- code add by (Aragan@Asura)
+    --     windower.send_command('input /t '..player.name..' '..player.name..' >> '..item_name..' << ITS DROP LOT IT ! <call14> ' )
+	-- end
 	if string.find(org, "Hazhdiha") then
 		windower.send_command('timers c "Hazhdiha Respawn" 900 down')
 		-- windower.send_command('input /echo '..player.name..' >> '..item_name..' << Amun Respawn time start 10 min!')  -- code add by (Aragan@Asura)
