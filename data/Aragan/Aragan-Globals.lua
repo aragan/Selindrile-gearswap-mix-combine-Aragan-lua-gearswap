@@ -1311,13 +1311,7 @@ function user_buff_change(buff, gain, eventArgs)
 			tickdelay = os.clock() + 1.1
 		end
 	end
-	if state.AutogearbuffMode.value and buff == "Sentinel's Scherzo" then
-		if gain then
-		state.HybridMode:set('Normal')
-	    else
-		state.HybridMode:set('DT')
-	    end
-	end
+
 
 	-- if state.AutogearbuffMode.value and buff == "Slow" then
 	-- 	if gain then
