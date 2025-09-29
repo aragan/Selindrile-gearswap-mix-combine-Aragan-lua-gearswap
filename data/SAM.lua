@@ -486,10 +486,10 @@ end
 
 
 function job_buff_change(id, data,buff, gain, eventArgs)
-	if buff:lower() == 'auspice' then
-		send_command('gs c update')
-        handle_equipping_gear(player.status)
-    end
+	-- if buff:lower() == 'auspice' then
+	-- 	-- send_command('gs c update')
+    --     handle_equipping_gear(player.status)
+    -- end
     if buff == 'Meikyo Shisui' and not gain then
 		enable('feet')
     end
@@ -522,12 +522,12 @@ function job_buff_change(id, data,buff, gain, eventArgs)
 	-- end
 
 	-- Create a timer when we gain weakness.  Remove it when weakness is gone.
-	if buff:lower() == 'weakness' then
-			send_command('timers create "Weakness" 300 up abilities/00255.png')
-	else
-			send_command('timers delete "Weakness"')
+	-- if buff:lower() == 'weakness' then
+	-- 		send_command('timers create "Weakness" 300 up abilities/00255.png')
+	-- else
+	-- 		send_command('timers delete "Weakness"')
 		
-	end
+	-- end
     if buffactive['Charm'] then		
         --    send_command('input /p Charmd, please Sleep me.')		
     else	
@@ -546,78 +546,79 @@ function job_buff_change(id, data,buff, gain, eventArgs)
             -- send_command('input /p '..player.name..' is no longer Sleep!')
         
     end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 
 	update_melee_groups()
 end
-windower.raw_register_event('postrender',function()
 
-	if state.AutoMedicineMode.value == true then
-		if buffactive['Defense Down'] then			
-				send_command('input /item "Panacea" <me>')
-		elseif buffactive['Magic Def. Down'] then			
-				send_command('@input /item "panacea" <me>')
+-- windower.raw_register_event('postrender',function()
+
+-- 	if state.AutoMedicineMode.value == true then
+-- 		if buffactive['Defense Down'] then			
+-- 				send_command('input /item "Panacea" <me>')
+-- 		elseif buffactive['Magic Def. Down'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['Max HP Down'] then			
-				send_command('@input /item "panacea" <me>')
-		elseif buffactive['Evasion Down'] then			
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['Max HP Down'] then			
+-- 				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['Evasion Down'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['Magic Evasion Down'] then			
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['Magic Evasion Down'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['Dia'] then			
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['Dia'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			  
-		elseif buffactive['Bio'] then			
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['Bio'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['Bind'] then			
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['Bind'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['slow'] then			
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['slow'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['weight'] then			
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['weight'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['Attack Down'] then			
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['Attack Down'] then			
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['Accuracy Down'] then			
-				send_command('@input /item "panacea" <me>')
-		end
-		if buffactive['VIT Down'] then
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['Accuracy Down'] then			
+-- 				send_command('@input /item "panacea" <me>')
+-- 		end
+-- 		if buffactive['VIT Down'] then
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['INT Down'] then
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['INT Down'] then
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['MND Down'] then
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['MND Down'] then
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['STR Down'] then
-				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['STR Down'] then
+-- 				send_command('@input /item "panacea" <me>')
 			
-		elseif buffactive['AGI Down'] then
-				send_command('@input /item "panacea" <me>')
-		elseif buffactive['poison'] then
-				send_command('input /item "remedy" <me>')
-				tickdelay = os.clock() + 2.4
-		end
+-- 		elseif buffactive['AGI Down'] then
+-- 				send_command('@input /item "panacea" <me>')
+-- 		elseif buffactive['poison'] then
+-- 				send_command('input /item "remedy" <me>')
+-- 				tickdelay = os.clock() + 2.4
+-- 		end
 
-		if not midaction() then
-			job_update()
-		end
-	end
-end)
+-- 		if not midaction() then
+-- 			job_update()
+-- 		end
+-- 	end
+-- end)
 
 
 -------------------------------------------------------------------------------------------------------------------
