@@ -1,7 +1,7 @@
 
 ![blood book11](https://github.com/user-attachments/assets/4acc0acc-6c98-46b1-baed-bab79aeee314)
 
--- Aragan (Asura) --- [Author]                                 
+-- Aragan  --- [Author]                                 
 
 --    {{{{{{{this gearswap have all codes}}}}}}}}}                                          --
 	---------------------------------------                        ---------------------------------------  
