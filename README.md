@@ -1,3 +1,4 @@
+![blood book](https://github.com/user-attachments/assets/695253a7-2b4d-4a41-a00f-a60c8d8e510c)
 
 -- Aragan (Asura) --- [Author]                                    --
 
