@@ -10,6 +10,10 @@
 
 - 🩸 BLOOD MODE  🩸 
 ```
+
+★ 💀 A R A G A N  G E A R S W A P 💀 ★
+
+
 -- Aragan  --- [Author]                                 
 
 --    {{{{{{{this gearswap have all codes}}}}}}}}}                                          --
