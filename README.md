@@ -1,6 +1,15 @@
 
 ![blood book11](https://github.com/user-attachments/assets/4acc0acc-6c98-46b1-baed-bab79aeee314)
 
+
+```diff
+-Aragan gearswap V2
++last update
+
+-★ 💀 A R A G A N  G E A R S W A P 💀 ★
+
+- 🩸 BLOOD MODE  🩸 
+```
 -- Aragan  --- [Author]                                 
 
 --    {{{{{{{this gearswap have all codes}}}}}}}}}                                          --
