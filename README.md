@@ -8,7 +8,7 @@
 
                         -★ 💀 A R A G A N  G E A R S W A P 💀 ★
 
-                                  -🩸 BLOOD MODE  🩸 
+                                  -🩸 BLOOD MODE 🩸 
 ```
 
                             ★ 💀 A R A G A N  G E A R S W A P 💀 ★
