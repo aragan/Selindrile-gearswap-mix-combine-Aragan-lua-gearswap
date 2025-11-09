@@ -58,10 +58,10 @@ StunAbility = 	  S{"Fulmination","Breakga","Death Scissors","Hell Scissors","Ter
 					"Empty Salvation","Winds of Oblivion","Bewitching Lantern","Quenching Hammer","Dread Spikes","Yama's Judgment",
 					"??? Needles","10000 Needles","4000 Needles","Slimy Proposal","Ruthlessness","Stalking Prey","Level 3 Petrify",
 					"Chymous Reek","Crowning Flatus","Gnash 'n Guttle","Infected Illusion","Dynastic Gravitas","Fulminous Fury","Tartaric Sigil",
-				   "Death Trap","Noiahionto","Infernal Bulwark","Yama's Judgement","Shah Mat","Tabbiyaa Gambit"
+				   "Death Trap","Noiahionto","Infernal Bulwark","Yama's Judgement","Shah Mat","Tabbiyaa Gambit","Raksha: Judgment"
 				   }
 
---"Raksha: Vengeance","Raksha: Judgment",
+--"Raksha: Vengeance"
 
 --List of moves to activate physical defense on.
 
@@ -91,7 +91,7 @@ MagicalAbility = S{"Stone III","Stone IV","Stone V","Stone VI","Stonega III","St
 					"Pain Sync","Backdraft","Radiant Breath","Chaos Breath","Dark Orb","Spectral Floe","Zero Hour","Interference","Flank Opening",
 					"Hellish Crescendo","Malign Invocation","Shadow Wreck","Stygian Cyclone","Oblivion's Mantle","Diluvial Wake"
 				    ,"Death Trap","Cyclone Wing","Absolute Terror","Thunderstrike","Tourbillion","Dreadstorm","Crippling Rime"
-				   }
+				   ,"Vivisection","Setting the Stage"}
 
 --List of moves to activate resist defense on.
 

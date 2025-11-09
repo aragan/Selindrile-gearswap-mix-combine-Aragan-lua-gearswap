@@ -1200,7 +1200,7 @@ function check_recast(spell, spellMap, eventArgs)
 					return true
 				else
 					add_to_chat(123,'Abort: ['..spell.english..'] waiting on recast. ('..seconds_to_clock(abil_recasts[spell.recast_id])..')')
-					--eventArgs.cancel = true
+					-- eventArgs.cancel = true
 					return true
 				end
 			else
@@ -1213,7 +1213,8 @@ function check_recast(spell, spellMap, eventArgs)
 					return true
 				else
 					add_to_chat(123,'Abort: ['..spell.english..'] waiting on recast. ('..seconds_to_clock(spell_recasts[spell.recast_id]/60)..')')
-					eventArgs.cancel = true
+					-- eventArgs.cancel = true
+					tickdelay = os.clock() + 1
 					return true
 				end
 			else
@@ -1416,7 +1417,7 @@ function check_nuke()
 end
 
 function check_samba()
-	if not (buffactive['Haste Samba'] or buffactive['Drain Samba'] or buffactive['Aspir Samba']) and windower.ffxi.get_ability_recasts()[216] and windower.ffxi.get_ability_recasts()[216] < latency and state.AutoSambaMode.value ~= 'Off' and player.tp > 400 then
+	if not data.areas.cities:contains(world.area) and not (buffactive['Haste Samba'] or buffactive['Drain Samba'] or buffactive['Aspir Samba']) and windower.ffxi.get_ability_recasts()[216] and windower.ffxi.get_ability_recasts()[216] < latency and state.AutoSambaMode.value ~= 'Off' and player.tp > 400 then
 		windower.chat.input('/ja "'..state.AutoSambaMode.value..'" <me>')
 		tickdelay = os.clock() + 1.8
 		return true
@@ -2673,6 +2674,7 @@ function get_effective_player_tp(spell, WSset)
 	if WSset.head == "Mpaca's Cap" then effective_tp = effective_tp + 200 end
 	if WSset.body == "Ikenga's Vest" then effective_tp = effective_tp + Ikenga_vest_bonus end
 	if WSset.legs == "Boii Cuisses +3" then effective_tp = effective_tp + 100 end
+	if WSset.legs == "Boii Cuisses +4" then effective_tp = effective_tp + 100 end
 	if player.equipment.main == "Ikenga's Axe" then effective_tp = effective_tp + Ikenga_axe_bonus end
 	if player.equipment.sub == "Ikenga's Axe" then effective_tp = effective_tp + Ikenga_axe_bonus end
 	
@@ -2716,8 +2718,10 @@ do
 		local adjusted_fencer_tier = base_fencer_tier
 		
 		if WSset.legs and WSset.legs:startswith('Boii Cuisses') then 
-			if WSset.legs:endswith('+3') then
+			if WSset.legs:endswith('+4') then
 				adjusted_fencer_tier = adjusted_fencer_tier + 3
+			elseif WSset.legs:endswith('+3') then
+				adjusted_fencer_tier = adjusted_fencer_tier + 3  
 			elseif WSset.legs:endswith('+2') then
 					adjusted_fencer_tier = adjusted_fencer_tier + 3    
 			elseif WSset.legs:endswith('+1') then
@@ -2733,6 +2737,9 @@ do
 			adjusted_fencer_tier = adjusted_fencer_tier + 1
 		end
 		if WSset.hands and WSset.hands == 'Agoge Mufflers +3' then
+			adjusted_fencer_tier = adjusted_fencer_tier + 1
+		end	
+		if WSset.hands and WSset.hands == 'Agoge Mufflers +4' then
 			adjusted_fencer_tier = adjusted_fencer_tier + 1
 		end	
 

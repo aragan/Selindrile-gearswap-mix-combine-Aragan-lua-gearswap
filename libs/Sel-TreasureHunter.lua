@@ -155,6 +155,10 @@ end
 -- For any active TH mode, if we haven't already tagged this target, equip TH gear and lock slots until we manage to hit it.
 function TH_for_first_hit()
     if player.status == 'Engaged' and state.TreasureMode.value ~= 'None' and state.DefenseMode.value == 'None' then
+        if not info or not info.tagged_mobs then
+            info = info or {}
+            info.tagged_mobs = T{}
+        end
         if not info.tagged_mobs[player.target.id] then
             if _settings.debug_mode then add_to_chat(123,'Prepping for first hit on '..tostring(player.target.id)..'.') end
             equip(sets.TreasureHunter)
@@ -222,6 +226,10 @@ function on_action_for_th(action)
                (th_action_check and th_action_check(action.category, action.param)) -- Any user-specified tagging actions
                then
                 for index,target in pairs(action.targets) do
+                    if not info or not info.tagged_mobs then
+                        info = info or {}
+                        info.tagged_mobs = T{}
+                    end
                     if not info.tagged_mobs[target.id] and _settings.debug_mode then
                         add_to_chat(123,'Mob '..target.id..' hit. Adding to tagged mobs table.')
                     end
@@ -232,12 +240,22 @@ function on_action_for_th(action)
                     unlock_TH()
                 end
             end
+        elseif not info or not info.tagged_mobs then
+                info = info or {}
+                info.tagged_mobs = T{}
+            
         elseif info.tagged_mobs[action.actor_id] then
+
             -- If mob acts, keep an update of last action time for TH bookkeeping
             info.tagged_mobs[action.actor_id] = os.time()
+            
         else
             -- If anyone else acts, check if any of the targets are our tagged mobs
             for index,target in pairs(action.targets) do
+                if not info or not info.tagged_mobs then
+                    info = info or {}
+                    info.tagged_mobs = T{}
+                end
                 if info.tagged_mobs[target.id] then
                     info.tagged_mobs[target.id] = os.time()
                 end
@@ -263,7 +281,7 @@ end
 -- AoE MA IDs for actions that always have TH: Diaga
 info.th_ma_ids = S{33, 34}
 -- AoE WS IDs for actions that always have TH in TH mode: Cyclone, Aeolian Edge
-info.th_ws_ids = S{}
+info.th_ws_ids = S{30}
 -- JA IDs for actions that always have TH: Provoke, Animated Flourish (Should all be handled in aftercast, kept for notes: 35, 204)
 info.th_ja_ids = S{}
 -- Unblinkable JA IDs for actions that always have TH: Quick/Box/Stutter Step, Desperate/Violent Flourish (Should all be handled in aftercast, kept for notes: 201, 202, 203, 205, 207)

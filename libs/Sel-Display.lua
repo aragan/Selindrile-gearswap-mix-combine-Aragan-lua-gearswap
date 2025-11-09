@@ -169,7 +169,7 @@ function update_job_states()
 		SkillChainMode = "SkillchainMode",
 		RecoverMode = "Recover MP",
 		ElementalMode = "Element",
-		ExtraSongsMode = "Songs",
+		ExtraSongsMode = "Horn",
 		AutoStunMode = "Auto Stun",
 		LuzafRing = "Luzaf's Ring",
 		AutoDefenseMode = "Auto Defense",
@@ -214,12 +214,13 @@ function update_job_states()
 		SrodaNecklace = "SrodaNecklace",
 		StormSurge = "StormSurge",
 		Etude = "Etude: "..state.Etude.value.."",
+		-- Singer = "Singer: "..state.Singer.value.."",
 		Songset = "Songset: "..state.Songset.value.."",
 		Rollset = "Rollset: "..state.Rollset.value.."",
 		Avatars = "Avatars: "..state.Avatars.value.."",
 		NM = "NM",
 		SleepMode = "SleepMode",
-		ShieldMode = "ShieldMode",
+		ShieldMode = "Shield",
 		AutoMedicineMode = "AutoMedicine",
 		AutoReraiseMode  = "AutoReraise",
 		Absorbs = "Absorbs: "..state.Absorbs.value.."",
@@ -316,10 +317,14 @@ function update_job_states()
 				stateBox:append(spc)
 			end
 		elseif n == 'RangedMode' then
-			stateBox:append(string.format("%s%s: ${%s}    ", clr.w, labels[n], n))
-				if statusammo then
-					stateBox:append('Ammo: '..statusammo..'    ')
-				end
+			if state.RangedMode.value ~= "None" then
+				stateBox:append(string.format("%sRangedMode: %s%s    ", clr.w, clr.h, state.RangedMode.value))
+			end
+		elseif n == 'Weapongun' then
+			if state.Weapongun.value ~= "None" then
+				stateBox:append(string.format("%sWeapongun: %s%s    ", clr.w, clr.h, state.Weapongun.value))
+			end
+			
 		elseif n == 'OffenseMode' then
 			if state.DefenseMode.value ~= 'None' then
 				stateBox:append(string.format("%sDefense Active: ", clr.w))
@@ -351,6 +356,13 @@ function update_job_states()
 					end
 				end
 				stateBox:append(spc)
+			end
+		elseif n == 'QDMode' then
+			if state.QDMode.value ~= 'None' then
+				stateBox:append(string.format("%sQD Mode: %s%s", clr.w, clr.h, state.QDMode.value))
+			end
+			if state.ElementalMode.value ~= 'None' then
+				stateBox:append(string.format("%s / %s%s%s", clr.n, clr[state.ElementalMode.value], state.ElementalMode.current, clr.n))
 			end
 		elseif n == 'AutoSambaMode' then
 			if state.AutoSambaMode.value ~= 'Off' then
@@ -418,16 +430,25 @@ function update_job_states()
 			end
 		elseif n == 'ExtraSongsMode' then
 			if state.ExtraSongsMode.value ~= "None" then
-				stateBox:append(string.format("%sSongs: %s%s    ", clr.w, clr.h, state.ExtraSongsMode.value))
+				stateBox:append(string.format("%sHorn: %s%s    ", clr.w, clr.h, state.ExtraSongsMode.value))
+			else
+				stateBox:append(string.format("%sHorn: %s%s    ", clr.w, clr.w, "None"))
 			end
+			-- end
 		elseif n == 'Rollset' then
-			if state.Rollset.value then
+			if state.Rollset.value and state.Rollset.value ~= "None" then
 				stateBox:append(string.format("%sRollset: %s%s    ", clr.w, clr.h, state.Rollset.value))
+			else
+				stateBox:append(string.format("%sRollset: %s%s    ", clr.w, clr.w, "None"))
 			end
 		elseif n == 'Songset' then
-			if state.Songset.value then
+			if state.Songset.value and state.Songset.value ~= "None" then
 				stateBox:append(string.format("%sSongset: %s%s    ", clr.w, clr.h, state.Songset.value))
 			end
+		-- elseif n == 'Singer' then
+		-- 	if state.Singer.value and state.Singer.value ~= "None" then
+		-- 		stateBox:append(string.format("%sSinger: %s%s    ", clr.w, clr.h, state.Singer.value))
+		-- 	end
 		elseif n == 'Etude' then
 			if state.Etude.value then
 				stateBox:append(string.format("%sEtude: %s%s    ", clr.w, clr.h, state.Etude.value))

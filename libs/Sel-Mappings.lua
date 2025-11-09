@@ -183,7 +183,24 @@ data.weaponskills.mythic = {
     ["Terpsichore"] = "Pyrrhic Kleos",
     ["Tupsimati"] = "Omniscience",
     ["Idris"] = "Exudation",
-    ["Epeolatry"] = "Dimidiation"}
+    ["Epeolatry"] = "Dimidiation",
+--prime weapons
+	["Varga Purnikawa"] = "Maru Kala",
+	["Mpu Gandring"] = "Ruthless Stroke",
+	["Caliburnus"] = "Imperator",
+	["Helheim"] = "Fimbulvetr",
+	["Spalirisos"] = "Blitz",
+	["Laphria"] = "Disaster",
+	["Foenaria"] = "Origin",
+	["Gae Buide"] = "Diarmuid",
+	["Dokoku"] = "Zesho Meppo",
+	["Kusanagi"] = "Tachi: Mumei",
+	["Lorg Mor"] = "Dagda",
+	["Opashoro"] = "Oshala",
+	["Pinaka"] = "Sarv",
+	["Earp"] = "Terminus"
+
+}
 	
 data.weaponskills.empyrean = {
     ["Verethragna"] = "Victory Smite",
@@ -200,6 +217,46 @@ data.weaponskills.empyrean = {
     ["Hvergelmir"] = "Myrkr",
     ["Gandiva"] = "Jishnu's Radiance",
     ["Armageddon"] = "Wildfire"}
+
+data.weaponskills.aftermath = {
+	["Conqueror"] = "King's Justice",
+	["Glanzfaust"] = "Ascetic's Fury",
+	["Yagrush"] = "Mystic Boon",
+	["Laevateinn"] = "Vidohunir",
+	["Murgleis"] = "Death Blossom",
+	["Vajra"] = "Mandalic Stab",
+	["Burtgang"] = "Atonement",
+	["Liberator"] = "Insurgency",
+	["Aymur"] = "Primal Rend",
+	["Carnwenhan"] = "Mordant Rime",
+	["Gastraphetes"] = "Trueflight",
+	["Kogarasumaru"] = "Tachi: Rana",
+	["Nagi"] = "Blade: Kamu",
+	["Ryunohige"] = "Drakesbane",
+	["Nirvana"] = "Garland of Bliss",
+	["Tizona"] = "Expiacion",
+	["Death Penalty"] = "Leaden Salute",
+	["Kenkonken"] = "Stringing Pummel",
+	["Terpsichore"] = "Pyrrhic Kleos",
+	["Tupsimati"] = "Omniscience",
+	["Idris"] = "Exudation",
+	["Epeolatry"] = "Dimidiation",
+	["Gandiva"] = "Jishnu's Radiance",
+	["Armageddon"] = "Wildfire",
+	["Varga Purnikawa"] = "Maru Kala",
+	["Mpu Gandring"] = "Ruthless Stroke",
+	["Caliburnus"] = "Imperator",
+	["Helheim"] = "Fimbulvetr",
+	["Spalirisos"] = "Blitz",
+	["Laphria"] = "Disaster",
+	["Foenaria"] = "Origin",
+	["Gae Buide"] = "Diarmuid",
+	["Dokoku"] = "Zesho Meppo",
+	["Kusanagi"] = "Tachi: Mumei",
+	["Lorg Mor"] = "Dagda",
+	["Opashoro"] = "Oshala",
+	["Pinaka"] = "Sarv",
+	["Earp"] = "Terminus"}
 
 -- Weaponskills that can be used at range.
 data.weaponskills.ranged = S{"Flaming Arrow","Piercing Arrow","Dulling Arrow","Sidewinder","Arching Arrow",
@@ -733,6 +790,18 @@ data.areas.assault = S{
 data.areas.proc = S{
 
 }
+data.areas.Abyssea = S{
+	"Abyssea - Konschtat",
+	"Abyssea - La Theine",
+	"Abyssea - Tahrongi",
+	"Abyssea - Attohwa",
+	"Abyssea - Misareaux",
+	"Abyssea - Vunkerl",
+	"Abyssea - Altepa",
+	"Abyssea - Uleguerand",
+	"Abyssea - Grauberg",
+	-- "Abyssea - Empyreal Paradox"
+	}
 -- Laggy zones where latency will be increased.
 data.areas.laggy = S{
 	"Dynamis - San d'Oria [D]",
@@ -744,7 +813,18 @@ data.areas.laggy = S{
 	"Escha - Zi'Tah",
 	"Escha - Ru'Aun",
 	"Outer Ra'Kaznar [U]",
+    "Outer Ra\'Kaznar [U1]",
+	"Outer Ra\'Kaznar [U2]",
+	"Walk of Echoes [P1]",
+	"Walk of Echoes [P2]",
 }
+
+--------------zone name
+--Sortie
+-- Outer Ra\'Kaznar [U2]
+--Sortie
+
+-- ody c Walk of Echoes [P2]
 
 -------------------------------------------------------------------------------------------------------------------
 -- NPC Lists
@@ -952,6 +1032,71 @@ item_stepdown = {
 }
 
 
+abyssea_elemental_ws_proc_weapons_map = {
+	['fire'] =		{['ProcSword']="Red Lotus Blade"},
+	['earth'] =		{['ProcStaff']="Earth Crusher"},
+	['wind'] =		{['ProcDagger']="Cyclone",['ProcGreatKatana']="Tachi: Jinpu"},
+	['ice'] =		{['ProcGreatSword']="Freezebite"},
+	['lightning'] =	{['ProcPolearm']="Raiden Thrust"},
+	['light'] =		{['ProcClub']="Seraph Strike",['ProcGreatKatana']="Tachi: Koki",['ProcSword']="Seraph Blade"},
+	['darkness'] =	{['ProcScythe']="Shadow of Death",['ProcKatana']="Blade: Ei",['ProcDagger']="Energy Drain"},
+}
+
+
+-- Buff Handling
+buff_group_IDs = { --Buffs that overwrite each other or are blocked by each other and do not share a buffID.
+	['BarElement'] = S{100,101,102,103,104,105},
+	['BarStatus'] = S{106,107,108,109,110,111,112},
+	['Enspell'] = S{94,95,96,97,98,99,274,275,277,278,279,280,281,282,288},
+	['Boost-Stat'] = S{86,119,120,121,122,123,124,125},
+	['Spikes'] = S{34,35,38,173},
+	['Invis'] = S{69,77}, --Includes camoflauge
+	['Haste'] = S{13,33,581}, --Includes slow
+	['Defense'] = S{93,149}, --Includes defense down
+	['SpecialReactorCool'] = S{34,35,38,93,149,173}, --Is decidedly uncool for breaking my system.
+}
+
+-- spell_to_buff = {['Reactor Cool']='SpecialReactorCool',}
+-- for _, rline in pairs(gearswap.res.spells) do
+-- 	if rline.status then
+-- 		for key in pairs(buff_group_IDs) do
+-- 			if not key:startswith('Special') and buff_group_IDs[key]:contains(rline.status) and not rline.targets:contains('Enemy') then
+-- 				if not spell_to_buff[rline.english] then
+-- 					spell_to_buff[rline.english] = key
+-- 				end
+-- 				break
+-- 			end
+-- 		end
+-- 	end
+-- end
+
+data.status_map = T{
+	{buff='doom',spell='Cursna'},
+	{buff='petrification',spell='Stona'},
+	{buff='sleep',spell='Cure'},
+	{buff='curse',spell='Cursna'},
+	{buff='paralysis',spell='Paralyna'},
+	{buff='bind',spell='Erase'},
+	{buff='slow',spell='Erase'},
+	{buff='elegy',spell='Erase'},
+	{buff='weight',spell='Erase'},
+	{buff='silence',spell='Silena'},
+	{buff='poison',spell='Poisona'},
+	{buff='blindness',spell='Blindna'},
+	{buff='bio',spell='Erase'},
+	{buff='dia',spell='Erase'},
+	{buff='requiem',spell='Erase'},
+	{buff='plague',spell='Viruna'},
+	{buff='burn',spell='Erase'},
+	{buff='frost',spell='Erase'},
+	{buff='choke',spell='Erase'},
+	{buff='rasp',spell='Erase'},
+	{buff='shock',spell='Erase'},
+	{buff='drown',spell='Erase'},
+	{buff='diseased',spell='Viruna'},
+}
+
+
 -- Elements for skillchain names
 skillchain_elements = {}
 skillchain_elements.Light = S{'Light','Fire','Wind','Lightning'}
@@ -968,6 +1113,24 @@ skillchain_elements.Detonation = S{'Wind'}
 skillchain_elements.Scission = S{'Earth'}
 skillchain_elements.Impaction = S{'Lightning'}
 skillchain_elements.Reverberation = S{'Water'}
+
+
+-- Elements for skillchain names
+data.skillchains = {}
+data.skillchains.light = S{'Light','Fire','Wind','Lightning'}
+data.skillchains.darkness = S{'Dark','Ice','Earth','Water'}
+data.skillchains.fusion = S{'Light','Fire'}
+data.skillchains.fragmentation = S{'Wind','Lightning'}
+data.skillchains.distortion = S{'Ice','Water'}
+data.skillchains.gravitation = S{'Dark','Earth'}
+data.skillchains.transfixion = S{'Light'}
+data.skillchains.compression = S{'Dark'}
+data.skillchains.liquification = S{'Fire'}
+data.skillchains.induration = S{'Ice'}
+data.skillchains.detonation = S{'Wind'}
+data.skillchains.scission = S{'Earth'}
+data.skillchains.impaction = S{'Lightning'}
+data.skillchains.reverberation = S{'Water'}
 
 -- disable_priority = T{
 --     "User",

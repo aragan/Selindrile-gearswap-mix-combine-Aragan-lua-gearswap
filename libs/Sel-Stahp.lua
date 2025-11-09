@@ -143,10 +143,28 @@ function check_reaction(act)
 			if state.AutoEngageMode.value and actor.race == 0 and math.sqrt(actor.distance) < (3.2 + actor.model_size) and player.status == 'Idle' and not (moving or engaging > os.clock() or actor.name:contains("'s ")) then
 				engaging = os.clock() + 2
 				windower.send_command('gs c facemob')
-				-- handle_facemob()
-				face_target()
-				-- windower.ffxi.turn()
-				-- windower.ffxi.turn((actor):radian())			--Face the mob
+
+				local function face_target()
+					local player = windower.ffxi.get_mob_by_target('me')
+					local target = windower.ffxi.get_mob_by_target('t')
+
+					if player and target then
+						local dx = target.x - player.x
+						local dy = target.y - player.y
+						local angle = math.atan2(dy, dx)
+						windower.ffxi.turn(angle)
+					else
+						windower.add_to_chat(207, '[Error] No target or player data available.')
+					end
+				end
+
+				-- استدعاء الدالة مع تأخير زمني
+				coroutine.wrap(function()
+					while true do
+						face_target()
+						coroutine.sleep(0.5) -- تحديث الاتجاه كل 0.5 ثانية
+					end
+				end)
 
 				packets.inject(packets.new('outgoing', 0x1a, {
 					['Target'] = actor.id,

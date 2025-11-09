@@ -514,7 +514,7 @@ function target_change(new)
 					end
 				end
 			elseif target.name == "Sturdy Pyxis" and player.inventory['Forbidden Key'] then
-				windower.chat.input('/item "Forbidden Key" <t>') return
+				windower.chat.input('/item "Forbidden Key" <t>') return		
 			end
 		end
 	end
@@ -555,7 +555,7 @@ function default_zone_change(new_id,old_id)
 	state.AutoFoodMode:reset()
 	state.AutoWSMode:reset()
 	state.AutoNukeMode:reset()
-	if state.CraftingMode.value ~= 'None' then
+	if not data.areas.cities:contains(world.area) and state.CraftingMode.value ~= 'None' then
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		state.CraftingMode:reset()
 	end
@@ -1052,11 +1052,11 @@ function default_precast(spell, spellMap, eventArgs)
 	if spell.action_type == 'Magic' then
 		next_cast = os.clock() + (spell.cast_time/4) + 3.35 - latency
 	elseif spell.type == 'WeaponSkill' then
-		next_cast = os.clock() + 2.5 - latency
+		next_cast = os.clock() + 2.75 - latency --+ 2.5
 	elseif spell.action_type == 'Ability' then
 		next_cast = os.clock() + .95 - latency
 	elseif spell.action_type == 'Item' then
-		next_cast = os.clock() + 1.35 - latency
+		next_cast = os.clock() + 1.55 - latency
 	elseif spell.action_type == 'Ranged Attack' then
 		next_cast = os.clock() + 1.05 - latency
 	end
@@ -1283,11 +1283,11 @@ function default_aftercast(spell, spellMap, eventArgs)
 	elseif spell.action_type == 'Magic' then
 		next_cast = os.clock() + 3.35 - latency
 	elseif spell.type == 'WeaponSkill' then
-		next_cast = os.clock() + 1.5 - latency
+		next_cast = os.clock() + 2.7 - latency
 	elseif spell.action_type == 'Ability' then
 		next_cast = os.clock() + .8 - latency
 	elseif 	spell.action_type == 'Item' then
-		next_cast = os.clock() + .85 - latency
+		next_cast = os.clock() + 1.5 - latency
 	elseif spell.action_type == 'Ranged Attack' then
 		next_cast = os.clock() + .85 - latency
 	end
@@ -1295,12 +1295,16 @@ function default_aftercast(spell, spellMap, eventArgs)
 	if tickdelay < next_cast then tickdelay = next_cast end
 	
 	if not spell.interrupted then
+		-- تأكد من أن info.tagged_mobs تم تهيئته
+		info.tagged_mobs = info.tagged_mobs or {}
+
 		if state.TreasureMode.value ~= 'None' and state.DefenseMode.value == 'None' and spell.target.type == 'MONSTER' and not info.tagged_mobs[spell.target.id] then
 			info.tagged_mobs[spell.target.id] = os.time()
 			if player.target.id == spell.target.id and state.th_gear_is_locked then
 				unlock_TH()
 			end
 		end
+	
 		if is_nuke(spell, spellMap) then
 			if state.MagicBurstMode.value == 'Single' then state.MagicBurstMode:reset() end
 			if state.ElementalWheel.value and (spell.skill == 'Elemental Magic' or spellMap:contains('ElementalNinjutsu')) then
@@ -2186,13 +2190,11 @@ end
 -- @param baseSet : The gear set that the kiting gear will be applied on top of.
 function apply_kiting(baseSet)
 	if sets.Kiting and (state.Kiting.value or (player.status == 'Idle' and moving and state.DefenseMode.value == 'None')) then
-
 		baseSet = set_combine(baseSet, sets.Kiting)
-	    
 	end
-	if state.HippoMode.value then 
-		baseSet = set_combine(baseSet, {feet="Hippo. Socks +1"})
-	end
+	-- if state.HippoMode.value then 
+	-- 	baseSet = set_combine(baseSet, {feet="Hippo. Socks +1"})
+	-- end
 	if user_customize_kiting_set then
 		baseSet = user_customize_kiting_set(baseSet)
     end
