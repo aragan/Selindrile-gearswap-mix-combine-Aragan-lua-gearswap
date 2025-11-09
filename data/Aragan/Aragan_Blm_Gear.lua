@@ -21,7 +21,7 @@ u can use addon automb
 
 
 function user_job_setup()
-    send_command('amb t 6')--;automb addon set tier spell
+    send_command('amb t 5')--;automb addon set tier spell
 
 	-- Options: Override default values
 	state.CastingMode:options('Normal', 'SIRD', 'Spaekona', 'ConserveMP', 'Proc','OccultAcumen')
@@ -1207,6 +1207,10 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
 	windower.chat.input('/lockstyleset 174')
 end
 

@@ -115,7 +115,7 @@ function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal','NOSchereEar', 'STP', 'Acc', 'SubtleBlow','DA', 'CRIT')
     state.RangedMode:options('Normal', 'Acc')
-    state.WeaponskillMode:options('Match', 'SubtleBlow', 'Acc', 'PDL', 'SC', 'Dread', 'None')
+    state.WeaponskillMode:options('Match', 'SubtleBlow', 'Acc', 'PDL', 'SC', 'Dread', 'Proc')
     state.HybridMode:options('DT', 'Normal', 'DreadSP')
 	state.CastingMode:options('Normal', 'ConserveMP', 'SIRD')
     state.PhysicalDefenseMode:options( 'PDT', 'HP', 'Enmity','Aminon', 'Dread Spikes', 'SEboost', 'Reraise')
@@ -711,7 +711,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
-    sets.precast.WS.Judgment.None = {}
+    sets.precast.WS.Judgment.Proc = {}
     sets.precast.WS['Fell Cleave'] = set_combine(sets.precast.WS, {})
 
     sets.precast.WS['Vorpal Scythe'] = set_combine(sets.precast.WS, {
@@ -723,15 +723,15 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         feet="Thereoid Greaves",
         neck="Nefarious Collar +1",
         waist="Gerdr Belt",
-        left_ear="Schere Earring",
-        right_ear="Brutal Earring",
+        right_ear="Schere Earring",
+        left_ear="Brutal Earring",
         left_ring="Hetairoi Ring",
         right_ring="Niqmaddu Ring",
         back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
     })
-    sets.precast.WS['Vorpal Scythe'].None = {}
+    sets.precast.WS['Vorpal Scythe'].Proc = {}
     sets.precast.WS['Power Slash'] = set_combine(sets.precast.WS['Vorpal Scythe'], {})
-    sets.precast.WS['Power Slash'].None = {}
+    sets.precast.WS['Power Slash'].Proc = {}
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
     sets.precast.WS['Catastrophe'] = {
         ammo="Knobkierrie",
@@ -772,12 +772,12 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
-    sets.precast.WS['Catastrophe'].None = {}
+    sets.precast.WS['Catastrophe'].Proc = {}
 
     sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS['Catastrophe'], {})
     sets.precast.WS['Savage Blade'].PDL = set_combine(sets.precast.WS['Catastrophe'].PDL, {})
     sets.precast.WS['Savage Blade'].SC = set_combine(sets.precast.WS['Catastrophe'].SC, {})
-    sets.precast.WS['Savage Blade'].None = {}
+    sets.precast.WS['Savage Blade'].Proc = {}
     sets.precast.WS['Savage Blade'].PDL.SubtleBlow = set_combine(sets.precast.WS['Savage Blade'].PDL, {
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
@@ -805,7 +805,7 @@ sets.midcast.Stoneskin.SIRD = set_combine(sets.midcast['Enhancing Magic'],sets.S
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
-    sets.precast.WS['Spiral Hell'].None = {
+    sets.precast.WS['Spiral Hell'].Proc = {
     }
 sets.precast.WS['Insurgency'] = {
     ammo="Knobkierrie",
@@ -846,7 +846,7 @@ sets.precast.WS['Insurgency'] = {
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},  })
-    sets.precast.WS['Insurgency'].None = {}
+    sets.precast.WS['Insurgency'].Proc = {}
     sets.precast.WS['Cross Reaper'] = {
         ammo="Knobkierrie",
         head="Hjarrandi Helm",
@@ -880,7 +880,7 @@ sets.precast.WS['Insurgency'] = {
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
-    sets.precast.WS['Cross Reaper'].None = {
+    sets.precast.WS['Cross Reaper'].Proc = {
     }
 sets.precast.WS['Quietus'] = {
     ammo="Knobkierrie",
@@ -919,7 +919,7 @@ sets.precast.WS['Quietus'].SC = set_combine(sets.precast.WS['Quietus'], {
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
 })
-sets.precast.WS['Quietus'].None =  {
+sets.precast.WS['Quietus'].Proc =  {
 }
 sets.precast.WS['Entropy'] = {
     ammo="Knobkierrie",
@@ -954,7 +954,7 @@ sets.precast.WS['Entropy'].SC = set_combine(sets.precast.WS['Entropy'], {
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
 })
-sets.precast.WS['Entropy'].None =  {}
+sets.precast.WS['Entropy'].Proc =  {}
 sets.precast.WS['Infernal Scythe'] = {   
 ammo="Pemphredo Tathlum",
 head="Pixie Hairpin +1",
@@ -981,27 +981,27 @@ sets.precast.WS['Infernal Scythe'].SC = set_combine(sets.precast.WS['Infernal Sc
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
 })
-sets.precast.WS['Infernal Scythe'].None = {}
+sets.precast.WS['Infernal Scythe'].Proc = {}
 sets.precast.WS['Shadow of Death'] = set_combine(sets.precast.WS['Infernal Scythe'], {neck="Sibyl Scarf",})
 sets.precast.WS['Shadow of Death'].Acc = set_combine(sets.precast.WS['Infernal Scythe'], {neck="Sibyl Scarf",})
 sets.precast.WS['Shadow of Death'].PDL = set_combine(sets.precast.WS['Infernal Scythe'].PDL, {neck="Sibyl Scarf",})
 sets.precast.WS['Shadow of Death'].SC = set_combine(sets.precast.WS['Infernal Scythe'].SC, {neck="Sibyl Scarf",})
-sets.precast.WS['Shadow of Death'].None = {}
+sets.precast.WS['Shadow of Death'].Proc = {}
 sets.precast.WS['Dark Harvest'] = set_combine(sets.precast.WS['Infernal Scythe'], {})
-sets.precast.WS['Dark Harvest'].None = {}
+sets.precast.WS['Dark Harvest'].Proc = {}
 
 sets.precast.WS['Sanguine Blade'] = set_combine(sets.precast.WS['Infernal Scythe'], {})
 sets.precast.WS['Freezebite'] = set_combine(sets.precast.WS['Infernal Scythe'], {
     ammo="Aurgelmir Orb +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},})
-    sets.precast.WS['Freezebite'].None = {}
+    sets.precast.WS['Freezebite'].Proc = {}
 
 sets.precast.WS['Frostbite'] = set_combine(sets.precast.WS['Infernal Scythe'], {
     ammo="Aurgelmir Orb +1",
     head={ name="Nyame Helm", augments={'Path: B',}},
     left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},})
-sets.precast.WS['Frostbite'].None = {}
+sets.precast.WS['Frostbite'].Proc = {}
 
 sets.precast.WS['Nightmare Scythe'] = {
     ammo={ name="Seeth. Bomblet +1", augments={'Path: A',}},
@@ -1018,7 +1018,7 @@ sets.precast.WS['Nightmare Scythe'] = {
     right_ring="Chirich Ring +1",
     back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},}
 
-    sets.precast.WS['Nightmare Scythe'].None = {}
+    sets.precast.WS['Nightmare Scythe'].Proc = {}
 
     sets.precast.WS['Resolution'] = {
     ammo={ name="Coiste Bodhar", augments={'Path: A',}},
@@ -1044,10 +1044,10 @@ sets.precast.WS['Nightmare Scythe'] = {
         right_ear="Heathen's Earring",
         left_ring="Sroda Ring",
     })
-    sets.precast.WS['Resolution'].None  = {}
+    sets.precast.WS['Resolution'].Proc  = {}
 
     sets.precast.WS['Sickle Moon'] = set_combine(sets.precast.WS['Resolution'], {})
-    sets.precast.WS['Sickle Moon'].None =  {}
+    sets.precast.WS['Sickle Moon'].Proc =  {}
 
     sets.precast.WS['Ground Strike'] = {
         ammo="Knobkierrie",
@@ -1085,7 +1085,7 @@ sets.precast.WS['Nightmare Scythe'] = {
         legs={ name="Nyame Flanchard", augments={'Path: B',}},
         feet="Heath. Sollerets +2",
     })
-    sets.precast.WS['Ground Strike'].None =  {}
+    sets.precast.WS['Ground Strike'].Proc =  {}
       
     sets.precast.WS['Torcleaver'] = {
     ammo="Knobkierrie",
@@ -1124,7 +1124,7 @@ sets.precast.WS['Nightmare Scythe'] = {
         feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
     })
-    sets.precast.WS['Torcleaver'].None = {}
+    sets.precast.WS['Torcleaver'].Proc = {}
     sets.precast.WS['Scourge'] = set_combine(sets.precast.WS['Torcleaver'], {})
     sets.precast.WS['Scourge'].Dread  = sets.defense['Dread Spikes']
     sets.precast.WS['Scourge'].PDL = set_combine(sets.precast.WS['Torcleaver'], {
@@ -1216,7 +1216,7 @@ sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
     right_ring="Cornelia's Ring",
     back={ name="Ankou's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
 })
-sets.precast.WS["Burning Blade"].None = {}
+sets.precast.WS["Burning Blade"].Proc = {}
 
 sets.precast.WS["Shining Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Seraph Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
@@ -1235,25 +1235,25 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Tachi: Jinpu"] = set_combine(sets.precast.WS["Burning Blade"],{})
-sets.precast.WS["Tachi: Jinpu"].None = {}
+sets.precast.WS["Tachi: Jinpu"].Proc = {}
 
 sets.precast.WS["Aeolian Edge"] = set_combine(sets.precast.WS["Burning Blade"],{})
-sets.precast.WS["Aeolian Edge"].None = {}
+sets.precast.WS["Aeolian Edge"].Proc = {}
 
 sets.precast.WS["Cyclone"] = set_combine(sets.precast.WS["Burning Blade"],{})
-sets.precast.WS["Cyclone"].None = {}
+sets.precast.WS["Cyclone"].Proc = {}
 
 sets.precast.WS["Red Lotus Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
-sets.precast.WS["Red Lotus Blade"].None = {}
+sets.precast.WS["Red Lotus Blade"].Proc = {}
 
 sets.precast.WS["Herculean Slash"] = set_combine(sets.precast.WS["Burning Blade"],{})
-sets.precast.WS["Herculean Slash"].None = {}
+sets.precast.WS["Herculean Slash"].Proc = {}
 sets.precast.WS["Crescent Moon"] = set_combine(sets.precast.WS,{})
-sets.precast.WS["Crescent Moon"].None = {}
+sets.precast.WS["Crescent Moon"].Proc = {}
 sets.precast.WS["Hard Slash"] = set_combine(sets.precast.WS,{})
-sets.precast.WS["Hard Slash"].None = {}
+sets.precast.WS["Hard Slash"].Proc = {}
 sets.precast.WS["Fast Blade"] = set_combine(sets.precast.WS,{})
-sets.precast.WS["Fast Blade"].None = {}
+sets.precast.WS["Fast Blade"].Proc = {}
 
 sets.precast.WS['Armor Break'] = set_combine(sets.precast.WS, {
     ammo="Pemphredo Tathlum",
@@ -1699,8 +1699,8 @@ sets.defense.SEboost = {
         feet="Carmine Greaves +1",
 		neck="Abyssal Beads +2",
 		waist={ name="Sailfi Belt +1", augments={'Path: A',}},
-        ear1="Schere Earring",
-        ear2="Dedition Earring",
+        ear2="Schere Earring",
+        ear1="Dedition Earring",
         ring1="Petrov Ring",
         ring2="Niqmaddu Ring",
         back="Null Shawl",
@@ -2266,7 +2266,10 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
-
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

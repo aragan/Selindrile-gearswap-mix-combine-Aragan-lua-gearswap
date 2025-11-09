@@ -78,7 +78,7 @@ function user_job_setup()
 
     
     --Ikenga_axe_bonus = 300  -- It is 300 at R25. Uncomment if you need to manually adjust because you are using below R25 or above
-	
+	-- windower.send_command('lua load xivcrossbar')
 	select_default_macro_book()
 end
 
@@ -128,9 +128,9 @@ sets.weapons.ProcClub = {main="Caduceus",sub=empty}
 sets.weapons.ProcStaff = {main="Profane Staff",sub=empty}
 sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
 
-	 -- neck JSE Necks Reinforcement Points Mode add u neck here 
-	 sets.RP = {}
-	-- Precast Sets
+-- neck JSE Necks Reinforcement Points Mode add u neck here 
+	sets.RP = {}
+-- Precast Sets
 
     sets.Enmity = {
 		ammo="Iron Gobbet",
@@ -817,11 +817,22 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
             legs="Boii Cuisses +3",
             left_ring="Sroda Ring",
         })
-        sets.precast.WS["Ground Strike"] = set_combine(sets.precast.WS['Savage Blade'], {
-        left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
-        right_ear="Lugra Earring +1",
-        left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
-        right_ring="Cornelia's Ring",    })
+        sets.precast.WS["Ground Strike"] =  {
+            ammo="Knobkierrie",
+            head="Agoge Mask +3",
+            body="Sakpata's Plate",
+            hands="Boii Mufflers +3",
+            legs="Boii Cuisses +3",
+            feet="Sakpata's Leggings",
+            neck="Fotia Gorget",
+            waist="Fotia Belt",
+            ear1="Thrud Earring",
+            ear2="Moonshade Earring",
+            ring1="Sroda Ring", 
+            ring2="Cornelia's ring",
+            back={ name="Cichol's Mantle", augments={'STR+20','Accuracy+20 Attack+20','STR+10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+
+    }
         sets.precast.WS["Ground Strike"].SC= set_combine(sets.precast.WS['Ground Strike'], {
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Nyame Mail", augments={'Path: B',}},
@@ -1148,9 +1159,11 @@ sets.weapons.ProcStaff2 = {main="Profane Staff",sub=empty}
         legs={ name="Sakpata's Cuisses", augments={'Path: A',}},
         feet={ name="Sakpata's Leggings", augments={'Path: A',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
-        left_ear="Eabani Earring",
-        left_ring="Shadow Ring",
-    })
+        right_ear="Eabani Earring",
+        left_ear="Sanare Earring",
+		left_ring="Shadow Ring",
+		right_ring="Defending Ring",
+		back="Moonlight Cape",    })
 		
 	sets.defense.MEVA = sets.defense.MDT
 
@@ -1420,7 +1433,11 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
-    if not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
+    if data.areas.Abyssea:contains(world.area) or state.Stylenotwingsemode.value then
+        windower.chat.input('/lockstyleset 1')
+        send_command('gs c update') 
+        style_lock = true
+    elseif not world.area:contains('Abyssea - Empyreal Paradox') and world.area:contains('Abyssea') then
         windower.chat.input('/lockstyleset 1')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
@@ -1439,7 +1456,7 @@ end
 
 
 autows_list = {['DualNaegling']='Circle Blade',['Malevo']='Aeolian Edge',['Naegling']='Savage Blade',
-['Chango']='Fell Cleave',['AgwuClaymore']='Resolution',['Drepanum']='Spiral Hell',['IkengaAxe']='Calamity',
+['Chango']='Upheaval',['AgwuClaymore']='Resolution',['Drepanum']='Spiral Hell',['IkengaAxe']='Calamity',
 ['DualIkengaAxe']='Calamity',['ProcGreatSword']='Freezebite',['ProcScythe']='Shadow of Death',
 ['ProcDagger2']='Cyclone',['ProcDagger']='Energy Drain',['ProcStaff2']='Sunburst',
 ['ProcStaff']='Earth Crusher',['ProcSword2']='Seraph Blade',['ProcSword']='Red Lotus Blade',

@@ -537,14 +537,14 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 		right_ring="Stikini Ring +1",
 }
 	sets.midcast['Phalanx'] = set_combine(sets.midcast['Enhancing Magic'],{
-		head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+		head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
         feet={ name="Herculean Boots", augments={'Accuracy+8','Pet: Attack+28 Pet: Rng.Atk.+28','Phalanx +4','Mag. Acc.+12 "Mag.Atk.Bns."+12',}},
 		})
 	sets.Phalanx_Received = {
-		head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+		head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -619,21 +619,22 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
         back="Moonlight Cape",
     }
 	sets.defense.MDT = {
-        head="Malignance Chapeau",
-        body="Malignance Tabard",
-        hands="Malignance Gloves",
-		legs="Malignance Tights",
-        eet="Malignance Boots",
-        neck={ name="Loricate Torque +1", augments={'Path: A',}},
-        waist="Flume Belt +1",
-        left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-        right_ear="Infused Earring",
-        left_ring="Paguroidea Ring",
-        right_ring="Defending Ring",
-        back="Moonlight Cape",} 
+        head="Nyame Helm",
+        body="Nyame Mail",
+        hands="Nyame Gauntlets",
+        legs="Nyame Flanchard",
+        feet="Nyame Sollerets",
+        neck={ name="Warder's Charm +1", augments={'Path: A',}},
+        waist="Plat. Mog. Belt",
+        left_ear="Tuisto Earring",
+        right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+        left_ring="Shadow Ring",
+        right_ring={ name="Gelatinous Ring +1", augments={'Path: A',}},
+        back="Moonlight Cape",
+	} 
 		
     sets.defense.MEVA = {
-        head="Malignance Chapeau",neck="Warder's Charm +1",ear1="Genmei Earring",ear2="Sanare Earring",
+        head="Malignance Chapeau",neck="Warder's Charm +1",ear1="Eabani Earring",ear2="Sanare Earring",
         body="Malignance Tabard",hands="Malignance Gloves",ring1="Defending Ring",ring2="Vengeful Ring",
         back="Moonlight Cape",waist="Carrier's Sash",legs="Malignance Tights",feet="Malignance Boots"}
 
@@ -923,6 +924,10 @@ sets.engaged.DW.STP = set_combine(sets.engaged, {
 end
 
 function user_job_lockstyle()
+	if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

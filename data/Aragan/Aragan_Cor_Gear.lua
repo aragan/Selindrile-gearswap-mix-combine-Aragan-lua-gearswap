@@ -33,18 +33,18 @@ Last Stand(3000TP) - Requiescat - Savage Blade - Last Stand (Light) - Last Stand
 function user_job_setup()
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'Ranged', 'CRIT')
     state.HybridMode:options( 'DT25','DT','Normal')
-    state.RangedMode:options('Normal', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow','SubtleBlow40')
-    state.WeaponskillMode:options('Match', 'SubtleBlow', 'PDL', 'SC')
+    state.RangedMode:options('None', 'Acc', 'STP', 'NOENMITY', 'Critical','SubtleBlow','SubtleBlow40')
+    state.WeaponskillMode:options('Match','Proc', 'SubtleBlow', 'PDL', 'SC')
     state.CastingMode:options('Normal', 'Resistant')
     state.IdleMode:options('DT','Normal','Empy', 'Evasion', 'HP', 'Regen','Regain', 'EnemyCritRate')
     state.PhysicalDefenseMode:options('PDT','Aminon', 'Evasion', 'HP')
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
 	state.ExtraMeleeMode = M{['description']='Extra Melee Mode', 'None', 'DWMax','SubtleBlow','SubtleBlow40'}
-	state.Weapons:options('None','DualSWORDS','DualRostam','DualKustawi','DualTauret','DualRanged','SWORDS','Tauret','Rostam','Kustawi','Ranged')--'DualHotShot','DualLeaden','Leaden','HotShot'
+	state.Weapons:options('None','DualSWORDS','DualSWORDS2','DualRostam','DualKustawi','DualTauret','DualRanged','SWORDS','Tauret','Rostam','Kustawi','Ranged')--'DualHotShot','DualLeaden','Leaden','HotShot'
 	state.CompensatorMode:options('Never','Always','300','1000')
     --state.ranged:options('normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp')
-    state.Weapongun = M{['description']='Weapon Set', 'normal', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
+    state.Weapongun = M{['description']='Weapon Set', 'None', 'DeathPenalty', 'Anarchy', 'Fomalhaut', 'Earp'}
 
     gear.RAbullet = "Decimating Bullet"
     gear.WSbullet = "Chrono Bullet"
@@ -94,6 +94,7 @@ function user_job_setup()
 	send_command('bind !` gs c elemental quickdraw')
     send_command('bind !1 gs c cycle AutoSambaMode')
 	send_command('bind f4 gs c cycle ElementalMode;gs c cycle RuneElement')
+    -- sets.idle.rollers = set_combine(sets.idle, {lring="Roller's Ring",})
 
 	
 	--send_command('bind ^backspace input /ja "Double-up" <me>')
@@ -119,7 +120,7 @@ function user_job_setup()
     send_command('bind !w gs c toggle WeaponLock')
     send_command('bind @x gs c toggle RP')  
 	send_command('bind @z gs c toggle Capacity') --Keeps capacity mantle on and uses capacity rings.
-    send_command('bind !f3 gs c cycle QDMode')
+    send_command('bind ^5 gs c cycle QDMode')
     send_command('bind @f4 gs c cycle QDMode')
 
     send_command('bind !z gs c toggle CompensatorMode')  
@@ -151,7 +152,7 @@ function user_job_setup()
 
     select_default_macro_book()
 end
-autows_list = {['DualSWORDS']='Savage Blade',['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='Aeolian Edge',
+autows_list = {['DualSWORDS']='Savage Blade',['DualSWORDS2']='Savage Blade',['SWORDS']='Savage Blade',['Rostam']='Leaden Salute',['Tauret']='Aeolian Edge',
 ['DualRostam']='Leaden Salute',['DualTauret']='Aeolian Edge',
 ['Ranged']='Leaden Salute',['Kustawi']='Last Stand',['DualKustawi']='Last Stand',['DualSavageWeapons']='Savage Blade',
 ['DualEvisceration']='Evisceration',['DualLeadenRanged']='Leaden Salute',['DualLeadenMelee']='Leaden Salute',
@@ -164,11 +165,13 @@ function init_gear_sets()
     -- Start defining the sets
     --------------------------------------
 
-	gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}},}
-	gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
+	gear.taeon_phalanx_feet= {feet={ name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +3',}},}
+	gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +3',}}
 
 
 	sets.weapons.DualSWORDS = {main="Naegling",sub="Crepuscular Knife"}
+    sets.weapons.DualSWORDS2 = {main="Naegling", sub="Demers. Degen +1",}
+
 	--sets.weapons.DualSavage = {main="Naegling", sub="Crepuscular Knife",}
     sets.weapons.DualRostam = {main={ name="Rostam", augments={'Path: A',}}, sub="Tauret"}
 	sets.weapons.DualTauret = {main={name="Tauret", priority=1},  sub="Crepuscular Knife",}
@@ -215,7 +218,7 @@ function init_gear_sets()
 	sets.precast.JA['Triple Shot'] = {body="Chasseur's Frac +2"}
     sets.precast.JA['Snake Eye'] = {}
     sets.precast.JA['Wild Card'] = {feet="Lanun Bottes +4"}
-    sets.precast.JA['Random Deal'] = {body="Lanun Frac +3"}
+    sets.precast.JA['Random Deal'] = {body="Lanun Frac +4"}
     sets.precast.FoldDoubleBust = {hands="Lanun Gants +3"}
 
     sets.precast.CorsairRoll = {
@@ -247,7 +250,7 @@ function init_gear_sets()
     
     sets.precast.CorsairShot =  {ammo="Hauksbok Bullet",
     head="Nyame Helm",
-    body="Lanun Frac +3",
+    body="Lanun Frac +4",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
     feet="Lanun Bottes +4",
@@ -506,7 +509,7 @@ sets.precast.JA['Super Jump'] = sets.precast.JA.Jump
     sets.precast.WS['Wildfire'] = {
         -- ammo=gear.MAbullet,
         head="Nyame Helm",
-        body="Lanun Frac +3",
+        body="Lanun Frac +4",
         hands="Nyame Gauntlets",
         legs="Nyame Flanchard",
         feet="Lanun Bottes +4",
@@ -530,7 +533,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
     sets.precast.WS['Leaden Salute'] = {     
     -- ammo=gear.MAbullet,
     head="Pixie Hairpin +1",
-    body="Lanun Frac +3",
+    body="Lanun Frac +4",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
     feet="Lanun Bottes +4",
@@ -546,7 +549,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
     sets.precast.WS['Leaden Salute'].PDL = {   
     --ammo=gear.RAbullet,
     head="Pixie Hairpin +1",
-    body="Lanun Frac +3",
+    body="Lanun Frac +4",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
     feet="Lanun Bottes +4",
@@ -564,7 +567,20 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
         left_ear="Digni. Earring",
         neck={ name="Comm. Charm +2", augments={'Path: A',}},
     })
-
+sets.precast.WS["HotShot"] = set_combine(sets.precast.WS, {
+    head="Nyame Helm",
+    body="Lanun Frac +4",
+    hands="Nyame Gauntlets",
+    legs="Nyame Flanchard",
+    feet="Lanun Bottes +4",
+    neck="Baetyl Pendant",
+    waist="Orpheus's Sash",
+    right_ear="Friomisi Earring",
+    left_ear={ name="Moonshade Earring", augments={'Accuracy+4','TP Bonus +250',}},
+    left_ring="Dingir Ring",
+    right_ring="Cornelia's Ring",
+    back={ name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Magic Damage +10','Weapon skill damage +10%','Phys. dmg. taken-10%',}},
+})
 
 -- Elemental Weapon Skill --elemental_ws--
 
@@ -572,7 +588,7 @@ sets.precast.WS['Wildfire'].SC = set_combine(sets.precast.WS['Wildfire'],  {
 -- 50% MND / 50% STR Darkness Elemental
 sets.precast.WS['Sanguine Blade'] = set_combine(sets.precast.WS, {
     head="Pixie Hairpin +1",
-    body="Lanun Frac +3",
+    body="Lanun Frac +4",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
     feet="Lanun Bottes +4",
@@ -595,7 +611,7 @@ sets.precast.WS.Cataclysm = sets.precast.WS["Sanguine Blade"]
 sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
     ammo="Hauksbok Bullet",
     head="Nyame Helm",
-    body="Lanun Frac +3",
+    body="Lanun Frac +4",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
     feet="Lanun Bottes +4",
@@ -680,7 +696,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
             back="Moonlight Cape",
     }
     sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'], {
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -691,7 +707,7 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
 
     sets.Phalanx_Received = {
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -797,7 +813,7 @@ sets.midcast.RA.SubtleBlow40 = set_combine(sets.midcast.RA, {
 sets.midcast.CorsairShot = {
     ammo="Hauksbok Bullet",    
     head="Nyame Helm",
-    body="Lanun Frac +3",
+    body="Lanun Frac +4",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
     feet="Lanun Bottes +4",
@@ -812,7 +828,7 @@ sets.midcast.CorsairShot = {
 
 sets.midcast.CorsairShot.Acc = {
     head="Nyame Helm",
-    body="Lanun Frac +3",
+    body="Lanun Frac +4",
     hands="Nyame Gauntlets",
     legs="Nyame Flanchard",
     feet="Chasseur's Bottes +2",
@@ -1456,7 +1472,7 @@ function select_default_macro_book()
     if player.sub_job == 'NIN' then
         set_macro_page(5, 7)
     elseif player.sub_job == 'DNC' then
-        set_macro_page(5, 7)
+        set_macro_page(6, 7)
     elseif player.sub_job == 'RNG' then
         set_macro_page(5, 7)
     elseif player.sub_job == 'DRG' then
@@ -1467,6 +1483,10 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

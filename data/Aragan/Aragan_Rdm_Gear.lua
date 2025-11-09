@@ -628,7 +628,7 @@ sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'].Duration, {})
 	sets.midcast.Temper = sets.EnhancingSkill
 	sets.midcast.Enspell = set_combine(sets.EnhancingSkill, {
 		main={ name="Pukulatmuj +1", augments={'Path: A',}},
-		sub="Demers. Degen +1",
+		sub="Archduke's Sword",
 		back="Ghostfyre Cape", })
 	sets.midcast.BoostStat = {}
 	sets.midcast.Protect = {ring2="Sheltered Ring"}
@@ -1027,12 +1027,12 @@ sets.idle.Sphere = set_combine(sets.idle, {
 		left_ear="Sanare Earring",
 		right_ear="Eabani Earring",
 		left_ring="Purity Ring",
-		right_ring="Vengeful Ring",
+		right_ring="Defending Ring",
 		back="Moonlight Cape",}
 		
 	
 	sets.defense.MEVA = {range=empty,ammo="Staunch Tathlum +1",
-		head="Malignance Chapeau",neck="Warder's Charm +1",ear1="Etiolation Earring",ear2="Ethereal Earring",
+		head="Malignance Chapeau",neck="Warder's Charm +1",ear1="Eabani Earring",ear2="Sanare Earring",
 		body="Malignance Tabard",hands="Malignance Gloves",ring1="Defending Ring",ring2="Vengeful Ring",
 		back="Moonlight Cape",waist="Carrier's Sash",legs="Malignance Tights",feet="Malignance Boots"}
 
@@ -1679,6 +1679,10 @@ function user_job_user_job_buff_change(buff, gain)
 end
 
 function user_job_lockstyle()
+	if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
 	if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     -- elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

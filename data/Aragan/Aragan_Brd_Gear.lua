@@ -33,7 +33,7 @@ function user_job_setup()
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
     state.WeaponskillMode:options('Match','SubtleBlow', 'PDL')
-    state.IdleMode:options('DT', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere','Regain')
+    state.IdleMode:options('DT', 'Normal', 'MDT','Empy', 'HP', 'Regen', 'Evasion', 'EnemyCritRate', 'Refresh', 'Sphere','Regain')
 	state.Weapons:options('None','DualNaegling','DualNaeglingCrepuscular','DualTwashtar','DualTwashtarCrepuscular','DualTauret','DualAeneas','DualCarnwenhan','Naegling', 'Twashtar','Tauret','Aeneas','Xoanon')
     state.Passive = M{['description'] = 'Passive Mode','None','RegalGloves','MDT','Enspell', 'SubtleBlow', 'SubtleBlow20'}
 
@@ -80,7 +80,7 @@ function user_job_setup()
     send_command('bind tab gs c cycle Singer;gs c singer')
     send_command('bind @tab gs c cycleback Singer;gs c singer;')
 
-    send_command('bind ^tab gs c cycle Etude')
+    -- send_command('bind ^tab gs c cycle Etude')
     -- send_command('bind ^tab gs c cycleback Etude')
     send_command('bind ^4 gs c toggle AutoAbsorttpaspirSpam')  
 
@@ -109,19 +109,19 @@ function user_job_setup()
     send_command('bind f3 gs c apply_songset')
     send_command('bind f4 gs c toggle_songset')
 
-local was_chat_open = false
-windower.register_event('prerender', function()
-    local chat_open = windower.ffxi.get_info().chat_open
-    if chat_open and not was_chat_open then
-		send_command('unbind `')
-		send_command('unbind tab')
-        was_chat_open = true
-    elseif not chat_open and was_chat_open then
-        send_command('bind ` gs c cycle Songset;')
-        send_command('bind tab gs c cycle Singer;gs c singer')
-        was_chat_open = false
-    end
-end)
+-- local was_chat_open = false
+-- windower.register_event('prerender', function()
+--     local chat_open = windower.ffxi.get_info().chat_open
+--     if chat_open and not was_chat_open then
+-- 		send_command('unbind `')
+-- 		send_command('unbind tab')
+--         was_chat_open = true
+--     elseif not chat_open and was_chat_open then
+--         send_command('bind ` gs c cycle Songset;')
+--         send_command('bind tab gs c cycle Singer;gs c singer')
+--         was_chat_open = false
+--     end
+-- end)
 
 	select_default_macro_book()
 end
@@ -263,7 +263,7 @@ function init_gear_sets()
 	-- Precast sets to enhance JAs
 	
 	sets.precast.JA.Nightingale = {feet="Bihu Slippers +3"}
-	sets.precast.JA.Troubadour = {body="Bihu Jstcorps. +3"}
+	sets.precast.JA.Troubadour = {body="Bihu Just. +4"}
 	sets.precast.JA['Soul Voice'] = {legs="Bihu Cannions +3"}
 
 	-- Waltz set (chr and vit)
@@ -301,7 +301,7 @@ function init_gear_sets()
         neck="Fotia Gorget",
         left_ear="Moonshade Earring",
         right_ear="Mache Earring +1",
-    body="Bihu Jstcorps. +3",
+    body="Bihu Just. +4",
     hands="Bunzi's Gloves",
     ring1="Hetairoi Ring",
     ring2="Ilabrat Ring",
@@ -316,7 +316,7 @@ function init_gear_sets()
         })
     sets.precast.WS['Exenterator'] = {range="Linos",
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
-        body="Bihu Jstcorps. +3",
+        body="Bihu Just. +4",
         legs="Lustr. Subligar +1",
     feet="Lustra. Leggings +1",
     hands="Bunzi's Gloves",
@@ -332,7 +332,7 @@ function init_gear_sets()
         body="Bunzi's Robe",})
     sets.precast.WS['Mordant Rime'] = {range="Linos",
     head={ name="Nyame Helm", augments={'Path: B',}},
-    body="Bihu Jstcorps. +3",
+    body="Bihu Just. +4",
     hands={ name="Nyame Gauntlets", augments={'Path: B',}},
     legs={ name="Nyame Flanchard", augments={'Path: B',}},
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -349,7 +349,7 @@ sets.precast.WS['Mordant Rime'].PDL = set_combine(sets.precast.WS['Mordant Rime'
 
 sets.precast.WS['Rudra\'s Storm'] = {range="Linos",
 head={ name="Nyame Helm", augments={'Path: B',}},
-body="Bihu Jstcorps. +3",
+body="Bihu Just. +4",
 hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 legs={ name="Nyame Flanchard", augments={'Path: B',}},
 feet={ name="Nyame Sollerets", augments={'Path: B',}}, 
@@ -370,7 +370,7 @@ sets.precast.WS['Rudra\'s Storm'].PDL.SubtleBlow = set_combine(sets.precast.WS['
     
 sets.precast.WS['Savage Blade'] = {range="Linos",
 head={ name="Nyame Helm", augments={'Path: B',}},
-body="Bihu Jstcorps. +3",
+body="Bihu Just. +4",
 hands={ name="Nyame Gauntlets", augments={'Path: B',}},
 legs={ name="Nyame Flanchard", augments={'Path: B',}},
 feet={ name="Nyame Sollerets", augments={'Path: B',}},
@@ -795,11 +795,11 @@ sets.precast.WS['Shattersoul'] = {
     }
         
 	sets.defense.MEVA = {  --ammo="Yamarang",
-    head={ name="Gleti's Mask", augments={'Path: A',}},
-    body={ name="Gleti's Cuirass", augments={'Path: A',}},
-    hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-    legs={ name="Gleti's Breeches", augments={'Path: A',}},
-    feet={ name="Gleti's Boots", augments={'Path: A',}},
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
     waist="Carrier's Sash",
     left_ear="Etiolation Earring",
@@ -1018,7 +1018,7 @@ sets.engaged.STP = {
 sets.engaged.CRIT = set_combine(sets.engaged, {
     ranged="Linos",
     head="Blistering Sallet +1",
-    body="Bihu Jstcorps. +3",
+    body="Bihu Just. +4",
     hands="Bunzi's Gloves",
     legs="Zoar Subligar +1",
     feet="Lustra. Leggings +1",
@@ -1300,10 +1300,24 @@ end
 
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()
-    set_macro_page(1, 2)
+    if player.sub_job == 'NIN' then
+        set_macro_page(5, 2)
+    elseif player.sub_job == 'DNC' then
+        set_macro_page(6, 2)
+    elseif player.sub_job == 'RNG' then
+        set_macro_page(5, 2)
+    elseif player.sub_job == 'DRG' then
+        set_macro_page(5, 2)
+    else
+        set_macro_page(1, 2)
+    end
 end
 function user_job_lockstyle()
-    if player.equipment.sub:contains('Shield') then
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
+    if player.equipment.sub and player.equipment.sub:contains('Shield') then
         if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword/Shield
         windower.chat.input('/lockstyleset 165')
         elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

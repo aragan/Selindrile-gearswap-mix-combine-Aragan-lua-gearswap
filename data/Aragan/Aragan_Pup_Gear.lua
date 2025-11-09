@@ -43,11 +43,11 @@ function user_job_setup()
     state.ResistDefenseMode:options('MEVA')
 	state.IdleMode:options('Normal','PDT','Empy','EnemyCritRate','Evasion','HP','MDT','Regain','Refresh','Sphere')
     state.Passive:options('None', 'SubtleBlow','SubtleBlowPET', 'SubtleBlowII','SubtleBlowPETII','SubtleBlowPETONLY','MDT', 'Enspell')
-    state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners','Tauret','CLUB','Staff')
+    state.Weapons:options('None','Godhands','Xiucoatl','Ohtas','Condemners','Midnights','Tauret','CLUB','Staff')
     state.Animators = M{['description']='Animators', 'AnimatorPI', 'None', 'AnimatorPII', 'NeoAnimator'}
 
     state.PetMode = M{['description']='Pet Mode', 'None','Melee','MaxAcc','Ranged','MaxTP','Regen','Bruiser','Tank','LightTank','Magic','Heal','Nuke'}
-	state.AutoRepairMode = M(false, 'Auto Repair Mode')
+	state.AutoRepairMode = M(true, 'Auto Repair Mode')
 	state.AutoDeployMode = M(true, 'Auto Deploy Mode')
 	state.AutoPetMode 	 = M(false, 'Auto Pet Mode')
 	state.PetWSGear		 = M(false, 'Pet WS Gear')
@@ -122,10 +122,12 @@ function user_job_setup()
     send_command("bind ^PAGEDOWN gs c hide keybinds")
 	send_command('bind @` gs c cycle SkillchainMode')
 	send_command('bind !f3 gs c toggle AutoPuppetMode')
+    send_command('bind !f8 gs c toggle PetStyleCycleDD')
+    send_command('bind !f7 gs c toggle PetModeCycle')
 	send_command('bind f2 gs c toggle AutoRepairMode')
     send_command('bind !f4 gs c toggle AutoManeuvers')
     send_command('bind f3 gs c toggle PetMode')
-    send_command('bind f7 gs c toggle Animators')
+    -- send_command('bind f7 gs c toggle Animators')
 	send_command('bind !f11 gs c cycle MagicalDefenseMode;gs c set DefenseMode Magical')
     send_command('bind f11 gs c cycle PhysicalDefenseMode;gs c set DefenseMode Physical') --Turns your physical defense set on.
     send_command('bind f10 gs c cycle HybridMode') --Changes defense settings for melee such as PDT.
@@ -152,6 +154,8 @@ function init_gear_sets()
 	sets.weapons.Xiucoatl = {main="Xiucoatl"}
 	sets.weapons.Ohtas = {main="Ohtas"}
 	sets.weapons.Condemners = {main="Condemners"}
+    sets.weapons.Midnights = {main="Midnights"}
+
     sets.weapons.Tauret = {main="Tauret", sub="Kustawi +1", }
     sets.weapons.Staff = {main="Gozuki Mezuki",sub="Niobid Strap"}
     sets.weapons.CLUB = {main="Mafic Cudgel",sub="Tauret",}
@@ -525,7 +529,7 @@ range="Trollbane",  }
     }
 
     sets.midcast.Phalanx = set_combine(sets.midcast['Enhancing Magic'],{
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -536,7 +540,7 @@ range="Trollbane",  }
 	sets.Self_Refresh = {back="Grapevine Cape",waist="Gishdubar Sash"}
 
     sets.Phalanx_Received = {
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -1374,6 +1378,10 @@ function select_default_macro_book()
     end
 end
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

@@ -772,8 +772,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
     
     -- Defense sets
     sets.defense.PDT = {
-        main={ name="Espiritus", augments={'Summoning magic skill +15','Pet: Mag. Acc.+30','Pet: Damage taken -4%',}},
-        sub="Elan Strap +1",
+
         ammo="Sancus Sachet +1",
         head="Beckoner's Horn +2",
         body={ name="Glyphic Doublet +3", augments={'Reduces Sp. "Blood Pact" MP cost',}},
@@ -790,8 +789,6 @@ sets.idle.MagicalBloodPactRage.Avatar = {
 }
 
     sets.defense.MDT = {
-        main="Contemplator +1",
-    sub="Elan Strap +1",
     ammo="Sancus Sachet +1",
     head="Tali'ah Turban +2",
     body={ name="Glyphic Doublet +3", augments={'Reduces Sp. "Blood Pact" MP cost',}},
@@ -808,8 +805,7 @@ sets.idle.MagicalBloodPactRage.Avatar = {
 }
 
     sets.defense.Regen = {
-        main="Contemplator +1",
-        sub="Elan Strap +1",
+
         ammo="Sancus Sachet +1",
         head="Beckoner's Horn +2",
         body={ name="Glyphic Doublet +3", augments={'Reduces Sp. "Blood Pact" MP cost',}},
@@ -869,9 +865,12 @@ sets.defense.MagicalBloodPactRage = {
     feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
     waist="Carrier's Sash",
-    ear1="Lugalbanda Earring",ear2="Sanare Earring",
-		ring1="Vengeful Ring",Ring2="Purity Ring",
-        back="Aurist's Cape +1"}
+    ear1="Lugalbanda Earring",
+    ear2="Sanare Earring",
+	ring1="Vengeful Ring",
+    Ring2="Purity Ring",
+    back="Moonlight Cape",
+    }
 		
     sets.defense.HP = sets.idle.HP  
 
@@ -934,6 +933,10 @@ sets.engaged.Acc = {
 }
 end
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
 	windower.chat.input('/lockstyleset 174')
 end
 -- Select default macro book on initial load or subjob change.

@@ -98,9 +98,9 @@ function user_job_setup()
 	gear.obi_high_nuke_back = gear.nuke_jse_back
 	gear.obi_high_nuke_waist = ""
 	
-	autoindi = "Haste"
+	autoindi = "Fury"
 	autogeo = "Frailty"
-	autoentrust = 'Fury'
+	autoentrust = "Haste"
 
 	-- Additional local binds
 	send_command('bind ^` gs c cycle ElementalMode')
@@ -167,7 +167,8 @@ function init_gear_sets()
 	
 	-- Fast cast sets for spells
 
-	sets.precast.FC = {        head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
+	sets.precast.FC = {
+    head={ name="Vanya Hood", augments={'MP+50','"Fast Cast"+10','Haste+2%',}},
 	hands="Agwu's Gages",
 	body="Shango Robe",
 	legs="Geomancy Pants +3",
@@ -180,9 +181,11 @@ function init_gear_sets()
 	waist="Witful Belt",
 	back={ name="Fi Follet Cape +1", augments={'Path: A',}},}
 
-	sets.precast.FC.Geomancy = set_combine(sets.precast.FC, {range="Dunna",ammo=empty})
+	sets.precast.FC.Geomancy = set_combine(sets.precast.FC, {
+        range="Dunna",ammo=empty})
 	
-    sets.precast.FC['Elemental Magic'] = set_combine(sets.precast.FC, {ear2="Malignance Earring",hands="Bagua Mitaines +1"})
+    sets.precast.FC['Elemental Magic'] = set_combine(sets.precast.FC, {
+        ear2="Malignance Earring",hands="Bagua Mitaines +1"})
 
 
     sets.precast.FC.Cure = set_combine(sets.precast.FC, {
@@ -792,8 +795,8 @@ function init_gear_sets()
         waist="Carrier's Sash",
         left_ear="Sanare Earring",
         right_ear="Eabani Earring",
-        left_ring="Stikini Ring +1",
-        right_ring="Stikini Ring +1",
+		left_ring="Shadow Ring",
+		right_ring="Archon Ring",
         back="Moonlight Cape",
     }
     sets.defense.Evasion = {
@@ -989,7 +992,14 @@ function check_trust()
 end
 
 function user_job_lockstyle()
-	windower.chat.input('/lockstyleset 198')
+    if data.areas.Abyssea:contains(world.area) or state.Stylenotwingsemode.value then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+		send_command('gs c update') 
+		style_lock = true
+    else
+	    windower.chat.input('/lockstyleset 198')
+    end
+
 end
 -- Select default macro book on initial load or subjob change.
 function select_default_macro_book()

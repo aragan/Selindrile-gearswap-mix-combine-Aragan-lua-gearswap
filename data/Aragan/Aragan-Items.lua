@@ -1,4 +1,9 @@
 --Gearsets your character will use among multiple jobs.
+
+-- if not sets then sets = {} end
+-- sets.buff = sets.buff or {}
+-- windower.add_to_chat(207, "[char_items] loaded")
+
 sets.BehemothSuit = {}--{body="Behemoth Suit +1",hands=empty,legs=empty,feet=empty
 sets.Sheltered = {ring2="Sheltered Ring"}
 sets.Capacity = {}--back="Mecisto. Mantle"
@@ -12,6 +17,8 @@ right_ring="Blenmot's Ring +1",}
 --Gavialis
 sets.WSDayBonus = {head="Gavialis Helm"}
 
+sets.precast.WS.Proc =  {}
+
 sets.TreasureHunter = {ammo="Per. Lucky Egg",head="Volte Cap",waist="Chaac Belt"}
 
 sets.precast.Item['Hallowed Water'] = {neck="Nicander's Necklace",
@@ -21,8 +28,8 @@ sets.precast.Item['Holy Water'] = {neck="Nicander's Necklace",
 left_ring="Purity Ring",
 right_ring="Blenmot's Ring +1",}
 
-gear.taeon_phalanx_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
-gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +2',}}
+gear.taeon_phalanx_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +3',}}
+gear.taeon_dw_feet= {name="Taeon Boots", augments={'Accuracy+20','"Dual Wield"+5','Phalanx +3',}}
 
 gear.herculean_treasure_legs = {name="Herculean Trousers", augments={'"Dbl.Atk."+1','AGI+6','"Treasure Hunter"+2','Accuracy+11 Attack+11','Mag. Acc.+9 "Mag.Atk.Bns."+9',}}
 

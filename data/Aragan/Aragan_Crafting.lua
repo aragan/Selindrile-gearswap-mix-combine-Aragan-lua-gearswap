@@ -24,9 +24,10 @@ sets.gathering = {body="Field Tunica",hands="Field Gloves",legs="Field Hose",fee
 
 ]]
 
-
-sets.crafting = {main="Caduceus",ring1="Craftkeeper's Ring",ring2="Orvail Ring +1",body="Goldsmith's Smock"}
+--if want HQ woverwriting all set it first 
+sets.crafting = {main="Caduceus",ring1="Confectioner's Ring",ring2="Orvail Ring +1",body="Goldsmith's Smock"}
 sets.crafting.HQ = {ring1="Craftmaster's Ring"}
+sets.crafting.HQ1 = {ring1="Confectioner's Ring"}
 
 sets.crafting.Smithing = {main="Caduceus",head="Shaded Specs.",hand="Smithy's Mitts",neck="Goldsm. Torque",sub="Toreutic Escutcheon",body="Goldsmith's Smock"}
 sets.crafting.Smithing.NQ = {ring1="Goldsmith's Ring"}
@@ -35,7 +36,8 @@ sets.crafting.Cooking = {main="Debahocho +1",head="Shaded Specs.",hand="Smithy's
 sets.crafting.Cooking.NQ = {ring1="Goldsmith's Ring"}
 sets.crafting.Goldsmithing = {main="Caduceus",head="Shaded Specs.",hand="Smithy's Mitts",neck="Goldsm. Torque",sub="Toreutic Escutcheon",body="Goldsmith's Smock"}
 sets.crafting.Goldsmithing.NQ = {ring1="Goldsmith's Ring"}
-
+-- sets.crafting.Goldsmithing.HQ = {ring1="Craftmaster's Ring"}
+-- sets.crafting.Goldsmithing.HQ1 = {ring1="Confectioner's Ring"}
 sets.Synergy = {}
 
 sets.Fishing = {range="Lu Sh. F. Rod",neck="Fisher's Torque",body="Fisherman's Smock",hands="Fsh. Gloves",ring1="Noddy Ring",ring2=="Puffin Ring",waist="Fisher's Rope",legs="Fisherman's Hose",feet="Waders"}

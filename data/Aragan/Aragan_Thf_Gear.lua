@@ -125,7 +125,7 @@ function init_gear_sets()
     sets.precast.JA['Accomplice'] = {head="Skulker's Bonnet +2",}
     sets.precast.JA['Flee'] = {}--feet="Pillager's Poulaines +1"
     sets.precast.JA['Hide'] = {body="Pillager's Vest +3"}
-    sets.precast.JA['Conspirator'] = {body="Skulker's Vest +1"} --body="Skulker's Vest"
+    sets.precast.JA['Conspirator'] = {body="Skulker's Vest +2"} --body="Skulker's Vest"
     sets.precast.JA['Steal'] = {}
 	sets.precast.JA['Mug'] = {}
     sets.precast.JA['Despoil'] = {feet="Skulk. Poulaines +2",}
@@ -596,7 +596,7 @@ sets.precast.WS["Empyreal Arrow"] = {
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
 
     sets.Phalanx_Received = {
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -707,11 +707,11 @@ sets.precast.WS["Empyreal Arrow"] = {
     }
 
     sets.defense.MDT = {ammo="Staunch Tathlum +1",
-    head={ name="Gleti's Mask", augments={'Path: A',}},
-    body={ name="Gleti's Cuirass", augments={'Path: A',}},
-    hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-    legs={ name="Gleti's Breeches", augments={'Path: A',}},
-    feet={ name="Gleti's Boots", augments={'Path: A',}},
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck="Warder's Charm +1",
     waist="Engraved Belt",
     left_ear="Eabani Earring",
@@ -735,9 +735,11 @@ sets.precast.WS["Empyreal Arrow"] = {
         right_ring="Defending Ring",
         back="Moonlight Cape", 
     }
-	sets.defense.MEVA = {ammo="Staunch Tathlum +1",
+	sets.defense.MEVA = {
+        ammo="Staunch Tathlum +1",
 		neck="Warder's Charm +1",ear1="Etiolation Earring",ear2="Sanare Earring",
-		body="Adamantite Armor",hands="Malignance Gloves",ring1="Vengeful Ring",ring2="Purity Ring",
+		head="Malignance Chapeau",
+        body="Adamantite Armor",hands="Malignance Gloves",ring1="Vengeful Ring",ring2="Purity Ring",
 		back="Moonlight Cape", waist="Engraved Belt",legs="Malignance Tights",feet="Malignance Boots"}
 
         
@@ -1172,6 +1174,10 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

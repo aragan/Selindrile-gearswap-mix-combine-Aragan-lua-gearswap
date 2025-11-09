@@ -223,7 +223,7 @@ function init_gear_sets()
 
     sets.precast.Flourish2 = {}
     sets.precast.Flourish2['Reverse Flourish'] = {
-        hands="Macu. Bangles +1",
+        hands="Macu. Bangles +2",
         back={ name="Senuna's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+10','"Dbl.Atk."+10','Phys. dmg. taken-10%',}},
     }
 
@@ -234,7 +234,7 @@ function init_gear_sets()
     -- Fast cast sets for spells
     
     sets.precast.FC = {ammo="Sapience Orb",
-    body="Taeon Tabard",
+    body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
     neck="Baetyl Pendant",
     left_ear="Loquac. Earring",
@@ -594,7 +594,7 @@ function init_gear_sets()
     
     sets.midcast.FastRecast = {
         ammo="Sapience Orb",
-        body="Taeon Tabard",
+        body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
         hands={ name="Leyline Gloves", augments={'Accuracy+15','Mag. Acc.+15','"Mag.Atk.Bns."+15','"Fast Cast"+3',}},
         left_ear="Loquac. Earring",
         right_ear="Etiolation Earring",
@@ -609,7 +609,7 @@ function init_gear_sets()
     left_ring="Prolix Ring",})
 
     sets.midcast['Phalanx'] = {
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -623,7 +623,7 @@ function init_gear_sets()
 	sets.Self_Refresh = {waist="Gishdubar Sash"}
 
     sets.Phalanx_Received = {
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -895,11 +895,11 @@ function init_gear_sets()
     
     sets.defense.MDT = {     
         ammo="Yamarang",
-        head={ name="Gleti's Mask", augments={'Path: A',}},
-        body={ name="Gleti's Cuirass", augments={'Path: A',}},
-        hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-        legs={ name="Gleti's Breeches", augments={'Path: A',}},
-        feet={ name="Gleti's Boots", augments={'Path: A',}},
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
         waist="Engraved Belt",
         left_ear="Etiolation Earring",
@@ -925,11 +925,11 @@ function init_gear_sets()
     }
     
 	sets.defense.MEVA = {  ammo="Yamarang",
-    head={ name="Gleti's Mask", augments={'Path: A',}},
-    body={ name="Gleti's Cuirass", augments={'Path: A',}},
-    hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-    legs={ name="Gleti's Breeches", augments={'Path: A',}},
-    feet={ name="Gleti's Boots", augments={'Path: A',}},
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
     waist="Engraved Belt",
     left_ear="Etiolation Earring",
@@ -1357,6 +1357,10 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

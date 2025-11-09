@@ -23,6 +23,26 @@ Shoha > Fudo > Kasha > Shoha > Fudo
 
 jinpu spam
 
+
+--TP BONUS
+
+Mpaca's Cap --200TP
+MASH EAR 250TP
+
+TOTAL 450 = WS TP 1550 = 2000 2P WS
+
+Mpaca's Cap --200TP
+MASH EAR 250TP
+Dojikiri Yasutsuna 500TP
+
+
+TOTAL 1050 = WS TP 1000 = 2050 TP WS
+
+IF
+
+TOTAL 1050 = WS TP 1950 = 3000 TP WS
+
+
 --]]
 
 -- Setup vars that are user-dependent.
@@ -1244,6 +1264,10 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

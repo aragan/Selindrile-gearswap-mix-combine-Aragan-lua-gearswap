@@ -148,7 +148,7 @@ function user_job_setup()
     state.MagicalDefenseMode:options('MDT')
     state.ResistDefenseMode:options('MEVA')
     state.Passive = M{['description'] = 'Passive Mode','None','MaxAcc'}
-	state.Weapons:options('Mpaca','Marin','None','Musa','Xoanon', 'Club','TernionDagger','DualDaybreak','DualMaxentius')
+	state.Weapons:options('Normal', 'Mpaca','Marin','None','Musa','Xoanon', 'Club','TernionDagger','DualDaybreak','DualMaxentius')
 	state.AutoBuffMode:options('Off','seg','Auto','Fullbuff') --,'Vagary','Off','Off','Off','Off',
 
 	gear.nuke_jse_back = {"Lugh's Cape"}
@@ -952,7 +952,24 @@ right_ear="Telos Earring",
     -- Initializes trusts at iLvl 119
     sets.midcast.Trust = sets.precast.FC
 
+-- Extra defense sets.  Apply these on top of melee or defense sets.
+--Passive set
 
+-- sets.Passive.MaxAcc = {
+--     ammo="Amar Cluster",
+--     head={ name="Blistering Sallet +1", augments={'Path: A',}},
+--     body="Arbatel Gown +3",
+--     hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
+--     legs="Arbatel Pants +2",
+--     feet="Arbatel Loafers +3",
+--     neck="Null Loop",
+--     waist="Null Belt",
+--     left_ear="Mache Earring +1",
+--     right_ear="Mache Earring +1",
+--     left_ring={ name="Cacoethic Ring +1", augments={'Path: A',}},
+--     right_ring="Chirich Ring +1",
+--     back="Null Shawl",
+-- }
     ------------------------------------------------------------------------------------------------
     ----------------------------------------- Idle Sets --------------------------------------------
     ------------------------------------------------------------------------------------------------
@@ -1129,10 +1146,10 @@ sets.idle.Sphere = set_combine(sets.idle, {
     feet="Arbatel Loafers +3",
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
     waist="Plat. Mog. Belt",
+    right_ear="Eabani Earring",
     left_ear="Sanare Earring",
-    right_ear="Etiolation Earring",
-    left_ring="Stikini Ring +1",
-    right_ring="Shadow Ring",
+    left_ring="Shadow Ring",
+    right_ring="Archon Ring",
     back="Moonlight Cape",
 }
 
@@ -1144,26 +1161,6 @@ sets.defense.MEVA = sets.defense.MDT
 sets.MoveSpeed = {feet="Herald's Gaiters"}
 sets.Kiting = {feet="Herald's Gaiters"}
 sets.latent_refresh = {waist="Fucho-no-obi",}
-
-    
--- Extra defense sets.  Apply these on top of melee or defense sets.
---Passive set
-
-sets.Passive.MaxAcc = {
-    ammo="Amar Cluster",
-    head={ name="Blistering Sallet +1", augments={'Path: A',}},
-    body="Arbatel Gown +3",
-    hands={ name="Gazu Bracelets +1", augments={'Path: A',}},
-    legs="Arbatel Pants +2",
-    feet="Arbatel Loafers +3",
-    neck="Null Loop",
-    waist="Null Belt",
-    left_ear="Mache Earring +1",
-    right_ear="Mache Earring +1",
-    left_ring={ name="Cacoethic Ring +1", augments={'Path: A',}},
-    right_ring="Chirich Ring +1",
-    back="Null Shawl",
-}
 
     ------------------------------------------------------------------------------------------------
     ---------------------------------------- Engaged Sets ------------------------------------------
@@ -1304,9 +1301,9 @@ sets.engaged.DT = {
 
 
 
-------------------------------------------------------------------------------------------------
----------------------------------------- Hybrid Sets -------------------------------------------
-------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------
+-- ---------------------------------------- Hybrid Sets -------------------------------------------
+-- ------------------------------------------------------------------------------------------------
 
 -- dt -50%
 
@@ -1471,6 +1468,10 @@ function select_default_macro_book()
 	end
 end
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
 	windower.chat.input('/lockstyleset 173')
 end
 

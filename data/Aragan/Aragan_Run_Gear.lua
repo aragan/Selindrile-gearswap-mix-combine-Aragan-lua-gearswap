@@ -645,7 +645,7 @@ sets.precast.WS['Savage Blade'] = set_combine(sets.precast.WS, {
 	sets.Self_Refresh = {head="Erilaz Galea +2",waist="Gishdubar Sash"}
 
     sets.Phalanx_Received = {
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},	
     	hands={ name="Herculean Gloves", augments={'Accuracy+11','Pet: Phys. dmg. taken -5%','Phalanx +4',}},
 	    legs={ name="Taeon Tights", augments={'Phalanx +3',}},
@@ -1401,6 +1401,10 @@ function check_trust()
 end
 
 function user_job_lockstyle()
+	if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 151')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

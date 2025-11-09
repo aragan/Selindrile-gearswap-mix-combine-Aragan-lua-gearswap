@@ -82,7 +82,7 @@ function init_gear_sets()
 	sets.weapons.Queller = {main="Queller Rod",sub="Genmei Shield"}
 	sets.weapons.Daybreak = {main="Daybreak",sub="Ammurapi Shield"}
 	sets.weapons.Xoanon = {main="Xoanon",sub="Alber Strap"}
-	sets.weapons.Staff = {main="Ababinili +1",sub="Giuoco Grip"}
+	sets.weapons.Staff = {main="Serenity",sub="Giuoco Grip"}
 
 	sets.weapons.DualDaybreak = {main="Daybreak", sub="Bunzi's Rod"}
 	sets.weapons.DualMaxentius = {main="Maxentius", sub="Daybreak"}
@@ -430,7 +430,7 @@ function init_gear_sets()
 	
     sets.midcast.SIRD = {
         ammo="Staunch Tathlum +1",
-        sub="Culminus",
+        -- sub="Culminus",
         hands={ name="Chironic Gloves", augments={'Mag. Acc.+11','Spell interruption rate down -10%','MND+8',}},
         body={ name="Ros. Jaseran +1", augments={'Path: A',}},
 		legs="Bunzi's Pants",
@@ -503,8 +503,8 @@ function init_gear_sets()
         right_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
     back="Alaunus's Cape",}
 	sets.midcast.Cure.SIRD = set_combine(sets.midcast.Cure, {
-        main="Daybreak",
-        sub="Culminus",
+        -- main="Daybreak",
+        -- sub="Culminus",
         ammo="Staunch Tathlum +1",
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Ros. Jaseran +1", augments={'Path: A',}},
@@ -544,7 +544,7 @@ function init_gear_sets()
         neck={ name="Clr. Torque +2", augments={'Path: A',}},
         waist="Plat. Mog. Belt",
         left_ear="Glorious Earring",
-        right_ear="Ebers Earring",
+        right_ear="Ebers Earring +1",
         left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
         right_ring="Lebeche Ring",
         back="Solemnity Cape",})
@@ -565,8 +565,8 @@ function init_gear_sets()
     back="Alaunus's Cape",}
 
     sets.midcast.CureSolace.SIRD = set_combine(sets.midcast.CureSolace, {
-        main="Daybreak",
-        sub="Culminus",
+        -- main="Daybreak",
+        -- sub="Culminus",
         ammo="Staunch Tathlum +1",
         head={ name="Nyame Helm", augments={'Path: B',}},
         body={ name="Ros. Jaseran +1", augments={'Path: A',}},
@@ -606,7 +606,7 @@ function init_gear_sets()
     neck={ name="Clr. Torque +2", augments={'Path: A',}},
     waist="Plat. Mog. Belt",
     left_ear="Glorious Earring",
-    right_ear="Ebers Earring",
+    right_ear="Ebers Earring +1",
     left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
     right_ring="Lebeche Ring",
     back="Solemnity Cape",})
@@ -629,8 +629,8 @@ function init_gear_sets()
 		
 	sets.midcast.LightDayCuraga = sets.midcast.LightDayCure
     sets.midcast.Curaga.SIRD = set_combine(sets.midcast.Curaga, {
-		main="Daybreak",
-		sub="Culminus",
+		-- main="Daybreak",
+		-- sub="Culminus",
 		ammo="Staunch Tathlum +1",
 		head={ name="Nyame Helm", augments={'Path: B',}},
 		body={ name="Ros. Jaseran +1", augments={'Path: A',}},
@@ -670,7 +670,7 @@ function init_gear_sets()
         neck={ name="Clr. Torque +2", augments={'Path: A',}},
         waist="Plat. Mog. Belt",
         left_ear="Glorious Earring",
-        right_ear="Ebers Earring",
+        right_ear="Ebers Earring +1",
         left_ring={ name="Mephitas's Ring +1", augments={'Path: A',}},
         right_ring="Lebeche Ring",
         back="Alaunus's Cape",
@@ -717,7 +717,7 @@ function init_gear_sets()
 	feet={ name="Vanya Clogs", augments={'"Cure" potency +5%','"Cure" spellcasting time -15%','"Conserve MP"+6',}},
 	neck="Debilis Medallion",
 	waist="Gishdubar Sash",
-	right_ear="Ebers Earring",
+	right_ear="Ebers Earring +1",
 	left_ring="Haoma's Ring",
 	right_ring="Menelaus's Ring",
 	back="Alaunus's Cape",}
@@ -871,7 +871,7 @@ function init_gear_sets()
         legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
         waist="Obstin. Sash",
         left_ear="Regal Earring",
-        right_ear="Ebers Earring",
+        right_ear="Ebers Earring +1",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Kishar Ring",
     })	
@@ -965,7 +965,7 @@ function init_gear_sets()
 	legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
 	waist="Obstin. Sash",
 	left_ear="Regal Earring",
-	right_ear="Ebers Earring",
+	right_ear="Ebers Earring +1",
 	left_ring="Stikini Ring +1",
 	right_ring="Kishar Ring",}
 
@@ -990,7 +990,7 @@ function init_gear_sets()
         legs={ name="Chironic Hose", augments={'Mag. Acc.+25 "Mag.Atk.Bns."+25','MND+7','"Mag.Atk.Bns."+10',}},
         waist="Obstin. Sash",
         left_ear="Regal Earring",
-        right_ear="Ebers Earring",
+        right_ear="Ebers Earring +1",
         left_ring={ name="Metamor. Ring +1", augments={'Path: A',}},
         right_ring="Kishar Ring",})
 	sets.midcast.MndEnfeebles.Resistant = sets.midcast.MndEnfeebles
@@ -1056,8 +1056,8 @@ function init_gear_sets()
     --------------------------------------
 
     sets.defense.PDT = {
-        main="Daybreak",
-        sub="Culminus",
+        -- main="Daybreak",
+        -- sub="Culminus",
         ammo="Staunch Tathlum +1",
         head="Null Masque",
         body="Shamash Robe",
@@ -1141,15 +1141,15 @@ function init_gear_sets()
     neck={ name="Warder's Charm +1", augments={'Path: A',}},
     waist="Plat. Mog. Belt",
     left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
-    right_ear="Etiolation Earring",
-    left_ring="Inyanga Ring",
+    right_ear="Eabani Earring",
+    left_ring="Defending Ring",
     right_ring="Shadow Ring",
     back="Alaunus's Cape",}
     
     sets.defense.MEVA = {ammo="Staunch Tathlum +1",
-		head="Nyame Helm",neck="Warder's Charm +1",ear1="Etiolation Earring",ear2="Ethereal Earring",
+		head="Nyame Helm",neck="Warder's Charm +1",ear1="Eabani Earring",ear2="Ethereal Earring",
 		body="Nyame Mail",hands="Nyame Gauntlets",ring1="Purity Ring",ring2="Vengeful Ring",
-		back="Aurist's Cape +1",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
+        back="Moonlight Cape",waist="Carrier's Sash",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 		
     -- Idle sets (default idle set not needed since the other three are defined, but leaving for testing purposes)
     sets.idle = {
@@ -1561,6 +1561,10 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
 	windower.chat.input('/lockstyleset 178')
 end
 

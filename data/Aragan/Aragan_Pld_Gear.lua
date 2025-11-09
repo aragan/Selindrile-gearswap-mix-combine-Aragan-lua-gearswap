@@ -1201,7 +1201,7 @@ sets.passive.kalunga = {
         back="Moonlight Cape",waist="Carrier's Sash",legs="Sakpata's Cuisses",feet="Sakpata's Leggings"}
 
 	sets.defense.MEVA = {ammo="Staunch Tathlum +1",
-		head="Nyame Helm",neck="Warder's Charm +1",ear1="Etiolation Earring",ear2="Sanare Earring",
+		head="Nyame Helm",neck="Warder's Charm +1",ear1="Eabani Earring",ear2="Sanare Earring",
 		body="Nyame Mail",hands="Nyame Gauntlets",ring1="Purity Ring",ring2="Shadow Ring",
 		back="Moonlight Cape",waist="Asklepian Belt",legs="Nyame Flanchard",feet="Nyame Sollerets"}
 		
@@ -1756,6 +1756,10 @@ function select_default_macro_book()
 end
 
 function user_job_lockstyle()
+	if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
 	windower.chat.input('/lockstyleset 177')
 end
 

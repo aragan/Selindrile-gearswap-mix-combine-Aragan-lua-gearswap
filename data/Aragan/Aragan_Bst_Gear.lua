@@ -214,18 +214,18 @@ sets.precast.FC.Cure = set_combine(sets.precast.FC, {
 	sets.midcast.Curaga = sets.midcast.Cure
 
 	sets.midcast['Phalanx'] = set_combine(sets.midcast['Enhancing Magic'],{
-	head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+	head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
     body={ name="Taeon Tabard", augments={'Phalanx +3',}},
     hands={ name="Taeon Gloves", augments={'Phalanx +3',}},
     legs={ name="Taeon Tights", augments={'Phalanx +3',}},
-    feet={ name="Taeon Boots", augments={'Phalanx +2',}},
+    feet={ name="Taeon Boots", augments={'Phalanx +3',}},
 	})
 	sets.Phalanx_Received = {
-	head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+	head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
     body={ name="Taeon Tabard", augments={'Phalanx +3',}},
     hands={ name="Taeon Gloves", augments={'Phalanx +3',}},
     legs={ name="Taeon Tights", augments={'Phalanx +3',}},
-    feet={ name="Taeon Boots", augments={'Phalanx +2',}},
+    feet={ name="Taeon Boots", augments={'Phalanx +3',}},
 	}
 	sets.Self_Healing = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
 	sets.Cure_Received = {neck="Phalaina Locket",hands="Buremte Gloves",ring2="Kunaji Ring",waist="Gishdubar Sash"}
@@ -1005,8 +1005,11 @@ sets.idle.Evasion = {
 		hands="Malignance Gloves",
 		legs="Malignance Tights",
 		feet="Malignance Boots",
-		neck="Warder's Charm +1",ear1="Sanare Earring",ear2="Etiolation Earring",
-		ring1="Vengeful Ring",ring2="Purity Ring",
+		neck="Warder's Charm +1",
+		right_ear="Eabani Earring",
+        left_ear="Sanare Earring",
+		ring1="Defending Ring",
+		ring2="Purity Ring",
 		waist="Engraved Belt",
 		back="Moonlight Cape",}
 
@@ -1217,6 +1220,10 @@ sets.idle.Evasion = {
 	sets.precast.JA['Bestial Loyalty'].SultryPatrice = set_combine(sets.precast.JA['Bestial Loyalty'], {ammo="Putrescent Broth"})
 end
 function user_job_lockstyle()
+	if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.

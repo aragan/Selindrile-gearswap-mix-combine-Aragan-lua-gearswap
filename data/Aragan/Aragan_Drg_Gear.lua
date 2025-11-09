@@ -15,7 +15,7 @@ keyboard binds and chat
 function user_job_setup()
 	-- Options: Override default values
     state.OffenseMode:options('Normal', 'Acc', 'STP', 'CRIT', 'SubtleBlow')
-    state.WeaponskillMode:options('Match', 'SubtleBlow', 'SC', 'PDL')
+    state.WeaponskillMode:options('Match','Proc', 'SubtleBlow', 'SC', 'PDL')
     state.HybridMode:options( 'DT','Normal')
     state.PhysicalDefenseMode:options('PDT', 'HP', 'Reraise', 'Regain')
     state.MagicalDefenseMode:options('MDT')
@@ -145,11 +145,11 @@ function init_gear_sets()
 	
     sets.Self_Refresh = {waist="Gishdubar Sash"}
     sets.Phalanx_Received = {
-        head={ name="Taeon Chapeau", augments={'Phalanx +2',}},
+        head={ name="Taeon Chapeau", augments={'Phalanx +3',}},
         body={ name="Taeon Tabard", augments={'Phalanx +3',}},
         hands={ name="Taeon Gloves", augments={'Phalanx +3',}},
         legs={ name="Taeon Tights", augments={'Phalanx +3',}},
-        feet={ name="Taeon Boots", augments={'Phalanx +2',}},
+        feet={ name="Taeon Boots", augments={'Phalanx +3',}},
 	}
 	sets.precast.RA = {ammo=empty,
 	range="Trollbane",  
@@ -206,6 +206,8 @@ function init_gear_sets()
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",
     }
+    sets.precast.WS.Proc = {}
+
 	sets.precast.WS['Sonic Thrust'] = sets.precast.WS
 
 	sets.precast.WS['Stardiver'] = set_combine(sets.precast.WS, {
@@ -241,6 +243,7 @@ function init_gear_sets()
         right_ear="Pel. Earring +1",
         left_ring="Sroda Ring", 
     })
+    sets.precast.WS['Stardiver'].Proc =  set_combine(sets.precast.WS.Proc,{})
 
     sets.precast.WS["Camlann's Torment"] = set_combine(sets.precast.WS, {
         ammo="Knobkierrie",
@@ -274,6 +277,8 @@ function init_gear_sets()
         right_ear="Pel. Earring +1",
         left_ring="Sroda Ring", 
     })
+    sets.precast.WS['Camlann\'s Torment'].Proc =  set_combine(sets.precast.WS.Proc,{})
+
 	sets.precast.WS['Drakesbane'] = set_combine(sets.precast.WS, {
         ammo="Coiste Bodhar",
         head={ name="Blistering Sallet +1", augments={'Path: A',}},
@@ -313,6 +318,9 @@ function init_gear_sets()
         right_ear="Pel. Earring +1",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",    })
+    
+    sets.precast.WS['Drakesbane'].Proc =  set_combine(sets.precast.WS.Proc,{})
+
     sets.precast.WS['Geirskogul'] = set_combine(sets.precast.WS, {
         ammo="Knobkierrie",
         head={ name="Nyame Helm", augments={'Path: B',}},
@@ -344,6 +352,8 @@ function init_gear_sets()
         right_ring="Cornelia's Ring",
         left_ring="Sroda Ring", 
     })
+    sets.precast.WS['Geirskogul'].Proc =  set_combine(sets.precast.WS.Proc,{})
+
     sets.precast.WS['Impulse Drive'] = set_combine(sets.precast.WS, {
         ammo="Knobkierrie",
         head={ name="Nyame Helm", augments={'Path: B',}},
@@ -405,7 +415,9 @@ function init_gear_sets()
         right_ear="Pel. Earring +1",
         left_ring="Chirich Ring +1",
         right_ring="Chirich Ring +1",    })
-    
+
+    sets.precast.WS['Savage Blade'].Proc =  set_combine(sets.precast.WS.Proc,{})
+
     sets.precast.WS['Black Halo'] = {
         ammo="Knobkierrie",
         head={ name="Nyame Helm", augments={'Path: B',}},
@@ -509,6 +521,8 @@ sets.precast.WS["Burning Blade"] = set_combine(sets.precast.WS, {
     right_ring="Cornelia's Ring",
     back="Argocham. Mantle",})
 
+sets.precast.WS['Burning Blade'].Proc =  set_combine(sets.precast.WS.Proc,{})
+
 sets.precast.WS["Red Lotus Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Shining Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Seraph Blade"] = set_combine(sets.precast.WS["Burning Blade"],{})
@@ -531,6 +545,9 @@ sets.precast.WS["Starburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Sunburst"] = set_combine(sets.precast.WS["Burning Blade"],{})
 sets.precast.WS["Flaming Arrow"] = set_combine(sets.precast.WS["Burning Blade"],{})
 	
+sets.precast.WS["Red Lotus Blade"].Proc = set_combine(sets.precast.WS.Proc,{})
+sets.precast.WS["Aeolian Edge"].Proc = set_combine(sets.precast.WS.Proc,{})
+
 sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     ammo="Pemphredo Tathlum",
     head={ name="Nyame Helm", augments={'Path: B',}},
@@ -584,11 +601,11 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
 
 	sets.defense.MDT = {
         ammo="Staunch Tathlum +1",
-        head={ name="Gleti's Mask", augments={'Path: A',}},
-        body={ name="Gleti's Cuirass", augments={'Path: A',}},
-        hands={ name="Gleti's Gauntlets", augments={'Path: A',}},
-        legs={ name="Gleti's Breeches", augments={'Path: A',}},
-        feet={ name="Gleti's Boots", augments={'Path: A',}},
+        head={ name="Nyame Helm", augments={'Path: B',}},
+        body={ name="Nyame Mail", augments={'Path: B',}},
+        hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+        legs={ name="Nyame Flanchard", augments={'Path: B',}},
+        feet={ name="Nyame Sollerets", augments={'Path: B',}},
         neck={ name="Warder's Charm +1", augments={'Path: A',}},
         waist="Carrier's Sash",
         left_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
@@ -650,10 +667,18 @@ sets.precast.WS["Shell Crusher"] = set_combine(sets.precast.WS, {
     }
 
 	sets.defense.MEVA = {ammo="Staunch Tathlum +1",
-		head="Loess Barbuta +1",neck="Warder's Charm +1",ear1="Genmei Earring",ear2="Ethereal Earring",
-		body="Tartarus Platemail",hands="Sulev. Gauntlets +2",ring1="Gelatinous Ring +1",ring2="Moonlight Ring",
-		back="Moonlight Cape",waist="Flume Belt +1",legs={ name="Gleti's Breeches", augments={'Path: A',}},
-        feet={ name="Gleti's Boots", augments={'Path: A',}},}
+    head={ name="Nyame Helm", augments={'Path: B',}},
+    body={ name="Nyame Mail", augments={'Path: B',}},
+    hands={ name="Nyame Gauntlets", augments={'Path: B',}},
+    legs={ name="Nyame Flanchard", augments={'Path: B',}},
+    feet={ name="Nyame Sollerets", augments={'Path: B',}},
+    neck="Warder's Charm +1",
+    waist="Carrier's Sash",
+    left_ear="Eabani Earring",
+    right_ear={ name="Odnowa Earring +1", augments={'Path: A',}},
+    left_ring="Shadow Ring",
+    right_ring="Purity Ring",
+    back="Moonlight Cape",}
 
 
 	-- Idle sets
@@ -1135,6 +1160,10 @@ sets.engaged.DW.CRIT.DT.MaxHaste = set_combine(sets.engaged.DW.CRIT.MaxHaste, se
 end
 
 function user_job_lockstyle()
+    if state.Stylenotwingsemode.value  then
+        windower.chat.input:schedule(6,'/lockstyleset 1')
+        return
+    end
     if res.items[item_name_to_id(player.equipment.main)].skill == 3 then --Sword in main hand.
         windower.chat.input('/lockstyleset 152')
     elseif res.items[item_name_to_id(player.equipment.main)].skill == 2 then --Dagger in main hand.
