@@ -48,7 +48,9 @@ function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
 	include('Kate-DefenseDown')
-
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Airmid's Gorget",
 		"Tumult's Blood",
@@ -98,6 +100,8 @@ end
     -- Setup vars that are user-independent.
 function job_setup()
 	set_dual_wield()
+	job_zone_change()
+
     attack2 = 5000 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
 	-- already_announced_by_name = already_announced_by_name or {}
 
@@ -109,11 +113,12 @@ function job_setup()
     state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Hasso = buffactive.Hasso or false
     state.Buff.Seigan = buffactive.Seigan or false
+
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 	state.DrainSwapWeaponMode = M{'Never','300','1000','Always'}
 	state.MagicBurst = M(false, 'Magic Burst')
     state.WeaponLock = M(false, 'Weapon Lock')
-    state.AutoEquipBurst = M(true)
+	state.AutoEquipBurst = M{['description'] = 'AutoEquipBurst', 'On', 'Off'}
     state.RP = M(false, "Reinforcement Points Mode")    
 	state.SubtleBlowMode = M(false, 'SubtleBlow Mode') 
 	state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
@@ -121,7 +126,8 @@ function job_setup()
     state.AbsorbMode = M{['description']='AbsorbMode','Potency','ACC'}
     state.SouleaterMode = M(true, 'Soul Eater Mode')
     state.LastResortMode = M(true,false)
-	
+	state.AutogearbuffMode = M(false, 'AutogearbuffMode')
+	state.NoSchereEarringMode = M(true, 'NoSchereEarringMode') 
 	-- Use Gavialis helm?
 	-- Weaponskills you want Gavialis helm used with (only considered if use_gavialis = true)
 	use_gavialis = true
@@ -158,7 +164,7 @@ function job_setup()
 
 	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","AutoMedicineMode","AutoReraiseMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","Absorbs","Stance","DrainSwapWeaponMode","TreasureMode",})
 end
-	
+
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for standard casting events.
 -------------------------------------------------------------------------------------------------------------------
@@ -195,11 +201,7 @@ function job_precast(spell, spellMap, eventArgs)
             add_to_chat(123, spell.name..' Canceled: Warcry its up [active]')
         end
     end
-	if spell.type == 'WeaponSkill' then
-        if state.WeaponskillMode.value == "None" then
-            equip() 
-        end
-    end
+
 	if spell.type == 'WeaponSkill' and state.AutoBuffMode.value ~= 'Off' then
 		local abil_recasts = windower.ffxi.get_ability_recasts()
 		if spell.english == 'Entropy' and not buffactive['Sekkanoki'] and abil_recasts[95] < latency then
@@ -228,7 +230,11 @@ end
 
 -- Run after the general precast() is done.
 function job_post_precast(spell, spellMap, eventArgs)
-	
+	if spell.type == 'WeaponSkill' then
+		if state.WeaponskillMode.value == "Proc" then
+			equip(sets.precast.WS.Proc) 
+		end
+	end
 	if spell.type == 'WeaponSkill' then
 
 		local WSset = standardize_set(get_precast_set(spell, spellMap))
@@ -276,6 +282,7 @@ function job_post_precast(spell, spellMap, eventArgs)
                 equip(sets.WSDayBonus)
             end
         end
+
 	end
 
 end
@@ -431,15 +438,42 @@ function job_customize_idle_set(idleSet)
 	if buffactive['Tactician\'s Roll'] and __rollNum == 11 then
 		idleSet = set_combine(idleSet, sets.rollerRing)
 	end
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom']) then
-	    idleSet = set_combine(idleSet, sets.Reraise)
-    end
+
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body')
+        idleSet = set_combine(idleSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+		-- autoReraiseMessageShown = true 
+	else
+        enable('head', 'body') 
+		-- autoReraiseMessageShown = false 
+	end
+
 
     return idleSet
 end
 
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
+	-- if state.EarringMode and state.EarringMode.value then
+	-- 	-- if meleeSet.ear1 and meleeSet.ear1 == "Schere Earring" then
+	-- 	-- 	meleeSet.ear1 = "Telos Earring"
+	-- 	-- end
+	-- 	if meleeSet.ear2 and meleeSet.ear2 == "Schere Earring" then
+	-- 		meleeSet.ear2 = "Telos Earring"
+	-- 	end
+	-- end
+	
+	if state.NoSchereEarringMode.value and player.status == 'Engaged' then
+
+		for slot, item in pairs(meleeSet) do
+			if item == "Schere Earring" then
+				meleeSet[slot] = "Telos Earring"
+			end
+		end
+	end
     if state.Buff.Souleater and state.DefenseMode.current == 'None' then
         meleeSet = set_combine(meleeSet, sets.buff.Souleater)
     end
@@ -458,27 +492,46 @@ function job_customize_melee_set(meleeSet)
 			-- meleeSet = set_combine(meleeSet, sets.passive.SubtleBlowMBOZE)
 		end
 
-		handle_equipping_gear(player.status)
 
 		if state.DisplayMode.value then update_job_states()	end
 	end
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-	    meleeSet = set_combine(meleeSet, sets.Reraise)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	    (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+	    disable('head', 'body') 
+	    meleeSet = set_combine(meleeSet, sets.Reraise) 
+	    tickdelay = os.clock() + 1
+	else
+	    enable('head', 'body') 
     end
     return meleeSet
 end
 
 function job_customize_defense_set(defenseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		defenseSet = set_combine(defenseSet, sets.Reraise)
-	end
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body') 
+        defenseSet = set_combine(defenseSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+
+	else
+        enable('head', 'body') 
+    end	
     return defenseSet
 end
+
 function job_customize_passive_set(baseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		baseSet = set_combine(baseSet, sets.Reraise)
-	end
-    return baseSet
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body') 
+        baseSet = set_combine(baseSet, sets.Reraise) 
+       --  windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+        tickdelay = os.clock() + 1
+	else
+	    enable('head', 'body') 
+    end   
+	return baseSet
+
 end
 --[[function update_combat_form()
     -- Check for H2H or single-wielding
@@ -719,7 +772,6 @@ end
 
 function job_update(cmdParams, eventArgs)
     update_melee_groups()
-
 	if player.sub_job ~= 'SAM' and state.Stance.value ~= "None" then
 		state.Stance:set("None")
 		update_job_states()
@@ -731,14 +783,55 @@ function job_update(cmdParams, eventArgs)
             end
         end
     end
+	-- if state.AutogearbuffMode.value then
+	-- 	if buffactive['Endark'] then
+	-- 		state.HybridMode:set('DreadSP') 
+	-- 	else
+	-- 		state.HybridMode:set('Normal') 
+	-- 	end
+	
+	-- 	-- handle_equipping_gear(player.status)
+	
+	-- end
 end
 
 function job_buff_change(buff, gain)
 	update_melee_groups()
+    -- add_to_chat(123, 'job_buff_change: '..buff..'  Gain: '..tostring(gain))
+
 	if buff:lower() == 'auspice' then
 		send_command('gs c update')
         handle_equipping_gear(player.status)
     end
+	if buffactive['Endark'] and buffactive['Auspice'] then
+		send_command('@wait .5;cancel "Endark"')
+		tickdelay = os.clock() + 1.1
+	end
+
+	-- if buffactive['auspice'] then
+	-- 	-- send_command('gs c update')
+    --     handle_equipping_gear(player.status)
+    -- end
+
+	-- if state.AutogearbuffMode.value then
+	-- 	if buffactive['Endark'] then
+	-- 		state.HybridMode:set('DreadSP') 	
+	-- 	else
+	-- 		state.HybridMode:set('Normal') 
+	-- 	end
+	-- 	-- send_command('@wait 0.5;gs c update')
+	-- end
+
+	-- if state.Autogearbuff.value then
+	-- 	if buffactive['Endark'] then
+	-- 		state.HybridMode:set('DreadSP') 
+	-- 	else
+	-- 		state.HybridMode:set('Normal') 
+	-- 	end
+	
+	-- 	handle_equipping_gear(player.status)
+	
+	-- end
 	-- if state.AutoReraiseMode.value and not buffactive['Reraise']then
 	-- 	if buffactive['weakness'] then
 	-- 		equip(sets.Reraise)
@@ -747,12 +840,13 @@ function job_buff_change(buff, gain)
 	-- 		enable('body','head')
 	-- 	end
 	-- end
-    if buff == "Arcane Circle " then
+    if buff == "Arcane Circle" then
         if gain then  			
-            send_command('input /p "Arcane Circle " [ON]')		
+            send_command('wait 1.1;input /p "Arcane Circle " [ON]')		
         else	
-            send_command('input /p "Arcane Circle " [OFF]')
+            send_command('wait 1.1;input /p "Arcane Circle " [OFF]')
         end
+
     end
 	if buff == "Soul Enslavement" then
         if gain then  			
@@ -768,94 +862,98 @@ function job_buff_change(buff, gain)
             send_command('input /p "Souleater" [OFF]')
         end
     end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
-	if state.AutoMedicineMode.value == true then
-		if buff == "Defense Down" then
-			if gain then  			
-				send_command('input /item "Panacea" <me>')
-			end
-		elseif buff == "Magic Def. Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Max HP Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Evasion Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Magic Evasion Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Dia" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end  
-		elseif buff == "Bio" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Bind" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Slow" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "weight" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Attack Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "Accuracy Down" then
-			if gain then  			
-				send_command('@input /item "panacea" <me>')
-			end
-		end
+	-- 	end
+	-- end
+	-- if state.AutoMedicineMode.value then
+	-- 	if buff == "Defense Down" then
+	-- 		if gain then  			
+	-- 			send_command('input /item "Panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Magic Def. Down" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Max HP Down" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Evasion Down" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Magic Evasion Down" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Dia" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end  
+	-- 	elseif buff == "Bio" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Bind" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Slow" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "weight" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Attack Down" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "Accuracy Down" then
+	-- 		if gain then  			
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	end
 	
-		if buff == "VIT Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "INT Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "MND Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "STR Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "AGI Down" then
-			if gain then
-				send_command('@input /item "panacea" <me>')
-			end
-		elseif buff == "paralysis" then
-			if gain then  
-				send_command('input /item "remedy" <me>')
-			end
-		end
-		if not midaction() then
-			job_update()
-		end
-	end
+	-- 	if buff == "VIT Down" then
+	-- 		if gain then
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "INT Down" then
+	-- 		if gain then
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "MND Down" then
+	-- 		if gain then
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "STR Down" then
+	-- 		if gain then
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "AGI Down" then
+	-- 		if gain then
+	-- 			send_command('@input /item "panacea" <me>')
+	-- 		end
+	-- 	elseif buff == "paralysis" then
+	-- 		if gain then  
+	-- 			send_command('input /item "remedy" <me>')
+	-- 		end
+	-- 	elseif buff == "Poison" then
+	-- 		if gain then  
+	-- 			send_command('input /item "remedy" <me>')
+	-- 		end
+	-- 	end
+	-- end
+
+	-- handle_equipping_gear(player.status)
+
 end
 	
 function update_melee_groups()
@@ -1082,6 +1180,45 @@ function check_buffup()
 	else
 		return false
 	end
+end
+
+
+-- Auto toggle Magic burst set.
+MB_Window = 0
+time_start = 0
+AEBurst = false
+
+if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+
+    windower.raw_register_event('action', function(act)
+        for _, target in pairs(act.targets) do
+            local battle_target = windower.ffxi.get_mob_by_target("t")
+            if battle_target ~= nil and target.id == battle_target.id then
+                for _, action in pairs(target.actions) do
+                    if action.add_effect_message > 287 and action.add_effect_message < 302 then
+                        --last_skillchain = skillchains[action.add_effect_message]
+                        MB_Window = 11
+                        MB_Time = os.time()
+                    end
+                end
+            end
+        end
+    end)
+
+    windower.raw_register_event('prerender', function()
+        --Items we want to check every second
+        if os.time() > time_start then
+            time_start = os.time()
+            if MB_Window > 0 then
+                MB_Window = 11 - (os.time() - MB_Time)
+				if state.AutoEquipBurst.value == 'On' then
+                    AEBurst = true
+                end
+            else
+                AEBurst = false
+            end
+        end
+    end)
 end
 
 

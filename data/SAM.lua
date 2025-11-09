@@ -47,7 +47,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {     
 		"Airmid's Gorget",
 		"Tumult's Blood",
@@ -108,6 +110,7 @@ function job_setup()
 	state.SubtleBlowMode = M(false, 'SubtleBlow Mode') 
 	state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
 	state.Absorbs = M{['description']='Absorbs', 'Absorb-TP', 'Absorb-VIT','Absorb-Attri', 'Absorb-MaxAcc','Absorb-STR', 'Absorb-DEX', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR',}
+	state.NoSchereEarringMode = M(false, 'NoSchereEarringMode') 
 
 	autows = 'Tachi: Fudo'
 	rangedautows = "Apex Arrow"
@@ -244,7 +247,14 @@ end
 
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
+	if state.NoSchereEarringMode.value and player.status == 'Engaged' then
 
+		for slot, item in pairs(meleeSet) do
+			if item == "Schere Earring" then
+				meleeSet[slot] = "Telos Earring"
+			end
+		end
+	end
     if state.Buff.Hasso and state.DefenseMode.value == 'None' and state.OffenseMode.value ~= 'FullAcc' then
 		meleeSet = set_combine(meleeSet, sets.buff.Hasso)
 	elseif state.Buff.Seigan and state.Buff['Third Eye'] and not state.OffenseMode.value:contains('Acc') then
@@ -273,22 +283,46 @@ function job_customize_idle_set(idleSet)
 	if buffactive['Tactician\'s Roll'] then 
 		idleSet = set_combine(idleSet, sets.rollerRing)
 	end
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-	    idleSet = set_combine(idleSet, sets.Reraise)
-    end
+
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body')
+        idleSet = set_combine(idleSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+		-- autoReraiseMessageShown = true 
+	else
+        enable('head', 'body') 
+		-- autoReraiseMessageShown = false 
+	end
 	return idleSet
 end
 function job_customize_defense_set(defenseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		defenseSet = set_combine(defenseSet, sets.Reraise)
-	end
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body') 
+        defenseSet = set_combine(defenseSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+
+	else
+        enable('head', 'body') 
+    end	
     return defenseSet
 end
+
 function job_customize_passive_set(baseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		baseSet = set_combine(baseSet, sets.Reraise)
-	end
-    return baseSet
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body') 
+        baseSet = set_combine(baseSet, sets.Reraise) 
+       --  windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+        tickdelay = os.clock() + 1
+	else
+	    enable('head', 'body') 
+    end   
+	return baseSet
+
 end
 
 -- Run after the default midcast() is done.

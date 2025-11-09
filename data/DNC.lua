@@ -71,7 +71,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {   
 		"Airmid's Gorget",     
 		"Gyudon",
@@ -373,23 +375,15 @@ function job_buff_change(buff,gain)
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 
-    if player.tp > 200 and abil_recasts[215] < latency and (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
-	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
-	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
-	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
-	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
-	        windower.send_command('input /ja Healing Waltz <me>')
-	        tickdelay = os.clock() + 1.1
-		return
-	end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
+
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -466,17 +460,22 @@ function job_buff_change(buff,gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
 	end
-
 end
 function job_status_change(newStatus, oldStatus, eventArgs)
 	
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 
+    if player.tp > 200 and abil_recasts[215] < latency and (buffactive['poison'] or buffactive['slow'] or buffactive['Rasp'] 
+	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
+	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
+	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
+	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) then		
+	        windower.send_command('input /ja Healing Waltz <me>')
+	        tickdelay = os.clock() + 1.1
+		return
+	end
 	if state.NeverDieMode.value or state.AutoCureMode.value then 
 		--[[if player.tp > 350 and player.max_hp - player.hp > 600 and abil_recasts[186] < latency then
 			windower.send_command('input /ja Curing Waltz II <me>')
@@ -612,7 +611,7 @@ function job_self_command(commandArgs, eventArgs)
 end
 
 function job_tick()
-	if job_buff_change() then return true end
+	-- if job_buff_change() then return true end
 	if job_status_change() then return true end
 	if check_dance() then return true end
 	if check_buff() then return true end

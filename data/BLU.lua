@@ -47,7 +47,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-	
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Airmid's Gorget",
 		"Tumult's Blood",
@@ -104,7 +106,7 @@ function job_setup()
     state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff['Unbridled Learning'] = buffactive['Unbridled Learning'] or false
 	state.Buff['Unbridled Wisdom'] = buffactive['Unbridled Wisdom'] or false
-	state.AutoEquipBurst = M(true)
+	state.AutoEquipBurst = M{['description'] = 'AutoEquipBurst', 'On', 'Off'}
     state.MagicBurst = M(false, 'Magic Burst')
     state.HippoMode = M(false, "hippoMode")
 	state.AutoCureMode = M(true, 'Auto Cure Mode')
@@ -114,7 +116,7 @@ function job_setup()
 
 	state.LearningMode = M(false, 'Learning Mode')
 	state.AutoUnbridled = M(false, 'Auto Unbridled Mode')
-	autows = 'Chant Du Cygne'
+	autows = 'Savage Blade'
 	autofood = 'Soy Ramen'
 	
     blue_magic_maps = {}
@@ -404,6 +406,9 @@ function job_pretarget(spell, spellMap, eventArgs)
 end
 
 function job_filter_precast(spell, spellMap, eventArgs)
+	local spell_recasts = spell_recasts or {}
+	local spell_latency = spell_latency or 0
+	
 	if spell.skill == 'Blue Magic' and unbridled_spells:contains(spell.english) and not (state.Buff['Unbridled Learning'] or state.Buff['Unbridled Wisdom']) then
 		if (state.AutoUnbridled.value or buffup ~= '' or state.AutoBuffMode.value ~= 'Off') and (windower.ffxi.get_ability_recasts()[81] < latency and (windower.ffxi.get_spell_recasts()[spell.recast_id]/60) < spell_latency) then
 			eventArgs.cancel = true
@@ -473,7 +478,6 @@ function job_post_precast(spell, spellMap, eventArgs)
     end
 end
 function job_midcast(spell, action, spellMap, eventArgs)
-	--Probably overkill but better safe than sorry.
 	if spell.action_type == 'Ranged Attack' then
 		disable('ammo')
 		add_to_chat(123,"Locking Ammo slot for RA!")
@@ -610,11 +614,7 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
 
 		end
     end
-	if spell.action_type == 'Ranged Attack' then
-		enable('ammo')
-		add_to_chat(123,"Re-enabling Ammo slot after RA!")
-		return
-	end	
+
 end
 function job_aftercast(spell, spellMap, eventArgs)
 
@@ -624,7 +624,11 @@ function job_aftercast(spell, spellMap, eventArgs)
 			if state.DisplayMode.value then update_job_states()	end
 		end
 	end
-	
+	if spell.action_type == 'Ranged Attack' then
+		enable('ammo')
+		add_to_chat(123,"Re-enabling Ammo slot after RA!")
+		return
+	end	
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -636,14 +640,14 @@ end
 -- gain == true if the buff was gained, false if it was lost.
 function job_buff_change(buff, gain)
 
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -720,12 +724,9 @@ function job_buff_change(buff, gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
+
 	end
 	update_melee_groups()
-	handle_equipping_gear(player.status)
 
 end
 
@@ -795,25 +796,45 @@ end
 function job_status_change(newStatus, oldStatus, eventArgs)
 	local abil_recasts = windower.ffxi.get_ability_recasts()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
-	--local player = windower.ffxi.get_player()
+	local player = windower.ffxi.get_player()
 
-    if (buffactive['slow'] or buffactive['Rasp'] 
-	    or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
-	    or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
-	    or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
-	    or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) and spell_recasts[681] < spell_latency then		
-	        windower.send_command('input /ma "Winds of Promy." <me>')
-	        tickdelay = os.clock() + 1.1
-
-		
+	if (buffactive['slow'] or buffactive['Rasp'] 
+		or buffactive['Dia'] or buffactive['Defense Down'] or buffactive['Magic Def. Down'] or buffactive['Max HP Down']
+		or buffactive['Evasion Down'] == "Evasion Down" or buffactive['Magic Evasion Down'] or buffactive['Bio'] or buffactive['Bind']
+		or buffactive['weight'] or buffactive['Attack Down'] or buffactive['Accuracy Down'] or buffactive['VIT Down']
+		or buffactive['INT Down'] or buffactive['MND Down'] or buffactive['STR Down'] or buffactive['AGI Down']) 
+		and spell_recasts[681] < spell_latency and actual_cost(get_spell_table_by_name('Winds of Promy.')) < player.mp then		
+			windower.send_command('input /ma "Winds of Promy." <me>')
+			tickdelay = os.clock() + 1.1
 		return
 	end
-	if state.NeverDieMode.value then 
+	if state.NeverDieMode.value or state.AutoCureMode.value then 
 
 		if player.sub_job == 'NIN' and not state.Buff['SJ Restriction'] and (player.in_combat or being_attacked) and player.hpp < 25 then
 			state.AutoShadowMode:set('true')
 			tickdelay = os.clock() + 1.1
 		end
+		if spell_recasts then
+			local hpp = player.hpp or 100 
+			if hpp < 40 then
+				send_command('gs c heal')
+
+				-- if spell_recasts[593] and spell_recasts[593] < spell_latency and silent_can_use(593) then
+				-- 	windower.chat.input('/ma "Magic Fruit" <me>')
+				-- elseif spell_recasts[690] and spell_recasts[690] < spell_latency and silent_can_use(690) then
+				-- 	windower.chat.input('/ma "White Wind" <me>')
+				-- elseif spell_recasts[658] and spell_recasts[658] < spell_latency and silent_can_use(658) then
+				-- 	windower.chat.input('/ma "Plenilune Embrace" <me>')
+				-- elseif spell_recasts[711] and spell_recasts[711] < spell_latency and silent_can_use(711) then
+				-- 	windower.chat.input('/ma "Restoral" <me>')
+				-- -- else
+				-- -- 	windower.add_to_chat(207, "No spells available to cast!")
+				-- end
+				tickdelay = os.clock() + 1.1
+
+			end
+		end
+
 	end
 end
 -- Handle notifications of general user state change.
@@ -828,20 +849,25 @@ function update_combat_form()
     end
 end
 function determine_haste_group()
-    classes.CustomMeleeGroups:clear()
-    if DW == true then
-        if DW_needed <= 11 then
-            classes.CustomMeleeGroups:append('MaxHaste')
-        elseif DW_needed > 11 and DW_needed <= 21 then
-            classes.CustomMeleeGroups:append('MidHaste')
-        elseif DW_needed > 21 and DW_needed <= 27 then
-            classes.CustomMeleeGroups:append('MidHaste')
-        elseif DW_needed > 27 and DW_needed <= 37 then
-            classes.CustomMeleeGroups:append('LowHaste')
-        elseif DW_needed > 37 then
-            classes.CustomMeleeGroups:append('LowHaste')
-        end
-    end
+	if state.AutoHasteMode.value then
+		classes.CustomMeleeGroups:clear()
+		if DW == true then
+			if DW_needed <= 11 then
+				classes.CustomMeleeGroups:append('MaxHaste')
+			elseif DW_needed > 11 and DW_needed <= 21 then
+				classes.CustomMeleeGroups:append('MidHaste')
+			elseif DW_needed > 21 and DW_needed <= 27 then
+				classes.CustomMeleeGroups:append('MidHaste')
+			elseif DW_needed > 27 and DW_needed <= 37 then
+				classes.CustomMeleeGroups:append('LowHaste')
+			elseif DW_needed > 37 then
+				classes.CustomMeleeGroups:append('LowHaste')
+			end
+		end
+	-- else
+		-- classes.CustomMeleeGroups:clear()
+		-- windower.add_to_chat(207, '[Info] AutoHasteMode is disabled. No haste group applied.')
+	end
 end
 function gearinfo(commandArgs, eventArgs)
     if commandArgs[1] == 'gearinfo' then
@@ -873,7 +899,28 @@ end
 
 function job_self_command(commandArgs, eventArgs)
 	gearinfo(commandArgs, eventArgs)
+	local abil_recasts = windower.ffxi.get_ability_recasts()
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+	local player = windower.ffxi.get_player()
+    if commandArgs[1]:lower() == 'heal' then
+		if spell_recasts and spell_latency then
+			local hpp = player.hpp or 100 
+				if spell_recasts[593] and spell_recasts[593] < spell_latency and silent_can_use(593) then
+					windower.chat.input('/ma "Magic Fruit" <me>')
+				elseif spell_recasts[690] and spell_recasts[690] < spell_latency and silent_can_use(690) then
+					windower.chat.input('/ma "White Wind" <me>')
+				elseif spell_recasts[658] and spell_recasts[658] < spell_latency and silent_can_use(658) then
+					windower.chat.input('/ma "Plenilune Embrace" <me>')
+				elseif spell_recasts[711] and spell_recasts[711] < spell_latency and silent_can_use(711) then
+					windower.chat.input('/ma "Restoral" <me>')
+				-- else
+				-- 	windower.add_to_chat(207, "No spells available to cast!")
+				end
+				tickdelay = os.clock() + 1.1
 
+		end
+
+    end
     if commandArgs[1]:lower() == 'curecheat' then
 		if sets.HPDown then
 			equip(sets.HPDown)
@@ -1219,6 +1266,47 @@ function check_buffup()
 		return false
 	end
 end
+
+
+-- Auto toggle Magic burst set.
+MB_Window = 0
+time_start = 0
+AEBurst = false
+
+if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+
+    windower.raw_register_event('action', function(act)
+        for _, target in pairs(act.targets) do
+            local battle_target = windower.ffxi.get_mob_by_target("t")
+            if battle_target ~= nil and target.id == battle_target.id then
+                for _, action in pairs(target.actions) do
+                    if action.add_effect_message > 287 and action.add_effect_message < 302 then
+                        --last_skillchain = skillchains[action.add_effect_message]
+                        MB_Window = 11
+                        MB_Time = os.time()
+                    end
+                end
+            end
+        end
+    end)
+
+    windower.raw_register_event('prerender', function()
+        --Items we want to check every second
+        if os.time() > time_start then
+            time_start = os.time()
+            if MB_Window > 0 then
+                MB_Window = 11 - (os.time() - MB_Time)
+				if state.AutoEquipBurst.value == 'On' then
+                    AEBurst = true
+                end
+            else
+                AEBurst = false
+            end
+        end
+    end)
+end
+
+
 
 ----- buff -----
 --[[

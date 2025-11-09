@@ -57,6 +57,11 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+
+
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items  = {
         "Airmid's Gorget",
         "Tumult's Blood",
@@ -72,11 +77,12 @@ function get_sets()
         "Crab Sushi",
         "Om. Sandwich",
         "Red Curry Bun",
+        "Decimating Bullet",
         "Living Bullet",
         "Chrono Bullet",
         "Trump Card Case",
         "Trump Card",
-        --"Chr. Bul. Pouch", 
+        "Chr. Bul. Pouch", 
         "Liv. Bul. Pouch", 
         "Dec. Bul. Pouch",
         "Gyudon",
@@ -111,23 +117,36 @@ end
 
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+    if player.satchel['Living Bullet'] then send_command('get *"Living Bullet" all') end
+    if player.sack['Living Bullet'] then send_command('get *"Living Bullet" all') end
+    if player.case['Living Bullet'] then send_command('get *"Living Bullet" all') end
+
+    if player.satchel['Decimating Bullet'] then send_command('get *"Decimating Bullet" all') end
+    if player.sack['Decimating Bullet'] then send_command('get *"Decimating Bullet" all') end
+    if player.case['Decimating Bullet'] then send_command('get *"Decimating Bullet" all') end
+
+    if player.satchel['Chrono Bullet'] then send_command('get *"Chrono Bullet" all') end
+    if player.sack['Chrono Bullet'] then send_command('get *"Chrono Bullet" all') end
+    if player.case['Chrono Bullet'] then send_command('get *"Chrono Bullet" all') end
+
     attack2 = 4000 -- This LUA will equip PDL "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value.
     set_dual_wield()
 	-- Whether to use Compensator under a certain threshhold even when weapons are locked.
 	state.CompensatorMode = M{'Never','300','1000','Always'}
 	-- Whether to automatically generate bullets.
 	state.AutoAmmoMode = M(true,'Auto Ammo Mode')
-	state.UseDefaultAmmo = M(true,'Use Default Ammo')
+	state.UseDefaultAmmo = M(false,'Use Default Ammo')
 	state.Buff['Triple Shot'] = buffactive['Triple Shot'] or false
 	state.RP = M(false, "Reinforcement Points Mode")  
 	state.WeaponLock = M(false, 'Weapon Lock')
     state.QDMode = M{['description']='Quick Mode','Enhance', 'STP',  'TH'}
     state.ElementalMode = M{['description'] = 'Elemental Mode','Light', 'Fire','Ice','Wind','Earth','Lightning','Water','Dark'}
 	state.RuneElement = M{['description'] = 'Rune Element','Lux','Ignis','Gelus','Flabra','Tellus','Sulpor','Unda','Tenebrae'}
-	state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
+	state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')--It is from the highest secrets.
+    state.Stance = M{['description']='Stance','None','Triple Shot'}
 
-    state.phalanxset = M(false,true)
-    
+    -- state.phalanxset = M(false,true)
+    --It is from the highest secrets.
     state.Roller1 = M{['description']='Roller', 'Chaos Roll', 'Samurai Roll','Fighter\'s Roll',
     'Wizard\'s Roll', 'Warlock\'s Roll','Tactician\'s Roll','Miser\'s Roll',
       'Companion\'s Roll','Puppet Roll', 'Beast Roll', 'Drachen Roll',
@@ -146,7 +165,7 @@ function job_setup()
     'Choral Roll', 'Hunter\'s Roll', 'Ninja Roll', 'Evoker\'s Roll',
     'Dancer\'s Roll', 'Scholar\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll','Corsair\'s Roll','Naturalist\'s Roll',
     }
-    state.Rollset = M{['description']='Rollset','None', 'melee', 'magic','dynamis','aminon','exp','tp','speed','acc','ws',
+    state.Rollset = M{['description']='Rollset','None', 'melee', 'magic','dynamis','sortie/mb','aminon','Exp','tp','speed','acc','ws',
     'pet','petnuke',
     }
 	-- Whether to use Luzaf's Ring
@@ -159,6 +178,12 @@ function job_setup()
 	autofood = 'Sublime Sushi'
 	ammostock = 98
 
+
+    -- gear.RAbullet = "Decimating Bullet"
+    -- gear.WSbullet = "Chrono Bullet"
+    -- gear.MAbullet = "Living Bullet" --For MAB WS, do not put single-use bullets here.
+    -- gear.QDbullet = "Living Bullet"
+
     Haste = 0
     DW_needed = 0
     DW = false
@@ -166,7 +191,7 @@ function job_setup()
     update_combat_form()  
 
     define_roll_values()
-	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","LuzafRing","AutoMedicineMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","WeaponskillMode","Rollset","ElementalMode","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"})
+	init_job_states({"Capacity","AutoNukeMode","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","RngHelper","AutoStunMode","AutoDefenseMode","AutoMedicineMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","RangedMode","Stance","Weapongun","WeaponskillMode","Rollset","IdleMode","Passive","RuneElement","CompensatorMode","TreasureMode","QDMode"}) --"LuzafRing","ElementalMode",
 end
 
 
@@ -248,7 +273,7 @@ function job_precast(spell, spellMap, eventArgs)
             equip(sets.precast.CorsairRoll)
         end
 	end
-    if spell.action_type == 'Ranged Attack' or spell.name == 'Shadowbind' or (spell.type == 'WeaponSkill' and spell.skill == 'Marksmanship') then
+    if spell.action_type == 'Ranged Attack' or spell.name == 'Shadowbind' or spell.type == 'CorsairShot' or (spell.type == 'WeaponSkill' and spell.skill == 'Marksmanship') then
         do_bullet_checks(spell, spellMap, eventArgs)
     end
 end
@@ -306,13 +331,7 @@ function job_midcast(spell, action, spellMap, eventArgs)
 			return
 		end
 	end
-	if spell.type == 'CorsairRoll' and not spell.interrupted then
-        add_to_chat(217, spell.english..' provides a bonus to '..(rolls[spell.english].bonus)..'.')
-        add_to_chat(217, 'Lucky roll is '..tostring(rolls[spell.english].lucky)..', Unlucky roll is '..tostring(rolls[spell.english].unlucky)..'.')
 
-        windower.chat.input('/p "'..tostring(spell.english)..' provides a bonus to '..rolls[spell.english].bonus..'.')
-        windower.chat.input:schedule(1.1,'/p "Lucky roll is '..tostring(rolls[spell.english].lucky)..', Unlucky roll is '..tostring(rolls[spell.english].unlucky)..'."')
-    end
 end
 function job_filter_aftercast(spell, spellMap, eventArgs)
 	if spell.english == "Light Shot" then
@@ -347,6 +366,13 @@ function job_aftercast(spell, spellMap, eventArgs)
     end
 	if player.status ~= 'Engaged' and state.WeaponLock.value == false then
         check_weaponset()
+    end
+    if spell.type == 'CorsairRoll' and not spell.interrupted then
+        add_to_chat(217, spell.english..' provides a bonus to '..(rolls[spell.english].bonus)..'.')
+        add_to_chat(217, 'Lucky roll is '..tostring(rolls[spell.english].lucky)..', Unlucky roll is '..tostring(rolls[spell.english].unlucky)..'.')
+
+        windower.chat.input('/p "'..tostring(spell.english)..' provides a bonus to '..rolls[spell.english].bonus..'.')
+        windower.chat.input:schedule(1.1,'/p "Lucky roll is '..tostring(rolls[spell.english].lucky)..', Unlucky roll is '..tostring(rolls[spell.english].unlucky)..'."')
     end
 	check_weaponset()
     handle_equipping_gear(player.status)
@@ -473,14 +499,14 @@ function job_buff_change(buff, gain)
            send_command('input /p Rostam max aug."Phantom Roll" +8 max Duration gear Equipped Ready')		
         end
     end
-	if buff == "phalanx" or "Phalanx II" then
-        if gain then
-            state.phalanxset:set(false)
-        end
-    end
+	-- if buff == "phalanx" or "Phalanx II" then
+    --     if gain then
+    --         state.phalanxset:set(false)
+    --     end
+    -- end
     if buff == "Charm" then
         if gain then  			
-        --    send_command('input /p Charmd, please Sleep me.')		
+           send_command('input /p Charmd,run away or please Sleep me.')		
         else	
         --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
         end
@@ -491,23 +517,23 @@ function job_buff_change(buff, gain)
             -- send_command('input /p Petrification, please Stona.')		
         else
         -- send_command('input /p '..player.name..' is no longer Petrify!')
-        handle_equipping_gear(player.status)
         end
     end
 	if buff == "sleep" then
         if gain then    
-            -- send_command('input /p ZZZzzz, please cure.')		
+            send_command('input /p ZZZzzz, please cure.')		
         else
             -- send_command('input /p '..player.name..' is no longer Sleep!')
         end
-    end	if state.NeverDieMode.value or state.AutoCureMode.value then 
+    end	
+    -- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
     
 	if state.AutoMedicineMode.value then
 
@@ -608,25 +634,29 @@ function job_state_change(stateField, newValue, oldValue)
     else
         enable('main','sub')
     end
-    if state.phalanxset .value == true then
-        equip(sets.Phalanx_Received)
-        send_command('gs equip sets.midcast.Phalanx')
-        send_command('input /p Phalanx set equiped [ON] PLZ GIVE ME PHALANX')	
-    else 
-        state.phalanxset:reset()
-    end
+    -- if state.phalanxset .value == true then
+    --     equip(sets.Phalanx_Received)
+    --     send_command('gs equip sets.midcast.Phalanx')
+    --     send_command('input /p Phalanx set equiped [ON] PLZ GIVE ME PHALANX')	
+    -- else 
+    --     state.phalanxset:reset()
+    -- end
 
     check_weaponset()
 end
 -- Modify the default idle set after it was constructed.
 function job_customize_idle_set(idleSet)
-
+    -- if buffactive['Tactician\'s Roll'] then 
+    --     idleSet = set_combine(idleSet, sets.rollerRing)
+    -- end
     if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
     else
         enable('neck')
     end
+    	idleSet.rollers = set_combine(sets.idle.Regain, {lring="Roller's Ring"})
+        
     -- rollinfo = rolls[spell.english]
     -- local rollNum = act.targets[1].actions[1].param
     -- if rollinfo == "Tactician's Roll" and rollNum < 11 then
@@ -666,6 +696,18 @@ function job_customize_melee_set(meleeSet)
 
     return meleeSet
 end
+function job_customize_defense_set(defenseSet)
+    if data.areas.cities:contains(world.area) then
+      defenseSet = set_combine(defenseSet, sets.kiting)
+    end
+    if (world.area:contains('Adoulin') or world.area == "Celennia Memorial Library") and item_available("Councilor's Garb") then
+		defenseSet = set_combine(defenseSet, {body="Councilor's Garb"}, sets.Kiting)
+    end
+    return defenseSet
+end 
+-- Called when the player's status changes, allowing you to adjust your gear. 
+-- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
+-- eventArgs.event can be: 'starting', 'update', or 'finishing'.
 function job_handle_equipping_gear(playerStatus, eventArgs)
 	check_weaponset()
     determine_haste_group()
@@ -890,7 +932,7 @@ function do_bullet_checks(spell, spellMap, eventArgs)
 		elseif item_available(gear.RAbullet) then
 			equip({ammo=gear.RAbullet})
 		else
-			equip({ammo=empty})
+            equip({ammo=gear.WSbullet})
 		end
 
 		add_to_chat(123,"Abort: Don't shoot your good ammo!")
@@ -899,33 +941,88 @@ function do_bullet_checks(spell, spellMap, eventArgs)
 
     local bullet_name
     local bullet_min_count = 1
-    
     if spell.type == 'WeaponSkill' then
         if spell.skill == "Marksmanship" then
             if data.weaponskills.elemental:contains(spell.english) then
-                -- magical weaponskills
-                bullet_name = gear.MAbullet
+                    if item_available(gear.MAbullet) then
+
+                    bullet_name = gear.MAbullet
+                    -- magical weaponskills
+
+                    elseif item_available(gear.WSbullet) then
+                    --     -- physical weaponskills
+
+				    bullet_name = gear.WSbullet
+                    else
+                        if item_available(gear.RAbullet) then
+                        bullet_name = gear.RAbullet
+                        end
+                    end
             else
+                if item_available(gear.WSbullet) then
+                    bullet_name = gear.WSbullet
+                    -- magical weaponskills
+                -- equip({ammo=gear.MAbullet})
+
+                elseif item_available(gear.MAbullet) then
 				-- physical weaponskills
-				bullet_name = gear.WSbullet
+				   bullet_name = gear.MAbullet
+                -- equip({ammo=gear.WSbullet})
+                else
+                    bullet_name = gear.RAbullet
+                end
+
             end
+            equip({ammo = bullet_name})
+
         else
             -- Ignore non-ranged weaponskills
             return
         end
+    
     elseif spell.type == 'CorsairShot' then
-        bullet_name = gear.QDbullet
-    elseif spell.action_type == 'Ranged Attack' then
-        bullet_name = gear.RAbullet
+        if item_available(gear.QDbullet) then
+            bullet_name = gear.QDbullet
+            -- magical weaponskills
+        -- equip({ammo=gear.MAbullet})
+
+        elseif item_available(gear.WSbullet) then
+        -- physical weaponskills
+           bullet_name = gear.WSbullet
+        -- equip({ammo=gear.WSbullet})
+        else
+            bullet_name = gear.RAbullet
+        end
+        equip({ammo = bullet_name})
+
+    end
+    if spell.action_type == 'Ranged Attack' then
+        if item_available(gear.RAbullet) then
+            bullet_name = gear.RAbullet
+            -- magical weaponskills
+        -- equip({ammo=gear.MAbullet})
+
+        elseif item_available(gear.WSbullet) then
+        -- physical weaponskills
+           bullet_name = gear.WSbullet
+        -- equip({ammo=gear.WSbullet})
+        else
+            bullet_name = gear.MAbullet
+        end
+
         if state.Buff['Triple Shot'] then
             bullet_min_count = 3
         end
+        equip({ammo = bullet_name})
+
     end
   
 	local available_bullets = count_available_ammo(bullet_name)
 	
   -- If no ammo is available, give appropriate warning and cancel.
     if not (available_bullets > 0) then
+        -- send_command('get *"'..available_bullets..'" all')
+
         if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
             add_to_chat(217, 'No Quick Draw ammo available, using equipped ammo: ('..player.equipment.ammo..')')
             return
@@ -937,6 +1034,7 @@ function do_bullet_checks(spell, spellMap, eventArgs)
             eventArgs.cancel = true
             return
         end
+
     end
     
     -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
@@ -949,12 +1047,13 @@ function do_bullet_checks(spell, spellMap, eventArgs)
     -- Low ammo warning.
     if spell.type ~= 'CorsairShot' and (available_bullets > 0) and (available_bullets <= options.ammo_warning_limit) then
         local msg = '****  LOW AMMO WARNING: '..bullet_name..' ****'
+
         --local border = string.repeat("*", #msg)
         local border = ""
         for i = 1, #msg do
             border = border .. "*"
         end
-        
+
         add_to_chat(217, border)
         add_to_chat(217, msg)
         add_to_chat(217, border)
@@ -964,6 +1063,7 @@ end
 function job_tick()
 	if check_ammo() then return true end
     if check_buff() then return true end
+    if check_stance() then return true end
 
     -- if job_buff_change() then return true end
 
@@ -976,6 +1076,22 @@ function job_tick()
 	return false
 end
 
+
+function check_stance()
+	if state.Stance.value ~= 'None' and player.in_combat then
+		
+		local abil_recasts = windower.ffxi.get_ability_recasts()
+
+        if state.Stance.value == 'Triple Shot' and not buffactive['Triple Shot'] and abil_recasts[84] < latency then
+            windower.chat.input('/ja "Triple Shot" <me>')
+            tickdelay = os.clock() + 1.1
+            return true
+        else
+            return false
+        end
+	end
+
+end
 
 buff_activation_time = nil
 last_auto_buff_mode = nil

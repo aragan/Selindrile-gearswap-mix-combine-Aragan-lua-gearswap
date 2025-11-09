@@ -47,7 +47,10 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-	
+	include('Kate-DefenseDown')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Airmid's Gorget",
 		"Tumult's Blood",
@@ -95,7 +98,7 @@ end
     -- Setup vars that are user-independent.
 function job_setup()
     set_dual_wield()
-
+	-- windower.send_command('lua reload xivcrossbar')
 	state.Buff['Brazen Rush'] = buffactive['Brazen Rush'] or false
 	state.Buff.Berserk = buffactive['Berserk'] or false
 	state.Buff.Aggressor = buffactive['Aggressor'] or false
@@ -116,9 +119,11 @@ function job_setup()
     state.RP = M(false, "Reinforcement Points Mode")
 	state.AutoReraiseMode = M(true, 'Auto Reraise Mode')
 	state.AutoTomahawkMode = M(false, 'AutoTomahawkMode')
+	state.NoSchereEarringMode = M(false, 'NoSchereEarringMode') 
 
 	state.Stance = M{['description']='Stance','Hasso','Seigan','None'}
 	state.ConquerorMode = M{['description']='Conqueror Mode','Never','500','1000','Always'}
+	-- state.Autodebugemode = M{['description'] = 'Debug Mode', 'Off', 'On'}
 
     absorbs = S{'Absorb-STR', 'Absorb-DEX', 'Absorb-VIT', 'Absorb-AGI', 'Absorb-INT', 'Absorb-MND', 'Absorb-CHR', 'Absorb-Attri', 'Absorb-MaxAcc', 'Absorb-TP'}
 
@@ -194,70 +199,115 @@ function job_precast(spell, spellMap, eventArgs)
 	end
 
 end
+
+-- autoReraiseMessageShown = false
+
 -- Modify the default idle set after it was constructed.
+-- function auto_reraise(set)
+-- 	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+-- 	   (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+-- 		disable('head', 'body')
+-- 		-- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear.")
+-- 		return set_combine(set, sets.Reraise)
+-- 	else
+-- 		enable('head', 'body') 
+-- 		-- windower.add_to_chat(207, "AutoReraise: Head and Body slots enabled.")
+-- 		return set
+-- 	end
+-- end
+
+
 function job_customize_idle_set(idleSet)
 	if buffactive['Tactician\'s Roll'] then 
 		idleSet = set_combine(idleSet, sets.rollerRing)
 	end
-    if state.RP.current == 'on' then
-        equip(sets.RP)
-        disable('neck')
-    else
-        enable('neck')
-    end
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-	    idleSet = set_combine(idleSet, sets.Reraise)
-    end
-	-- if player.status == 'Resting' and state.AutoReraiseMode.value then
-    --     idleSet = set_combine(idleSet, sets.Reraise)
-    -- end
-    return idleSet
-end
--- Modify the default melee set after it was constructed.
-function job_customize_melee_set(meleeSet)
+	if state.RP.current == 'on' then
+		equip(sets.RP)
+		disable('neck')
+	else
+		enable('neck')
+	end
 
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body')
+        idleSet = set_combine(idleSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+		-- autoReraiseMessageShown = true 
+	else
+        enable('head', 'body') 
+		-- autoReraiseMessageShown = false 
+
+	end
+	
+	return idleSet
+end
+
+
+function job_customize_melee_set(meleeSet)
+	if state.NoSchereEarringMode.value and player.status == 'Engaged' then
+
+		for slot, item in pairs(meleeSet) do
+			if item == "Schere Earring" then
+				meleeSet[slot] = "Telos Earring"
+			end
+		end
+	end
 	if not state.OffenseMode.value:contains('Acc') and state.HybridMode.value == 'Normal' and buffactive['Retaliation'] then
 		meleeSet = set_combine(meleeSet, sets.buff.Retaliation)
 	end
-	
 	if not state.OffenseMode.value:contains('Acc') and state.HybridMode.value == 'Normal' and buffactive['Restraint'] then
 		meleeSet = set_combine(meleeSet, sets.buff.Restraint)
 	end
 	if state.RP.current == 'on' then
-        equip(sets.RP)
-        disable('neck')
-    else
-        enable('neck')
+		equip(sets.RP)
+		disable('neck')
+	else
+		enable('neck')
+	end
+	if state.TreasureMode.value == 'Fulltime' then
+		meleeSet = set_combine(meleeSet, sets.TreasureHunter)
+	end
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+	 disable('head', 'body') 
+	 meleeSet = set_combine(meleeSet, sets.Reraise) 
+	 tickdelay = os.clock() + 1
+
+	else
+	 enable('head', 'body') 
     end
-    if state.TreasureMode.value == 'Fulltime' then
-        meleeSet = set_combine(meleeSet, sets.TreasureHunter)
-    end
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-	    meleeSet = set_combine(meleeSet, sets.Reraise)
-    end
-    return meleeSet
+ 	return meleeSet
 end
+
+
 function job_customize_defense_set(defenseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		defenseSet = set_combine(defenseSet, sets.Reraise)
-	end
-	-- if data.areas.cities:contains(world.area) then
-	-- 	if moving then
-    --  	defenseSet = set_combine(defenseSet, sets.kiting)
-	-- 	end
-	-- end
-	-- if areas.Cities:contains(world.area) and state.DefenseMode.value ~= 'None' then
-	-- 	if moving then
-	-- 		idleSet = set_combine(idleSet, sets.Kiting)
-	-- 	end
-	-- end
-    return defenseSet
+
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body') 
+        defenseSet = set_combine(defenseSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+
+	else
+        enable('head', 'body') 
+    end	
+	return defenseSet
 end
+
 function job_customize_passive_set(baseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		baseSet = set_combine(baseSet, sets.Reraise)
-	end
-    return baseSet
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+	 disable('head', 'body') 
+	 baseSet = set_combine(baseSet, sets.Reraise) 
+	--  windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+	 tickdelay = os.clock() + 1
+	else
+	    enable('head', 'body') 
+    end   
+	return baseSet
 end
 
 
@@ -342,6 +392,10 @@ end
 -- Called by the 'update' self-command.
 function job_update(cmdParams, eventArgs)
 
+	
+    if state.Autodebugemode.value == 'On' then
+        windower.add_to_chat(207, '[Debug] Job Update Triggered')
+    end
     update_melee_groups()
 	if player.sub_job ~= 'SAM' and state.Stance.value ~= "None" then
 		state.Stance:set("None")
@@ -364,6 +418,9 @@ function job_aftercast(spell, spellMap, eventArgs)
 
 end
 function job_handle_equipping_gear(playerStatus, eventArgs)
+	if state.Autodebugemode.value == 'On' then
+        windower.add_to_chat(207, '[Debug] Handling Equipping Gear')
+    end
 end
 
 function job_buff_change(buff, gain)
@@ -375,6 +432,9 @@ function job_buff_change(buff, gain)
 	-- 		enable('body','head')
 	-- 	end
 	-- end
+	if state.Autodebugemode.value == 'On' then
+        windower.add_to_chat(207, '[Debug] Buff change detected: ' .. buff .. ', Gain: ' .. tostring(gain))
+    end
 	if buff == "Mighty Strikes" then
         if gain then  			
             send_command('input /p "Mighty Strikes" [ON]')		
@@ -382,13 +442,13 @@ function job_buff_change(buff, gain)
             send_command('input /p "Mighty Strikes" [OFF]')
         end
     end
-	if buff == "Warcry" then
-        if gain then  			
-            send_command('input /p "Warcry" [ON]')		
-        else	
-            send_command('input /p "Warcry" [OFF]')
-        end
-    end
+	-- if buff == "Warcry" then
+    --     if gain then  			
+    --         send_command('input /p "Warcry" [ON]')		
+    --     else	
+    --         send_command('input /p "Warcry" [OFF]')
+    --     end
+    -- end
 
     if buff == "Blood Rage" then
         if gain then  			
@@ -420,84 +480,86 @@ function job_buff_change(buff, gain)
 			
 	-- 	end
 	-- end
-	-- if state.AutoMedicineMode.value == true then
-	-- 	if buff == "Defense Down" then
-	-- 		if gain then  			
-	-- 			send_command('input /item "Panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "Magic Def. Down" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "Max HP Down" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "Evasion Down" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "Magic Evasion Down" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "Dia" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end  
-	-- 	elseif buff == "Bio" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "Bind" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "slow" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "weight" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "Attack Down" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "Accuracy Down" then
-	-- 		if gain then  			
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	end
-	
-	-- 	if buff == "VIT Down" then
-	-- 		if gain then
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "INT Down" then
-	-- 		if gain then
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "MND Down" then
-	-- 		if gain then
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "STR Down" then
-	-- 		if gain then
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "AGI Down" then
-	-- 		if gain then
-	-- 			send_command('@input /item "panacea" <me>')
-	-- 		end
-	-- 	elseif buff == "poison" then
-	-- 		if gain then  
-	-- 			send_command('input /item "remedy" <me>')
-	-- 		end
-	-- 	end
 
-	-- end
+	if state.AutoMedicineMode.value == true then
+		if buff == "Defense Down" then
+			if gain then  			
+				send_command('input /item "Panacea" <me>')
+			end
+		elseif buff == "Magic Def. Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Max HP Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Magic Evasion Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Dia" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end  
+		elseif buff == "Bio" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Bind" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "slow" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "weight" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Attack Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "Accuracy Down" then
+			if gain then  			
+				send_command('@input /item "panacea" <me>')
+			end
+		end
+	
+		if buff == "VIT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "INT Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "MND Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "STR Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "AGI Down" then
+			if gain then
+				send_command('@input /item "panacea" <me>')
+			end
+		elseif buff == "poison" then
+			if gain then  
+				send_command('input /item "remedy" <me>')
+			end
+		end
+
+	end
+	
 	update_melee_groups()
 end
 

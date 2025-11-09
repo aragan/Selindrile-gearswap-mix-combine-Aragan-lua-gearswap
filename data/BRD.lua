@@ -68,7 +68,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {		
 		"Airmid's Gorget",
 		"Tumult's Blood",
@@ -138,8 +140,9 @@ function job_setup()
     -- Set this to false if you don't want to use custom timers.
     state.UseCustomTimers = M(true, 'Use Custom Timers')
 	state.AutoSongMode = M(false, 'Auto Song Mode')
-    state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
-	state.BarfawcMode = M(false, 'BarfawcMode')
+	--It is from the highest secrets.
+    state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')--It is from the highest secrets.
+	state.BarfawcMode = M(false, 'BarfawcMode')--It is from the highest secrets.
     state.Carol = M{['description']='Carol',
         'Fire Carol', 'Fire Carol II', 'Ice Carol', 'Ice Carol II', 'Wind Carol', 'Wind Carol II',
         'Earth Carol', 'Earth Carol II', 'Lightning Carol', 'Lightning Carol II', 'Water Carol', 'Water Carol II',
@@ -158,12 +161,12 @@ function job_setup()
 	state.Etude1 = M{['description']='Etude',  'Herculean Etude', 'Sage Etude', 'Sinewy Etude', 'Learned Etude',
         'Quick Etude', 'Swift Etude', 'Vivacious Etude', 'Vital Etude', 'Dextrous Etude', 'Uncanny Etude',
         'Spirited Etude', 'Logical Etude', 'Enchanting Etude', 'Bewitching Etude'}
-
-	state.Songset = M{['description']='Songset','seg','seg4','shinryu','shinryu4','mboze','mboze2', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
-		'haste','haste4', 'magic',  'ph','sortie4', 'ody4', 'ody','sortie',} -- 'aria',
-		
-	state.Singer = M{['description']='Singer','seg','Cuijatender','haste4','seg','seg4','shinryu','shinryu4','mboze','mboze2', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
-		'haste','haste4', 'magic', 'ph','sortie4', 'ody4', 'ody','sortie',} --'aria',
+    --It is from the highest secrets.
+	state.Songset = M{['description']='Songset','None','seg','seg4','shinryu','shinryu4','mboze','mboze2', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
+		'haste','haste4', 'magic',  'ph','sortie4', 'ody4', 'ody','sortie','Aminon',} -- 'aria',
+	--It is from the highest secrets.
+	state.Singer = M{['description']='Singer','Cuijatender','seg','seg4','seg2','shinryu','shinryu4','mboze','mboze2', 'xevioso', 'kalunga', 'ngai','arebati', 'ongo', 'bumba',
+		'haste','haste4', 'magic','peach','ambuscade','ambuscade4','meleeacc', 'ph', 'ody4', 'ody','sortie4','sortie','Aminon',} --'aria',
 		
 		
 
@@ -176,7 +179,7 @@ function job_setup()
 	determine_haste_group()
 
 	update_melee_groups()
-	init_job_states({"Capacity","AutoRuneMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Songset","Passive","RuneElement","ExtraSongsMode","ElementalMode","CastingMode","IdleMode","CarnMode","Etude","TreasureMode",})
+	init_job_states({"Capacity","AutoRuneMode","AutoNukeMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoStunMode","AutoDefenseMode","AutoSongMode","HippoMode","AutoMedicineMode"},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Singer","Songset","Passive","RuneElement","ExtraSongsMode","ElementalMode","CastingMode","IdleMode","CarnMode","TreasureMode",}) --,"Etude"
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -422,11 +425,11 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
 	local warn_time = duration - 180  -- قبل 3 دقائق
 	-- local warn_time_Miracle = duration - 890  -- قبل 3 دقائق
 
-	if player.equipment.range ~= 'Miracle Cheer' and spell.type == 'BardSong' and not spell.interrupted then
+	if player.equipment.range ~= 'Miracle Cheer' and buffactive['Troubadour'] and spell.type == 'BardSong' and not spell.interrupted then
 		send_command('@wait '..warn_time..';input /echo All song durations have expired 3min')
 	end
 
-	if player.equipment.range == 'Miracle Cheer' and  party.count ~= 1 and not data.npcs.trusts:contains(party.name) and spell.type == 'BardSong' and not spell.interrupted then
+	if player.equipment.range == 'Miracle Cheer' and buffactive['Troubadour'] and  party.count ~= 1 and not data.npcs.trusts:contains(party.name) and spell.type == 'BardSong' and not spell.interrupted then
         send_command('@wait '..warn_time..';input /echo <----- All Miracle Cheer song durations have expired 3min----->')
 	end
 end
@@ -471,25 +474,50 @@ function job_buff_change(buff, gain)
     local has_singing_buff = buffactive['Clarion Call'] or buffactive['Soul Voice'] or buffactive['Troubadour'] or buffactive['Nightingale']
 
     if in_party and has_singing_buff and not singing_announcement_sent then
-        send_command('@input /p >> SINGING started, dont go far!')
+        send_command('@input /p >> songs Gather together. 3 secs .. SINGING started, dont go far! <call10>')
         singing_announcement_sent = true
     elseif not has_singing_buff then
         -- إعادة السماح بالإعلان مرة أخرى عند زوال كل البوفات
         singing_announcement_sent = false
     end
-	if buffactive['Scherzo'] and state.HybridMode.value ~= 'Normal' then
-		state.HybridMode:set('Normal') 
-    else
-        state.HybridMode:set('DT') 
-    end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	--It is from the highest secrets.
+	-- if buffactive['Scherzo'] and state.HybridMode.value ~= 'Normal' then
+	-- 	state.HybridMode:set('Normal') 
+    -- else
+    --     state.HybridMode:set('DT') 
+    -- end
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
+	if buff == "sleep" then
+        if gain then    
+            send_command('input /p ZZZzzz, please cure.')		
+        else
+            -- send_command('input /p '..player.name..' is no longer Sleep!')
+        end
+    end	
+    if buff == "Charm" then
+        if gain then  			
+           send_command('input /p Charmd,run away or please Sleep me.')		
+        else	
+        --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
+        end
+    end
+	if buff == "petrification" then
+        if gain then    
+            equip(sets.defense.DT)
+            -- send_command('input /p Petrification, please Stona.')		
+        else
+        -- send_command('input /p '..player.name..' is no longer Petrify!')
+        end
+    end
+
+	--It is from the highest secrets.
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -573,11 +601,10 @@ function job_buff_change(buff, gain)
 		if buff == "curse" then
 			if gain then  
 				send_command('input /item "Holy Water" <me>')
-				equip(sets.precast.Item['Holy Water'])
+				if sets and sets.precast and sets.precast.Item and sets.precast.Item['Holy Water'] then
+					equip(sets.precast.Item['Holy Water'])
+				end
 			end
-		end
-		if not midaction() then
-			job_update()
 		end
 	end
 end
@@ -649,6 +676,7 @@ function job_customize_idle_set(idleSet)
 			end
 		end
     end
+	--It is from the highest secrets.
     if state.HippoMode.value == true then 
         idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
     end
@@ -674,7 +702,7 @@ function display_current_job_state(eventArgs)
     eventArgs.handled = true
 end
 
-
+--It is from the highest secrets.
 function check_tp_mp_lower()
 	local spell_recasts = windower.ffxi.get_spell_recasts()
 
@@ -743,7 +771,7 @@ function job_self_command(commandArgs, eventArgs)
 	if not commandArgs or not commandArgs[1] then return end
 
     local cmd = commandArgs[1]:lower()
-
+    --It is from the highest secrets.
     if cmd == 'toggle_songset' then
         current_songset_mode = current_songset_mode + 1
         if current_songset_mode > #songset_modes then
@@ -768,6 +796,7 @@ function job_self_command(commandArgs, eventArgs)
     elseif commandArgs[1]:lower() == 'threnody1' then
         send_command('@input /ma "'..state.Threnody.value..'" <stnpc>')
     end
+	--It is from the highest secrets.
 	if commandArgs[1]:lower() == 'songsetnoph' then
 		send_command('@abb "'..state.Songset.value..'" noph')
 	elseif commandArgs[1]:lower() == 'songsetnophnonitro' then
@@ -912,7 +941,7 @@ function handle_elemental(cmdParams)
 		end
 		
 	-- last_ballad3_time = last_ballad3_time or 0  
-
+   --It is from the highest secrets.
 	elseif command == 'ballad' then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		local now = os.clock() -- وقت حالي بالثواني منذ بدء التشغيل
@@ -925,7 +954,7 @@ function handle_elemental(cmdParams)
 			windower.chat.input('/ma "Mage\'s Ballad II" '..target..'')
 		end
 		-- last_minne_time = last_minne_time or 0  
-
+    --It is from the highest secrets.
 	elseif command == 'minne' then
 		local spell_recasts = windower.ffxi.get_spell_recasts()
 		local now = os.clock() 
@@ -1191,23 +1220,23 @@ function calculate_duration(spellName, spellMap)
 end
 
 
-mov = {counter=0}
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
+-- mov = {counter=0}
+-- if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+--     mov.x = windower.ffxi.get_mob_by_index(player.index).x
+--     mov.y = windower.ffxi.get_mob_by_index(player.index).y
+--     mov.z = windower.ffxi.get_mob_by_index(player.index).z
+-- end
 
-local last_check = 0
-moving = false
-windower.raw_register_event('prerender',function()
-	if os.clock() - last_check < 5 then return end
-    last_check = os.clock()	
-    mov.counter = mov.counter + 1;
-    if state.HippoMode.value == true then 
-        moving = false
-	end
-end)
+-- local last_check = 0
+-- moving = false
+-- windower.raw_register_event('prerender',function()
+-- 	if os.clock() - last_check < 5 then return end
+--     last_check = os.clock()	
+--     mov.counter = mov.counter + 1;
+--     if state.HippoMode.value == true then 
+--         moving = false
+-- 	end
+-- end)
 
 function check_song()
 	if state.AutoSongMode.value then
@@ -1298,10 +1327,10 @@ end
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-     	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
-		{Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
-		{Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
-		{Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
+     	-- {Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
+		-- {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
+		-- {Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
+		-- {Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
 
 		--{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Idle'},
 		--{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Idle'},
@@ -1310,10 +1339,10 @@ buff_spell_lists = {
 	},
 	melee4 = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 
-	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
-   {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
-   {Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
-   {Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
+-- 	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
+--    {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
+--    {Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
+--    {Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
 
    --{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Idle'},
    --{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Idle'},
@@ -1322,10 +1351,10 @@ buff_spell_lists = {
     },
 	sortie4 = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 
-	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
-   {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
-   {Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
-   {Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
+-- 	{Name='Honor March',	Buff='March',			SpellID=417,	When='Idle'},
+--    {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	When='Idle'},
+--    {Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	When='Idle'},
+--    {Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	When='Idle'},
 
    --{Name='Refresh',			Buff='Refresh',			SpellID=109,	When='Idle'},
    --{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	When='Idle'},
@@ -1333,24 +1362,24 @@ buff_spell_lists = {
    --{Name='Blink',				Buff='Blink',			SpellID=53,		When='Idle'},
     },
 	Regen = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-		{Name='Army\'s Paeon VI',	Buff='Paeon',		SpellID=383,	When='Always'},
-		{Name='Army\'s Paeon V',	Buff='Paeon',		SpellID=382,	When='Always'},
+		-- {Name='Army\'s Paeon VI',	Buff='Paeon',		SpellID=383,	When='Always'},
+		-- {Name='Army\'s Paeon V',	Buff='Paeon',		SpellID=382,	When='Always'},
 
     },
 	Default = {
 		--{Name='Army\'s Paeon VI',	Buff='Paeon',			SpellID=383,	Reapply=false},
-		{Name='Honor March',	Buff='March',			SpellID=417,	Reapply=false},
-		{Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	Reapply=false},
-		{Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	Reapply=false},
-		{Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	Reapply=false},
+		-- {Name='Honor March',	Buff='March',			SpellID=417,	Reapply=false},
+		-- {Name='Valor Minuet V',	Buff='Minuet',			SpellID=398,	Reapply=false},
+		-- {Name='Valor Minuet IV',Buff='Minuet',			SpellID=397,	Reapply=false},
+		-- {Name='Blade Madrigal',Buff='Madrigal',			SpellID=400,	Reapply=false},
 		--{Name='Refresh',			Buff='Refresh',			SpellID=109,	Reapply=false},
 		--{Name='Phalanx',			Buff='Phalanx',			SpellID=106,	Reapply=false},
 		--{Name='Stoneskin',			Buff='Stoneskin',		SpellID=54,		Reapply=false},
 		--{Name='Blink',				Buff='Blink',			SpellID=53,		Reapply=false},
 	},
 	Regen = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
-	{Name='Army\'s Paeon VI',	Buff='Paeon',			SpellID=383,	Reapply=false},
-	{Name='Army\'s Paeon V',	Buff='Paeon',		SpellID=382,	Reapply=false},
+	-- {Name='Army\'s Paeon VI',	Buff='Paeon',			SpellID=383,	Reapply=false},
+	-- {Name='Army\'s Paeon V',	Buff='Paeon',		SpellID=382,	Reapply=false},
 
     },
 }

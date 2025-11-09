@@ -107,22 +107,15 @@ You probably made a long skillchain combo (3 ?), and the last one was a bit off 
 Usage example : 
 /console gs c soloSC 1 Fusion
 => will do 1 skillchain, ending with Fusion : Fire, Thunder. Equivalent to /console gs c soloSC 1 Fusion false false
-/console gs c soloSC 3 Fragmentation
+/console gs soloSC 3 Fragmentation
 => will do 3 skillchains, ending with Fragmentation : Stone, Water, Blizzard, Water
-/console gs c soloSC max Fusion
+/console gs soloSC max Fusion
 => will spend all stratagems to perform skillchains, ending with Fusion
 /console gs c soloSC 1 Fusion true
 => will do 1 SC Fusion, and cast Fire V for magic burst
 /console gs c soloSC 1 Fusion true true
 => will do 1 SC Fusion and cast Fire V for magic burst, with no information displayed in party chat
-
-/console gs c soloSC 1 Induration true
-/console gs c soloSC 1 Scission true
-/console gs c soloSC 2 Fusion true
-/console gs c soloSC 1 Fragmentation true
-
-Scission
-  --]]
+--]]
 function soloSkillchain(nbSC,elementEnd,MB,STFU)
 --**************************************************
 -- CONSTANTS
@@ -199,7 +192,7 @@ add_to_chat(200,'========== soloSkillchain ==========')
 
  
   local wait = {}
-  wait.postImmanence = 1.5
+  wait.postImmanence = 1
   local commandSoloSC = '' -- 
 
   -- Checking you didn't forget Dark Arts
@@ -509,7 +502,7 @@ function getSpellsForSC(nbSC,elementSCFinale)
   dataSC[el].open.SC = 'Liquefaction'
   dataSC[el].open.castTime = castTime.tier1
   dataSC[el].close = {}
-  dataSC[el].close.magic = 'Ionohelix'
+  dataSC[el].close.magic = 'Thunder'
   dataSC[el].close.castTime = castTime.tier1
   
   el = 'Gravitation'

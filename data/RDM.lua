@@ -47,7 +47,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Gyudon",
 		"Reraiser",
@@ -491,7 +493,7 @@ function job_buff_change(buff, gain)
              disable('ring1','ring2','waist','neck')
         else
             enable('ring1','ring2','waist','neck')
-            handle_equipping_gear(player.status)
+            -- handle_equipping_gear(player.status)
         end
     end
 	if buff == "Charm" then
@@ -504,7 +506,7 @@ function job_buff_change(buff, gain)
             equip(sets.defense.PDT)
             -- send_command('input /p Petrification, please Stona.')		
         else
-            handle_equipping_gear(player.status)
+            -- handle_equipping_gear(player.status)
         end
     end
     if buff == "sleep" then
@@ -512,14 +514,14 @@ function job_buff_change(buff, gain)
             -- send_command('input /p ZZZzzz, please cure.')		
         end
     end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -595,9 +597,6 @@ function job_buff_change(buff, gain)
 			if gain then  
 				send_command('input /item "remedy" <me>')
 			end
-		end
-		if not midaction() then
-			job_update()
 		end
 	end
 
@@ -1330,9 +1329,13 @@ function user_job_target_change(target)
 end
 
 	
-
 local last_check = 0
 local was_chat_open = false
+local nexttime = 0
+local delay = 0.2
+local target = nil
+local low_hp_nm_triggered = false
+
 windower.register_event('prerender', function()
 	local curtime = os.clock()
 	if nexttime + delay <= curtime then

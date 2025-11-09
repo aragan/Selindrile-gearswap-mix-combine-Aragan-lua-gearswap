@@ -47,6 +47,9 @@
 function get_sets()
 	-- Load and initialize the include file.
 	include('Sel-Include.lua')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Decimating Bullet",
 		"Beryllium Arrow",
@@ -360,14 +363,14 @@ function job_buff_change(buff, gain)
 			end
 		end
 	end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -443,9 +446,6 @@ function job_buff_change(buff, gain)
 			if gain then  
 				send_command('input /item "remedy" <me>')
 			end
-		end
-		if not midaction() then
-			job_update()
 		end
 	end
 

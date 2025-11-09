@@ -47,6 +47,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Airmid's Gorget",
 		"Gyudon",
@@ -94,7 +97,8 @@ function job_setup()
 	--state.AutoMedicineMode = M(false, 'Auto Medicine Mode')
 
 	state.AutoBoost = M(false, 'Auto Boost Mode')
-	
+	state.NoSchereEarringMode = M(false, 'NoSchereEarringMode') 
+
 	autows = 'Victory Smite'
 	autofood = 'Soy Ramen'
 	
@@ -203,18 +207,18 @@ function job_buff_change(buff, gain)
         --    send_command('input /p Charmd, please Sleep me.')		
         else	
         --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
-           handle_equipping_gear(player.status)
+        --    handle_equipping_gear(player.status)
         end
     end
 
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -291,9 +295,6 @@ function job_buff_change(buff, gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
 	end
 end
 
@@ -303,7 +304,14 @@ end
 
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
-	
+	if state.NoSchereEarringMode.value and player.status == 'Engaged' then
+
+		for slot, item in pairs(meleeSet) do
+			if item == "Schere Earring" then
+				meleeSet[slot] = "Telos Earring"
+			end
+		end
+	end
 	if state.OffenseMode.value ~= 'FullAcc' then
 		if state.Buff['Impetus'] then
 			meleeSet = set_combine(meleeSet, sets.buff.Impetus)
@@ -345,23 +353,24 @@ end
 -------------------------------------------------------------------------------------------------------------------
 -- Utility functions specific to this job.
 -------------------------------------------------------------------------------------------------------------------
-mov = {counter=0}
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
 
-local last_check = 0
-moving = false
-windower.raw_register_event('prerender',function()
-    if os.clock() - last_check < 5 then return end
-    last_check = os.clock()	
-    mov.counter = mov.counter + 1;
-    if state.HippoMode.value == true then 
-        moving = false
-	end
-end)
+-- mov = {counter=0}
+-- if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+--     mov.x = windower.ffxi.get_mob_by_index(player.index).x
+--     mov.y = windower.ffxi.get_mob_by_index(player.index).y
+--     mov.z = windower.ffxi.get_mob_by_index(player.index).z
+-- end
+
+-- local last_check = 0
+-- moving = false
+-- windower.raw_register_event('prerender',function()
+--     if os.clock() - last_check < 5 then return end
+--     last_check = os.clock()	
+--     mov.counter = mov.counter + 1;
+--     if state.HippoMode.value == true then 
+--         moving = false
+-- 	end
+-- end)
 -------------------------------------------------------------------------------------------------------------------
 -- Custom event hooks.
 -------------------------------------------------------------------------------------------------------------------

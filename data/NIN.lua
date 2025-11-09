@@ -47,6 +47,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Mutsunokami",
         "Airmid's Gorget",
@@ -83,7 +86,9 @@ function get_sets()
         "Instant Reraise",
         "Black Curry Bun",
         "Rolan. Daifuku",
-        "Reraise Earring",}
+        "Reraise Earring",
+	    "Forbidden Key",
+	}
 
 end
 
@@ -96,6 +101,10 @@ buff_spell_lists = {
 	Sortie = {	--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 	{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
 	{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
+    },
+	Abyssea = {	--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
+	{Name='Kakka: Ichi',Buff='Store TP',SpellID=509,When='Engaged'},
+	-- {Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
     },
 	Defend = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
 	{Name='Migawari: Ichi',Buff='Migawari',SpellID=510,When='Combat'},
@@ -125,9 +134,10 @@ buff_spell_lists = {
 }
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
+	--It is from the highest secrets.
     attack2 = 4500 -- This LUA will equip "high buff" WS sets if the attack value of your TP set (or idle set if WSing from idle) is higher than this value	
     set_dual_wield()
-
+	job_zone_change()
 	state.Buff['Aftermath: Lv.3'] = buffactive['Aftermath: Lv.3'] or false
     state.Buff.Migawari = buffactive.Migawari or false
     state.Buff.Yonin = buffactive.Yonin or false
@@ -143,14 +153,18 @@ function job_setup()
 	state.abyssea = M{['description']='abyssea'}
 	state.abyssea:options('Ulhuadshi','Chloris','Dragua','Bukhis','Alfard','Briareus','Sobek','Apademak','Kukulkan','Azdaja','Sedna')
 	    -- state.Abyssea = M{['description']='Abyssea','Ulhuadshi','Chloris','Dragua','Bukhis','Alfard','Briareus','Sobek','Apademak','Kukulkan','Azdaja','Sedna' }
-state.AutoLoggerMode = M(false, 'AutoLoggerMode')
+    state.AutoLoggerMode = M(false, 'AutoLoggerMode')
+    state.Autogearbuff = M(true, 'Autogearbuff')
+	state.AutoMagicBurstMode = M{['description'] = 'Auto Magic Burst Mode', 'On', 'Off'}
 
-	autows = "Blade: Shun"
-	autofood = 'Soy Ramen'
+    autows = "Aeolian Edge"
+    autowstp = 1000
+	autofood = 'Carbonara'
 	autonuke = 'Katon: San'
 
-	utsusemi_ni_cancel_delay = .1
-	
+	-- utsusemi_ni_cancel_delay = .1
+	utsusemi_cancel_delay = .3
+	utsusemi_ni_cancel_delay = .06
 	state.ElementalMode = M{['description'] = 'Elemental Mode','Fire','Water','Lightning','Earth','Wind','Ice','Light','Dark',}
 	determine_haste_group()
 	update_combat_form()  
@@ -158,11 +172,22 @@ state.AutoLoggerMode = M(false, 'AutoLoggerMode')
 	Haste = 0
     DW_needed = 0
     DW = false
+
+	-- For th_action_check():
+-- AoE MA IDs for actions that always have TH: Diaga
+info.th_ma_ids = S{33, 34,322,321,320}
+-- AoE WS IDs for actions that always have TH in TH mode: Cyclone, Aeolian Edge
+info.th_ws_ids = S{30} --30 Aeolian Edge
+-- JA IDs for actions that always have TH: Provoke, Animated Flourish (Should all be handled in aftercast, kept for notes: 35, 204)
+info.th_ja_ids = S{}
+-- Unblinkable JA IDs for actions that always have TH: Quick/Box/Stutter Step, Desperate/Violent Flourish (Should all be handled in aftercast, kept for notes: 201, 202, 203, 205, 207)
+info.th_u_ja_ids = S{}
+
 	init_job_states({"Capacity","AutoRuneMode","AutoWSMode","AutoShadowMode","AutoFoodMode","AutoNukeMode","AutoStunMode","AutoDefenseMode","ElementalWheel","AutoMedicineMode",},{"AutoTrustMode","AutoBuffMode","AutoSambaMode","Weapons","OffenseMode","WeaponskillMode","Stance","IdleMode","Passive","RuneElement","ElementalMode","CastingMode","TreasureMode",})
 end
-function job_auto_change_target(spell, action, spellMap, eventArgs)
-	eventArgs.SelectNPCTargets = true
-end
+-- function job_auto_change_target(spell, action, spellMap, eventArgs)
+-- 	eventArgs.SelectNPCTargets = true
+-- end
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for standard casting events.
 -------------------------------------------------------------------------------------------------------------------
@@ -170,7 +195,60 @@ end
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 
 function job_filtered_action(spell, eventArgs)
-
+	if spell.type == 'WeaponSkill' then
+		local available_ws = S(windower.ffxi.get_abilities().weapon_skills)
+		-- WS 112 is Double Thrust, meaning a Spear is equipped.
+		if available_ws:contains(16) then
+            if spell.english == "Savage Blade" then
+				windower.chat.input('/ws "Evisceration" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+            elseif spell.english == "Circle Blade" then --aoe ws
+                windower.chat.input('/ws "Aeolian Edge" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+			end
+        end
+		if available_ws:contains(128) then --katana ws Blade: Rin
+            if spell.english == "Savage Blade" then
+				windower.chat.input('/ws "Blade: Shun" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+			end
+        end
+		if available_ws:contains(160) then --club ws Shining Strike
+            if spell.english == "Savage Blade" then
+				windower.chat.input('/ws "Judgment" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+			end
+        end
+		if available_ws:contains(9) then --H2H ws Asuran Fists
+            if spell.english == "Savage Blade" then
+				windower.chat.input('/ws "Asuran Fists" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+			elseif spell.english == "Circle Blade" then --aoe ws
+                windower.chat.input('/ws "Spinning Attack" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+			end
+        end
+		if available_ws:contains(148) then --Great Katana ws Tachi: Jinpu
+            if spell.english == "Savage Blade" then
+				windower.chat.input('/ws "Tachi: Jinpu" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+			end
+        end
+		if available_ws:contains(178) then --Staff ws Earth Crusher --aoe ws
+            if spell.english == "Circle Blade" then
+				windower.chat.input('/ws "Earth Crusher" '..spell.target.raw)
+                cancel_spell()
+				eventArgs.cancel = true
+			end
+        end
+	end
 
 end
 function job_filter_pretarget(spell, spellMap, eventArgs)
@@ -361,7 +439,7 @@ end
 -- eventArgs is the same one used in job_midcast, in case information needs to be persisted.
 function job_post_midcast(spell, spellMap, eventArgs)
     if spellMap == 'ElementalNinjutsu' then
-        if state.MagicBurstMode.value ~= 'Off' then equip(sets.MagicBurst) end
+        if (state.MagicBurst.value or AEBurst) then equip(sets.MagicBurst) end
 		if spell.element == world.weather_element or spell.element == world.day_element then
 			if state.CastingMode.value == 'Normal' or state.CastingMode.value == 'Fodder' then
 				-- if item_available('Twilight Cape') and not state.Capacity.value then
@@ -455,13 +533,58 @@ end
 function job_buff_change(buff, gain)
 	update_melee_groups()
 
-	if buff == "Sleep" then
-        if gain then    
-            -- send_command('input /p ZZZzzz, please cure.')		
-        else
-            -- send_command('input /p '..player.name..' is no longer Sleep!')
-        end
-    end
+	
+	-- previous_hybrid_mode = previous_hybrid_mode or nil
+
+
+    -- if (buff == "Copy Image (2)" or buff == "Copy Image (3)" or buff == "Copy Image (4)") then
+	-- 	if gain then
+    --         if not previous_hybrid_mode then
+	-- 			previous_hybrid_mode = state.OffenseMode.value
+	-- 		    add_to_chat(123, '[GS] Scherzo ON → حفظ '..previous_hybrid_mode..' وتغيير لـ Normal')
+	-- 	    end
+	-- 		state.OffenseMode:set('Acc')
+	-- 		add_to_chat(123, '[GS] Scherzo ON → Normal')
+	-- 	else
+	-- 		if previous_hybrid_mode then
+    --             state.OffenseMode:set(previous_hybrid_mode)
+    --             add_to_chat(122, "OffenseMode restored → "..previous_hybrid_mode)
+    --             previous_hybrid_mode = nil -- نفرغ التخزين
+    --         else
+    --             state.OffenseMode:reset()
+    --             add_to_chat(122, "OffenseMode reset (no saved value)")
+    --         end
+    --     end
+	-- end
+
+
+
+	-- previous_hybrid_mode = previous_hybrid_mode or nil
+
+
+	-- if (buff == "Copy Image (2)" or buff == "Copy Image (3)" or buff == "Copy Image (4)") then
+	-- 	if gain then
+	-- 		if not previous_hybrid_mode then
+	-- 			previous_hybrid_mode = state.HybridMode.value
+	-- 			add_to_chat(123, '[GS] Scherzo ON → حفظ '..previous_hybrid_mode..' وتغيير لـ Normal')
+	-- 		end
+	-- 		state.HybridMode:set('Normal')
+	-- 		add_to_chat(123, '[GS] Scherzo ON → Normal')
+	-- 	else
+	-- 		if previous_hybrid_mode then
+	-- 			state.HybridMode:set(previous_hybrid_mode)
+	-- 			add_to_chat(122, "HybridMode restored → "..previous_hybrid_mode)
+	-- 			previous_hybrid_mode = nil -- نفرغ التخزين
+	-- 		else
+	-- 			state.HybridMode:set('DT')
+	-- 			add_to_chat(122, "HybridMode reset (no saved value)")
+	-- 		end
+	-- 	end
+	-- end
+	
+	
+
+
 	if buff == "petrification" then
         if gain then    
             equip(sets.defense.DT)
@@ -471,23 +594,31 @@ function job_buff_change(buff, gain)
         handle_equipping_gear(player.status)
         end
     end
+
+	if buff == "sleep" then
+        if gain then    
+            send_command('input /p ZZZzzz, please cure.')		
+        else
+            -- send_command('input /p '..player.name..' is no longer Sleep!')
+        end
+    end	
     if buff == "Charm" then
         if gain then  			
-        --    send_command('input /p Charmd, please Sleep me.')		
+           send_command('input /p Charmd,run away or please Sleep me.')		
         else	
         --    send_command('input /p '..player.name..' is no longer Charmed, please wake me up!')
-           handle_equipping_gear(player.status)
         end
     end
 
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
+    --It is from the highest secrets.
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -567,15 +698,18 @@ function job_buff_change(buff, gain)
 		if not midaction() then
 			job_update()
 		end
+		tickdelay = os.clock() + 1
+
 	end
 
 
 end
 
 function job_status_change(new_status, old_status)
+	--It is from the highest secrets.
 	if state.NeverDieMode.value then 
 
-		if (player.in_combat or being_attacked) and player.hpp < 25 then
+		if (player.in_combat or being_attacked) and player.hpp < 15 then
 			state.AutoShadowMode:set('true')
 			state.AutoBuffMode:set('Defend')
 
@@ -605,13 +739,24 @@ end]]
 
 -- Get custom spell maps
 function job_get_spell_map(spell, default_spell_map)
+	local spell_recasts = windower.ffxi.get_spell_recasts()
+
     if spell.skill == "Ninjutsu" then
         if not default_spell_map then
             if spell.target.type == 'SELF' then
                 return 'NinjutsuBuff'
+				-- tickdelay = os.clock() + 1.1
+
             else
                 return 'NinjutsuDebuff'
+				-- tickdelay = os.clock() + 1.1
+
             end
+			tickdelay = os.clock() + 1.1
+	    else
+			return default_spell_map
+			-- tickdelay = os.clock() + 1.1
+
         end
     end
 end
@@ -664,6 +809,7 @@ function job_update(cmdParams, eventArgs)
 	--determine_haste_group()
 	--handle_equipping_gear(player.status)  
 	update_melee_groups()
+	-- th_update()
 	if player.sub_job == 'SAM' and state.Stance.value == "None" then
 		state.Stance:set("Hasso")
 	end
@@ -909,7 +1055,7 @@ function job_tick()
 	if check_stance() then return true end
 	if check_buff() then return true end
 	if check_buffup() then return true end
-	if job_status_change() then return true end
+	-- if job_status_change() then return true end
 
 	if state.AutoTankMode.value and player.in_combat and player.target.type == "MONSTER" and not moving then
 		windower.send_command('gs c SubJobEnmity')
@@ -1044,15 +1190,15 @@ function check_buff()
 		if state.AutoBuffMode.value ~= 'Auto' and state.AutoBuffMode.value ~= 'Defend'and player.in_combat and not state.Buff['SJ Restriction'] then
 			local abil_recasts = windower.ffxi.get_ability_recasts()
 
-			if player.sub_job == 'WAR' and not buffactive.Berserk and not buffactive.Defender and abil_recasts[1] < latency then
+			if player.sub_job == 'WAR' and player.status == 'Engaged' and not buffactive.Berserk and not buffactive.Defender and abil_recasts[1] < latency then
 				windower.chat.input('/ja "Berserk" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
-			elseif player.sub_job == 'WAR' and not buffactive.Aggressor and not buffactive.Defender and abil_recasts[4] < latency then
+			elseif player.sub_job == 'WAR' and player.status == 'Engaged' and not buffactive.Aggressor and not buffactive.Defender and abil_recasts[4] < latency then
 				windower.chat.input('/ja "Aggressor" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
-			elseif player.sub_job == 'WAR' and not buffactive.Warcry and abil_recasts[2] < latency then
+			elseif player.sub_job == 'WAR' and player.status == 'Engaged' and not buffactive.Warcry and abil_recasts[2] < latency then
 				windower.chat.input('/ja "Warcry" <me>')
 				tickdelay = os.clock() + 1.1
 				return true
@@ -1122,50 +1268,111 @@ function check_buffup()
 	end
 end
 
+function user_job_target_change(target)  
+	
+
+	local target = windower.ffxi.get_mob_by_target('t')
+	local sub= windower.ffxi.get_mob_by_target('st')
+	if (target ~= nil) and (sub == nil) then
+		if (target.name == "Sisyphus" or target.name == "Apademak" or target.name == "Snowflake" or target.name == "Olyphant" or
+		 target.name == "Upas-Kamuy" or target.name == "Fistule" or target.name == "Jaculus" or target.name == "Lord Varney" or
+		 target.name == "Deelgeed") then --test Ironshell Ghast -- or target.name == "Gartell" --  or target.name == "Hrosshvalur"
+			--windower.chat.input('gs c set RuneElement Ignis;gs c set ElementalMode Fire;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+			send_command('gs c set TreasureMode Fulltime;gs c set AutoWSMode false')--gs enable all AutoWSMode --gs c Weapons Naegling;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false
+
+			-- windower.send_command('gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+			-- windower.chat.input('/p >>> '..auto_translate('Rayke')..''..auto_translate(''..target.name..'')..'['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands: only Ice damage will be effective.')  -- code add by (Aragan)
+			-- windower.send_command('input /echo ['..target.name..'] RUN Thunder hand USE Tellus / Wind hand USE Gelus .. Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands:  only Ice damage will be effective.')  -- code add by (Aragan)
+		-- elseif target.name == "Aminon" then
+		-- 	windower.send_command('gs c set RuneElement Lux;gs c set ElementalMode Light;gs c set AutoBuffMode Aminon;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+        -- elseif target.name == "Ghatjot" or target.name == "Dhartok" then
+		-- 	wwindower.send_command('gs c set RuneElement Tellus;gs c set ElementalMode Earth;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+		-- elseif target.name == "Skomora" or target.name == "Triboulex" then
+		-- 	windower.send_command('gs c set RuneElement Ignis;gs c set ElementalMode Fire;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+		end
+	end
+
+
+	-- local target = windower.ffxi.get_mob_by_target('t')
+	-- local sub= windower.ffxi.get_mob_by_target('st')
+	-- if (target ~= nil) and (sub == nil) then
+	-- 	if target.name == "Hazhdiha"  then --test Ironshell Ghast -- or target.name == "Gartell"
+	-- 		--windower.chat.input('gs c set RuneElement Ignis;gs c set ElementalMode Fire;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+	-- 		send_command('gs c Weapons ProcGreatSword;gs c set WeaponskillMode Proc;gs c set OffenseMode Normal;gs c set TreasureMode None;gs c set AutoWSMode True')--gs enable all AutoWSMode --gs c Weapons Naegling;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false
+
+	-- 		-- windower.send_command('gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+	-- 		-- windower.chat.input('/p >>> '..auto_translate('Rayke')..''..auto_translate(''..target.name..'')..'['..target.name..'] Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands: only Ice damage will be effective.')  -- code add by (Aragan)
+	-- 		-- windower.send_command('input /echo ['..target.name..'] RUN Thunder hand USE Tellus / Wind hand USE Gelus .. Wind hand: 70% Ice, Thunder hand: 70% EarthWind and Thunder hands:  only Ice damage will be effective.')  -- code add by (Aragan)
+	-- 	-- elseif target.name == "Aminon" then
+	-- 	-- 	windower.send_command('gs c set RuneElement Lux;gs c set ElementalMode Light;gs c set AutoBuffMode Aminon;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+    --     -- elseif target.name == "Ghatjot" or target.name == "Dhartok" then
+	-- 	-- 	wwindower.send_command('gs c set RuneElement Tellus;gs c set ElementalMode Earth;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+	-- 	-- elseif target.name == "Skomora" or target.name == "Triboulex" then
+	-- 	-- 	windower.send_command('gs c set RuneElement Ignis;gs c set ElementalMode Fire;gs c set AutoBuffMode Sortie;gs c set AutoDefenseMode true;gs c set AutoTankMode true;gs c set DefenseMode Magical;gs c set AutoRuneMode true') 			
+	-- 	end
+	-- end
+end
+
 
 windower.register_event('incoming text',function(org)     
-
+    --It is from the highest secrets.
 	--abyssea stagger --red pros
 	if string.find(org, "The fiend is frozen in its tracks.") then
 		windower.send_command('input /p Stagger! <call21>!')-- code add by (Aragan@Asura)
-		send_command('gs c Weapons Tauret;gs c set WeaponskillMode Match;gs c set OffenseMode Normal;gs c set TreasureMode Fulltime;gs c set AutoWSMode True')--gs enable all AutoWSMode --gs c Weapons Naegling;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false
+		-- send_command('gs c Weapons Tauret;gs c set WeaponskillMode Match;gs c set OffenseMode Normal;gs c set TreasureMode Fulltime;gs c set AutoWSMode True')--gs enable all AutoWSMode --gs c Weapons Naegling;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false
+		-- send_command('gs c Weapons ProcCRIT2;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false;gs c set ExtraMeleeMode DWFull2')--gs enable all AutoWSMode --gs c Weapons Naegling;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false
+	    -- send_command('gs c Weapons ProcCRIT2;gs c set WeaponskillMode Match;gs c set OffenseMode Normal;gs c set TreasureMode None;gs c set AutoWSMode True;gs c set ExtraMeleeMode DWFull')--gs enable all AutoWSMode --gs c Weapons Naegling;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false -- for abyssea track Kukulkan's Fang
+		send_command('gs c Weapons ProcSword3;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false;gs c set ExtraMeleeMode DWFull2')--gs enable all AutoWSMode --gs c Weapons Naegling;gs c set WeaponskillMode Match;gs c set OffenseMode CRIT;gs c set TreasureMode Fulltime;gs c set AutoWSMode false
+
 	end
 
-	if state.WeaponskillMode.value == 'Proc' then    
-		if string.find(org, "The fiend appears vulnerable to wind elemental weapon skills!")  then
+	local last_message = nil
+--RED Proc mode
+--  set weapon first on ProcGreatSword for Freezebite bcuz its have 1 ws rotate  that for work fine
+	if state.WeaponskillMode.value == 'Proc' then  
+		if last_message == true then return end
+
+		if string.find(org, "The fiend appears vulnerable to ice elemental weapon skills!")  then
+			send_command('gs c Weapons ProcGreatSword;')
+			send_command('input /p RED Proc: Ice - Freezebite(GSD);')
+			send_command('input /echo RED Proc: Ice - Freezebite(GSD);')
+		elseif string.find(org, "The fiend appears vulnerable to wind elemental weapon skills!")  then
 			send_command('gs c Weapons ProcGreatKatana;') 
 			send_command('input /p RED Proc: Wind - Cyclone(DGR), Tachi: Jinpu(GKT);') 
 			send_command('input /echo RED Proc: Wind - Cyclone(DGR), Tachi: Jinpu(GKT);')
+			
 
 		elseif string.find(org, "The fiend appears vulnerable to lightning elemental weapon skills!")  then
 			send_command('gs c Weapons ProcPolearm;')
 			send_command('input /p RED Proc: Lightning - Raiden Thrust(PLM);')
 			send_command('input /echo RED Proc: Lightning - Raiden Thrust(PLM);')
-		
+			
+
 	    elseif string.find(org, "The fiend appears vulnerable to fire elemental weapon skills!")  then
 			send_command('gs c Weapons ProcSword;')
 			send_command('input /p RED Proc: Fire - Red Lotus Blade(SWD);')
 			send_command('input /echo RED Proc: Fire - Red Lotus Blade(SWD);')
-		
+			
+
 	    elseif string.find(org, "The fiend appears vulnerable to earth elemental weapon skills!")  then
 			send_command('gs c Weapons ProcStaff;')
 			send_command('input /p RED Proc: Earth - Earth Crusher(STF);')
 			send_command('input /echo RED Proc: Earth - Earth Crusher(STF);')
-		
-	    elseif string.find(org, "The fiend appears vulnerable to ice elemental weapon skills!")  then
-			send_command('gs c Weapons ProcGreatSword;')
-			send_command('input /p RED Proc: Ice - Freezebite(GSD);')
-			send_command('input /echo RED Proc: Ice - Freezebite(GSD);')
-		
+			
 	    elseif string.find(org, "The fiend appears vulnerable to darkness elemental weapon skills!")  then
 			send_command('gs c Weapons ProcScythe;')
 			send_command('input /p RED Proc: Dark - Energy Drain(DGR), Shadow of Death(SCY), Blade: Ei(KTN);')
 			send_command('input /echo RED Proc: Dark - Energy Drain(DGR), Shadow of Death(SCY), Blade: Ei(KTN);')
-	    elseif string.find(org, "The fiend appears vulnerable to light elemental weapon skills!")  then
+			 
+
+		elseif string.find(org, "The fiend appears vulnerable to light elemental weapon skills!")  then
 			send_command('gs c Weapons ProcSword2;')
 			send_command('input /p RED Proc: Light - Seraph Blade(SWD), Tachi: Koki(GKT), Seraph Strike(CLB), Sunburst(STF);')
 			send_command('input /echo RED Proc: Light - Seraph Blade(SWD), Tachi: Koki(GKT), Seraph Strike(CLB), Sunburst(STF);')
-	    elseif string.find(org, "Tachi: Jinpu")  then
+		end
+		last_message = true
+
+		if string.find(org, "Tachi: Jinpu")  then
 			send_command('gs c Weapons ProcDagger2;')
 	    elseif string.find(org, "Cyclone")  then
 			send_command('gs c Weapons ProcGreatKatana;')
@@ -1184,13 +1391,17 @@ windower.register_event('incoming text',function(org)
 	    elseif string.find(org, "Tachi: Koki")  then
 				send_command('gs c Weapons ProcSword2;')
 		end
+		if not midaction() then
+			job_update()
+		end
 	end
 
 
 
 
 
-	handle_equipping_gear(player.status)  
+	-- handle_equipping_gear(player.status)  
+	--It is from the highest secrets.
 	--Sortie 	--Vagary
 	if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
 		windower.send_command('gs c set ElementalMode water')
@@ -1234,11 +1445,51 @@ windower.register_event('incoming text',function(org)
 end)
 
 
-function default_zone_change(new_id,old_id)
+--  --RED Proc mode reset  with Engage و Disengage
+windower.register_event('status change', function(new, old)
+    if new == 0 or new == 1 then  
+        -- 0 = Idle (disengaged), 1 = Engaged
+        last_message = nil
+    end
+end)
 
-	if world.area:contains('Abyssea') then
-		send_command('ept show;gs c set SkipProcWeapons false;/lockstyleset 1;lua u fastcs') --Turns addon on.
+windower.register_event('action', function(act)
+	local actor = (act.actor_id and windower.ffxi.get_mob_by_id(act.actor_id)) or 'unknown'
+	if type(actor) == "table" then
+		actor = actor.name
+	end
+
+	local monster_ability = res.monster_abilities[act.targets[1].actions[1].param]
+	local spell_start = res.spells[act.targets[1].actions[1].param]
+
+--It is from the highest secrets.
+if (actor == 'Skomora' or actor == 'Triboulex') then
+	local monster_ability = res.monster_abilities[act.param]
+	if monster_ability == nil then
+		return
+	elseif monster_ability.en == 'Setting the Stage' then
+		state.MagicalDefenseMode:set('MDT')
+		windower.chat.input('/p '..actor..' uses '..monster_ability.en..' <call14>!') -- code add by (Aragan)
+	end
+end
+if (actor == 'Degei' or actor == 'Aita') then
+	local monster_ability = res.monster_abilities[act.param]
+	if monster_ability == nil then
+		return
+	elseif monster_ability.en == 'Vivisection' then
+		state.MagicalDefenseMode:set('MDT')
+		windower.chat.input('/p '..actor..' uses '..monster_ability.en..' <call14>!') -- code add by (Aragan)
+	end
+end
+end)
+
+function job_zone_change(new_id,old_id)
+    if data.areas.Abyssea:contains(world.area) or state.Stylenotwingsemode.value then
+		send_command('input /lockstyleset 1;ept show;gs c set SkipProcWeapons false;lua u fastcs') --Turns addon on.
 		set_macro_page(6, 5)
+		windower.chat.input('/lockstyleset 1')
+        send_command('gs c update') 
+        style_lock = true
 	else
 		send_command('ept hide;') --Turns addon off.
 	end
@@ -1246,205 +1497,205 @@ end
 
 ----------
 
-function variables() 
-	attacks = 0
-	hits = 0
-	trend = {}
-	trend_write_pos = 0
+-- function variables() 
+-- 	attacks = 0
+-- 	hits = 0
+-- 	trend = {}
+-- 	trend_write_pos = 0
 
-	define_user_functions()
+-- 	define_user_functions()
 
-	options = { usePDT = false, meleeMode = 'DD', autopilot = false,
-			HUD = { x = 100, y = 100, visible = true, trendSize = 40 }
-	}
+-- 	options = { usePDT = false, meleeMode = 'DD', autopilot = false,
+-- 			HUD = { x = 100, y = 100, visible = true, trendSize = 40 }
+-- 	}
    
-	build_HUD()
+-- 	build_HUD()
 
-end
+-- end
 
 
 
-function define_user_functions()
+-- function define_user_functions()
 
-	function swing(hit)
-			trend_write_pos = trend_write_pos + 1
-			if trend_write_pos > options.HUD.trendSize then
-					trend_write_pos = 1
-			end
+-- 	function swing(hit)
+-- 			trend_write_pos = trend_write_pos + 1
+-- 			if trend_write_pos > options.HUD.trendSize then
+-- 					trend_write_pos = 1
+-- 			end
 		   
-			if hit then
-					hits = hits + 1
-					attacks = attacks + 1
-					trend[trend_write_pos] = 1
-			else
-					attacks = attacks + 1
-					trend[trend_write_pos] = 0
-			end
+-- 			if hit then
+-- 					hits = hits + 1
+-- 					attacks = attacks + 1
+-- 					trend[trend_write_pos] = 1
+-- 			else
+-- 					attacks = attacks + 1
+-- 					trend[trend_write_pos] = 0
+-- 			end
 		   
-			local overall = math.floor(hits / attacks * 100 - .1)
-			local recent = math.floor(table.sum(trend) / #trend * 100 - .1)
+-- 			local overall = math.floor(hits / attacks * 100 - .1)
+-- 			local recent = math.floor(table.sum(trend) / #trend * 100 - .1)
 		   
-			windower.text.set_text(rtAcc, tostring(overall))
-			windower.text.set_text(rtTrend, tostring(recent))
+-- 			windower.text.set_text(rtAcc, tostring(overall))
+-- 			windower.text.set_text(rtTrend, tostring(recent))
 			
-			if recent >= 92 then
-				windower.text.set_color(rtTrend, 255, 2, 255, 2)
-			elseif recent < 92 then
-				if recent < 79 then
-				windower.text.set_color(rtTrend, 255, 255, 2, 60)
-				else
-				windower.text.set_color(rtTrend, 255, 200, 100, 2)
-				end
+-- 			if recent >= 92 then
+-- 				windower.text.set_color(rtTrend, 255, 2, 255, 2)
+-- 			elseif recent < 92 then
+-- 				if recent < 79 then
+-- 				windower.text.set_color(rtTrend, 255, 255, 2, 60)
+-- 				else
+-- 				windower.text.set_color(rtTrend, 255, 200, 100, 2)
+-- 				end
 			
-			end
+-- 			end
 
-	end
+-- 	end
 
-	windower.register_event('action',function (act)
-			if act.actor_id == windower.ffxi.get_player().id then
-					if act.category == 1 then
-							for i=1,act.targets[1].action_count do
-					if act.targets[1].actions[i].message == 1 or act.targets[1].actions[i].message == 67 then
-											swing(true)
-									else
-											swing(false)
-									end
-							end
-					end
-			end
-	end)
-
-
-end
+-- 	windower.register_event('action',function (act)
+-- 			if act.actor_id == windower.ffxi.get_player().id then
+-- 					if act.category == 1 then
+-- 							for i=1,act.targets[1].action_count do
+-- 					if act.targets[1].actions[i].message == 1 or act.targets[1].actions[i].message == 67 then
+-- 											swing(true)
+-- 									else
+-- 											swing(false)
+-- 									end
+-- 							end
+-- 					end
+-- 			end
+-- 	end)
 
 
-function build_HUD()
+-- end
 
-	hudBord = 'blu_hud_border'
+
+-- function build_HUD()
+
+-- 	hudBord = 'blu_hud_border'
    
-	windower.prim.create(hudBord)
-	windower.prim.set_color(hudBord, 255, 2, 2, 2)
-	windower.prim.set_position(hudBord, options.HUD.x - 9, options.HUD.y-2)
-	windower.prim.set_size(hudBord, 140, 70)
-	windower.prim.set_visibility(hudBord, options.HUD.visible)
+-- 	windower.prim.create(hudBord)
+-- 	windower.prim.set_color(hudBord, 255, 2, 2, 2)
+-- 	windower.prim.set_position(hudBord, options.HUD.x - 9, options.HUD.y-2)
+-- 	windower.prim.set_size(hudBord, 140, 70)
+-- 	windower.prim.set_visibility(hudBord, options.HUD.visible)
    
-	hudBG = 'blu_hud_background'
+-- 	hudBG = 'blu_hud_background'
    
-	windower.prim.create(hudBG)
-	windower.prim.set_color(hudBG, 100, 40, 40, 100)
-	windower.prim.set_position(hudBG, options.HUD.x - 7, options.HUD.y)
-	windower.prim.set_size(hudBG, 135, 65)
-	windower.prim.set_visibility(hudBG, options.HUD.visible)
+-- 	windower.prim.create(hudBG)
+-- 	windower.prim.set_color(hudBG, 100, 40, 40, 100)
+-- 	windower.prim.set_position(hudBG, options.HUD.x - 7, options.HUD.y)
+-- 	windower.prim.set_size(hudBG, 135, 65)
+-- 	windower.prim.set_visibility(hudBG, options.HUD.visible)
    
-	rtAcc = 'blu_realtime_accuracy_display'
+-- 	rtAcc = 'blu_realtime_accuracy_display'
 
-	windower.text.create(rtAcc)
-windower.text.set_location(rtAcc, options.HUD.x, options.HUD.y)
-windower.text.set_bg_color(rtAcc, 0, 0, 0, 0)
-windower.text.set_color(rtAcc, 255, 255, 255, 255)
-windower.text.set_font(rtAcc, 'Arial')
-windower.text.set_font_size(rtAcc, 18)
-windower.text.set_bold(rtAcc, false)
-windower.text.set_italic(rtAcc, false)
-windower.text.set_text(rtAcc, '--')
-windower.text.set_bg_visibility(rtAcc, options.HUD.visible)
-	windower.text.set_visibility(rtAcc, options.HUD.visible)
+-- 	windower.text.create(rtAcc)
+-- windower.text.set_location(rtAcc, options.HUD.x, options.HUD.y)
+-- windower.text.set_bg_color(rtAcc, 0, 0, 0, 0)
+-- windower.text.set_color(rtAcc, 255, 255, 255, 255)
+-- windower.text.set_font(rtAcc, 'Arial')
+-- windower.text.set_font_size(rtAcc, 18)
+-- windower.text.set_bold(rtAcc, false)
+-- windower.text.set_italic(rtAcc, false)
+-- windower.text.set_text(rtAcc, '--')
+-- windower.text.set_bg_visibility(rtAcc, options.HUD.visible)
+-- 	windower.text.set_visibility(rtAcc, options.HUD.visible)
    
-	rtTrend = 'blu_realtime_accuracy_trend_display'
+-- 	rtTrend = 'blu_realtime_accuracy_trend_display'
 
-	windower.text.create(rtTrend)
-windower.text.set_location(rtTrend, options.HUD.x + 40, options.HUD.y + 2)
-windower.text.set_bg_color(rtTrend, 0, 0, 0, 0)
-windower.text.set_color(rtTrend, 255, 255, 255, 255)
-windower.text.set_font(rtTrend, 'Arial')
-windower.text.set_font_size(rtTrend, 24)
-windower.text.set_bold(rtTrend, false)
-windower.text.set_italic(rtTrend, false)
-windower.text.set_text(rtTrend, '--')
-windower.text.set_bg_visibility(rtTrend, options.HUD.visible)
-	windower.text.set_visibility(rtTrend, options.HUD.visible)
+-- 	windower.text.create(rtTrend)
+-- windower.text.set_location(rtTrend, options.HUD.x + 40, options.HUD.y + 2)
+-- windower.text.set_bg_color(rtTrend, 0, 0, 0, 0)
+-- windower.text.set_color(rtTrend, 255, 255, 255, 255)
+-- windower.text.set_font(rtTrend, 'Arial')
+-- windower.text.set_font_size(rtTrend, 24)
+-- windower.text.set_bold(rtTrend, false)
+-- windower.text.set_italic(rtTrend, false)
+-- windower.text.set_text(rtTrend, '--')
+-- windower.text.set_bg_visibility(rtTrend, options.HUD.visible)
+-- 	windower.text.set_visibility(rtTrend, options.HUD.visible)
    
-	gMode = 'blu_gear_mode_display'
+-- 	gMode = 'blu_gear_mode_display'
 
-	windower.text.create(gMode)
-windower.text.set_location(gMode, options.HUD.x + 40, options.HUD.y + 40)
-windower.text.set_bg_color(gMode, 0, 0, 0, 0)
-windower.text.set_color(gMode, 255, 255, 0, 0)
-windower.text.set_font(gMode, 'Arial')
-windower.text.set_font_size(gMode, 11)
-windower.text.set_bold(gMode, true)
-windower.text.set_italic(gMode, false)
-windower.text.set_text(gMode, 'Recent')
-windower.text.set_bg_visibility(gMode, options.HUD.visible)
-	windower.text.set_visibility(gMode, options.HUD.visible)
+-- 	windower.text.create(gMode)
+-- windower.text.set_location(gMode, options.HUD.x + 40, options.HUD.y + 40)
+-- windower.text.set_bg_color(gMode, 0, 0, 0, 0)
+-- windower.text.set_color(gMode, 255, 255, 0, 0)
+-- windower.text.set_font(gMode, 'Arial')
+-- windower.text.set_font_size(gMode, 11)
+-- windower.text.set_bold(gMode, true)
+-- windower.text.set_italic(gMode, false)
+-- windower.text.set_text(gMode, 'Recent')
+-- windower.text.set_bg_visibility(gMode, options.HUD.visible)
+-- 	windower.text.set_visibility(gMode, options.HUD.visible)
    
-	abText = 'blu_ability_availability_display'
+-- 	abText = 'blu_ability_availability_display'
 
-	windower.text.create(abText)
-windower.text.set_location(abText, options.HUD.x-1, options.HUD.y - 12)
-windower.text.set_bg_color(abText, 0, 0, 0, 0)
-windower.text.set_color(abText, 255, 200, 180, 0)
-windower.text.set_font(abText, 'Lucida Console')
-windower.text.set_font_size(abText, 8)
-windower.text.set_bold(abText, true)
-windower.text.set_italic(abText, false)
-windower.text.set_text(abText, '')
-windower.text.set_bg_visibility(abText, options.HUD.visible)
-	windower.text.set_visibility(abText, options.HUD.visible)
+-- 	windower.text.create(abText)
+-- windower.text.set_location(abText, options.HUD.x-1, options.HUD.y - 12)
+-- windower.text.set_bg_color(abText, 0, 0, 0, 0)
+-- windower.text.set_color(abText, 255, 200, 180, 0)
+-- windower.text.set_font(abText, 'Lucida Console')
+-- windower.text.set_font_size(abText, 8)
+-- windower.text.set_bold(abText, true)
+-- windower.text.set_italic(abText, false)
+-- windower.text.set_text(abText, '')
+-- windower.text.set_bg_visibility(abText, options.HUD.visible)
+-- 	windower.text.set_visibility(abText, options.HUD.visible)
    
-end
+-- end
 
-function file_unload()
-	windower.prim.delete(hudBord or "")
-	windower.prim.delete(hudBG or "")
-	windower.text.delete(gMode or "")
-	windower.text.delete(rtTrend or "")
-	windower.text.delete(rtAcc or "")
-	windower.text.delete(abText or "")
-end
+-- function file_unload()
+-- 	windower.prim.delete(hudBord or "")
+-- 	windower.prim.delete(hudBG or "")
+-- 	windower.text.delete(gMode or "")
+-- 	windower.text.delete(rtTrend or "")
+-- 	windower.text.delete(rtAcc or "")
+-- 	windower.text.delete(abText or "")
+-- end
 
-fSTR = 0
-D = 0
-pDIF = 0
-total_damage = 0
-total_damage_array = L{}
-max_count = 15
-max_acc_count = 10
-total_crit = 0
+-- fSTR = 0
+-- D = 0
+-- pDIF = 0
+-- total_damage = 0
+-- total_damage_array = L{}
+-- max_count = 15
+-- max_acc_count = 10
+-- total_crit = 0
 
 
-windower.register_event('action',function (act)
-local actor = act.actor_id
-local category = act.category
-local player = windower.ffxi.get_player()
+-- windower.register_event('action',function (act)
+-- local actor = act.actor_id
+-- local category = act.category
+-- local player = windower.ffxi.get_player()
   
-if actor == player.id and category == 1 then
+-- if actor == player.id and category == 1 then
 
-	local round_hits = act.targets[1].action_count
+-- 	local round_hits = act.targets[1].action_count
 	
-	for i = 1,round_hits do
-		if act.targets[1].actions[i].reaction == 8 then
-			if act.targets[1].actions[i].message ~= 67 then
-			total_damage_array:append(act.targets[1].actions[i].param)
-			end
-		end
-	end
-		approximate_pdif()
-end
-end)
+-- 	for i = 1,round_hits do
+-- 		if act.targets[1].actions[i].reaction == 8 then
+-- 			if act.targets[1].actions[i].message ~= 67 then
+-- 			total_damage_array:append(act.targets[1].actions[i].param)
+-- 			end
+-- 		end
+-- 	end
+-- 		approximate_pdif()
+-- end
+-- end)
 
 
-function approximate_pdif()
-local total_damage = 0
-local total_hits = math.min(max_count,total_damage_array:length())
+-- function approximate_pdif()
+-- local total_damage = 0
+-- local total_hits = math.min(max_count,total_damage_array:length())
  
-if total_damage_array:length() < 1 then
-	return
-end
+-- if total_damage_array:length() < 1 then
+-- 	return
+-- end
  
-for i=1,total_hits do
-	local v = total_damage_array:last(i)
-	total_damage = total_damage+v
-end
-pDIF = ( (total_damage/total_hits) / (D + fSTR) )
-end
+-- for i=1,total_hits do
+-- 	local v = total_damage_array:last(i)
+-- 	total_damage = total_damage+v
+-- end
+-- pDIF = ( (total_damage/total_hits) / (D + fSTR) )
+-- end

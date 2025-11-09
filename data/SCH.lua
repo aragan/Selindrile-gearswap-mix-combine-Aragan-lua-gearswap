@@ -71,9 +71,12 @@ function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
 	send_command('lua l sch-hud')
-
+-- script for auto sc
 	include('SCH_soloSC.lua')
     include('common_info.skillchain.lua')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
         "Gyudon",
         "Reraiser",
@@ -119,7 +122,7 @@ function job_setup()
     state.Buff['Sublimation: Activated'] = buffactive['Sublimation: Activated'] or false
 	state.Buff['Enlightenment'] = buffactive['Enlightenment'] or false
 	state.Buff['Tabula Rasa'] = buffactive['Tabula Rasa'] or false
-	state.AutoEquipBurst = M(true)
+	state.AutoEquipBurst = M{['description'] = 'AutoEquipBurst', 'On', 'Off'}
     state.HelixMode = M{['description']='Helix Mode', 'Duration', 'Potency'}
     state.RegenMode = M{['description']='Regen Mode', 'Duration', 'Potency'}
     state.RP = M(false, "Reinforcement Points Mode")
@@ -598,6 +601,7 @@ function job_filter_aftercast(spell, spellMap, eventArgs)
 		tickdelay = os.clock() + 1.1
     end
 end
+
 function job_aftercast(spell, spellMap, eventArgs)
     -- if not spell.interrupted then
 	-- 	if spell.type == 'Scholar' then
@@ -666,9 +670,9 @@ function job_buff_change(buff, gain)
     end
     if buff == "Tabula Rasa" then
         if gain then
-            send_command('@wait 1;@input /p Tabula Rasa [ON]')
+            send_command('@input /p Tabula Rasa [ON]')
         else	
-            send_command('@wait 1;@input /p Tabula Rasa [OFF]')        
+            send_command('@input /p Tabula Rasa [OFF]')        
         end
     end
     if buff == "doom" then
@@ -698,14 +702,15 @@ function job_buff_change(buff, gain)
         -- send_command('input /p '..player.name..' is no longer Petrify!')
         handle_equipping_gear(player.status)
         end
-    end	if state.NeverDieMode.value or state.AutoCureMode.value then 
+    end	
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -782,9 +787,6 @@ function job_buff_change(buff, gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
 	end
     if buff == "curse" then
         if gain then  
@@ -798,9 +800,7 @@ function job_buff_change(buff, gain)
             -- send_command('input /p '..player.name..' is no longer Sleep!')
         end
     end
-    if not midaction() then
-        job_update()
-    end
+
 end
 
 -- Handle notifications of general user state change.
@@ -879,12 +879,31 @@ function job_customize_idle_set(idleSet)
     return idleSet
 end
 
+-- Modify the default melee set after it was constructed.
+function job_customize_melee_set(meleeSet)
+
+
+
+	if state.RP.current == 'on' then
+        equip(sets.RP)
+        disable('neck')
+    else
+        enable('neck')
+    end
+    if state.TreasureMode.value == 'Fulltime' then
+        meleeSet = set_combine(meleeSet, sets.TreasureHunter)
+    end
+
+    return meleeSet
+end
 -- Called by the 'update' self-command.
 function job_update(cmdParams, eventArgs)
     update_active_stratagems()
     update_sublimation()
 end
-
+function job_status_change(newStatus, oldStatus, eventArgs)
+ 
+end
 -- Function to display the current relevant user state when doing an update.
 -- Return true if display was handled, and you don't want the default info shown.
 function display_current_job_state(eventArgs)
@@ -956,6 +975,9 @@ function job_self_command(commandArgs, eventArgs)
 	end
 end
 
+function errlog(msg) 
+	add_to_chat(167,msg)
+end
 -------------------------------------------------------------------------------------------------------------------
 -- Utility functions specific to this job.
 -------------------------------------------------------------------------------------------------------------------
@@ -1923,7 +1945,7 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
             time_start = os.time()
             if MB_Window > 0 then
                 MB_Window = 11 - (os.time() - MB_Time)
-                if state.AutoEquipBurst.value then
+				if state.AutoEquipBurst.value == 'On' then
                     AEBurst = true
                 end
             else
@@ -1971,33 +1993,34 @@ function refine_various_spells(spell, action, spellMap, eventArgs)
     end
 end
     
-mov = {counter=0}
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
-
-local last_check = 0
-moving = false
-windower.raw_register_event('prerender',function()
-    if os.clock() - last_check < 5 then return end
-    last_check = os.clock()	
-    mov.counter = mov.counter + 1;
-    if state.HippoMode.value == true then 
-        moving = false
-	end
-end)
-
--- function getNbStratagems()
---     -- returns recast in seconds.
---     local allRecasts = windower.ffxi.get_ability_recasts()
---     local stratsRecast = allRecasts[231]
---     local maxStrategems = math.floor((player.main_job_level + 10) / 20)
---     local fullRechargeTime = 4*60 -- change 60 with 45 if you have unlocked the job point gift on stratagem recast
---     local currentCharges = math.floor(maxStrategems - maxStrategems * stratsRecast / fullRechargeTime)
---     return currentCharges
+-- mov = {counter=0}
+-- if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+--     mov.x = windower.ffxi.get_mob_by_index(player.index).x
+--     mov.y = windower.ffxi.get_mob_by_index(player.index).y
+--     mov.z = windower.ffxi.get_mob_by_index(player.index).z
 -- end
+
+-- local last_check = 0
+-- moving = false
+-- windower.raw_register_event('prerender',function()
+--     if os.clock() - last_check < 5 then return end
+--     last_check = os.clock()	
+--     mov.counter = mov.counter + 1;
+--     if state.HippoMode.value == true then 
+--         moving = false
+-- 	end
+-- end)
+
+--SCH_soloSC.lua
+function getNbStratagems()
+    -- returns recast in seconds.
+    local allRecasts = windower.ffxi.get_ability_recasts()
+    local stratsRecast = allRecasts[231]
+    local maxStrategems = math.floor((player.main_job_level + 10) / 20)
+    local fullRechargeTime = 4*60 -- change 60 with 45 if you have unlocked the job point gift on stratagem recast
+    local currentCharges = math.floor(maxStrategems - maxStrategems * stratsRecast / fullRechargeTime)
+    return currentCharges
+end
 
 function set_lockstyle()
     send_command('wait 2;input /lockstyleset 173')

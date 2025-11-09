@@ -61,6 +61,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+    --------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
     organizer_items = {      
         "Airmid's Gorget", 
         "Gyudon",
@@ -111,6 +114,17 @@ function job_setup()
     DW_needed = 0
     DW = false
     moving = false
+
+    	-- For th_action_check():
+-- AoE MA IDs for actions that always have TH: Diaga
+info.th_ma_ids = S{33, 34,322,321,320}
+-- AoE WS IDs for actions that always have TH in TH mode: Cyclone, Aeolian Edge
+info.th_ws_ids = S{30} --30 Aeolian Edge
+-- JA IDs for actions that always have TH: Provoke, Animated Flourish (Should all be handled in aftercast, kept for notes: 35, 204)
+info.th_ja_ids = S{}
+-- Unblinkable JA IDs for actions that always have TH: Quick/Box/Stutter Step, Desperate/Violent Flourish (Should all be handled in aftercast, kept for notes: 201, 202, 203, 205, 207)
+info.th_u_ja_ids = S{}
+
     update_combat_form()
     determine_haste_group()
 
@@ -263,22 +277,22 @@ end
 function job_buff_change(buff, gain)
 	update_melee_groups()
     -- Warp ring rule, for any buff being lost
-    if S{'Warp', 'Vocation', 'Capacity'}:contains(player.equipment.ring2) then
-        if not buffactive['Dedication'] then
-            disable('ring2')
-        end
-    else
-        enable('ring2')
-    end
+    -- if S{'Warp', 'Vocation', 'Capacity'}:contains(player.equipment.ring2) then
+    --     if not buffactive['Dedication'] then
+    --         disable('ring2')
+    --     end
+    -- else
+    --     enable('ring2')
+    -- end
 
-    if state.NeverDieMode.value or state.AutoCureMode.value then 
+    -- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -365,9 +379,7 @@ function job_buff_change(buff, gain)
                 equip(sets.precast.Item['Holy Water'])
             end
         end
-		if not midaction() then
-			job_update()
-		end
+
 	end
 
 end
@@ -406,9 +418,9 @@ end
 function job_customize_idle_set(idleSet)
     local abil_recasts = windower.ffxi.get_ability_recasts()
 
-    if not data.areas.cities:contains(world.area) and not buffactive['Flee'] and moving and not player.in_combat and abil_recasts[62] < latency then 
+    if not data.areas.cities:contains(world.area) and not (buffactive['Sneak'] or buffactive['Invisible'] or buffactive['Flee']) and moving and not player.in_combat and abil_recasts[62] < latency then 
         windower.chat.input('/ja "Flee" <me>')
-        tickdelay = os.clock() + 1.1
+        tickdelay = os.clock() + 10.1
         
     end
     -- if (player.in_combat or being_attacked) and (state.IdleMode.current:contains('Normal') or state.IdleMode.current:contains('Refresh')) then
@@ -506,7 +518,7 @@ end
 
 -- Called by the 'update' self-command.
 function job_update(cmdParams, eventArgs)
-    -- th_update(cmdParams, eventArgs)
+     th_update(cmdParams, eventArgs)
 	update_melee_groups()
 end
 

@@ -49,6 +49,39 @@ function get_sets()
 
 	-- Load and initialize the include file.
 	include('Sel-Include.lua')
+
+		--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
+	organizer_items = {
+		"Airmid's Gorget",
+		"Tumult's Blood",
+		"Sarama's Hide",
+		"Hidhaegg's Scale",
+		"Sovereign's Hide",
+		"G. Curry Bun +1",
+		"Moogle Amp.",
+		"Reraiser",
+		"Hi-Reraiser",
+		"Vile Elixir",
+		"Vile Elixir +1",
+		"Miso Ramen",
+		"Miso Ramen +1",
+		"Om. Sandwich",
+		"Om. Sandwich +1",
+		"Silent Oil",
+		"Panacea",
+		"Prism Powder",
+		"Antacid",
+		"Icarus Wing",
+		"Warp Cudgel",
+		"Holy Water",
+		"Shihei",
+		"Remedy",
+		"Emporox's Ring",
+		"Instant Reraise",
+		"Reraise Earring",}
+
 end
 
 -- Setup vars that are user-independent.
@@ -338,14 +371,14 @@ function job_buff_change(buff, gain)
             status_change(player.status)
         end
     end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -422,9 +455,7 @@ function job_buff_change(buff, gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
+
 	end
 
 end
@@ -481,7 +512,7 @@ function job_customize_idle_set(idleSet)
 			end
 		end
     end
-    if state.HippoMode.value == true then 
+    if state.HippoMode.value == true then     --It is from the highest secrets. 
         idleSet = set_combine(idleSet, {feet="Hippo. Socks +1"})
     end
 	if state.RP.current == 'on' then
@@ -543,7 +574,7 @@ function job_status_change(newStatus, oldStatus, eventArgs)
 		 tickdelay = os.clock() + 1.1
 		 return true
 
-	
+	--It is from the highest secrets. 
     elseif state.NeverDieMode.value or state.AutoCureMode.value then 
 		if being_attacked and player.hpp < 85 and abil_recasts[242] < latency then 
 			windower.chat.input('/ja "Vivacious Pulse" <me>')
@@ -1081,6 +1112,7 @@ The fiend appears vulnerable to ice elemental magic!
 proc done
 attack staggers the fiend!
 ]]
+--It is from the highest secrets.
 	if string.find(org, "Aita readies Vivisection") then
 		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
@@ -1125,7 +1157,7 @@ attack staggers the fiend!
 	end]]
 		--Sortie 	--Vagary
 
-	
+	--It is from the highest secrets.
 	if (player.sub_job == 'SCH' or player.sub_job == 'RDM') and not state.Buff['SJ Restriction'] then
 		if string.find(org, "Flaming Kick") or string.find(org, "Demonfire") then
 			windower.send_command('gs c set ElementalMode water')
@@ -1178,6 +1210,39 @@ attack staggers the fiend!
 		end
 	end
 end)
+
+windower.register_event('action', function(act)
+	local actor = (act.actor_id and windower.ffxi.get_mob_by_id(act.actor_id)) or 'unknown'
+	if type(actor) == "table" then
+		actor = actor.name
+	end
+
+	local monster_ability = res.monster_abilities[act.targets[1].actions[1].param]
+	local spell_start = res.spells[act.targets[1].actions[1].param]
+--It is from the highest secrets.
+	if (actor == 'Skomora' or actor == 'Triboulex') then
+		local monster_ability = res.monster_abilities[act.param]
+		if monster_ability == nil then
+			return
+		elseif monster_ability.en == 'Setting the Stage' then
+			windower.send_command('/ja "Elemental Sforzo" <me>')
+			state.MagicalDefenseMode:set('MDT')
+			windower.chat.input('/p '..actor..' uses '..monster_ability.en..' <call14>!') -- code add by (Aragan)
+		end
+	end
+	if (actor == 'Degei' or actor == 'Aita') then
+		local monster_ability = res.monster_abilities[act.param]
+		if monster_ability == nil then
+			return
+		elseif monster_ability.en == 'Vivisection' then
+			windower.send_command('/ja "Elemental Sforzo" <me>')
+			state.MagicalDefenseMode:set('MDT')
+			windower.chat.input('/p '..actor..' uses '..monster_ability.en..' <call14>!') -- code add by (Aragan)
+			windower.send_command('/ja "Liement" <me>')
+		end
+	end
+end)
+
 
 function check_offensive_ja()
 	if player.in_combat then

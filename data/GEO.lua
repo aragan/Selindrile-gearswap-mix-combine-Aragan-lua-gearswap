@@ -47,6 +47,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
         "Airmid's Gorget",
         "Sarama's Hide",
@@ -99,7 +102,7 @@ function job_setup()
 	state.Buff.Entrust = buffactive.Entrust or false
 	state.Buff['Blaze of Glory'] = buffactive['Blaze of Glory'] or false
 	state.MagicBurst = M(false, 'Magic Burst')
-    state.AutoEquipBurst = M(true)
+	state.AutoEquipBurst = M{['description'] = 'AutoEquipBurst', 'On', 'Off'}
     state.HippoMode = M(false, "hippoMode")
     state.AutoAbsorttpaspirSpam = M(false,'Auto Absort tp aspir Spam Mode')
 
@@ -122,8 +125,8 @@ function job_setup()
 
 	autows = 'Judgement'
 	autofood = 'Miso Ramen'
-	autoindi = 'Torpor'
-	autoentrust = 'Fury'
+	autoindi = 'Fury'
+	autoentrust = 'Haste'
 	autoentrustee = '<p1>'
 	autogeo = 'Frailty'
 	last_indi = nil
@@ -132,7 +135,7 @@ function job_setup()
 	used_ecliptic = false
 
 	state.ShowDistance = M(true, 'Show Geomancy Buff/Debuff distance')
-	state.AutoEntrust = M(false, 'AutoEntrust Mode')
+	state.AutoEntrust = M(true, 'AutoEntrust Mode')
 	state.CombatEntrustOnly = M(true, 'Combat Entrust Only Mode')
 	state.AutoGeoAbilities = M(true, 'Use Geo Abilities Automatically')
 
@@ -438,7 +441,7 @@ if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
             time_start = os.time()
             if MB_Window > 0 then
                 MB_Window = 11 - (os.time() - MB_Time)
-                if state.AutoEquipBurst.value then
+				if state.AutoEquipBurst.value == 'On' then
                     AEBurst = true
                 end
             else
@@ -460,14 +463,14 @@ function job_buff_change(buff, gain)
         classes.CustomIdleGroups:clear()
         if not midaction () then handle_equipping_gear(player.status) end
     end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -543,9 +546,6 @@ function job_buff_change(buff, gain)
 			if gain then  
 				send_command('input /item "remedy" <me>')
 			end
-		end
-		if not midaction() then
-			job_update()
 		end
 	end
 
@@ -978,24 +978,25 @@ windower.raw_register_event('prerender',function()
 
 end)
 --]]
-mov = {counter=0}
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
+
+-- mov = {counter=0}
+-- if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+--     mov.x = windower.ffxi.get_mob_by_index(player.index).x
+--     mov.y = windower.ffxi.get_mob_by_index(player.index).y
+--     mov.z = windower.ffxi.get_mob_by_index(player.index).z
+-- end
 
 
-local last_check = 0
-moving = false
-windower.raw_register_event('prerender',function()
-	if os.clock() - last_check < 5 then return end
-    last_check = os.clock()	
-    mov.counter = mov.counter + 1;
-    if state.HippoMode.value == true then 
-        moving = false
-	end
-end)
+-- local last_check = 0
+-- moving = false
+-- windower.raw_register_event('prerender',function()
+-- 	if os.clock() - last_check < 5 then return end
+--     last_check = os.clock()	
+--     mov.counter = mov.counter + 1;
+--     if state.HippoMode.value == true then 
+--         moving = false
+-- 	end
+-- end)
 
 buff_activation_time = nil
 last_auto_buff_mode = nil

@@ -47,7 +47,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
-
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Airmid's Gorget",
 		"Grape Daifuku",
@@ -105,7 +107,8 @@ function job_setup()
 	state.AutoManawell = M(true, 'Auto Manawell Mode')
 	state.RecoverMode = M('35%', '60%', 'Always', 'Never')
     state.MagicBurst = M(false, 'Magic Burst')
-	state.AutoEquipBurst = M(true)
+	-- state.AutoEquipBurst = M(true)
+	state.AutoEquipBurst = M{['description'] = 'AutoEquipBurst', 'On', 'Off'}
     state.WeaponLock = M(false, 'Weapon Lock')
     state.RP = M(false, "Reinforcement Points Mode")
     state.HippoMode = M(false, "hippoMode")
@@ -612,25 +615,25 @@ function job_customize_defense_set(defenseSet)
     return defenseSet
 end
 
-mov = {counter=0}
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
+-- mov = {counter=0}
+-- if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+--     mov.x = windower.ffxi.get_mob_by_index(player.index).x
+--     mov.y = windower.ffxi.get_mob_by_index(player.index).y
+--     mov.z = windower.ffxi.get_mob_by_index(player.index).z
+-- end
 
-local last_check = 0
-moving = false
-windower.raw_register_event('prerender',function()
-    if os.clock() - last_check < 5 then return end
-    last_check = os.clock()	
-    mov.counter = mov.counter + 1;
-    if state.HippoMode.value == true then 
-        moving = false
-	elseif buffactive['Mana Wall'] then
-		moving = false
-	end
-end)
+-- local last_check = 0
+-- moving = false
+-- windower.raw_register_event('prerender',function()
+--     if os.clock() - last_check < 5 then return end
+--     last_check = os.clock()	
+--     mov.counter = mov.counter + 1;
+--     if state.HippoMode.value == true then 
+--         moving = false
+-- 	elseif buffactive['Mana Wall'] then
+-- 		moving = false
+-- 	end
+-- end)
 
 -- Function to display the current relevant user state when doing an update.
 function display_current_job_state(eventArgs)
@@ -938,6 +941,48 @@ function check_buffup()
 		return false
 	end
 end
+
+
+-- Auto toggle Magic burst set.
+MB_Window = 0
+time_start = 0
+AEBurst = false
+
+if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+
+    windower.raw_register_event('action', function(act)
+        for _, target in pairs(act.targets) do
+            local battle_target = windower.ffxi.get_mob_by_target("t")
+            if battle_target ~= nil and target.id == battle_target.id then
+                for _, action in pairs(target.actions) do
+                    if action.add_effect_message > 287 and action.add_effect_message < 302 then
+                        --last_skillchain = skillchains[action.add_effect_message]
+                        MB_Window = 11
+                        MB_Time = os.time()
+                    end
+                end
+            end
+        end
+    end)
+
+    windower.raw_register_event('prerender', function()
+        --Items we want to check every second
+        if os.time() > time_start then
+            time_start = os.time()
+            if MB_Window > 0 then
+                MB_Window = 11 - (os.time() - MB_Time)
+				if state.AutoEquipBurst.value == 'On' then
+                    AEBurst = true
+                end
+            else
+                AEBurst = false
+            end
+        end
+    end)
+end
+
+
+
 
 windower.register_event('incoming text',function(org)     
 

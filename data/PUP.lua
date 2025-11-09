@@ -48,7 +48,9 @@ function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
 
-	   
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Airmid's Gorget",
 		"Moogle Amp.",
@@ -143,7 +145,7 @@ function job_setup()
     state.PetModeCycle = M {"DD", "TANK", "MAGE"}
     --Default Pet Cycle is Tank
     state.PetStyleCycle = state.PetStyleCycleDD
-
+    --   //gs c toggle PetStyleCycleDD
     --Toggles
     --[[
         Alt + E will turn on or off Auto Maneuver
@@ -253,6 +255,7 @@ function job_setup()
 
 	state.RP = M(false, "Reinforcement Points Mode")
 	state.HippoMode = M(false, "hippoMode")
+	state.NoSchereEarringMode = M(false, 'NoSchereEarringMode') 
 
     -- Adjust the X (horizontal) and Y (vertical) position here to adjust the window
     pos_x = 0
@@ -373,7 +376,7 @@ function job_buff_change(buff, gain)
         else
             enable('ring1','ring2','waist','neck')
             -- send_command('input /p Doom removed.')
-            handle_equipping_gear(player.status)
+            -- handle_equipping_gear(player.status)
         end
     end
     if buff == "Charm" then
@@ -389,7 +392,7 @@ function job_buff_change(buff, gain)
             -- send_command('input /p Petrification, please Stona.')		
         else
             -- send_command('input /p '..player.name..' is no longer Petrify!')
-            handle_equipping_gear(player.status)
+            -- handle_equipping_gear(player.status)
         end
     end
     if buff == "Sleep" then
@@ -399,14 +402,14 @@ function job_buff_change(buff, gain)
             -- send_command('input /p '..player.name..' is no longer Sleep!')
         end
     end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -483,30 +486,28 @@ function job_buff_change(buff, gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
+
 	end
 
 end
 
-mov = {counter=0}
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
+-- mov = {counter=0}
+-- if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+--     mov.x = windower.ffxi.get_mob_by_index(player.index).x
+--     mov.y = windower.ffxi.get_mob_by_index(player.index).y
+--     mov.z = windower.ffxi.get_mob_by_index(player.index).z
+-- end
 
-local last_check = 0
-moving = false
-windower.raw_register_event('prerender',function()
-	if os.clock() - last_check < 5 then return end
-    last_check = os.clock()	
-    mov.counter = mov.counter + 1;
-    if state.HippoMode.value == true then 
-        moving = false
-	end
-end)
+-- local last_check = 0
+-- moving = false
+-- windower.raw_register_event('prerender',function()
+-- 	if os.clock() - last_check < 5 then return end
+--     last_check = os.clock()	
+--     mov.counter = mov.counter + 1;
+--     if state.HippoMode.value == true then 
+--         moving = false
+-- 	end
+-- end)
 -- Called when a player gains or loses a pet.
 -- pet == pet gained or lost
 -- gain == true if the pet was gained, false if it was lost.
@@ -628,7 +629,14 @@ function job_customize_melee_set(meleeSet)
 	if state.HippoMode.value == true then 
         meleeSet = set_combine(meleeSet, {feet="Hippo. Socks +1"})
     end
+	if state.NoSchereEarringMode.value and player.status == 'Engaged' then
 
+		for slot, item in pairs(meleeSet) do
+			if item == "Schere Earring" then
+				meleeSet[slot] = "Telos Earring"
+			end
+		end
+	end
     return meleeSet
 end
 
@@ -844,6 +852,12 @@ function job_aftercast(spell, spellMap, eventArgs)
 		eventArgs.handled = true
 	end
 	if player.status ~= 'Engaged' and state.WeaponLock.value == false then
-        check_weaponset()
-    end
+		check_weaponset()
+	end
+
+	if pet and pet.isvalid then
+		if pet.status == "Engaged" then
+			add_to_chat(122, "Pet is engaged!")
+		end
+	end
 end

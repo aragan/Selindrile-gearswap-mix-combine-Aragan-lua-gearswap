@@ -88,6 +88,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
     organizer_items = {
         "Gyudon",
         "Reraiser",
@@ -391,14 +394,14 @@ function job_buff_change(buff, gain)
 			enable('range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		end
 	end
-    if state.NeverDieMode.value or state.AutoCureMode.value then 
+    -- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -475,11 +478,7 @@ function job_buff_change(buff, gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
 	end
-
 end
 
 -- Called when the player's pet's status changes.
@@ -649,51 +648,51 @@ end
 -------------------------------------------------------------------------------------------------------------------
 
 
-mov = {counter=0}
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
+-- mov = {counter=0}
+-- if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
+--     mov.x = windower.ffxi.get_mob_by_index(player.index).x
+--     mov.y = windower.ffxi.get_mob_by_index(player.index).y
+--     mov.z = windower.ffxi.get_mob_by_index(player.index).z
+-- end
 
 
-local last_check = 0
-moving = false
-windower.raw_register_event('prerender',function()
-	if os.clock() - last_check < 5 then return end
-    last_check = os.clock()	
-    mov.counter = mov.counter + 1;
-	if state.HippoMode.value == "Hippo" then
-		moving = false
-    elseif mov.counter>15 then
-        local pl = windower.ffxi.get_mob_by_index(player.index)
-        if pl and pl.x and mov.x then
-            dist = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 )
-            if dist > 1 and not moving then
-                state.Moving.value = true
-                send_command('gs c update')
-				if world.area:contains("Adoulin") then
-                send_command('gs equip sets.Adoulin')
-				else
-                send_command('gs equip sets.MoveSpeed')
-                end
+-- local last_check = 0
+-- moving = false
+-- windower.raw_register_event('prerender',function()
+-- 	if os.clock() - last_check < 5 then return end
+--     last_check = os.clock()	
+--     mov.counter = mov.counter + 1;
+-- 	if state.HippoMode.value == "Hippo" then
+-- 		moving = false
+--     elseif mov.counter>15 then
+--         local pl = windower.ffxi.get_mob_by_index(player.index)
+--         if pl and pl.x and mov.x then
+--             dist = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 )
+--             if dist > 1 and not moving then
+--                 state.Moving.value = true
+--                 send_command('gs c update')
+-- 				if world.area:contains("Adoulin") then
+--                 send_command('gs equip sets.Adoulin')
+-- 				else
+--                 send_command('gs equip sets.MoveSpeed')
+--                 end
 
-        moving = true
+--         moving = true
 
-            elseif dist < 1 and moving then
-                state.Moving.value = false
-                send_command('gs c update')
-                moving = false
-            end
-        end
-        if pl and pl.x then
-            mov.x = pl.x
-            mov.y = pl.y
-            mov.z = pl.z
-        end
-        mov.counter = 0
-    end
-end)
+--             elseif dist < 1 and moving then
+--                 state.Moving.value = false
+--                 send_command('gs c update')
+--                 moving = false
+--             end
+--         end
+--         if pl and pl.x then
+--             mov.x = pl.x
+--             mov.y = pl.y
+--             mov.z = pl.z
+--         end
+--         mov.counter = 0
+--     end
+-- end)
 
 -- Cast the appopriate storm for the currently summoned avatar, if possible.
 function handle_petweather()

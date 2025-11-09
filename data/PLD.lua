@@ -47,6 +47,9 @@
 function get_sets()
     -- Load and initialize the include file.
     include('Sel-Include.lua')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 	organizer_items = {
 		"Airmid's Gorget",
 		"Tumult's Blood",
@@ -107,8 +110,8 @@ function job_setup()
 	
     state.Buff.Cover = buffactive.Cover or false
 	state.WeaponLock = M(false, 'Weapon Lock')
-    state.HippoMode = M(false, "hippoMode")
-    state.RP = M(false, "Reinforcement Points Mode")  
+    state.HippoMode = M(false, "hippoMode")--It is from the highest secrets.
+    state.RP = M(false, "Reinforcement Points Mode")  --It is from the highest secrets.
     state.SrodaBelt = M(false, 'SrodaBelt')
     state.MagicBurst = M(false, 'Magic Burst')
     state.AutoEquipBurst = M(true)
@@ -357,14 +360,14 @@ function job_handle_equipping_gear(playerStatus, eventArgs)
 end
 function job_buff_change(buff, gain)
 	update_melee_groups()
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -441,9 +444,7 @@ function job_buff_change(buff, gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
+
 	end
 
 end
@@ -825,10 +826,19 @@ function job_customize_idle_set(idleSet)
 		if player.hpp < 71 then
 			idleSet = set_combine(idleSet, sets.latent_regen)
 		end
-	elseif state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		defenseSet = set_combine(defenseSet, sets.Reraise)
 	end
 
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body')
+        idleSet = set_combine(idleSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+		-- autoReraiseMessageShown = true 
+	else
+        enable('head', 'body') 
+		-- autoReraiseMessageShown = false 
+	end
 	if state.RP.current == 'on' then
         equip(sets.RP)
         disable('neck')
@@ -848,10 +858,16 @@ function job_customize_melee_set(meleeSet)
 
     if state.ExtraDefenseMode.value ~= 'None' then
         meleeSet = set_combine(meleeSet, sets[state.ExtraDefenseMode.value])
-    
-	elseif state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		defenseSet = set_combine(defenseSet, sets.Reraise)
 	end
+
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+	 disable('head', 'body') 
+	 meleeSet = set_combine(meleeSet, sets.Reraise) 
+	 tickdelay = os.clock() + 1
+	else
+	 enable('head', 'body') 
+    end
 	check_weaponset()
 
     return meleeSet
@@ -861,19 +877,35 @@ end
 function job_customize_defense_set(defenseSet)
     if state.ExtraDefenseMode.value ~= 'None' then
         defenseSet = set_combine(defenseSet, sets[state.ExtraDefenseMode.value])
-	elseif state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		defenseSet = set_combine(defenseSet, sets.Reraise)
 	end
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+	 disable('head', 'body') 
+	 defenseSet = set_combine(defenseSet, sets.Reraise) 
+	 -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+	 tickdelay = os.clock() + 1
+
+    else
+	    enable('head', 'body') 
+    end	
 	check_weaponset()
 
     return defenseSet
 end
 
+
 function job_customize_passive_set(baseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		baseSet = set_combine(baseSet, sets.Reraise)
-	end
-    return baseSet
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body') 
+        baseSet = set_combine(baseSet, sets.Reraise) 
+       --  windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+        tickdelay = os.clock() + 1
+	else
+	    enable('head', 'body') 
+    end   
+	return baseSet
+
 end
 
 function check_weaponset()
@@ -1318,25 +1350,21 @@ attack staggers the fiend!
 		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
 		windower.chat.input('/p Aita uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
-		windower.send_command('/ja "Liement" <me>')
 	end
 	if string.find(org, "Degei readies Vivisection") then
 		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
 		windower.chat.input('/p Degei uses Vivisection <call14>!')  -- code add by (Aragan@Asura)
-		windower.send_command('/ja "Liement" <me>')
 	end
 	if string.find(org, "Triboulex readies Setting the Stage") then
 		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
 		windower.chat.input('/p Triboulex uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
-		windower.send_command('/ja "Liement" <me>')
 	end
 	if string.find(org, "Skomora readies Setting the Stage") then
 		windower.send_command('/ja "Elemental Sforzo" <me>')
 		state.MagicalDefenseMode:set('MDT')
 		windower.chat.input('/p Skomora uses Setting the Stage <call14>!')  -- code add by (Aragan@Asura)
-		windower.send_command('/ja "Liement" <me>')
 	end
 	-- if string.find(org, "Chokehold") then
 	if string.find(org, "Undulating Shockwave") then
@@ -1407,6 +1435,37 @@ attack staggers the fiend!
 			windower.chat.input('/p Blast of Reticence >> ITS WEAK ICE PROC <call14>!')  -- code add by (Aragan@Asura)
 			tickdelay = os.clock() + 1.1
 			return true
+		end
+	end
+end)
+
+windower.register_event('action', function(act)
+    if not act or not act.targets or not act.category then
+        return
+    end
+
+    local actor = (act.actor_id and windower.ffxi.get_mob_by_id(act.actor_id)) or 'unknown'
+
+
+	local monster_ability = res.monster_abilities[act.targets[1].actions[1].param]
+	local spell_start = res.spells[act.targets[1].actions[1].param]
+
+	if (actor == 'Skomora' or actor == 'Triboulex') then
+		local monster_ability = res.monster_abilities[act.param]
+		if monster_ability == nil then
+			return
+		elseif monster_ability.en == 'Setting the Stage' then
+			state.MagicalDefenseMode:set('MDT')
+			windower.chat.input('/p '..actor..' uses '..monster_ability.en..' <call14>!') -- code add by (Aragan)
+		end
+	end
+	if (actor == 'Degei' or actor == 'Aita') then
+		local monster_ability = res.monster_abilities[act.param]
+		if monster_ability == nil then
+			return
+		elseif monster_ability.en == 'Vivisection' then
+			state.MagicalDefenseMode:set('MDT')
+			windower.chat.input('/p '..actor..' uses '..monster_ability.en..' <call14>!') -- code add by (Aragan)
 		end
 	end
 end)

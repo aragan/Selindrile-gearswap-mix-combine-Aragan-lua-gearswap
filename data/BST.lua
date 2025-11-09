@@ -52,9 +52,11 @@
 
 -- Initialization function for this job file.
 function get_sets()
-    -- Load and initialize the include file.
-    include('Sel-Include.lua')
-		
+-- Load and initialize the include file.
+include('Sel-Include.lua')
+	--------------------------------------
+	-- Gear for organizer to get
+	--------------------------------------
 organizer_items = {
 	"Moogle Amp.",
 	ammo="Pet Food Theta",
@@ -592,30 +594,59 @@ function job_customize_idle_set(idleSet)
 	if pet.isvalid and pet.status == 'Engaged' and can_dual_wield and sets.idle.Pet.Engaged.DW then
 		equip(sets.idle.Pet.Engaged.DW)
 	end
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-	    idleSet = set_combine(idleSet, sets.Reraise)
-    end
+
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body')
+        idleSet = set_combine(idleSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+		-- autoReraiseMessageShown = true 
+	else
+        enable('head', 'body') 
+		-- autoReraiseMessageShown = false 
+	end
     return idleSet
 end
 -- Modify the default melee set after it was constructed.
 function job_customize_melee_set(meleeSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-	    meleeSet = set_combine(meleeSet, sets.Reraise)
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+	 disable('head', 'body') 
+	 meleeSet = set_combine(meleeSet, sets.Reraise) 
+	 tickdelay = os.clock() + 1
+	else
+	 enable('head', 'body') 
     end
     return meleeSet
 end
 
 function job_customize_defense_set(defenseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		defenseSet = set_combine(defenseSet, sets.Reraise)
-	end
+    if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+       (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body') 
+        defenseSet = set_combine(defenseSet, sets.Reraise) 
+        -- windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+		tickdelay = os.clock() + 1
+
+	else
+        enable('head', 'body') 
+    end	
     return defenseSet
 end
+
 function job_customize_passive_set(baseSet)
-	if state.AutoReraiseMode.value and not buffactive['Reraise'] and (player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
-		baseSet = set_combine(baseSet, sets.Reraise)
-	end
-    return baseSet
+	if state.AutoReraiseMode.value and not buffactive['Reraise'] and 
+	(player.hpp < 5 or buffactive['doom'] or buffactive['weakness']) then
+        disable('head', 'body') 
+        baseSet = set_combine(baseSet, sets.Reraise) 
+       --  windower.add_to_chat(207, "AutoReraise: Equipping Reraise gear automatically.")
+        tickdelay = os.clock() + 1
+	else
+	    enable('head', 'body') 
+    end   
+	return baseSet
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -629,14 +660,14 @@ function job_buff_change(buff, gain)
 		enable('main','sub','range','ammo','head','neck','lear','rear','body','hands','lring','rring','back','waist','legs','feet')
 		add_to_chat(217, "Unleash has worn, enabling all slots.")
 	end
-	if state.NeverDieMode.value or state.AutoCureMode.value then 
+	-- if state.NeverDieMode.value or state.AutoCureMode.value then 
 
-		if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
-			windower.chat.input('/ma "Poisona" <me>')
-			tickdelay = os.clock() + 1.1
+	-- 	if buffactive['poison'] and world.area:contains('Sortie') and (player.sub_job == 'SCH' or player.sub_job == 'WHM') and spell_recasts[14] < spell_latency then 
+	-- 		windower.chat.input('/ma "Poisona" <me>')
+	-- 		tickdelay = os.clock() + 1.1
 			
-		end
-	end
+	-- 	end
+	-- end
 	if state.AutoMedicineMode.value == true then
 		if buff == "Defense Down" then
 			if gain then  			
@@ -713,9 +744,7 @@ function job_buff_change(buff, gain)
 				send_command('input /item "remedy" <me>')
 			end
 		end
-		if not midaction() then
-			job_update()
-		end
+
 	end
 
 end

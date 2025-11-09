@@ -473,8 +473,16 @@ end
 
 --Attempts to determine the Puppet Mode and Style
 function determinePuppetType()
-    local head = pet.head
-    local frame = pet.frame
+    if not pet or not pet.isvalid then
+        add_to_chat(122, '[PUP-LIB] Pet not active yet, skipping determinePuppetType.')
+        return
+    end
+
+    local head = pet.head or "Unknown"
+    local frame = pet.frame or "Unknown"
+
+    -- local head = pet.head
+    -- local frame = pet.frame
 
     local ValHead = "Valoredge Head"
     local ValFrame = "Valoredge Frame"
@@ -490,6 +498,9 @@ function determinePuppetType()
 
     local SoulHead = "Soulsoother Head"
     local SpiritHead = "Spiritreaver Head"
+
+    
+
 
     --This is based mostly off of the frames from String Theory
     --https://www.bg-wiki.com/bg/String_Theory#Automaton_Frame_Setups
